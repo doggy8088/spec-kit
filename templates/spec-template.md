@@ -1,11 +1,11 @@
-# Feature Specification: [FEATURE NAME]
+# 功能規格說明： [FEATURE NAME]
 
-**Feature Branch**: `[###-feature-name]`  
-**Created**: [DATE]  
-**Status**: Draft  
-**Input**: User description: "$ARGUMENTS"
+**功能分支**：`[###-feature-name]`  
+**建立日期**：[DATE]  
+**狀態**：草稿  
+**輸入**：使用者描述："$ARGUMENTS"
 
-## Execution Flow (main)
+## 執行流程（主流程）
 ```
 1. Parse user description from Input
    → If empty: ERROR "No feature description provided"
@@ -27,90 +27,90 @@
 
 ---
 
-## ⚡ Quick Guidelines
-- ✅ Focus on WHAT users need and WHY
-- ❌ Avoid HOW to implement (no tech stack, APIs, code structure)
-- 👥 Written for business stakeholders, not developers
+## ⚡ 快速指引
+- ✅ 著重於用戶需要「做什麼」以及「為什麼」
+- ❌ 避免說明「如何實作」（不涉及技術堆疊、API、程式碼結構）
+- 👥 內容撰寫對象為業務相關持份者，而非開發人員
 
-### Section Requirements
-- **Mandatory sections**: Must be completed for every feature
-- **Optional sections**: Include only when relevant to the feature
-- When a section doesn't apply, remove it entirely (don't leave as "N/A")
+### 各區塊要求
+- **必填區塊**：每個功能皆需完整填寫
+- **選填區塊**：僅在與該功能相關時納入
+- 若某區塊不適用，請直接移除（勿保留為「N/A」）
 
-### For AI Generation
-When creating this spec from a user prompt:
-1. **Mark all ambiguities**: Use [NEEDS CLARIFICATION: specific question] for any assumption you'd need to make
-2. **Don't guess**: If the prompt doesn't specify something (e.g., "login system" without auth method), mark it
-3. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
-4. **Common underspecified areas**:
-   - User types and permissions
-   - Data retention/deletion policies  
-   - Performance targets and scale
-   - Error handling behaviors
-   - Integration requirements
-   - Security/compliance needs
-
----
-
-## User Scenarios & Testing *(mandatory)*
-
-### Primary User Story
-[Describe the main user journey in plain language]
-
-### Acceptance Scenarios
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
-2. **Given** [initial state], **When** [action], **Then** [expected outcome]
-
-### Edge Cases
-- What happens when [boundary condition]?
-- How does system handle [error scenario]?
-
-## Requirements *(mandatory)*
-
-### Functional Requirements
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
-
-*Example of marking unclear requirements:*
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
-
-### Key Entities *(include if feature involves data)*
-- **[Entity 1]**: [What it represents, key attributes without implementation]
-- **[Entity 2]**: [What it represents, relationships to other entities]
+### 關於 AI 產生規格
+當根據用戶提示產生此規格時：
+1. **標記所有不明確處**：對於任何需要假設的地方，請使用 [NEEDS CLARIFICATION: 具體問題] 標註
+2. **不要猜測**：若提示未明確說明（例如：「登入系統」未指定驗證方式），請標記
+3. **以測試人員思維審視**：每個模糊需求都應無法通過「可測試且明確」的檢查項
+4. **常見未明確項目**：
+   - 用戶類型與權限
+   - 資料保存／刪除政策
+   - 效能目標與規模
+   - 錯誤處理行為
+   - 整合需求
+   - 資安／合規需求
 
 ---
 
-## Review & Acceptance Checklist
-*GATE: Automated checks run during main() execution*
+## 用戶情境與測試 *(必填)*
 
-### Content Quality
-- [ ] No implementation details (languages, frameworks, APIs)
-- [ ] Focused on user value and business needs
-- [ ] Written for non-technical stakeholders
-- [ ] All mandatory sections completed
+### 主要用戶故事
+[以白話描述主要用戶操作流程]
 
-### Requirement Completeness
-- [ ] No [NEEDS CLARIFICATION] markers remain
-- [ ] Requirements are testable and unambiguous  
-- [ ] Success criteria are measurable
-- [ ] Scope is clearly bounded
-- [ ] Dependencies and assumptions identified
+### 驗收情境
+1. **Given** [初始狀態]，**When** [動作]，**Then** [預期結果]
+2. **Given** [初始狀態]，**When** [動作]，**Then** [預期結果]
+
+### 邊界情境
+- 當發生 [邊界條件] 時會怎樣？
+- 系統如何處理 [錯誤情境]？
+
+## 需求 *(必填)*
+
+### 功能性需求
+- **FR-001**：系統必須 [具體能力，例如：「允許用戶建立帳號」]
+- **FR-002**：系統必須 [具體能力，例如：「驗證電子郵件地址」]
+- **FR-003**：用戶必須能夠 [關鍵互動，例如：「重設密碼」]
+- **FR-004**：系統必須 [資料需求，例如：「保存用戶偏好設定」]
+- **FR-005**：系統必須 [行為，例如：「記錄所有安全事件」]
+
+*不明確需求標記範例：*
+- **FR-006**：系統必須透過 [NEEDS CLARIFICATION: 未指定驗證方式 - email/password、SSO、OAuth？] 進行用戶驗證
+- **FR-007**：系統必須保留用戶資料 [NEEDS CLARIFICATION: 未指定保存期限]
+
+### 主要實體 *(若功能涉及資料時填寫)*
+- **[實體 1]**： [代表什麼、主要屬性（不含實作細節）]
+- **[實體 2]**： [代表什麼、與其他實體的關聯]
 
 ---
 
-## Execution Status
-*Updated by main() during processing*
+## 審查與驗收清單
+*GATE：main() 執行期間自動檢查*
 
-- [ ] User description parsed
-- [ ] Key concepts extracted
-- [ ] Ambiguities marked
-- [ ] User scenarios defined
-- [ ] Requirements generated
-- [ ] Entities identified
-- [ ] Review checklist passed
+### 內容品質
+- [ ] 無實作細節（語言、框架、API）
+- [ ] 聚焦用戶價值與業務需求
+- [ ] 以非技術持份者為對象撰寫
+- [ ] 所有必填區塊皆已完成
+
+### 需求完整性
+- [ ] 無 [NEEDS CLARIFICATION] 標記殘留
+- [ ] 需求可測試且明確
+- [ ] 成功標準可量化
+- [ ] 範圍界定清楚
+- [ ] 已識別依賴與假設
+
+---
+
+## 執行狀態
+*由 main() 處理過程中更新*
+
+- [ ] 已解析用戶描述
+- [ ] 已萃取關鍵概念
+- [ ] 已標記不明確處
+- [ ] 已定義用戶情境
+- [ ] 已產生需求
+- [ ] 已識別實體
+- [ ] 已通過審查清單
 
 ---

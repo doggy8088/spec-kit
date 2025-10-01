@@ -1,110 +1,107 @@
-## Contributing to Spec Kit
+## 貢獻 Spec Kit 指南
 
-Hi there! We're thrilled that you'd like to contribute to Spec Kit. Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
+您好！我們非常高興您願意為 Spec Kit 做出貢獻。對本專案的貢獻將依照[專案的開源授權條款](LICENSE)[公開釋出](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license)。
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+請注意，本專案遵循[貢獻者行為準則](CODE_OF_CONDUCT.md)。參與本專案即表示您同意遵守其條款。
 
-## Prerequisites for running and testing code
+## 執行與測試程式碼的先決條件
 
-These are one time installations required to be able to test your changes locally as part of the pull request (PR) submission process.
+以下為您在提交 Pull Request (PR) 前，於本地測試變更所需的一次性安裝步驟：
 
-1. Install [Python 3.11+](https://www.python.org/downloads/)
-1. Install [uv](https://docs.astral.sh/uv/) for package management
-1. Install [Git](https://git-scm.com/downloads)
-1. Have an [AI coding agent available](README.md#-supported-ai-agents)
+1. 安裝 [Python 3.11+](https://www.python.org/downloads/)
+1. 安裝套件管理工具 [uv](https://docs.astral.sh/uv/)
+1. 安裝 [Git](https://git-scm.com/downloads)
+1. 準備一個[可用的 AI 編碼代理工具](README.md#-supported-ai-agents)
 
-## Submitting a pull request
+## 提交 Pull Request 的流程
 
 >[!NOTE]
->If your pull request introduces a large change that materially impacts the work of the CLI or the rest of the repository (e.g., you're introducing new templates, arguments, or otherwise major changes), make sure that it was **discussed and agreed upon** by the project maintainers. Pull requests with large changes that did not have a prior conversation and agreement will be closed.
+>如果您的 Pull Request 涉及重大變更，對命令列介面 (Command Line Interface, CLI) 或整個儲存庫造成實質影響（例如新增模板、參數或其他重大修改），請務必**先與專案維護者討論並取得共識**。未經事先討論與同意的大型變更 PR 將會被關閉。
 
-1. Fork and clone the repository
-1. Configure and install the dependencies: `uv sync`
-1. Make sure the CLI works on your machine: `uv run specify --help`
-1. Create a new branch: `git checkout -b my-branch-name`
-1. Make your change, add tests, and make sure everything still works
-1. Test the CLI functionality with a sample project if relevant
-1. Push to your fork and submit a pull request
-1. Wait for your pull request to be reviewed and merged.
+1. Fork 並 clone 此儲存庫
+1. 設定並安裝相依套件：`uv sync`
+1. 確認 CLI 能在您的機器上正常運作：`uv run specify --help`
+1. 建立新分支：`git checkout -b my-branch-name`
+1. 進行您的變更、加入測試，並確保一切功能正常
+1. 若有相關，請以範例專案測試 CLI 功能
+1. Push 到您的 fork 並提交 Pull Request
+1. 等待您的 Pull Request 被審查與合併
 
-Here are a few things you can do that will increase the likelihood of your pull request being accepted:
+以下幾點能提升您的 Pull Request 被接受的機會：
 
-- Follow the project's coding conventions.
-- Write tests for new functionality.
-- Update documentation (`README.md`, `spec-driven.md`) if your changes affect user-facing features.
-- Keep your change as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
-- Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
-- Test your changes with the Spec-Driven Development workflow to ensure compatibility.
+- 遵循專案的程式撰寫慣例
+- 為新增功能撰寫測試
+- 若您的變更影響到使用者相關功能，請更新文件（`README.md`、`spec-driven.md`）
+- 盡量讓您的變更聚焦單一主題。若有多個彼此無依賴的變更，建議分開提交多個 Pull Request
+- 撰寫[良好的 commit 訊息](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+- 以 Spec-Driven Development 工作流程測試您的變更，確保相容性
 
-## Development workflow
+## 開發工作流程
 
-When working on spec-kit:
+當您在開發 spec-kit 時：
 
-1. Test changes with the `specify` CLI commands (`/specify`, `/plan`, `/tasks`) in your coding agent of choice
-2. Verify templates are working correctly in `templates/` directory
-3. Test script functionality in the `scripts/` directory
-4. Ensure memory files (`memory/constitution.md`) are updated if major process changes are made
+1. 使用 `specify` CLI 指令（`/specify`、`/plan`、`/tasks`）於您選擇的 AI 編碼代理工具中測試變更
+2. 驗證 `templates/` 目錄中的模板運作正常
+3. 測試 `scripts/` 目錄下的腳本功能
+4. 若有重大流程變更，請確保記憶檔案（`memory/constitution.md`）已更新
 
-## AI contributions in Spec Kit
+## 在 Spec Kit 中使用 AI 協作的規範
 
 > [!IMPORTANT]
 >
-> If you are using **any kind of AI assistance** to contribute to Spec Kit,
-> it must be disclosed in the pull request or issue.
+> 如果您在貢獻 Spec Kit 時**有使用任何形式的 AI 協助**，
+> 必須在 Pull Request 或 Issue 中明確揭露。
 
-We welcome and encourage the use of AI tools to help improve Spec Kit! Many valuable contributions have been enhanced with AI assistance for code generation, issue detection, and feature definition.
+我們歡迎並鼓勵使用 AI 工具來協助提升 Spec Kit！許多有價值的貢獻都在程式碼產生、問題偵測、功能定義等方面受益於 AI 協助。
 
-That being said, if you are using any kind of AI assistance (e.g., agents, ChatGPT) while contributing to Spec Kit,
-**this must be disclosed in the pull request or issue**, along with the extent to which AI assistance was used (e.g., documentation comments vs. code generation).
+但請注意，若您在貢獻過程中使用了任何 AI 協助（例如代理工具、ChatGPT 等），
+**必須在 Pull Request 或 Issue 中揭露**，並說明 AI 協助的範圍（如僅用於文件註解，或包含程式碼產生等）。
 
-If your PR responses or comments are being generated by an AI, disclose that as well.
+若您的 PR 回覆或評論是由 AI 產生，也請一併揭露。
 
-As an exception, trivial spacing or typo fixes don't need to be disclosed, so long as the changes are limited to small parts of the code or short phrases.
+例外情況：若僅為微小的排版或錯字修正，且僅限於程式碼小片段或短語，則無需揭露。
 
-An example disclosure:
+範例揭露：
 
-> This PR was written primarily by GitHub Copilot.
+> 此 PR 主要由 GitHub Copilot 撰寫。
 
-Or a more detailed disclosure:
+或更詳細的揭露：
 
-> I consulted ChatGPT to understand the codebase but the solution
-> was fully authored manually by myself.
+> 我諮詢了 ChatGPT 以理解程式碼基礎，但解決方案完全由我手動撰寫。
 
-Failure to disclose this is first and foremost rude to the human operators on the other end of the pull request, but it also makes it difficult to
-determine how much scrutiny to apply to the contribution.
+未揭露 AI 協助，首先對負責審查 PR 的人員不禮貌，同時也會讓我們難以判斷該貢獻需投入多少審查力度。
 
-In a perfect world, AI assistance would produce equal or higher quality work than any human. That isn't the world we live in today, and in most cases
-where human supervision or expertise is not in the loop, it's generating code that cannot be reasonably maintained or evolved.
+理想情況下，AI 協助能產生與人類同等或更高品質的成果。但現實上，在缺乏人類監督或專業參與的情況下，AI 產生的程式碼往往難以維護或擴展。
 
-### What we're looking for
+### 我們希望看到的內容
 
-When submitting AI-assisted contributions, please ensure they include:
+當您提交 AI 協助的貢獻時，請確保包含：
 
-- **Clear disclosure of AI use** - You are transparent about AI use and degree to which you're using it for the contribution
-- **Human understanding and testing** - You've personally tested the changes and understand what they do
-- **Clear rationale** - You can explain why the change is needed and how it fits within Spec Kit's goals  
-- **Concrete evidence** - Include test cases, scenarios, or examples that demonstrate the improvement
-- **Your own analysis** - Share your thoughts on the end-to-end developer experience
+- **明確揭露 AI 使用情形** —— 透明說明您使用 AI 的情況及程度
+- **人為理解與測試** —— 您已親自測試變更並理解其作用
+- **清楚的理由** —— 能解釋為何需要此變更，以及其如何符合 Spec Kit 的目標
+- **具體證據** —— 提供測試案例、情境或範例以證明改進效果
+- **您的分析** —— 分享您對整體開發者體驗的看法
 
-### What we'll close
+### 我們會關閉的貢獻
 
-We reserve the right to close contributions that appear to be:
+我們保留關閉以下類型貢獻的權利：
 
-- Untested changes submitted without verification
-- Generic suggestions that don't address specific Spec Kit needs
-- Bulk submissions that show no human review or understanding
+- 未經測試、未驗證即提交的變更
+- 無法解決 Spec Kit 具體需求的泛泛建議
+- 缺乏人為審查或理解的大量提交
 
-### Guidelines for success
+### 成功的指引
 
-The key is demonstrating that you understand and have validated your proposed changes. If a maintainer can easily tell that a contribution was generated entirely by AI without human input or testing, it likely needs more work before submission.
+關鍵在於展現您已理解並驗證所提變更。若維護者能輕易判斷該貢獻完全由 AI 產生，且缺乏人為參與或測試，則可能需要進一步完善後再提交。
 
-Contributors who consistently submit low-effort AI-generated changes may be restricted from further contributions at the maintainers' discretion.
+持續提交低品質 AI 產生內容的貢獻者，維護者有權限制其後續貢獻。
 
-Please be respectful to maintainers and disclose AI assistance.
+請尊重維護者，並主動揭露 AI 協助情形。
 
-## Resources
+## 相關資源
 
-- [Spec-Driven Development Methodology](./spec-driven.md)
-- [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
-- [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://help.github.com)
+- [Spec-Driven Development 方法論](./spec-driven.md)
+- [如何為開源專案貢獻](https://opensource.guide/how-to-contribute/)
+- [使用 Pull Request](https://help.github.com/articles/about-pull-requests/)
+- [GitHub 說明](https://help.github.com)

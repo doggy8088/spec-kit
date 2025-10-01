@@ -1,31 +1,31 @@
-Thanks for helping make GitHub safe for everyone.
+感謝您協助讓 GitHub 對所有人都更加安全。
 
-# Security
+# 安全性
 
-GitHub takes the security of our software products and services seriously, including all of the open source code repositories managed through our GitHub organizations, such as [GitHub](https://github.com/GitHub).
+GitHub 非常重視我們軟體產品與服務的安全性，包括透過我們 GitHub 組織所管理的所有開源程式碼儲存庫，例如 [GitHub](https://github.com/GitHub)。
 
-Even though [open source repositories are outside of the scope of our bug bounty program](https://bounty.github.com/index.html#scope) and therefore not eligible for bounty rewards, we will ensure that your finding gets passed along to the appropriate maintainers for remediation. 
+即使[開源儲存庫不在我們漏洞懸賞計畫的範圍內](https://bounty.github.com/index.html#scope)，因此不符合懸賞獎勵資格，我們仍會確保您發現的問題能夠被轉交給相關維護者進行修復。
 
-## Reporting Security Issues
+## 回報安全性問題
 
-If you believe you have found a security vulnerability in any GitHub-owned repository, please report it to us through coordinated disclosure.
+如果您認為在任何 GitHub 擁有的儲存庫中發現了安全性漏洞，請透過協調式揭露（coordinated disclosure）向我們回報。
 
-**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
+**請不要透過公開的 GitHub issue、討論區或 pull request 回報安全性漏洞。**
 
-Instead, please send an email to opensource-security[@]github.com.
+請改為發送電子郵件至 opensource-security[@]github.com。
 
-Please include as much of the information listed below as you can to help us better understand and resolve the issue:
+為了協助我們更好地理解並解決問題，請盡可能提供以下資訊：
 
-  * The type of issue (e.g., buffer overflow, SQL injection, or cross-site scripting)
-  * Full paths of source file(s) related to the manifestation of the issue
-  * The location of the affected source code (tag/branch/commit or direct URL)
-  * Any special configuration required to reproduce the issue
-  * Step-by-step instructions to reproduce the issue
-  * Proof-of-concept or exploit code (if possible)
-  * Impact of the issue, including how an attacker might exploit the issue
+  * 問題類型（例如：緩衝區溢位、SQL 注入、跨站腳本攻擊等）
+  * 與問題相關的原始檔案完整路徑
+  * 受影響原始碼的位置（tag/branch/commit 或直接 URL）
+  * 重現問題所需的特殊設定
+  * 重現問題的逐步操作說明
+  * 概念驗證（proof-of-concept）或攻擊程式碼（如可提供）
+  * 問題的影響範圍，包括攻擊者可能如何利用此問題
 
-This information will help us triage your report more quickly.
+這些資訊將有助於我們更快速地分類與處理您的回報。
 
-## Policy
+## 政策
 
-See [GitHub's Safe Harbor Policy](https://docs.github.com/en/site-policy/security-policies/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms)
+請參閱 [GitHub 的 Safe Harbor 政策](https://docs.github.com/en/site-policy/security-policies/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms)

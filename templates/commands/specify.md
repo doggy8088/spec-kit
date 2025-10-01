@@ -1,24 +1,24 @@
 ---
-description: Create or update the feature specification from a natural language feature description.
+description: 根據自然語言的功能描述，建立或更新功能規格說明。
 scripts:
   sh: scripts/bash/create-new-feature.sh --json "{ARGS}"
   ps: scripts/powershell/create-new-feature.ps1 -Json "{ARGS}"
 ---
 
-The user input to you can be provided directly by the agent or as a command argument - you **MUST** consider it before proceeding with the prompt (if not empty).
+使用者輸入可以直接由代理程式（agent）提供，或作為命令參數傳入——在繼續提示前，你**必須**先考慮這些輸入（若非空）。
 
-User input:
+使用者輸入：
 
 $ARGUMENTS
 
-The text the user typed after `/specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `{ARGS}` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
+使用者在觸發訊息中的 `/specify` 後輸入的文字**就是**功能描述。請假設你在本次對話中始終可取得該描述，即使下方出現了 `{ARGS}` 也一樣。除非使用者輸入的命令為空，否則不要要求使用者重複輸入。
 
-Given that feature description, do this:
+根據該功能描述，請執行以下步驟：
 
-1. Run the script `{SCRIPT}` from repo root and parse its JSON output for BRANCH_NAME and SPEC_FILE. All file paths must be absolute.
-  **IMPORTANT** You must only ever run this script once. The JSON is provided in the terminal as output - always refer to it to get the actual content you're looking for.
-2. Load `templates/spec-template.md` to understand required sections.
-3. Write the specification to SPEC_FILE using the template structure, replacing placeholders with concrete details derived from the feature description (arguments) while preserving section order and headings.
-4. Report completion with branch name, spec file path, and readiness for the next phase.
+1. 從版本庫根目錄執行腳本 `{SCRIPT}`，並解析其 JSON 輸出以取得 BRANCH_NAME 和 SPEC_FILE。所有檔案路徑必須為絕對路徑。
+  **重要：** 你只能執行此腳本一次。JSON 會以終端機輸出提供——請務必參考該輸出以取得你所需的實際內容。
+2. 載入 `templates/spec-template.md` 以瞭解所需的章節。
+3. 依照模板結構，將規格內容寫入 SPEC_FILE，並以功能描述（參數）中取得的具體細節取代對應的佔位符，同時保留章節順序與標題。
+4. 回報完成情況，包括分支名稱、規格檔案路徑，以及是否已準備好進入下一階段。
 
-Note: The script creates and checks out the new branch and initializes the spec file before writing.
+注意：腳本會建立並切換到新分支，並在寫入前初始化規格檔案。

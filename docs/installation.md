@@ -1,24 +1,24 @@
-# Installation Guide
+# 安裝指南
 
-## Prerequisites
+## 先決條件
 
-- **Linux/macOS** (or Windows; PowerShell scripts now supported without WSL)
-- AI coding agent: [Claude Code](https://www.anthropic.com/claude-code), [GitHub Copilot](https://code.visualstudio.com/), or [Gemini CLI](https://github.com/google-gemini/gemini-cli)
-- [uv](https://docs.astral.sh/uv/) for package management
+- **Linux/macOS**（或 Windows；現已支援 PowerShell 腳本，無需 WSL）
+- AI 程式碼代理： [Claude Code](https://www.anthropic.com/claude-code)、[GitHub Copilot](https://code.visualstudio.com/) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- 用於套件管理的 [uv](https://docs.astral.sh/uv/)
 - [Python 3.11+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads)
 
-## Installation
+## 安裝
 
-### Initialize a New Project
+### 初始化新專案
 
-The easiest way to get started is to initialize a new project:
+最簡單的入門方式是初始化一個新專案：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
 ```
 
-Or initialize in the current directory:
+或者在目前目錄中初始化：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init .
@@ -26,9 +26,9 @@ uvx --from git+https://github.com/github/spec-kit.git specify init .
 uvx --from git+https://github.com/github/spec-kit.git specify init --here
 ```
 
-### Specify AI Agent
+### 指定 AI Agent
 
-You can proactively specify your AI agent during initialization:
+您可以在初始化時主動指定您的 AI agent：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai claude
@@ -36,43 +36,43 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai copilot
 ```
 
-### Specify Script Type (Shell vs PowerShell)
+### 指定腳本類型（Shell 與 PowerShell）
 
-All automation scripts now have both Bash (`.sh`) and PowerShell (`.ps1`) variants.
+所有自動化腳本現在都提供 Bash（`.sh`）與 PowerShell（`.ps1`）兩種版本。
 
-Auto behavior:
-- Windows default: `ps`
-- Other OS default: `sh`
-- Interactive mode: you'll be prompted unless you pass `--script`
+自動行為：
+- Windows 預設：`ps`
+- 其他作業系統預設：`sh`
+- 互動模式：除非你傳遞 `--script`，否則系統會提示你選擇
 
-Force a specific script type:
+強制指定特定腳本類型：
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --script sh
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --script ps
 ```
 
-### Ignore Agent Tools Check
+### 忽略 Agent 工具檢查
 
-If you prefer to get the templates without checking for the right tools:
+如果你希望在不檢查相關工具的情況下取得範本：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai claude --ignore-agent-tools
 ```
 
-## Verification
+## 驗證
 
-After initialization, you should see the following commands available in your AI agent:
-- `/specify` - Create specifications
-- `/plan` - Generate implementation plans  
-- `/tasks` - Break down into actionable tasks
+初始化完成後，你應該會在你的 AI agent 中看到以下指令可用：
+- `/specify` - 建立規格說明
+- `/plan` - 產生實作計畫  
+- `/tasks` - 拆解為可執行任務
 
-The `.specify/scripts` directory will contain both `.sh` and `.ps1` scripts.
+`.specify/scripts` 目錄將會包含 `.sh` 與 `.ps1` 腳本。
 
-## Troubleshooting
+## 疑難排解
 
-### Git Credential Manager on Linux
+### Linux 上的 Git Credential Manager
 
-If you're having issues with Git authentication on Linux, you can install Git Credential Manager:
+如果你在 Linux 上遇到 Git 認證相關問題，可以安裝 Git Credential Manager：
 
 ```bash
 #!/usr/bin/env bash
