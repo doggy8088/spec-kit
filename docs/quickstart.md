@@ -1,14 +1,14 @@
 # 快速入門指南
 
-本指南將協助你使用 Spec Kit 開始進行規格驅動開發（Spec-Driven Development）。
+本指南將協助你使用 Spec Kit 開始進行 Spec-Driven Development 方法論。
 
-> 新功能：所有自動化腳本現在都同時提供 Bash（`.sh`）和 PowerShell（`.ps1`）版本。`specify` 命令列介面（Command Line Interface）會根據作業系統自動選擇，除非你傳入 `--script sh|ps`。
+> 新功能：所有自動化腳本現在都同時提供 Bash (`.sh`) 和 PowerShell (`.ps1`) 版本。`specify` 命令列介面 (Command Line Interface) 會根據作業系統自動選擇，除非你傳入 `--script sh|ps`。
 
 ## 四步驟流程
 
 ### 1. 安裝 Specify
 
-根據你所使用的 coding agent，初始化你的專案：
+根據你所使用的 AI 編碼代理工具，初始化你的專案：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
@@ -22,29 +22,29 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 
 ### 2. 建立規格（Spec）
 
-使用 `/specify` 指令來描述你想要建構的內容。請著重於**做什麼（what）**以及**為什麼（why）**，而不是技術堆疊（tech stack）。
+使用 `/speckit.specify` 指令來描述你想要建構的內容。請著重於**做什麼（what）**以及**為什麼（why）**，而不是技術堆疊。
 
 ```bash
-/specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
+/speckit.specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
 ```
 
 ### 3. 建立技術實作計劃
 
-使用 `/plan` 指令來提供您的技術堆疊（tech stack）與架構選擇。
+使用 `/speckit.plan` 指令來提供您的技術堆疊與架構選擇。
 
 ```bash
-/plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
+/speckit.plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
 ```
 
 ### 4. 拆解並實作
 
-使用 `/tasks` 來建立可執行的任務清單，然後請你的 agent 實作該功能。
+使用 `/speckit.tasks` 來建立可執行的任務清單，然後請你的 agent 實作該功能。
 
 ## 詳細範例：打造 Taskify
 
 以下是一個建立團隊生產力平台的完整範例：
 
-### 步驟 1：使用 `/specify` 定義需求
+### 步驟 1：使用 `/speckit.specify` 定義需求
 
 ```text
 Develop Taskify, a team productivity platform. It should allow users to create projects, add team members,
@@ -67,7 +67,7 @@ delete any comments that you made, but you can't delete comments anybody else ma
 
 ### 步驟 2：細化規格說明
 
-在建立初始規格說明後，請釐清任何遺漏的需求：
+在建立初始規格說明後，釐清任何遺漏的需求：
 
 ```text
 For each sample project or project that you create there should be a variable number of tasks between 5 and 15
@@ -81,9 +81,9 @@ one task in each stage of completion.
 Read the review and acceptance checklist, and check off each item in the checklist if the feature spec meets the criteria. Leave it empty if it does not.
 ```
 
-### 步驟 3：使用 `/plan` 產生技術規劃
+### 步驟 3：使用 `/speckit.plan` 產生技術規劃
 
-請明確說明您的技術堆疊（tech stack）與技術需求：
+請明確說明您的技術堆疊與技術需求：
 
 ```text
 We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use
@@ -93,7 +93,7 @@ tasks API, and a notifications API.
 
 ### 步驟 4：驗證與實作
 
-讓你的 AI agent 審查實作計畫：
+讓你的 AI agent 審核實作計畫：
 
 ```text
 Now I want you to go and audit the implementation plan and the implementation detail files.
@@ -101,7 +101,7 @@ Read through it with an eye on determining whether or not there is a sequence of
 to be doing that are obvious from reading this. Because I don't know if there's enough here.
 ```
 
-最後，實作這個解決方案：
+最後，實作解決方案：
 
 ```text
 implement specs/002-create-taskify/plan.md
@@ -110,13 +110,13 @@ implement specs/002-create-taskify/plan.md
 ## 主要原則
 
 - **明確說明**你正在建構什麼，以及為什麼要這麼做
-- 在規格制定階段**不要聚焦於技術堆疊（tech stack）**
-- 在實作前**反覆修正與完善**你的規格
+- 在規格制定階段**不要聚焦於技術堆疊**
+- 在實作前**反覆修正與完善**你的規格說明
 - 在開始撰寫程式碼前**驗證**你的計畫
 - **讓 AI agent 處理**實作細節
 
 ## 下一步
 
 - 閱讀完整的方法論以獲得深入指引
-- 在儲存庫中查看更多範例
+- 在 repository 中查看更多範例
 - 在 GitHub 上瀏覽原始碼

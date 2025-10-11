@@ -1,8 +1,8 @@
 # 本地開發指南
 
-本指南說明如何在不先發佈版本或提交到`main`的情況下，於本地對`specify`命令列介面 (Command Line Interface, CLI) 進行迭代開發。
+本指南說明如何在不先發佈版本或提交到`main`的情況下，於本地對`specify`命令列介面 (Command Line Interface) 進行迭代開發。
 
-> 腳本現在同時提供 Bash (`.sh`) 和 PowerShell (`.ps1`) 版本。CLI 會根據作業系統自動選擇，除非你傳入`--script sh|ps`參數。
+> 腳本現在同時提供 Bash (`.sh`) 和 PowerShell (`.ps1`) 版本。命令列介面 (Command Line Interface) 會根據作業系統自動選擇，除非你傳入`--script sh|ps`。
 
 ## 1. 複製並切換分支
 
@@ -31,7 +31,7 @@ python src/specify_cli/__init__.py init demo-project --script ps
 
 ## 3. 使用可編輯安裝（隔離環境）
 
-使用`uv`建立隔離環境，以確保相依套件的解析方式與最終使用者取得的結果完全一致：
+使用`uv`建立隔離環境，以確保相依性（dependency）的解析方式與最終使用者取得的結果完全一致：
 
 ```bash
 # Create & activate virtual env (uv auto-manages .venv)
@@ -55,7 +55,7 @@ specify --help
 uvx --from . specify init demo-uvx --ai copilot --ignore-agent-tools --script sh
 ```
 
-你也可以讓 uvx 指向特定的分支，而不需要合併：
+你也可以讓 uvx 指向特定分支，而無需合併：
 
 ```bash
 # Push your working branch first
@@ -72,13 +72,13 @@ uvx --from /mnt/c/GitHub/spec-kit specify --help
 uvx --from /mnt/c/GitHub/spec-kit specify init demo-anywhere --ai copilot --ignore-agent-tools --script sh
 ```
 
-為方便起見，請設定一個環境變數：
+為了方便操作，請設定一個環境變數（environment variable）：
 ```bash
 export SPEC_KIT_SRC=/mnt/c/GitHub/spec-kit
 uvx --from "$SPEC_KIT_SRC" specify init demo-env --ai copilot --ignore-agent-tools --script ps
 ```
 
-（選用）定義一個 shell 函式：
+（可選）定義一個 shell 函數：
 ```bash
 specify-dev() { uvx --from /mnt/c/GitHub/spec-kit specify "$@"; }
 # Then
@@ -104,7 +104,7 @@ python -c "import specify_cli; print('Import OK')"
 
 ## 7. 在本地建置 Wheel（可選）
 
-在發佈前驗證套件打包：
+在發佈前驗證套件包裝：
 
 ```bash
 uv build
@@ -120,11 +120,11 @@ ls dist/
 mkdir /tmp/spec-test && cd /tmp/spec-test
 python -m src.specify_cli init --here --ai claude --ignore-agent-tools --script sh  # if repo copied here
 ```
-或者，如果你只需要一個較輕量的沙盒環境，可以僅複製已修改的 CLI 部分。
+或者，如果你只需要一個較輕量的沙盒環境，可以僅複製已修改的命令列介面 (Command Line Interface) 部分。
 
 ## 9. 偵錯網路 / 跳過 TLS
 
-如果你在實驗時需要略過 TLS 驗證，可以這樣做：
+如果你在實驗時需要略過 TLS 驗證：
 
 ```bash
 specify check --skip-tls
@@ -136,9 +136,9 @@ specify init demo --skip-tls --ai gemini --ignore-agent-tools --script ps
 
 | 動作 | 指令 |
 |------|------|
-| 直接執行 CLI | `python -m src.specify_cli --help` |
+| 直接執行命令列介面 (Command Line Interface) | `python -m src.specify_cli --help` |
 | 可編輯安裝 | `uv pip install -e .` 然後 `specify ...` |
-| 本地 uvx 執行（repo 根目錄） | `uvx --from . specify ...` |
+| 本地 uvx 執行（repository 根目錄） | `uvx --from . specify ...` |
 | 本地 uvx 執行（絕對路徑） | `uvx --from /mnt/c/GitHub/spec-kit specify ...` |
 | Git 分支 uvx | `uvx --from git+URL@branch specify ...` |
 | 建立 wheel | `uv build` |

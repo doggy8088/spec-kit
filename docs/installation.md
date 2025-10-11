@@ -3,7 +3,7 @@
 ## 先決條件
 
 - **Linux/macOS**（或 Windows；現已支援 PowerShell 腳本，無需 WSL）
-- AI 程式碼代理： [Claude Code](https://www.anthropic.com/claude-code)、[GitHub Copilot](https://code.visualstudio.com/) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- AI 編碼代理工具：[Claude Code](https://www.anthropic.com/claude-code)、[GitHub Copilot](https://code.visualstudio.com/) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 - 用於套件管理的 [uv](https://docs.astral.sh/uv/)
 - [Python 3.11+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads)
@@ -26,7 +26,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init .
 uvx --from git+https://github.com/github/spec-kit.git specify init --here
 ```
 
-### 指定 AI Agent
+### 指定 AI agent
 
 您可以在初始化時主動指定您的 AI agent：
 
@@ -43,7 +43,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 自動行為：
 - Windows 預設：`ps`
 - 其他作業系統預設：`sh`
-- 互動模式：除非你傳遞 `--script`，否則系統會提示你選擇
+- 互動模式 (Interactive mode)：除非你傳遞 `--script`，否則系統會提示你選擇
 
 強制指定特定腳本類型：
 ```bash
@@ -53,7 +53,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 
 ### 忽略 Agent 工具檢查
 
-如果你希望在不檢查相關工具的情況下取得範本：
+如果你希望在不檢查正確工具的情況下取得範本：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai claude --ignore-agent-tools
@@ -62,11 +62,11 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 ## 驗證
 
 初始化完成後，你應該會在你的 AI agent 中看到以下指令可用：
-- `/specify` - 建立規格說明
-- `/plan` - 產生實作計畫  
-- `/tasks` - 拆解為可執行任務
+- `/speckit.specify` - 建立規格說明
+- `/speckit.plan` - 產生實作計畫  
+- `/speckit.tasks` - 拆解為可執行任務
 
-`.specify/scripts` 目錄將會包含 `.sh` 與 `.ps1` 腳本。
+`.specify/scripts` 目錄將會包含 `.sh` 和 `.ps1` 腳本。
 
 ## 疑難排解
 

@@ -4,27 +4,27 @@
 ## 核心原則
 
 ### [PRINCIPLE_1_NAME]
-<!-- 例如：I. Library-First（以函式庫為先） -->
+<!-- 例如：I. 以函式庫為先 (Library-First) -->
 [PRINCIPLE_1_DESCRIPTION]
 <!-- 例如：每個功能都從獨立的函式庫開始；函式庫必須自包含、可獨立測試、有文件說明；需有明確目的——不得僅為組織結構而存在的函式庫 -->
 
 ### [PRINCIPLE_2_NAME]
-<!-- 例如：II. CLI Interface（命令列介面） -->
+<!-- 例如：II. 命令列介面 (CLI Interface) -->
 [PRINCIPLE_2_DESCRIPTION]
 <!-- 例如：每個函式庫都需透過命令列介面 (Command Line Interface) 提供功能；文字輸入/輸出協定：stdin/args → stdout，錯誤 → stderr；支援 JSON 與人類可讀格式 -->
 
 ### [PRINCIPLE_3_NAME]
-<!-- 例如：III. Test-First（測試優先，強制執行） -->
+<!-- 例如：III. 測試優先 (Test-First，強制執行) -->
 [PRINCIPLE_3_DESCRIPTION]
 <!-- 例如：必須採用測試驅動開發（TDD）：先撰寫測試 → 用戶確認 → 測試失敗 → 再實作；嚴格執行 Red-Green-Refactor 循環 -->
 
 ### [PRINCIPLE_4_NAME]
-<!-- 例如：IV. Integration Testing（整合測試） -->
+<!-- 例如：IV. 整合測試 (Integration Testing) -->
 [PRINCIPLE_4_DESCRIPTION]
 <!-- 例如：需進行整合測試的重點範疇：新函式庫契約測試、契約變更、服務間通訊、共用資料結構 -->
 
 ### [PRINCIPLE_5_NAME]
-<!-- 例如：V. Observability（可觀察性）、VI. Versioning & Breaking Changes（版本管理與重大變更）、VII. Simplicity（簡單為先） -->
+<!-- 例如：V. 可觀察性 (Observability)、VI. 版本管理與重大變更 (Versioning & Breaking Changes)、VII. 簡單為先 (Simplicity) -->
 [PRINCIPLE_5_DESCRIPTION]
 <!-- 例如：文字 I/O 保證可除錯性；必須有結構化日誌；或：採用 MAJOR.MINOR.BUILD 版本格式；或：從簡單開始，遵循 YAGNI 原則 -->
 
@@ -32,7 +32,7 @@
 <!-- 例如：額外限制、安全性需求、效能標準等。 -->
 
 [SECTION_2_CONTENT]
-<!-- 例如：技術棧要求、合規標準、部署政策等。 -->
+<!-- 例如：技術堆疊要求、合規標準、部署政策等。 -->
 
 ## [SECTION_3_NAME]
 <!-- 例如：開發流程、審查流程、品質門檻等。 -->

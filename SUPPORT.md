@@ -6,7 +6,7 @@
 
 如需協助或有關本專案使用上的問題，請：
 
-- 針對錯誤回報、功能需求，或有關 Spec-Driven Development 方法論的問題，請開啟 [GitHub issue](https://github.com/github/spec-kit/issues/new) 
+- 針對錯誤回報、功能需求，或有關 Spec-Driven Development 方法論的問題，請開啟 [GitHub issue](https://github.com/github/spec-kit/issues/new)
 - 參閱 [comprehensive guide](./spec-driven.md)，以獲得有關 Spec-Driven Development 流程的詳細文件
 - 查看 [README](./README.md)，以取得入門指引與疑難排解建議
 

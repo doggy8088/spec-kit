@@ -1,6 +1,6 @@
 ## 貢獻 Spec Kit 指南
 
-您好！我們非常高興您願意為 Spec Kit 做出貢獻。對本專案的貢獻將依照[專案的開源授權條款](LICENSE)[公開釋出](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license)。
+您好！我們非常高興您願意為 Spec Kit 做出貢獻。對本專案的貢獻將[公開釋出](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license)，並依照[專案的開源授權條款](LICENSE)。
 
 請注意，本專案遵循[貢獻者行為準則](CODE_OF_CONDUCT.md)。參與本專案即表示您同意遵守其條款。
 
@@ -16,9 +16,9 @@
 ## 提交 Pull Request 的流程
 
 >[!NOTE]
->如果您的 Pull Request 涉及重大變更，對命令列介面 (Command Line Interface, CLI) 或整個儲存庫造成實質影響（例如新增模板、參數或其他重大修改），請務必**先與專案維護者討論並取得共識**。未經事先討論與同意的大型變更 PR 將會被關閉。
+>如果您的 Pull Request 涉及重大變更，對命令列介面 (Command Line Interface, CLI) 或整個 repository 造成實質影響（例如新增模板、參數或其他重大修改），請務必**先與專案維護者討論並取得共識**。未經事先討論與同意的大型變更 PR 將會被關閉。
 
-1. Fork 並 clone 此儲存庫
+1. Fork 並 clone 此 repository
 1. 設定並安裝相依套件：`uv sync`
 1. 確認 CLI 能在您的機器上正常運作：`uv run specify --help`
 1. 建立新分支：`git checkout -b my-branch-name`
@@ -29,18 +29,18 @@
 
 以下幾點能提升您的 Pull Request 被接受的機會：
 
-- 遵循專案的程式撰寫慣例
-- 為新增功能撰寫測試
-- 若您的變更影響到使用者相關功能，請更新文件（`README.md`、`spec-driven.md`）
-- 盡量讓您的變更聚焦單一主題。若有多個彼此無依賴的變更，建議分開提交多個 Pull Request
-- 撰寫[良好的 commit 訊息](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-- 以 Spec-Driven Development 工作流程測試您的變更，確保相容性
+- 遵循專案的程式撰寫慣例。
+- 為新增功能撰寫測試。
+- 若您的變更影響到使用者相關功能，請更新文件（`README.md`、`spec-driven.md`）。
+- 盡量讓您的變更聚焦單一主題。若有多個彼此無依賴的變更，建議分開提交多個 Pull Request。
+- 撰寫[良好的 commit 訊息](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)。
+- 以 Spec-Driven Development 工作流程測試您的變更，確保相容性。
 
 ## 開發工作流程
 
 當您在開發 spec-kit 時：
 
-1. 使用 `specify` CLI 指令（`/specify`、`/plan`、`/tasks`）於您選擇的 AI 編碼代理工具中測試變更
+1. 使用 `specify` CLI 指令（`/speckit.specify`、`/speckit.plan`、`/speckit.tasks`）於您選擇的 AI 編碼代理工具中測試變更
 2. 驗證 `templates/` 目錄中的模板運作正常
 3. 測試 `scripts/` 目錄下的腳本功能
 4. 若有重大流程變更，請確保記憶檔案（`memory/constitution.md`）已更新
@@ -79,7 +79,7 @@
 
 - **明確揭露 AI 使用情形** —— 透明說明您使用 AI 的情況及程度
 - **人為理解與測試** —— 您已親自測試變更並理解其作用
-- **清楚的理由** —— 能解釋為何需要此變更，以及其如何符合 Spec Kit 的目標
+- **清楚的理由** —— 能解釋為何需要此變更，以及其如何符合 Spec Kit 的目標  
 - **具體證據** —— 提供測試案例、情境或範例以證明改進效果
 - **您的分析** —— 分享您對整體開發者體驗的看法
 

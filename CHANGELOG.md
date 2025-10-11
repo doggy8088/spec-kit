@@ -2,16 +2,37 @@
 
 <!-- markdownlint-disable MD024 -->
 
-所有 Specify CLI 的重大變更都會記錄在此檔案中。
+所有 Specify CLI 及範本的重大變更都會記錄在此檔案中。
 
 此格式基於 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 且本專案遵循 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
-## [LATEST_VERSION] - RELEASE_DATE
+## [0.0.19] - 2025-10-10
 
 ### 新增
 
-- 在 `specify init .` 指令中支援使用 `.` 作為目前目錄的簡寫，等同於 `--here` 旗標，但對使用者來說更直觀
+- 支援 CodeBuddy（感謝 [@lispking](https://github.com/lispking) 的貢獻）。
+- Specify CLI 現在可顯示來自 Git 的錯誤訊息。
+
+### 變更
+
+- 修正 `plan.md` 中憲章檔案的路徑（感謝 [@lyzno1](https://github.com/lyzno1) 指出）。
+- 修正 Gemini 產生的 TOML 檔案中的反斜線跳脫問題（感謝 [@hsin19](https://github.com/hsin19) 的貢獻）。
+- Implementation 指令現在會確保正確加入 ignore 檔案（感謝 [@sigent-amazon](https://github.com/sigent-amazon) 的貢獻）。
+
+## [0.0.18] - 2025-10-06
+
+### 新增
+
+- 在 `.` 指令中支援使用 `.` 作為目前目錄的簡寫，等同於 `--here` 旗標，但對使用者來說更直觀。
+- 使用 `/speckit.` 指令前綴，可輕鬆發現與 Spec Kit 相關的指令。
+- 重構提示詞與範本，簡化其功能與追蹤方式。不再在不需要時加入測試內容。
+- 確保每個 user story 都會建立對應的任務（簡化測試與驗證）。
+- 新增對 Visual Studio Code 提示捷徑與自動腳本執行的支援。
+
+### 變更
+
+- 所有指令檔案現在皆以 `speckit.` 為前綴（例如 `speckit.specify.md`、`speckit.plan.md`），以提升在 IDE/CLI 指令面板與檔案總管中的可發現性與區辨度。
 
 ## [0.0.17] - 2025-09-22
 
@@ -112,7 +133,7 @@
 
 ### 新增
 
-- 透過 `httpx[socks]` 相依套件，新增 SOCKS 代理支援以因應企業環境
+- 透過 `httpx[socks]` 相依性，新增 SOCKS 代理支援以因應企業環境
 
 ### 修正
 

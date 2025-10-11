@@ -50,7 +50,7 @@ SDD 將需求變更從障礙轉化為日常流程。當規格驅動實作時，�
 
 **可執行規格**：規格必須足夠精確、完整且無歧義，才能產生可運作的系統。這消除了意圖與實作之間的鴻溝。
 
-**持續精煉**：一致性驗證是持續進行的，而非一次性的檢查。AI 持續分析規格中的歧義、矛盾與缺漏。
+**持續精煉**：一致性驗證是持續進行的，而非一次性的檢查。AI 持續分析規格中的歧義、矛盾與缺漏，這是一個持續進行的過程。
 
 **研究驅動的背景資訊**：研究代理在規格流程中收集關鍵背景，調查技術選項、效能影響與組織限制。
 
@@ -74,31 +74,31 @@ SDD 將需求變更從障礙轉化為日常流程。當規格驅動實作時，�
 
 SDD 方法論透過三個強大的指令大幅自動化「規格 → 規劃 → 任務」的工作流程：
 
-### `/specify` 指令
+### `/speckit.specify` 指令
 
-此指令將簡單的功能描述（使用者提示）轉換為完整、結構化的規格，並自動管理儲存庫：
+此指令將簡單的功能描述（用戶提示）轉換為完整、結構化的規格，並自動管理儲存庫：
 
 1. **自動功能編號**：掃描現有規格，決定下一個功能編號（如 001、002、003）
 2. **分支建立**：根據你的描述產生語意化分支名稱並自動建立
 3. **模板化產生**：複製並依需求自訂功能規格模板
-4. **目錄結構**：為所有相關文件建立正確的 `specs/[branch-name]/` 結構
+4. **目錄結構**：建立正確的 `specs/[branch-name]/` 目錄結構，存放所有相關文件
 
-### `/plan` 指令
+### `/speckit.plan` 指令
 
 當功能規格已存在時，此指令會產生完整的實作計畫：
 
 1. **規格分析**：閱讀並理解功能需求、使用者故事與驗收標準
 2. **憲章遵循**：確保與專案憲章及架構原則一致
 3. **技術轉譯**：將商業需求轉換為技術架構與實作細節
-4. **詳細文件**：產生資料模型、API 合約與測試情境的支援文件
+4. **詳細文件**：產生資料模型、API 契約與測試情境的支援文件
 5. **快速驗證指南**：產生涵蓋關鍵驗證情境的快速入門指南
 
-### `/tasks` 指令
+### `/speckit.tasks` 指令
 
 計畫產生後，此指令會分析計畫及相關設計文件，產生可執行的任務清單：
 
 1. **輸入**：讀取 `plan.md`（必填），如有則讀取 `data-model.md`、`contracts/`、`research.md`
-2. **任務推導**：將合約、實體與情境轉換為具體任務
+2. **任務推導**：將契約、實體與情境轉換為具體任務
 3. **平行化**：標記獨立任務 `[P]`，並規劃安全的平行群組
 4. **輸出**：在功能目錄下寫入 `tasks.md`，供 Task agent 執行
 
@@ -121,7 +121,7 @@ Total: ~12 hours of documentation work
 
 ```bash
 # Step 1: Create the feature specification (5 minutes)
-/specify Real-time chat system with message history and user presence
+/speckit.specify Real-time chat system with message history and user presence
 
 # This automatically:
 # - Creates branch "003-chat-system"
@@ -129,10 +129,10 @@ Total: ~12 hours of documentation work
 # - Populates it with structured requirements
 
 # Step 2: Generate implementation plan (5 minutes)
-/plan WebSocket for real-time messaging, PostgreSQL for history, Redis for presence
+/speckit.plan WebSocket for real-time messaging, PostgreSQL for history, Redis for presence
 
 # Step 3: Generate executable tasks (5 minutes)
-/tasks
+/speckit.tasks
 
 # This automatically creates:
 # - specs/003-chat-system/plan.md
@@ -147,28 +147,28 @@ Total: ~12 hours of documentation work
 
 - 一份完整的功能規格說明，包含使用者故事與驗收標準
 - 一份詳細的實作計畫，說明技術選擇及其理由
-- 已可用於程式碼產生的 API 合約與資料模型
+- 已可用於程式碼產生的 API 契約與資料模型
 - 針對自動化與手動測試的全面測試情境
 - 所有文件皆已於功能分支中正確進行版本控管
 
 ### 結構化自動化的力量
 
-這些指令不僅僅節省時間——它們還強制執行一致性與完整性：
+這些指令不僅節省時間——它們還強制執行一致性與完整性：
 
 1. **不遺漏任何細節**：範本確保每個面向都被考慮，從非功能性需求到錯誤處理
 2. **決策可追溯**：每一項技術選擇都能回溯到特定需求
-3. **活文件（Living Documentation）**：規格與程式碼保持同步，因為規格會自動產生程式碼
+3. **活文件（Living Documentation）**：規格說明與程式碼保持同步，因為規格說明會自動產生程式碼
 4. **快速迭代**：需求變更與計畫重生僅需數分鐘，而非數天
 
-這些指令體現了 SDD 原則，將規格視為可執行產物，而非靜態文件。它們將規格制定流程，從一項不得不做的苦差事，轉變為開發的驅動力。
+這些指令體現了 SDD 原則，將規格說明視為可執行產物，而非靜態文件。它們將規格制定流程，從一項不得不做的苦差事，轉變為開發的驅動力。
 
 ### 範本驅動的品質：結構如何約束大型語言模型 (LLM) 以提升成果
 
-這些指令的真正威力，不僅在於自動化，更在於範本如何引導大型語言模型 (LLM) 產生更高品質的規格。這些範本就像精密的提示，能以有效方式約束 LLM 的輸出：
+這些指令的真正威力，不僅在於自動化，更在於範本如何引導大型語言模型 (LLM) 產生更高品質的規格說明。這些範本就像精密的提示，能以有效方式約束 LLM 的輸出：
 
 #### 1. **防止過早涉及實作細節**
 
-功能規格範本會明確指示：
+功能規格說明範本會明確指示：
 
 ```text
 - ✅ Focus on WHAT users need and WHY
@@ -187,11 +187,11 @@ When creating this spec from a user prompt:
 2. **Don't guess**: If the prompt doesn't specify something, mark it
 ```
 
-這可以防止大型語言模型 (LLM) 常見的行為——做出看似合理但可能不正確的假設。LLM 不會猜測「登入系統」是採用 email/password 驗證，而是必須標記為 `[NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]`。
+這可以防止大型語言模型 (LLM) 常見的行為——做出看似合理但可能不正確的假設。與其猜測「登入系統」是採用 email/password 驗證，LLM 必須將其標記為 `[NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]`。
 
 #### 3. **透過檢查清單進行結構化思考**
 
-這些範本包含完整的檢查清單，作為規格的「單元測試」：
+這些範本包含完整的檢查清單，作為規格說明的「單元測試」：
 
 ```markdown
 ### Requirement Completeness
@@ -202,9 +202,9 @@ When creating this spec from a user prompt:
 
 這些檢查清單強制大型語言模型 (LLM) 系統性地自我檢查其輸出，能夠捕捉到那些可能會被忽略的疏漏。這就像是為 LLM 提供一個品質保證的框架。
 
-#### 4. **透過階段閘門確保合憲性**
+#### 4. **透過閘門確保專案憲章遵循**
 
-實作計畫範本會透過階段閘門（phase gates）來強制執行架構原則：
+實作計畫範本會透過階段閘門來強制執行架構原則：
 
 ```markdown
 ### Phase -1: Pre-Implementation Gates
@@ -216,7 +216,7 @@ When creating this spec from a user prompt:
 - [ ] Single model representation?
 ```
 
-這些 gate（閘門）可防止過度設計，因為它們要求大型語言模型 (LLM) 必須明確說明任何複雜性的理由。如果某個 gate 未通過，LLM 必須在「複雜性追蹤」區段中記錄原因，為架構決策創造問責機制。
+這些 gate（閘門）可防止過度設計，因為它們要求大型語言模型 (LLM) 必須明確說明任何複雜性的理由。如果某個 gate 未通過，LLM 必須在「複雜度追蹤」區段中記錄原因，為架構決策建立問責機制。
 
 #### 5. **階層式細節管理**
 
@@ -232,7 +232,7 @@ must be placed in the appropriate `implementation-details/` file
 
 #### 6. **測試優先思維（Test-First Thinking）**
 
-實作範本強制執行測試優先（test-first）開發：
+實作計畫範本會強制執行測試優先（Test-First）開發：
 
 ```text
 ### File Creation Order
@@ -241,11 +241,11 @@ must be placed in the appropriate `implementation-details/` file
 3. Create source files to make tests pass
 ```
 
-這種排序約束確保大型語言模型 (LLM) 在實作之前，會先考慮可測試性與契約，從而產生更健全且可驗證的規格。
+這種排序約束確保大型語言模型 (LLM) 在實作之前，會先考慮可測試性與契約，從而產生更健全且可驗證的規格說明。
 
 #### 7. **防止推測性功能**
 
-範本會明確地避免推測性設計：
+範本會明確地避免推測性功能：
 
 ```text
 - [ ] No speculative or "might need" features
@@ -256,7 +256,7 @@ must be placed in the appropriate `implementation-details/` file
 
 ### 複合效應
 
-這些約束條件相互配合，產生出具備以下特性的規格：
+這些約束條件相互配合，產生出具備以下特性的規格說明：
 
 - **完整性**：檢查清單確保沒有遺漏任何事項
 - **無歧義性**：強制澄清標記突顯所有不確定之處
@@ -264,11 +264,11 @@ must be placed in the appropriate `implementation-details/` file
 - **可維護性**：適當的抽象層級與資訊層次結構
 - **可實作性**：明確的階段與具體的交付成果
 
-這些範本將 LLM 從一位創意寫作者轉變為一名嚴謹的規格工程師，將其能力導向產出持續高品質、可執行、真正推動開發的規格文件。
+這些範本將 LLM 從一位創意寫作者轉變為一名嚴謹的規格工程師，將其能力導向產出持續高品質、可執行、真正推動開發的規格說明。
 
 ## 憲法基礎：強化架構紀律
 
-SDD 的核心是一部憲法——一套不可變更的原則，規範規格如何轉化為程式碼。這部憲法（`memory/constitution.md`）就像系統的架構 DNA，確保每一次產生的實作都能維持一致性、簡潔性與品質。
+SDD 的核心是一部憲法——一套不可變更的原則，規範規格說明如何轉化為程式碼。這部憲法（`memory/constitution.md`）就像系統的架構 DNA，確保每一次產生的實作都能維持一致性、簡潔性與品質。
 
 ### 開發的九大條款
 
@@ -284,9 +284,9 @@ No feature shall be implemented directly within application code without
 first being abstracted into a reusable library component.
 ```
 
-此原則確保規格能夠產生模組化、可重複使用的程式碼，而非單一龐大的應用程式。當大型語言模型 (LLM) 生成實作計劃時，必須將功能結構化為具有明確邊界且相依性最小的函式庫。
+此原則確保規格能夠產生模組化、可重複使用的程式碼，而非單一龐大的應用程式。當大型語言模型 (LLM) 生成實作計劃時，必須將功能結構化為具有明確邊界且相依性 (dependency) 最小的函式庫。
 
-#### 第二條：CLI 介面強制規定
+#### 第二條：命令列介面 (CLI Interface) 強制規定
 
 每個函式庫都必須透過命令列介面 (Command Line Interface) 對外公開其功能：
 
@@ -315,7 +315,7 @@ No implementation code shall be written before:
 
 #### 第七與第八條：簡單性與反抽象
 
-這兩條原則旨在對抗過度工程化：
+這兩條原則旨在防止過度工程化：
 
 ```text
 Section 7.3: Minimal Project Structure
@@ -328,7 +328,7 @@ Section 8.1: Framework Trust
 
 當大型語言模型 (LLM) 可能自然地產生過於繁複的抽象時，這些文章則強制要求其為每一層複雜性提供正當理由。實作計畫範本中的「Phase -1 Gates」直接落實了這些原則。
 
-#### 第九條：以整合為優先的測試（Integration-First Testing）
+#### 第九條：以整合為優先的測試 (Integration-First Testing)
 
 優先考慮真實世界的測試，而非孤立的單元測試：
 
@@ -341,9 +341,9 @@ Tests MUST use realistic environments:
 
 這可確保產生的程式碼在實務上可行，而不僅僅是在理論上。
 
-### 透過範本進行憲法式強制執行
+### 透過範本進行憲章式強制執行
 
-實作計畫範本透過具體的檢查點，將這些條款落實於實際操作中：
+實作計畫範本透過具體的檢查點，將這些條款具體化並落實於實際操作中：
 
 ```markdown
 ### Phase -1: Pre-Implementation Gates
@@ -364,14 +364,14 @@ Tests MUST use realistic environments:
 
 ### 不可變原則的力量
 
-憲法的力量在於其不可變性。雖然實作細節可以演進，但核心原則始終保持不變。這帶來以下優勢：
+專案憲章的力量在於其不可變性。雖然實作細節可以演進，但核心原則始終保持不變。這帶來以下優勢：
 
 1. **跨時間的一致性**：今天產生的程式碼與明年產生的程式碼遵循相同的原則
 2. **跨大型語言模型 (LLM) 的一致性**：不同的 AI 模型產生的程式碼在架構上能夠相容
 3. **架構完整性**：每個功能都能強化而非削弱系統設計
-4. **品質保證**：先測試、優先使用函式庫，以及簡單性原則確保程式碼易於維護
+4. **品質保證**：測試優先、以函式庫為先，以及簡單性原則確保程式碼易於維護
 
-### 憲法的演進
+### 憲章的演進
 
 雖然原則不可變，但其應用方式可以隨著時間演進：
 
@@ -394,10 +394,10 @@ Modifications to this constitution require:
 - **整合優於孤立**：在真實環境中測試，而非人工環境
 - **模組化優於巨石式架構**：每個功能都是具備明確邊界的函式庫
 
-透過將這些原則嵌入規格與規劃流程，SDD（規格驅動開發）確保產生的程式碼不僅僅是可運作的——更是易於維護、可測試且具備良好架構。這份憲章讓 AI 從單純的程式碼產生器，轉變為尊重並強化系統設計原則的架構夥伴。
+透過將這些原則嵌入規格與規劃流程，SDD（Spec-Driven Development 方法論）確保產生的程式碼不僅僅是可運作的——更是易於維護、可測試且具備良好架構。這份憲章讓 AI 從單純的程式碼產生器，轉變為尊重並強化系統設計原則的架構夥伴。
 
 ## 轉變
 
-這並不是要取代開發者或自動化創造力，而是透過自動化機械式的轉譯來強化人類能力。這是要建立一個緊密的回饋循環，讓規格、研究與程式碼共同演進，每一次迭代都帶來更深的理解，以及更好地對齊意圖與實作。
+這並不是要取代開發者或自動化創造力。這是要透過自動化機械式的轉譯來強化人類能力。它旨在建立一個緊密的回饋循環，讓規格、研究與程式碼共同演進，每一次迭代都帶來更深的理解，以及更好地對齊意圖與實作。
 
 軟體開發需要更好的工具來維持意圖與實作的一致性。SDD 提供了一套方法論，透過可執行的規格來產生程式碼，而不僅僅是指引程式碼的撰寫，從而實現這種一致性。
