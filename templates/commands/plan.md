@@ -59,7 +59,7 @@ $ARGUMENTS
 
 ### 階段 1：設計與契約
 
-**前置條件：** `research.md` 完成
+**前置條件**： `research.md` 完成
 
 1. **從功能規格說明中擷取 entity** → `data-model.md`：
    - entity 名稱、欄位、關聯

@@ -106,7 +106,7 @@ SDD 方法論透過三個強大的指令大幅自動化「規格 → 規劃 → 
 
 以下說明這些指令如何轉化傳統開發流程：
 
-**傳統方式：**
+**傳統方式**：
 
 ```text
 1. Write a PRD in a document (2-3 hours)
@@ -117,7 +117,7 @@ SDD 方法論透過三個強大的指令大幅自動化「規格 → 規劃 → 
 Total: ~12 hours of documentation work
 ```
 
-**採用 Commands 方法的 SDD：**
+**採用 Commands 方法的 SDD**：
 
 ```bash
 # Step 1: Create the feature specification (5 minutes)

@@ -222,7 +222,7 @@ $ARGUMENTS
 
 ## 檢查清單類型範例與範本項目
 
-**UX 需求品質：** `ux.md`
+**UX 需求品質**： `ux.md`
 
 範例項目（測試需求，**非**實作）：
 - "Are visual hierarchy requirements defined with measurable criteria? [Clarity, Spec §FR-1]"
@@ -232,7 +232,7 @@ $ARGUMENTS
 - "Is fallback behavior defined when images fail to load? [Edge Case, Gap]"
 - "Can 'prominent display' be objectively measured? [Measurability, Spec §FR-4]"
 
-**API 需求品質：** `api.md`
+**API 需求品質**： `api.md`
 
 範例項目：
 - "Are error response formats specified for all failure scenarios? [Completeness]"
@@ -241,7 +241,7 @@ $ARGUMENTS
 - "Are retry/timeout requirements defined for external dependencies? [Coverage, Gap]"
 - "Is versioning strategy documented in requirements? [Gap]"
 
-**效能需求品質：** `performance.md`
+**效能需求品質**： `performance.md`
 
 範例項目：
 - "Are performance requirements quantified with specific metrics? [Clarity]"
@@ -250,7 +250,7 @@ $ARGUMENTS
 - "Can performance requirements be objectively measured? [Measurability]"
 - "Are degradation requirements defined for high-load scenarios? [Edge Case, Gap]"
 
-**安全性需求品質：** `security.md`
+**安全性需求品質**： `security.md`
 
 ```markdown
 - [ ] CHK001 - Verify landing page displays 3 episode cards [Spec §FR-001]
@@ -259,7 +259,7 @@ $ARGUMENTS
 - [ ] CHK004 - Check that related episodes section shows 3-5 items [Spec §FR-005]
 ```
 
-**✅ 正確 - 這些測試需求品質良好：**
+**✅ 正確 - 這些測試需求品質良好**：
 
 ```markdown
 - [ ] CHK001 - Are the number and layout of featured episodes explicitly specified? [Completeness, Spec §FR-001]
@@ -270,7 +270,7 @@ $ARGUMENTS
 - [ ] CHK006 - Can "visual hierarchy" requirements be objectively measured? [Measurability, Spec §FR-001]
 ```
 
-**主要差異：**
+**主要差異**：
 - 錯誤：測試系統是否正確運作
 - 正確：測試需求是否正確撰寫
 - 錯誤：驗證行為

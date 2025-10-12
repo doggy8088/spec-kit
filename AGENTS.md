@@ -143,7 +143,7 @@ WINDSURF_FILE="$REPO_ROOT/.windsurf/rules/specify-rules.md"
 case "$AGENT_TYPE" in
   # ... existing cases ...
   windsurf) update_agent_file "$WINDSURF_FILE" "Windsurf" ;;
-  "") 
+  "")
     # ... existing checks ...
     [ -f "$WINDSURF_FILE" ] && update_agent_file "$WINDSURF_FILE" "Windsurf";
     # Update default creation condition
@@ -199,12 +199,12 @@ elif selected_ai == "windsurf":
 
 **關鍵**：新增 agent 至 AGENT_CONFIG 時，請務必使用**實際可執行檔名稱**作為字典的 key，而不是縮寫或方便記憶的版本。
 
-**為什麼這很重要：**
+**為什麼這很重要**：
 - `check_tool()` 函式會用 `shutil.which(tool)` 在系統 PATH 中尋找可執行檔
 - 如果 key 與實際 CLI 工具名稱不符，整個程式碼庫就需要特別的對應映射
 - 這會造成不必要的複雜性與維護負擔
 
-**範例 - Cursor 的教訓：**
+**範例 - Cursor 的教訓**：
 
 ❌ **錯誤做法**（需要特別對應映射）：
 ```python
@@ -233,7 +233,7 @@ AGENT_CONFIG = {
 # No special cases needed - just use agent_key directly!
 ```
 
-**此方法的優點：**
+**此方法的優點**：
 - 消除分散在程式碼庫中的特殊情境邏輯
 - 讓程式碼更易於維護與理解
 - 新增代理時可降低產生錯誤的機率

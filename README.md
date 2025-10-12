@@ -77,7 +77,7 @@ uv tool install specify-cli --force --from git+https://github.com/github/spec-ki
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
 ```
 
-**持久安裝的好處：**
+**持久安裝的好處**：
 
 - 工具會持續安裝並可在 PATH 中使用
 - 無需建立 shell 別名
@@ -201,7 +201,7 @@ specify init --here --ai copilot
 
 # Force merge into current (non-empty) directory without confirmation
 specify init . --force --ai copilot
-# or 
+# or
 specify init --here --force --ai copilot
 
 # Skip git initialization
@@ -364,7 +364,7 @@ specify init --here --force --ai claude
 specify init <project_name> --ai claude --ignore-agent-tools
 ```
 
-### **步驟 1：** 建立專案原則
+### **步驟 1**： 建立專案原則
 
 進入專案資料夾並啟動您的 AI agent。在本範例中，我們使用的是 `claude`。
 
@@ -380,7 +380,7 @@ specify init <project_name> --ai claude --ignore-agent-tools
 
 此步驟會建立或更新 `.specify/memory/constitution.md` 檔案，內容為您專案的基礎指導原則，AI agent 會在規格說明、規劃與實作階段參考這份文件。
 
-### **步驟 2：**建立專案規格
+### **步驟 2**：建立專案規格
 
 在確立專案原則後，您現在可以建立功能規格。請使用 `/speckit.specify` 指令，並提供您想開發專案的具體需求。
 
@@ -435,7 +435,7 @@ delete any comments that you made, but you can't delete comments anybody else ma
         └── tasks-template.md
 ```
 
-### **步驟 3：** 釐清功能規格（規劃前必須執行）
+### **步驟 3**： 釐清功能規格（規劃前必須執行）
 
 在建立好基準規格（baseline specification）後，你可以針對第一次嘗試未能正確捕捉的需求進行釐清。
 
@@ -463,7 +463,7 @@ Read the review and acceptance checklist, and check off each item in the checkli
 
 與 Claude Code 的互動應視為釐清與詢問規格問題的機會——**不要將其第一次回應視為最終結果**。
 
-### **步驟 4：** 產生計畫
+### **步驟 4**： 產生計畫
 
 此時，您可以明確指定技術堆疊及其他技術需求。您可以使用專案範本內建的 `/speckit.plan` 指令，並搭配如下提示語：
 
@@ -530,7 +530,7 @@ That's way too untargeted research. The research needs to help you solve a speci
 >[!NOTE]
 >Claude Code 有時可能會過於積極，新增你未要求的元件。請要求它說明這些變更的理由及來源。
 
-### **步驟 5：**請 Claude Code 驗證計畫
+### **步驟 5**：請 Claude Code 驗證計畫
 
 當你完成計畫後，應該讓 Claude Code 依照計畫檢查一遍，以確保沒有遺漏任何部分。你可以使用如下提示詞：
 
