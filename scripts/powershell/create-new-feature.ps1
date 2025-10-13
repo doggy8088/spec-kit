@@ -72,8 +72,16 @@ if (Test-Path $specsDir) {
 $next = $highest + 1
 $featureNum = ('{0:000}' -f $next)
 
-$branchName = $featureDesc.ToLower() -replace '[^a-z0-9]', '-' -replace '-{2,}', '-' -replace '^-', '' -replace '-$', ''
-$words = ($branchName -split '-') | Where-Object { $_ } | Select-Object -First 3
+# Preserve Chinese (and other Unicode letters) while normalizing separators
+$branchName = $featureDesc.Trim()
+# Replace any run of characters that are not letters or numbers with a single hyphen
+$branchName = $branchName -replace '[^\p{L}\p{N}]+' , '-'
+# Trim leading/trailing hyphens
+$branchName = $branchName -replace '^-|-$',''
+# Lowercase ASCII letters (won't affect Chinese characters)
+$branchName = $branchName.ToLowerInvariant()
+# Keep up to first 3 hyphen-separated segments
+$words = ($branchName -split '-') | Where-Object { $_ -ne '' } | Select-Object -First 3
 $branchName = "$featureNum-$([string]::Join('-', $words))"
 
 if ($hasGit) {
@@ -91,17 +99,17 @@ New-Item -ItemType Directory -Path $featureDir -Force | Out-Null
 
 $template = Join-Path $repoRoot '.specify/templates/spec-template.md'
 $specFile = Join-Path $featureDir 'spec.md'
-if (Test-Path $template) { 
-    Copy-Item $template $specFile -Force 
-} else { 
-    New-Item -ItemType File -Path $specFile | Out-Null 
+if (Test-Path $template) {
+    Copy-Item $template $specFile -Force
+} else {
+    New-Item -ItemType File -Path $specFile | Out-Null
 }
 
 # Set the SPECIFY_FEATURE environment variable for the current session
 $env:SPECIFY_FEATURE = $branchName
 
 if ($Json) {
-    $obj = [PSCustomObject]@{ 
+    $obj = [PSCustomObject]@{
         BRANCH_NAME = $branchName
         SPEC_FILE = $specFile
         FEATURE_NUM = $featureNum

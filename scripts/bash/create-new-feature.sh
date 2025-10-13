@@ -67,7 +67,15 @@ fi
 NEXT=$((HIGHEST + 1))
 FEATURE_NUM=$(printf "%03d" "$NEXT")
 
-BRANCH_NAME=$(echo "$FEATURE_DESCRIPTION" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//')
+if command -v perl >/dev/null 2>&1; then
+    BRANCH_NAME=$(printf '%s' "$FEATURE_DESCRIPTION" | \
+        perl -Mopen=:std,:utf8 -pe '$_ = lc($_); s/[^0-9a-z\p{Han}]+/-/g; s/-+/-/g; s/^-|-$//g;')
+else
+    # Fallback to the original ASCII-only sanitization if perl is not available.
+    BRANCH_NAME=$(echo "$FEATURE_DESCRIPTION" | tr '[:upper:]' '[:lower:]' \
+        | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//' | sed 's/-$//')
+fi
+
 WORDS=$(echo "$BRANCH_NAME" | tr '-' '\n' | grep -v '^$' | head -3 | tr '\n' '-' | sed 's/-$//')
 BRANCH_NAME="${FEATURE_NUM}-${WORDS}"
 
