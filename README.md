@@ -5,48 +5,47 @@
 </div>
 
 <p align="center">
-    <strong>透過 Spec-Driven Development 方法論，協助組織專注於產品情境，而非重複撰寫無差異化的程式碼。</strong>
+    <strong>一個開源工具包，讓你專注於產品情境與可預測的成果，而不必每個部分都從零開始「憑感覺寫程式」。</strong>
 </p>
 
 <p align="center">
-    <a href="https://github.com/github/spec-kit/actions/workflows/release.yml""><img src="https://github.com/github/spec-kit/actions/workflows/release.yml/badge.svg"" alt="Release"/></a>
-    <a href="https://github.com/github/spec-kit/stargazers""><img src="https://img.shields.io/github/stars/github/spec-kit?style=social"" alt="GitHub stars"/></a>
-    <a href="https://github.com/github/spec-kit/blob/main/LICENSE""><img src="https://img.shields.io/github/license/github/spec-kit"" alt="License"/></a>
-    <a href="https://github.github.io/spec-kit/""><img src="https://img.shields.io/badge/docs-GitHub_Pages-blue"" alt="Documentation"/></a>
+    <a href="https://github.com/github/spec-kit/actions/workflows/release.yml"><img src="https://github.com/github/spec-kit/actions/workflows/release.yml/badge.svg" alt="Release"/></a>
+    <a href="https://github.com/github/spec-kit/stargazers"><img src="https://img.shields.io/github/stars/github/spec-kit?style=social" alt="GitHub stars"/></a>
+    <a href="https://github.com/github/spec-kit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/github/spec-kit" alt="License"/></a>
+    <a href="https://github.github.io/spec-kit/"><img src="https://img.shields.io/badge/docs-GitHub_Pages-blue" alt="Documentation"/></a>
 </p>
 
 ---
 
 ## 目錄
 
-- [🤔 什麼是 Spec-Driven Development？](#-what-is-spec-driven-development)
-- [⚡ 快速開始](#-get-started)
-- [📽️ 影片總覽](#-video-overview)
-- [🤖 支援的 AI agent](#-supported-ai-agents)
-- [🔧 Specify CLI 參考](#-specify-cli-reference)
-- [📚 核心理念](#-core-philosophy)
-- [🌟 開發階段](#-development-phases)
-- [🎯 實驗目標](#-experimental-goals)
-- [🔧 先決條件](#-prerequisites)
-- [📖 進一步了解](#-learn-more)
-- [📋 詳細流程](#-detailed-process)
-- [🔍 疑難排解](#-troubleshooting)
-- [👥 維護者](#-maintainers)
-- [💬 支援](#-support)
-- [🙏 致謝](#-acknowledgements)
-- [📄 授權條款](#-license)
+- [🤔 什麼是 Spec-Driven Development 方法論？](#-什麼是-spec-driven-development-方法論)
+- [⚡ 快速開始](#-快速開始)
+- [📽️ 影片總覽](#️-影片總覽)
+- [🤖 支援的 AI agent](#-支援的-ai-agent)
+- [🔧 Specify CLI 參考文件](#-specify-cli-參考說明)
+- [📚 核心理念](#-核心理念)
+- [🌟 開發階段](#-開發階段)
+- [🎯 實驗目標](#-實驗目標)
+- [🔧 先決條件](#-先決條件)
+- [📖 深入了解](#-進一步了解)
+- [📋 詳細流程](#-詳細流程)
+- [🔍 疑難排解](#-疑難排解)
+- [👥 維護者](#-專案維護者)
+- [💬 支援](#-支援)
+- [🙏 致謝](#-致謝)
+- [📄 授權條款](#-授權)
+## 🤔 什麼是 Spec-Driven Development 方法論？
 
-## 🤔 什麼是 Spec-Driven Development？
-
-Spec-Driven Development 方法論**顛覆了**傳統軟體開發的流程。數十年來，程式碼一直是主角——規格僅僅是我們搭建並在「真正開始寫程式」後就丟棄的鷹架。Spec-Driven Development 則不同：**規格本身可以執行**，不只是作為參考指引，而是能直接產生可運作的實作。
+Spec-Driven Development **顛覆了傳統軟體開發流程**。數十年來，程式碼一直是主角——而規格說明只是搭建完就丟棄的鷹架，一旦開始「真正的程式設計工作」就被拋諸腦後。Spec-Driven Development 方法論改變了這一點：**規格說明變成可執行的內容**，不再只是指引，而是能直接產生可運作的實作。
 
 ## ⚡ 快速開始
 
-### 1. 安裝 Specify
+### 1. 安裝 Specify CLI
 
 請選擇你偏好的安裝方式：
 
-#### 方式一：持久安裝（推薦）
+#### 選項 1：持久安裝（推薦）
 
 只需安裝一次，隨處可用：
 
@@ -61,9 +60,7 @@ specify init <PROJECT_NAME>
 specify check
 ```
 
-#### 升級方式
-
-若要升級，請執行下列指令：
+若要升級，請執行：
 
 ```bash
 uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git
@@ -71,30 +68,30 @@ uv tool install specify-cli --force --from git+https://github.com/github/spec-ki
 
 #### 選項 2：一次性使用 (One-time Usage)
 
-直接執行，無需安裝：
+可直接執行，無需安裝：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
 ```
 
-**持久安裝的好處**：
+**持久安裝的好處：**
 
-- 工具會持續安裝並可在 PATH 中使用
+- 該工具會持續安裝並可在 PATH 中使用
 - 無需建立 shell 別名
-- 使用 `uv tool list`、`uv tool upgrade`、`uv tool uninstall` 可更好地管理工具
+- 透過 `uv tool list`、`uv tool upgrade`、`uv tool uninstall` 進行更好的工具管理
 - 讓 shell 設定更乾淨
 
 ### 2. 建立專案原則
 
-使用 **`/speckit.constitution`** 指令來建立你的專案治理原則與開發指南，這將指引後續的所有開發工作。
+使用 **`/speckit.constitution`** 指令來建立您的專案憲章與開發指南，這將引導後續所有的開發工作。
 
 ```bash
 /speckit.constitution Create principles focused on code quality, testing standards, user experience consistency, and performance requirements
 ```
 
-### 3. 建立規格說明
+### 3. 建立規格
 
-使用 **`/speckit.specify`** 指令來描述您想要建構的內容。請著重於**做什麼（what）**以及**為什麼（why）**，而非技術堆疊。
+使用 **`/speckit.specify`** 指令來描述你想要建構的內容。請著重於**做什麼**以及**為什麼**，而非技術堆疊。
 
 ```bash
 /speckit.specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
@@ -102,7 +99,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 
 ### 4. 建立技術實作計畫
 
-使用 **`/speckit.plan`** 指令來說明你的技術堆疊與架構選擇。
+使用 **`/speckit.plan`** 指令，提供你的技術堆疊與架構選擇。
 
 ```bash
 /speckit.plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
@@ -110,7 +107,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 
 ### 5. 拆解為任務
 
-使用 **`/speckit.tasks`** 根據你的實作計畫建立可執行的任務清單。
+使用 **`/speckit.tasks`** 根據你的實作計畫，建立可執行的任務清單。
 
 ```bash
 /speckit.tasks
@@ -118,13 +115,13 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 
 ### 6. 執行實作
 
-使用 **`/speckit.implement`** 來執行所有任務，並依照計畫建構你的功能。
+使用 **`/speckit.implement`** 來執行所有任務，並依照計劃建置你的功能。
 
 ```bash
 /speckit.implement
 ```
 
-如需詳細的逐步操作說明，請參閱我們的 [comprehensive guide](./spec-driven.md)。
+如需詳細的逐步說明，請參閱我們的 [comprehensive guide](./spec-driven.md)。
 
 ## 📽️ 影片總覽
 
@@ -132,7 +129,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 
 [![Spec Kit video header](/media/spec-kit-video-header.jpg)](https://www.youtube.com/watch?v=a9eR1xsfvHg&pp=0gcJCckJAYcqIYzv)
 
-## 🤖 支援的 AI agent
+## 🤖 支援的 AI Agent
 
 | Agent                                                     | 支援狀態 | 備註                                             |
 |-----------------------------------------------------------|---------|---------------------------------------------------|
@@ -145,35 +142,35 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 | [Windsurf](https://windsurf.com/)                         | ✅ |                                                   |
 | [Kilo Code](https://github.com/Kilo-Org/kilocode)         | ✅ |                                                   |
 | [Auggie CLI](https://docs.augmentcode.com/cli/overview)   | ✅ |                                                   |
-| [CodeBuddy](https://www.codebuddy.ai/)                    | ✅ |                                                   |
+| [CodeBuddy CLI](https://www.codebuddy.ai/cli)             | ✅ |                                                   |
 | [Roo Code](https://roocode.com/)                          | ✅ |                                                   |
 | [Codex CLI](https://github.com/openai/codex)              | ✅ |                                                   |
 | [Amazon Q Developer CLI](https://aws.amazon.com/developer/learning/q-developer-cli/) | ⚠️ | Amazon Q Developer CLI [does not support](https://github.com/aws/amazon-q-developer-cli/issues/3064) slash 指令的自訂參數。 |
 
-## 🔧 Specify CLI 參考
+## 🔧 Specify CLI 參考說明
 
-`specify` 指令支援下列選項：
+`specify` 指令支援以下選項：
 
 ### 指令
 
 | 指令     | 說明                                                    |
 |-------------|----------------------------------------------------------------|
-| `init`      | 從最新範本初始化新的 Specify 專案      |
+| `init`      | 以最新範本初始化新的 Specify 專案      |
 | `check`     | 檢查已安裝的工具（`git`、`claude`、`gemini`、`code`/`code-insiders`、`cursor-agent`、`windsurf`、`qwen`、`opencode`、`codex`） |
 
 ### `specify init` 參數與選項
 
-| 參數/選項        | 類型     | 說明                                                                  |
+| 參數／選項        | 類型     | 說明                                                                  |
 |------------------------|----------|------------------------------------------------------------------------------|
-| `<project-name>`       | 參數 | 新專案目錄名稱（若使用 `--here` 可選填，或用 `.` 於目前目錄） |
-| `--ai`                 | 選項   | 指定要使用的 AI assistant：`claude`、`gemini`、`copilot`、`cursor`、`qwen`、`opencode`、`codex`、`windsurf`、`kilocode`、`auggie`、`roo`、`codebuddy` 或 `q` |
+| `<project-name>`       | 參數 | 新專案目錄名稱（若使用 `--here` 可選填，或使用 `.` 於目前目錄建立） |
+| `--ai`                 | 選項   | 指定要使用的 AI assistant：`claude`、`gemini`、`copilot`、`cursor-agent`、`qwen`、`opencode`、`codex`、`windsurf`、`kilocode`、`auggie`、`roo`、`codebuddy` 或 `q` |
 | `--script`             | 選項   | 指定腳本類型：`sh`（bash/zsh）或 `ps`（PowerShell）                 |
-| `--ignore-agent-tools` | 旗標     | 跳過 AI agent 工具檢查（如 Claude Code）                             |
-| `--no-git`             | 旗標     | 跳過 git 儲存庫初始化                                          |
-| `--here`               | 旗標     | 於目前目錄初始化專案（不建立新目錄）   |
-| `--force`              | 旗標     | 強制合併/覆蓋於目前目錄初始化時（跳過確認） |
+| `--ignore-agent-tools` | 旗標     | 跳過 AI agent 工具（如 Claude Code）的檢查                             |
+| `--no-git`             | 旗標     | 跳過 git repository 初始化                                          |
+| `--here`               | 旗標     | 將專案初始化於目前目錄，而非建立新目錄   |
+| `--force`              | 旗標     | 在目前目錄初始化時強制合併／覆寫（跳過確認） |
 | `--skip-tls`           | 旗標     | 跳過 SSL/TLS 驗證（不建議）                                 |
-| `--debug`              | 旗標     | 啟用詳細除錯輸出以協助問題排查                            |
+| `--debug`              | 旗標     | 啟用詳細除錯輸出以便疑難排解                            |
 | `--github-token`       | 選項   | 用於 API 請求的 GitHub token（或設定 GH_TOKEN/GITHUB_TOKEN 環境變數）  |
 
 ### 範例
@@ -201,7 +198,7 @@ specify init --here --ai copilot
 
 # Force merge into current (non-empty) directory without confirmation
 specify init . --force --ai copilot
-# or
+# or 
 specify init --here --force --ai copilot
 
 # Skip git initialization
@@ -219,7 +216,7 @@ specify check
 
 ### 可用的 Slash 指令
 
-執行 `specify init` 後，你的 AI 編碼代理工具將能使用以下 Slash 指令，進行結構化開發：
+執行 `specify init` 後，你的 AI 程式設計代理將能使用以下 Slash 指令，進行結構化開發：
 
 #### 核心指令
 
@@ -229,9 +226,9 @@ Spec-Driven Development 方法論工作流程的基本指令：
 |-----------------------|----------------------------------------------------------------|
 | `/speckit.constitution`  | 建立或更新專案憲章與開發指南 |
 | `/speckit.specify`       | 定義你想要建構的內容（需求與使用者故事）        |
-| `/speckit.plan`          | 以選定的技術堆疊建立技術實作計劃     |
+| `/speckit.plan`          | 以你選擇的技術堆疊建立技術實作計畫     |
 | `/speckit.tasks`         | 產生可執行的實作任務清單                     |
-| `/speckit.implement`     | 執行所有任務，依照計劃建構功能         |
+| `/speckit.implement`     | 執行所有任務，依照計畫建構功能         |
 
 #### 選用指令
 
@@ -239,90 +236,88 @@ Spec-Driven Development 方法論工作流程的基本指令：
 
 | 指令              | 說明                                                           |
 |-------------------|----------------------------------------------------------------|
-| `/speckit.clarify`   | 釐清規格中未明確的區域（建議於 `/speckit.plan` 前執行；原為 `/quizme`） |
-| `/speckit.analyze`   | 進行跨產出物一致性與覆蓋率分析（於 `/speckit.tasks` 之後、`/speckit.implement` 之前執行） |
-| `/speckit.checklist` | 產生自訂品質檢查清單，驗證需求的完整性、明確性與一致性（如同「英文的單元測試」） |
+| `/speckit.clarify`   | 釐清規格中未明確的區塊（建議於 `/speckit.plan` 前執行；前身為 `/quizme`） |
+| `/speckit.analyze`   | 跨產物一致性與覆蓋率分析（於 `/speckit.tasks` 後、`/speckit.implement` 前執行） |
+| `/speckit.checklist` | 產生自訂的品質檢查清單，驗證需求的完整性、清晰度與一致性（類似「英文的單元測試」） |
 
-### 環境變數
+### 環境變數 (environment variables)
 
 | 變數         | 說明                                                                                    |
-|--------------|-----------------------------------------------------------------------------------------|
-| `SPECIFY_FEATURE` | 覆寫非 Git 儲存庫的功能偵測。設為功能目錄名稱（例如 `001-photo-albums`），可在未使用 Git 分支時針對特定功能作業。<br/>**必須在你操作的代理工具上下文中，於使用 `/speckit.plan` 或後續指令前設定。 |
+|--------------|----------------------------------------------------------------------------------------|
+| `SPECIFY_FEATURE` | 覆寫非 Git repository 的功能偵測。設定為功能目錄名稱（例如 `001-photo-albums`），即可在未使用 Git 分支時針對特定功能作業。<br/>**必須在你所操作的代理上下文中，於使用 `/speckit.plan` 或後續指令前先設定。 |
 
 ## 📚 核心理念
 
-Spec-Driven Development 方法論強調：
+Spec-Driven Development 方法論是一套結構化流程，強調：
 
-- **意圖導向開發**：先定義「做什麼」（what），再決定「怎麼做」（how）
-- **豐富的規格撰寫**：結合防呆機制與組織原則
-- **多步驟精煉**：避免單次提示直接產生程式碼
-- **高度依賴**先進 AI 模型對規格的解讀能力
+- **以意圖為導向的開發**，先以規格說明「做什麼」再決定「怎麼做」
+- **豐富的規格說明**，結合防呆機制與組織原則
+- **多步驟反覆精煉**，而非一次性從提示直接產生程式碼
+- **高度依賴先進 AI 模型能力**，用於解讀規格說明
 
 ## 🌟 開發階段
 
 | 階段 | 重點 | 主要活動 |
 |------|------|----------|
-| **0-to-1 開發**（Greenfield） | 從零開始產生 | <ul><li>從高階需求開始</li><li>產生規格</li><li>規劃實作步驟</li><li>建構可上線的應用程式</li></ul> |
-| **創意探索** | 平行實作 | <ul><li>探索多元解法</li><li>支援多種技術堆疊與架構</li><li>實驗不同 UX 模式</li></ul> |
-| **漸進式強化**（Brownfield） | 舊系統現代化 | <ul><li>逐步新增功能</li><li>現代化既有系統</li><li>調整流程</li></ul> |
+| **0-to-1 開發**（Greenfield） | 從零開始產生 | <ul><li>從高層次需求開始</li><li>產生規格說明</li><li>規劃實作步驟</li><li>建構可上線的應用程式</li></ul> |
+| **創意探索** | 平行實作 | <ul><li>探索多元解決方案</li><li>支援多種技術堆疊與架構</li><li>嘗試不同 UX 模式</li></ul> |
+| **反覆增強**（Brownfield） | Brownfield 現代化 | <ul><li>逐步新增功能</li><li>現代化舊有系統</li><li>調整流程</li></ul> |
 
 ## 🎯 實驗目標
 
 我們的研究與實驗聚焦於：
 
-### 技術中立
+### 技術獨立性
 
 - 使用多元技術堆疊建立應用程式
-- 驗證 Spec-Driven Development 方法論是一種流程，不受限於特定技術、程式語言或框架
+- 驗證 Spec-Driven Development 方法論是一種不受特定技術、程式語言或框架綁定的流程
 
 ### 企業級限制
 
 - 展示任務關鍵型應用程式開發
-- 納入組織限制（雲端供應商、技術堆疊、工程實踐）
+- 納入組織層級限制（雲端服務商、技術堆疊、工程實踐）
 - 支援企業設計系統與合規需求
 
 ### 以使用者為中心的開發
 
 - 為不同用戶族群與偏好打造應用程式
-- 支援多種開發模式（從 vibe-coding 到 AI-native 開發）
+- 支援多種開發方式（從 vibe-coding 到 AI 原生開發）
 
-### 創意與迭代流程
+### 創意與反覆流程
 
 - 驗證平行實作探索的概念
-- 提供健全的迭代式功能開發工作流程
-- 擴展流程以支援升級與現代化任務
+- 提供健全的反覆功能開發工作流程
+- 延伸流程以處理升級與現代化任務
 
 ## 🔧 先決條件
 
-- **Linux/macOS**（或 Windows 上的 WSL2）
-- AI 編碼代理工具：[Claude Code](https://www.anthropic.com/claude-code)、[GitHub Copilot](https://code.visualstudio.com/)、[Gemini CLI](https://github.com/google-gemini/gemini-cli)、[Cursor](https://cursor.sh/)、[Qwen CLI](https://github.com/QwenLM/qwen-code)、[opencode](https://opencode.ai/)、[Codex CLI](https://github.com/openai/codex)、[Windsurf](https://windsurf.com/)、或 [Amazon Q Developer CLI](https://aws.amazon.com/developer/learning/q-developer-cli/)
-- [uv](https://docs.astral.sh/uv/)（套件管理）
+- **Linux/macOS/Windows**
+- [支援的](#-支援的-ai-agent)AI 程式設計代理
+- [uv](https://docs.astral.sh/uv/) 套件管理工具
 - [Python 3.11+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads)
 
-若你在使用代理工具時遇到問題，請提交 issue 以便我們優化整合。
+如果你在使用代理時遇到問題，請提交 issue 以便我們改進整合。
 
 ## 📖 進一步了解
 
-- **[完整 Spec-Driven Development 方法論](./spec-driven.md)**－深入了解完整流程
-- **[詳細操作教學](#-detailed-process)**－逐步實作指南
+- **[完整 Spec-Driven Development 方法論](./spec-driven.md)** - 深入了解完整流程
+- **[詳細操作教學](#-詳細流程)** - 步驟式實作指南
 
 ---
 
 ## 📋 詳細流程
 
 <details>
-<summary>點擊展開詳細的逐步操作說明</summary>
+<summary>點擊展開詳細的逐步操作教學</summary>
 
-你可以使用 Specify CLI 來初始化你的專案，這會將所需產出物帶入你的環境。執行：
+你可以使用 Specify CLI 來快速建立專案，這將會在你的環境中帶入所需的產物。執行：
 
 ```bash
 specify init <project_name>
 ```
 
-![Specify CLI bootstrapping a new project in the terminal](./media/specify_cli.gif)
-
-或在目前目錄中初始化：
+或者在目前目錄中初始化：
 
 ```bash
 specify init .
@@ -334,9 +329,9 @@ specify init . --force
 specify init --here --force
 ```
 
-![Specify CLI bootstrapping a new project in the terminal](./media/specify_cli.gif)
+![Specify CLI 在終端機中初始化新專案](./media/specify_cli.gif)
 
-系統會提示您選擇正在使用的 AI agent。您也可以直接在終端機中主動指定：
+系統會提示你選擇正在使用的 AI agent。你也可以直接在終端機中主動指定：
 
 ```bash
 specify init <project_name> --ai claude
@@ -358,36 +353,36 @@ specify init . --force --ai claude
 specify init --here --force --ai claude
 ```
 
-命令列介面 (Command Line Interface) 會檢查你是否已安裝 Claude Code、Gemini CLI、Cursor CLI、Qwen CLI、opencode、Codex CLI 或 Amazon Q Developer CLI。如果你尚未安裝這些工具，或你希望在不檢查工具的情況下直接取得範本，請在指令中加入 `--ignore-agent-tools`：
+CLI 會檢查你是否已安裝 Claude Code、Gemini CLI、Cursor CLI、Qwen CLI、opencode、Codex CLI 或 Amazon Q Developer CLI。如果尚未安裝，或你希望直接取得模板而不檢查相關工具，請在指令中加入 `--ignore-agent-tools`：
 
 ```bash
 specify init <project_name> --ai claude --ignore-agent-tools
 ```
 
-### **步驟 1**： 建立專案原則
+### **步驟 1：** 建立專案原則
 
-進入專案資料夾並啟動您的 AI agent。在本範例中，我們使用的是 `claude`。
+進入專案資料夾並執行你的 AI agent。在本範例中，我們使用的是 `claude`。
 
 ![Bootstrapping Claude Code environment](./media/bootstrap-claude-code.gif)
 
-當您看到 `/speckit.constitution`、`/speckit.specify`、`/speckit.plan`、`/speckit.tasks` 和 `/speckit.implement` 指令可用時，代表環境已正確設定。
+如果你看到 `/speckit.constitution`、`/speckit.specify`、`/speckit.plan`、`/speckit.tasks` 和 `/speckit.implement` 指令可用，表示設定正確。
 
-第一步應該是使用 `/speckit.constitution` 指令來建立專案的治理原則（governing principles）。這有助於在後續所有開發階段中確保決策的一致性：
+第一步應該是使用 `/speckit.constitution` 指令來建立你的專案治理原則（project’s governing principles）。這有助於確保在後續所有開發階段中，決策能保持一致性：
 
 ```text
 /speckit.constitution Create principles focused on code quality, testing standards, user experience consistency, and performance requirements. Include governance for how these principles should guide technical decisions and implementation choices.
 ```
 
-此步驟會建立或更新 `.specify/memory/constitution.md` 檔案，內容為您專案的基礎指導原則，AI agent 會在規格說明、規劃與實作階段參考這份文件。
+這個步驟會建立或更新 `.specify/memory/constitution.md` 檔案，內容包含你的專案基礎指引，AI agent 會在規格說明、規劃與實作階段參考這些指引。
 
-### **步驟 2**：建立專案規格
+### **步驟 2：** 建立專案規格說明
 
-在確立專案原則後，您現在可以建立功能規格。請使用 `/speckit.specify` 指令，並提供您想開發專案的具體需求。
+在你已經建立好專案原則後，現在可以開始撰寫功能規格說明。請使用 `/speckit.specify` 指令，並提供你想開發專案的具體需求。
 
 >[!IMPORTANT]
->請盡可能明確說明您想要建構的 _內容_ 以及 _原因_。**此階段請不要聚焦於技術堆疊。**
+>請盡可能明確說明你想要建構的「內容」以及「原因」。**此階段請勿聚焦於技術堆疊。**
 
-範例提示如下：
+範例提示：
 
 ```text
 Develop Taskify, a team productivity platform. It should allow users to create projects, add team members,
@@ -408,13 +403,13 @@ see yours. You can edit any comments that you make, but you can't edit comments 
 delete any comments that you made, but you can't delete comments anybody else made.
 ```
 
-輸入此提示後，您應該會看到 Claude Code 啟動規劃與規格草擬流程。Claude Code 也會觸發部分內建腳本來設定儲存庫。
+在輸入此提示後，你應該會看到 Claude Code 啟動規劃與規格草擬流程。Claude Code 也會觸發部分內建腳本來設定 repository。
 
-完成這個步驟後，您應該會看到已建立一個新分支（例如：`001-create-taskify`），以及在 `specs/001-create-taskify` 目錄下產生一份新的規格說明。
+完成這個步驟後，你應該會有一個新建立的分支（例如：`001-create-taskify`），以及一份新的規格說明，位於 `specs/001-create-taskify` 目錄中。
 
-產生的規格說明應包含一組使用者故事與功能性需求，內容依範本所定義。
+產生的規格說明應該包含一組使用者故事（user stories）與功能性需求（functional requirements），這些內容會依照範本所定義。
 
-此時，您的專案資料夾內容應類似如下：
+此時，你的專案資料夾內容應該會類似以下結構：
 
 ```text
 └── .specify
@@ -435,19 +430,19 @@ delete any comments that you made, but you can't delete comments anybody else ma
         └── tasks-template.md
 ```
 
-### **步驟 3**： 釐清功能規格（規劃前必須執行）
+### **步驟 3：** 功能規格說明釐清（規劃前必須完成）
 
-在建立好基準規格（baseline specification）後，你可以針對第一次嘗試未能正確捕捉的需求進行釐清。
+在建立基準規格說明後，您可以針對第一次嘗試時未正確捕捉到的需求進行釐清。
 
-你應該在建立技術規劃（technical plan）**之前**，先執行結構化的釐清流程，以減少後續返工。
+您應該在建立技術規劃之前，先執行結構化的釐清流程，以減少後續返工。
 
-建議順序如下：
-1. 優先使用 `/speckit.clarify`（結構化）——依序、覆蓋式提問，並將答案記錄於 Clarifications 區段。
-2. 如仍有不明確之處，可選擇性地進行自由形式（ad-hoc）的細化提問。
+建議流程順序：
+1. 使用 `/speckit.clarify`（結構化）—— 依序、以覆蓋率為基礎的提問，並將答案記錄於 Clarifications 區段。
+2. 若仍有不明確之處，可選擇性地進行即席的自由格式細化。
 
-如果你有意跳過釐清流程（例如：進行 spike 或探索性原型開發），請明確說明，讓 agent 不會因缺乏釐清而中斷流程。
+如果您有意跳過釐清流程（例如：進行 spike 或探索性原型），請明確說明，讓代理不會因缺少釐清而中斷。
 
-自由形式細化提示詞範例（如在 `/speckit.clarify` 後仍有需要）：
+範例自由格式細化提示（若在 `/speckit.clarify` 後仍有需要）：
 
 ```text
 For each sample project or project that you create there should be a variable number of tasks between 5 and 15
@@ -455,17 +450,17 @@ tasks for each one randomly distributed into different states of completion. Mak
 one task in each stage of completion.
 ```
 
-你也應該請 Claude Code 驗證 **Review & Acceptance Checklist**，將已通過驗證／符合需求的項目勾選，未通過的則保持未勾選狀態。可以使用以下提示語：
+你也應該請 Claude Code 驗證 **Review & Acceptance Checklist**，將已驗證／通過需求的項目勾選，未通過的則保持未勾選。可以使用以下的用戶提示：
 
 ```text
 Read the review and acceptance checklist, and check off each item in the checklist if the feature spec meets the criteria. Leave it empty if it does not.
 ```
 
-與 Claude Code 的互動應視為釐清與詢問規格問題的機會——**不要將其第一次回應視為最終結果**。
+與 Claude Code 的互動是一個釐清並詢問規格說明相關問題的好機會——**不要將其第一次嘗試視為最終版本**。
 
-### **步驟 4**： 產生計畫
+### **步驟 4：** 產生計畫
 
-此時，您可以明確指定技術堆疊及其他技術需求。您可以使用專案範本內建的 `/speckit.plan` 指令，並搭配如下提示語：
+你現在可以明確指定技術堆疊及其他技術需求。你可以使用專案範本內建的 `/speckit.plan` 指令，並搭配如下提示語：
 
 ```text
 We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use
@@ -473,7 +468,7 @@ Blazor server with drag-and-drop task boards, real-time updates. There should be
 tasks API, and a notifications API.
 ```
 
-此步驟的輸出將包含多份實作細節文件，您的目錄樹將類似如下所示：
+此步驟的輸出將包含多份實作細節文件，您的目錄結構將會類似如下：
 
 ```text
 .
@@ -503,9 +498,9 @@ tasks API, and a notifications API.
     └── tasks-template.md
 ```
 
-請參閱 `research.md` 文件，根據你的指示確認所使用的技術堆疊是否正確。如有任何組件特別突出，你可以請 Claude Code 進一步優化，甚至讓它檢查你想使用的平台或框架（例如 .NET）在本地安裝的版本。
+請檢查 `research.md` 文件，以確保根據你的指示所使用的技術堆疊（tech stack）正確無誤。如果其中有任何元件特別突出，你可以請 Claude Code 進行優化，甚至讓它檢查你想要使用的平台或框架（例如 .NET）的本地安裝版本。
 
-此外，如果你選擇的技術堆疊屬於快速變動的領域（例如 .NET Aspire、JavaScript 框架），你也可以請 Claude Code 針對該技術堆疊進行詳細研究，提示語例如：
+此外，如果你選擇的技術堆疊屬於變化快速的領域（例如 .NET Aspire、JavaScript 框架），你也可以請 Claude Code 針對該技術堆疊進行細節研究，提示語可以像這樣：
 
 ```text
 I want you to go through the implementation plan and implementation details, looking for areas that could
@@ -515,7 +510,7 @@ versions that we are going to be using in this Taskify application and spawn par
 any details using research from the web.
 ```
 
-在這個過程中，你可能會發現 Claude Code 研究的方向不正確——你可以用如下的提示詞協助它回到正確的方向：
+在這個過程中，你可能會發現 Claude Code 會卡在研究錯誤的方向——你可以透過像這樣的用戶提示（user prompt）來協助引導它回到正確的方向：
 
 ```text
 I think we need to break this down into a series of steps. First, identify a list of tasks
@@ -528,11 +523,11 @@ That's way too untargeted research. The research needs to help you solve a speci
 ```
 
 >[!NOTE]
->Claude Code 有時可能會過於積極，新增你未要求的元件。請要求它說明這些變更的理由及來源。
+>Claude Code 可能會過於積極，新增你未曾要求的元件。請要求它說明這些變更的理由及來源。
 
-### **步驟 5**：請 Claude Code 驗證計畫
+### **步驟 5：**讓 Claude Code 驗證計畫
 
-當你完成計畫後，應該讓 Claude Code 依照計畫檢查一遍，以確保沒有遺漏任何部分。你可以使用如下提示詞：
+當你已經擬定好計畫後，應該讓 Claude Code 依照計畫執行一遍，以確保沒有遺漏任何部分。你可以使用如下的用戶提示：
 
 ```text
 Now I want you to go and audit the implementation plan and the implementation detail files.
@@ -542,14 +537,33 @@ when I look at the core implementation, it would be useful to reference the appr
 details where it can find the information as it walks through each step in the core implementation or in the refinement.
 ```
 
-這有助於細化你的實作計畫，並協助你避免 Claude Code 在規劃流程中可能遺漏的盲點。完成初步細化後，請再要求 Claude Code 依據檢查清單重新檢查一次，確認可以進入實作階段。
+這有助於細化實作計畫，並協助你避免 Claude Code 在規劃階段可能遺漏的潛在盲點。當初步細化完成後，請再次要求 Claude Code 根據檢查清單進行檢查，確認一切無誤後再進入實作階段。
 
-你也可以要求 Claude Code（如果你已安裝 [GitHub CLI](https://docs.github.com/en/github-cli/github-cli)）直接從你目前的分支建立一個 Pull Request 到 `main`，並附上詳細說明，以確保所有工作都能被妥善追蹤。
+如果你已安裝 [GitHub CLI](https://docs.github.com/en/github-cli/github-cli)，也可以請 Claude Code 直接從你目前的分支建立一個 Pull Request 到 `main`，並附上詳細說明，以確保整個流程都被妥善追蹤。
 
 >[!NOTE]
->在讓 AI agent 進行實作前，也建議你提示 Claude Code 交叉檢查細節，確認是否有過度設計（記住——它有時會過於積極）。如果發現有過度設計的元件或決策，可以請 Claude Code 協助修正。請確保 Claude Code 依循 [constitution](base/memory/constitution.md)，作為制定計畫時必須遵守的基礎。
+>在讓代理執行實作前，也建議你提示 Claude Code 交叉檢查細節，確認是否有過度設計（請記住——它有時會過於積極）。如果發現有過度設計的元件或決策，你可以請 Claude Code 協助簡化。請確保 Claude Code 依循 [constitution](base/memory/constitution.md)，這是其制定計畫時必須遵循的基礎文件。
 
-### STEP 6: Implementation
+### **步驟 6：** 使用 /speckit.tasks 產生任務拆解
+
+當實作計畫驗證無誤後，你可以將計畫拆解為具體且可執行的任務，並依正確順序執行。使用 `/speckit.tasks` 指令，根據你的實作計畫自動產生詳細的任務拆解：
+
+```text
+/speckit.tasks
+```
+
+此步驟會在你的功能規格說明目錄中建立一個 `tasks.md` 檔案，內容包含：
+
+- **依使用者故事組織的任務拆解** — 每個使用者故事都會成為獨立的實作階段，並擁有自己的一組任務
+- **相依性（dependency）管理** — 任務會依照元件間的相依性排序（例如：先建立 models，再建立 services，最後建立 endpoints）
+- **平行執行標記** — 可以平行執行的任務會以 `[P]` 標記，以最佳化開發流程
+- **檔案路徑規格** — 每個任務都會包含實作所需的精確檔案路徑
+- **測試優先（Test-First）結構** — 若有要求測試，則會包含測試任務，並確保測試在實作前先撰寫
+- **檢查點（checkpoints）驗證** — 每個使用者故事階段都包含檢查點，以驗證其獨立功能
+
+產生的 tasks.md 為 `/speckit.implement` 指令提供明確的路線圖，確保系統化實作、維持程式碼品質，並可逐步交付使用者故事。
+
+### **步驟 7：** 實作
 
 準備好後，請使用 `/speckit.implement` 指令來執行你的實作計畫：
 
@@ -557,17 +571,17 @@ details where it can find the information as it walks through each step in the c
 /speckit.implement
 ```
 
-`/speckit.implement` 指令將會執行以下動作：
-- 驗證所有前置條件是否齊備（專案憲章、規格、計畫和任務）
-- 解析來自 `tasks.md` 的任務拆解
-- 依正確順序執行任務，並遵循相依性（dependency）及平行執行標記
+`/speckit.implement` 指令將會：
+- 驗證所有前置條件是否齊備（專案憲章、規格、計畫與任務）
+- 解析來自 `tasks.md` 的任務分解
+- 依正確順序執行任務，並遵循相依性（dependency）與平行執行標記
 - 遵循你在任務計畫中定義的 TDD 方法
 - 提供進度更新並妥善處理錯誤
 
 >[!IMPORTANT]
->AI agent 會執行本機命令列介面（Command Line Interface）指令（例如 `dotnet`、`npm` 等）——請確保你的機器已安裝所需工具。
+>AI agent 會執行本地的 CLI 指令（例如 `dotnet`、`npm` 等）—請確保你已在本機安裝所需工具。
 
-實作完成後，請測試應用程式，並解決任何在命令列介面（Command Line Interface）日誌中未顯示的執行時錯誤（例如：瀏覽器主控台錯誤）。你可以將這些錯誤複製貼回 AI agent 以協助排除。
+當實作完成後，請測試應用程式，並解決任何在 CLI 日誌中未顯示的執行時錯誤（例如瀏覽器主控台錯誤）。你可以將這類錯誤複製貼上回 AI agent 以協助解決。
 
 </details>
 
@@ -592,19 +606,20 @@ echo "Cleaning up..."
 rm gcm-linux_amd64.2.6.1.deb
 ```
 
-## 👥 維護者
+## 👥 專案維護者
 
 - Den Delimarsky ([@localden](https://github.com/localden))
 - John Lam ([@jflam](https://github.com/jflam))
 
 ## 💬 支援
 
-如需支援，請開啟一個 [GitHub issue](https://github.com/github/spec-kit/issues/new)。我們歡迎錯誤回報、功能需求，以及關於如何使用 Spec-Driven Development 方法論 的問題。
+如需支援，請開啟 [GitHub issue](https://github.com/github/spec-kit/issues/new)。我們歡迎錯誤回報、功能需求以及關於如何使用 Spec-Driven Development 方法論的提問。
 
 ## 🙏 致謝
 
-本專案深受 [John Lam](https://github.com/jflam) 的研究與工作影響與啟發。
+本專案深受 [John Lam](https://github.com/jflam) 的研究與成果影響與啟發。
 
 ## 📄 授權
 
-本專案依據 MIT 開源授權條款發佈。完整條款請參閱 [LICENSE](./LICENSE) 檔案。
+本專案依 MIT 開源授權條款發布。完整條款請參閱 [LICENSE](./LICENSE) 檔案。
+

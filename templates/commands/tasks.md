@@ -1,115 +1,133 @@
 ---
-description: 根據現有設計產物，為功能產生可執行、依相依性（dependency）排序的 tasks.md。
+description: 根據可用的設計產物，為該功能產生一份可執行、依相依性（dependency）排序的 tasks.md。
 scripts:
   sh: scripts/bash/check-prerequisites.sh --json
   ps: scripts/powershell/check-prerequisites.ps1 -Json
 ---
 
-## 使用者輸入
+## 用戶輸入
 
 ```text
 $ARGUMENTS
 ```
 
-在繼續執行前，**必須**考慮用戶輸入（若非空）。
+在繼續執行前，您**必須**考慮用戶輸入（若非空）。
 
 ## 大綱
 
-1. **初始化**：於 repo 根目錄執行 `{SCRIPT}`，並解析 FEATURE_DIR 及 AVAILABLE_DOCS 清單。所有路徑必須為絕對路徑。若參數中有單引號（如 "I'm Groot"），請使用跳脫語法：例如 'I'\''m Groot'（或可用雙引號："I'm Groot"）。
+1. **設定**：從 repo 根目錄執行 `{SCRIPT}`，並解析 FEATURE_DIR 及 AVAILABLE_DOCS 清單。所有路徑必須為絕對路徑。對於引數中如 "I'm Groot" 這類帶有單引號的內容，請使用跳脫語法：例如 'I'\''m Groot'（或若可行則用雙引號："I'm Groot"）。
 
 2. **載入設計文件**：從 FEATURE_DIR 讀取：
    - **必要**：plan.md（技術堆疊、函式庫、結構）、spec.md（用戶故事及其優先順序）
-   - **選用**：data-model.md（entity）、contracts/（API endpoint）、research.md（決策）、quickstart.md（測試情境）
-   - 注意：並非所有專案都具備所有文件。請依現有文件產生任務。
+   - **選用**：data-model.md（實體）、contracts/（API endpoint）、research.md（決策）、quickstart.md（測試情境）
+   - 注意：並非所有專案都具備上述所有文件。請依現有文件產生任務。
 
-3. **執行任務產生流程**（依照範本結構）：
-   - 載入 plan.md，擷取技術堆疊、函式庫、專案結構
-   - **載入 spec.md，擷取用戶故事及其優先順序（P1、P2、P3 等）**
-   - 若存在 data-model.md：擷取 entity → 對應至用戶故事
-   - 若存在 contracts/：每個檔案 → 將 endpoint 對應至用戶故事
-   - 若存在 research.md：擷取決策 → 產生初始化任務
-   - **依用戶故事組織產生任務**：
-     - 初始化任務（所有故事共用的基礎設施）
-     - **基礎任務（所有用戶故事開始前必須完成的前置作業）**
-     - 針對每個用戶故事（依優先順序 P1、P2、P3...）：
-       - 彙整完成該故事所需的所有任務
-       - 包含該故事專屬的 model、service、endpoint、UI component
-       - 標記哪些任務可 [P] 並行
-       - 若有要求測試：納入該故事專屬的測試
-     - 修飾／整合任務（橫跨多故事的共通議題）
-   - **測試為選用**：僅於功能規格或用戶明確要求 TDD 時產生測試任務
-   - 任務規則：
-     - 不同檔案＝標記 [P] 可並行
-     - 同一檔案＝需依序進行（不標記 [P]）
-     - 若有要求測試：測試優先於實作（TDD 順序）
-   - 任務編號需連續（T001、T002...）
-   - 產生相依性（dependency）圖，顯示用戶故事完成順序
-   - 為每個用戶故事建立並行執行範例
-   - 驗證任務完整性（每個用戶故事皆具備所有必要任務，且可獨立測試）
+3. **執行任務產生工作流程**：
+   - 載入 plan.md 並擷取技術堆疊、函式庫、專案結構
+   - 載入 spec.md 並擷取用戶故事及其優先順序（P1、P2、P3 等）
+   - 若有 data-model.md：擷取實體並對應到用戶故事
+   - 若有 contracts/：將 API endpoint 對應到用戶故事
+   - 若有 research.md：擷取決策以產生設定任務
+   - 依用戶故事產生任務（詳見下方「任務產生規則」）
+   - 產生顯示用戶故事完成順序的相依性（dependency）圖
+   - 為每個用戶故事建立可並行執行的範例
+   - 驗證任務完整性（每個用戶故事皆有所需任務，且可獨立測試）
 
-4. **產生 tasks.md**：以 `.specify/templates/tasks-template.md` 為結構，填入以下內容：
+4. **產生 tasks.md**：以 `.specify/templates/tasks-template.md` 為結構，內容包含：
    - 從 plan.md 取得正確的功能名稱
-   - 第一階段：初始化任務（專案初始化）
-   - 第二階段：基礎任務（所有用戶故事的阻擋前置作業）
-   - 第三階段起：每個用戶故事一個階段（依 spec.md 優先順序）
-     - 每階段包含：故事目標、獨立測試標準、測試（如有要求）、實作任務
-     - 每個任務均有明確 [Story] 標籤（US1、US2、US3...）
-     - 每個故事內可並行任務標記 [P]
-     - 每個故事階段結束後設置檢查點
-   - 最後階段：修飾與橫向議題
-   - 任務以執行順序編號（T001、T002...）
-   - 每個任務標明檔案路徑
-   - 相依性（dependency）區段，顯示故事完成順序
-   - 每個故事的並行執行範例
-   - 實作策略區段（MVP 優先，漸進交付）
+   - Phase 1：設定任務（專案初始化）
+   - Phase 2：基礎任務（所有用戶故事的阻斷前置作業）
+   - Phase 3+：每個用戶故事一個階段（依 spec.md 的優先順序）
+   - 每個階段包含：故事目標、獨立測試標準、測試（如有需求）、實作任務
+   - 最終階段：優化與橫向議題
+   - 所有任務必須遵循嚴格的檢查清單格式（詳見下方「任務產生規則」）
+   - 每個任務需明確標示檔案路徑
+   - 相依性區段，顯示用戶故事完成順序
+   - 每個用戶故事的並行執行範例
+   - 實作策略區段（先 MVP（最小可行性產品），逐步交付）
 
 5. **報告**：輸出產生的 tasks.md 路徑及摘要：
    - 任務總數
    - 各用戶故事的任務數
    - 已識別的並行機會
-   - 每個故事的獨立測試標準
-   - 建議 MVP 範圍（通常僅限用戶故事 1）
+   - 各用戶故事的獨立測試標準
+   - 建議的 MVP（最小可行性產品）範圍（通常僅為 User Story 1）
+   - 格式驗證：確認**所有**任務皆符合檢查清單格式（核取方塊、ID、標籤、檔案路徑）
 
-任務產生的情境參數：{ARGS}
+任務產生的上下文：{ARGS}
 
-tasks.md 應可立即執行——每個任務必須具體明確，使大型語言模型 (LLM) 能在無額外上下文下完成。
+產生的 tasks.md 應可立即執行——每個任務須具體明確，使大型語言模型 (LLM) 能在無額外上下文下完成。
 
 ## 任務產生規則
 
-**重要**：測試為選用。僅於用戶於功能規格明確要求測試或 TDD 方法時產生測試任務。
+**關鍵**：任務**必須**依用戶故事組織，以利獨立實作與測試。
 
-**關鍵**：任務**必須**依用戶故事組織，以確保可獨立實作與測試。
+**測試為選用**：僅當功能規格說明明確要求，或用戶要求採用 TDD（測試優先）方法時，才產生測試任務。
 
-1. **來自用戶故事（spec.md）**——主要組織方式：
-   - 每個用戶故事（P1、P2、P3...）各自為一個階段
-   - 將所有相關元件對應至該故事：
-     - 該故事所需的 model
-     - 該故事所需的 service
-     - 該故事所需的 endpoint／UI
-     - 若有要求測試：該故事專屬的測試
-   - 標記故事間相依性（大多數故事應為獨立）
+### 檢查清單格式（必須）
 
-2. **來自 contracts**：
-   - 每個 contract／endpoint → 對應至所屬用戶故事
-   - 若有要求測試：每個 contract → 於該故事階段的實作前產生 contract 測試任務 [P]
+每個任務**必須**嚴格遵循以下格式：
 
-3. **來自資料模型**：
-   - 每個 entity → 對應至所需的用戶故事
-   - 若 entity 服務多個故事：放在最早的故事或初始化階段
-   - 關聯 → 於適當故事階段產生 service 層任務
+```text
+- [ ] [TaskID] [P?] [Story?] Description with file path
+```
 
-4. **來自初始化／基礎設施**：
-   - 共用基礎設施 → 初始化階段（Phase 1）
-   - 基礎／阻擋任務 → 基礎階段（Phase 2）
-     - 例如：資料庫 schema 設定、驗證框架、核心函式庫、基礎設定
-     - 這些**必須**於任何用戶故事實作前完成
-   - 故事專屬初始化 → 放在該故事階段
+**格式組成要素**：
 
-5. **排序**：
-   - 第一階段：初始化（專案初始化）
-   - 第二階段：基礎（阻擋前置作業——必須於用戶故事前完成）
-   - 第三階段起：用戶故事依優先順序（P1、P2、P3...）
-     - 每個故事內：測試（如有要求）→ model → service → endpoint → 整合
-   - 最後階段：修飾與橫向議題
-   - 每個用戶故事階段應為完整、可獨立測試的增量
+1. **核取方塊**：一律以 `- [ ]`（Markdown 核取方塊）起始
+2. **任務 ID**：依執行順序遞增編號（T001、T002、T003...）
+3. **[P] 標記**：僅在任務可並行執行時加入（不同檔案、且無未完成任務的相依性）
+4. **[Story] 標籤**：僅限 User Story 階段任務必須加上
+   - 格式：[US1]、[US2]、[US3] 等（對應 spec.md 中的 user story）
+   - Setup 階段：不加 story 標籤
+   - Foundational 階段：不加 story 標籤  
+   - User Story 階段：必須加上 story 標籤
+   - Polish 階段：不加 story 標籤
+5. **描述**：明確的動作說明，並標註精確的檔案路徑
+
+**範例**：
+
+- ✅ 正確：`- [ ] T001 Create project structure per implementation plan`
+- ✅ 正確：`- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
+- ✅ 正確：`- [ ] T012 [P] [US1] Create User model in src/models/user.py`
+- ✅ 正確：`- [ ] T014 [US1] Implement UserService in src/services/user_service.py`
+- ❌ 錯誤：`- [ ] Create User model`（缺少 ID 與 Story 標籤）
+- ❌ 錯誤：`T001 [US1] Create model`（缺少核取方塊）
+- ❌ 錯誤：`- [ ] [US1] Create User model`（缺少任務 ID）
+- ❌ 錯誤：`- [ ] T001 [US1] Create model`（缺少檔案路徑）
+
+### 任務組織方式
+
+1. **依 User Stories（spec.md）為主進行組織**：
+   - 每個 user story（P1、P2、P3...）各自成為一個階段
+   - 將所有相關元件對應到該 story：
+     - 該 story 需要的 models
+     - 該 story 需要的 services
+     - 該 story 需要的 endpoints/UI
+     - 若有測試需求：針對該 story 的測試
+   - 標註 story 之間的相依性（大多數 story 應為獨立）
+
+2. **依 Contracts**：
+   - 將每個 contract/endpoint → 對應到其所屬的 user story
+   - 若有測試需求：每個 contract → contract 測試任務 [P]，於該 story 階段的實作前執行
+
+3. **依 Data Model**：
+   - 將每個 entity 對應到需要它的 user story
+   - 若 entity 服務多個 story：放在最早需要的 story 或 Setup 階段
+   - 關聯性 → 在適當的 story 階段建立 service 層任務
+
+4. **依 Setup/Infrastructure**：
+   - 共用基礎設施 → 放在 Setup 階段（Phase 1）
+   - 基礎/阻擋性任務 → 放在 Foundational 階段（Phase 2）
+   - 特定 story 的 setup → 放在該 story 階段
+
+### 階段結構
+
+- **Phase 1**：Setup（專案初始化）
+- **Phase 2**：Foundational（阻擋性前置作業——必須在 user stories 前完成）
+- **Phase 3 以上**：依優先順序執行 User Stories（P1、P2、P3...）
+  - 每個 story 內部順序：測試（如有需求）→ Models → Services → Endpoints → 整合
+  - 每個階段都應該是完整、可獨立測試的增量
+- **最終階段**：Polish 與跨階段關注事項
+
 
