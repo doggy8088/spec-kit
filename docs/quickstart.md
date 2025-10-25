@@ -1,20 +1,21 @@
 # 快速入門指南
 
-本指南將協助你使用 Spec Kit 進行 Spec-Driven Development 方法論的快速上手。
+本指南將協助你使用 Spec Kit 開始進行 Spec-Driven Development 方法論。
 
-> 新功能：所有自動化腳本現在同時提供 Bash (`.sh`) 與 PowerShell (`.ps1`) 版本。`specify` CLI 會根據作業系統自動選擇，除非你傳入 `--script sh|ps` 參數。
+> 新功能：所有自動化腳本現在皆提供 Bash (`.sh`) 與 PowerShell (`.ps1`) 兩種版本。`specify` 命令列介面 (CLI) 會根據作業系統自動選擇，除非你指定 `--script sh|ps`。
 
 ## 四步驟流程
 
 ### 1. 安裝 Specify
 
-根據你所使用的 AI 程式設計代理來初始化你的專案：
+根據你所使用的 AI 程式設計代理，初始化你的專案：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
 ```
 
 明確選擇腳本類型（可選）：
+
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME> --script ps  # Force PowerShell
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME> --script sh  # Force POSIX shell
@@ -22,7 +23,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 
 ### 2. 建立規格說明
 
-使用 `/speckit.specify` 指令來描述你想要建構的內容。請著重於**做什麼**以及**為什麼要這麼做**，而非技術堆疊。
+使用 `/speckit.specify` 指令來描述你想要建構的內容。請著重於**做什麼**以及**為什麼要做**，而不是技術堆疊。
 
 ```bash
 /speckit.specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
@@ -38,7 +39,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 
 ### 4. 拆解並實作
 
-使用 `/speckit.tasks` 建立可執行的任務清單，然後請你的 agent 來實作該功能。
+使用 `/speckit.tasks` 來建立可執行的任務清單，然後請你的 agent 實作該功能。
 
 ## 詳細範例：打造 Taskify
 
@@ -67,7 +68,7 @@ delete any comments that you made, but you can't delete comments anybody else ma
 
 ### 步驟 2：細化規格說明
 
-在初步的規格說明建立後，請釐清任何遺漏的需求：
+在初步規格說明建立後，請釐清任何遺漏的需求：
 
 ```text
 For each sample project or project that you create there should be a variable number of tasks between 5 and 15
@@ -83,7 +84,7 @@ Read the review and acceptance checklist, and check off each item in the checkli
 
 ### 步驟 3：使用 `/speckit.plan` 產生技術計畫
 
-請明確說明你的技術堆疊與技術需求：
+請明確說明您的技術堆疊（tech stack）與技術需求：
 
 ```text
 We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use
@@ -93,7 +94,7 @@ tasks API, and a notifications API.
 
 ### 步驟 4：驗證與實作
 
-請讓你的 AI agent 審核實作計畫：
+讓你的 AI agent 審核實作計畫：
 
 ```text
 Now I want you to go and audit the implementation plan and the implementation detail files.
@@ -109,7 +110,7 @@ implement specs/002-create-taskify/plan.md
 
 ## 主要原則
 
-- **明確說明**你正在建構什麼，以及為什麼要這麼做
+- **明確說明**你正在建構什麼以及原因
 - 在規格說明階段**不要聚焦於技術堆疊**
 - 在實作前**反覆修正與完善**你的規格說明
 - 在開始撰寫程式碼前**驗證**計畫
@@ -120,4 +121,3 @@ implement specs/002-create-taskify/plan.md
 - 閱讀完整的 Spec-Driven Development 方法論以獲得深入指引
 - 在 repository 中查看更多範例
 - 前往 GitHub 探索原始碼
-

@@ -7,11 +7,13 @@
 若要在本地建置文件：
 
 1. 安裝 DocFX：
+
    ```bash
    dotnet tool install -g docfx
    ```
 
 2. 建置文件：
+
    ```bash
    cd docs
    docfx docfx.json --serve
@@ -30,5 +32,4 @@
 
 ## 部署
 
-當變更被推送至 `main` 分支時，文件會自動建置並部署到 GitHub Pages。相關工作流程定義於 `.github/workflows/docs.yml`。
-
+當變更被推送到 `main` 分支時，文件會自動建置並部署到 GitHub Pages。相關工作流程定義於 `.github/workflows/docs.yml`。

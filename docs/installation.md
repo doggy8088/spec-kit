@@ -18,7 +18,7 @@
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
 ```
 
-或者在目前目錄中初始化：
+或在目前目錄中初始化：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init .
@@ -37,16 +37,18 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai codebuddy
 ```
 
-### 指定腳本類型（Shell 與 PowerShell）
+### 指定腳本類型（Shell vs PowerShell）
 
-所有自動化腳本現在都同時提供 Bash（`.sh`）和 PowerShell（`.ps1`）兩種版本。
+所有自動化腳本現在都同時提供 Bash（`.sh`）與 PowerShell（`.ps1`）兩種變體。
 
 自動行為：
+
 - Windows 預設：`ps`
 - 其他作業系統預設：`sh`
-- 互動模式（Interactive mode）：除非你傳遞 `--script`，否則會出現用戶提示
+- 互動模式 (Interactive mode)：除非你傳入 `--script`，否則會出現用戶提示
 
-強制指定特定腳本類型：
+強制指定特定的腳本類型：
+
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --script sh
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --script ps
@@ -54,7 +56,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 
 ### 忽略 Agent 工具檢查
 
-如果你希望在不檢查相依工具（Agent Tools）的情況下取得模板：
+如果你希望在不檢查相關工具的情況下取得模板：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai claude --ignore-agent-tools
@@ -62,18 +64,19 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 
 ## 驗證
 
-初始化後，你應該會在你的 AI agent 中看到以下指令可用：
+初始化完成後，你應該會在你的 AI agent 中看到以下指令可用：
+
 - `/speckit.specify` - 建立規格說明
 - `/speckit.plan` - 產生實作計畫  
 - `/speckit.tasks` - 拆解為可執行的任務
 
-`.specify/scripts` 目錄將同時包含 `.sh` 和 `.ps1` 腳本。
+`.specify/scripts` 目錄將會包含 `.sh` 和 `.ps1` 兩個腳本。
 
 ## 疑難排解
 
 ### Linux 上的 Git Credential Manager
 
-如果你在 Linux 上遇到 Git 認證問題，可以安裝 Git Credential Manager：
+如果你在 Linux 上遇到 Git 認證相關問題，可以安裝 Git Credential Manager：
 
 ```bash
 #!/usr/bin/env bash
@@ -87,4 +90,3 @@ git config --global credential.helper manager
 echo "Cleaning up..."
 rm gcm-linux_amd64.2.6.1.deb
 ```
-

@@ -1,6 +1,6 @@
 # 本機開發指南
 
-本指南說明如何在不先發佈版本或提交到`main`的情況下，於本機針對`specify` CLI 進行反覆開發。
+本指南說明如何在不先發佈版本或提交到`main`的情況下，於本機對`specify` CLI 進行迭代開發。
 
 > 腳本現在同時提供 Bash（`.sh`）與 PowerShell（`.ps1`）兩種版本。CLI 會根據作業系統自動選擇，除非你傳入`--script sh|ps`。
 
@@ -45,9 +45,9 @@ uv pip install -e .
 specify --help
 ```
 
-在可編輯模式（editable mode）下，編輯程式碼後重新執行不需要重新安裝。
+在可編輯模式（editable mode）下，編輯程式碼後重新執行無需重新安裝。
 
-## 4. 直接從 Git 以 uvx 執行
+## 4. 直接從 Git 使用 uvx 呼叫
 
 `uvx` 可以從本地路徑（或 Git 參考）執行，以模擬使用者流程：
 
@@ -63,9 +63,9 @@ git push origin your-feature-branch
 uvx --from git+https://github.com/github/spec-kit.git@your-feature-branch specify init demo-branch-test --script ps
 ```
 
-### 4a. 絕對路徑 uvx（可在任意目錄執行）
+### 4a. 絕對路徑 uvx（可於任意目錄執行）
 
-如果你目前位於其他目錄，請使用絕對路徑來取代`.`：
+如果你在其他目錄，請使用絕對路徑來取代`.`：
 
 ```bash
 uvx --from /mnt/c/GitHub/spec-kit specify --help
@@ -73,12 +73,14 @@ uvx --from /mnt/c/GitHub/spec-kit specify init demo-anywhere --ai copilot --igno
 ```
 
 為了方便操作，請設定一個環境變數 (environment variable)：
+
 ```bash
 export SPEC_KIT_SRC=/mnt/c/GitHub/spec-kit
 uvx --from "$SPEC_KIT_SRC" specify init demo-env --ai copilot --ignore-agent-tools --script ps
 ```
 
-（選用）定義一個 shell 函數：
+（選用）定義一個 shell 函式：
+
 ```bash
 specify-dev() { uvx --from /mnt/c/GitHub/spec-kit specify "$@"; }
 # Then
@@ -87,17 +89,19 @@ specify-dev --help
 
 ## 5. 測試腳本權限邏輯
 
-在執行 `init` 之後，請檢查 shell 腳本在 POSIX 系統上是否具有可執行權限：
+在執行完`init`後，請在 POSIX 系統上檢查 shell 腳本是否具有可執行權限：
 
 ```bash
 ls -l scripts | grep .sh
 # Expect owner execute bit (e.g. -rwxr-xr-x)
 ```
+
 在 Windows 上，你將會使用 `.ps1` 腳本（不需要執行 chmod）。
 
 ## 6. 執行 Lint／基本檢查（可自行新增）
 
-目前尚未內建強制的 lint 設定，但你可以快速檢查是否可正確匯入：
+目前尚未內建強制的 lint 設定，但你可以快速檢查是否可正常匯入：
+
 ```bash
 python -c "import specify_cli; print('Import OK')"
 ```
@@ -110,26 +114,29 @@ python -c "import specify_cli; print('Import OK')"
 uv build
 ls dist/
 ```
-如有需要，請將建置產物安裝到全新的一次性使用（One-time Usage）環境中。
+
+如有需要，請將建置完成的產物安裝到全新的臨時環境中。
 
 ## 8. 使用臨時工作區
 
-當在一個未清理的目錄中測試 `init --here` 時，請建立一個臨時工作區：
+當你在一個非乾淨（dirty）的目錄中測試 `init --here` 時，請建立一個臨時工作區：
 
 ```bash
 mkdir /tmp/spec-test && cd /tmp/spec-test
 python -m src.specify_cli init --here --ai claude --ignore-agent-tools --script sh  # if repo copied here
 ```
-或者，如果你只想要較輕量的沙盒環境，可以只複製已修改的 CLI 部分。
+
+或者，如果你只想要更輕量的沙盒環境，可以僅複製已修改的 CLI 部分。
 
 ## 9. 偵錯網路 / 跳過 TLS
 
-如果你在實驗過程中需要略過 TLS 驗證，可以這樣操作：
+如果你在實驗時需要繞過 TLS 驗證：
 
 ```bash
 specify check --skip-tls
 specify init demo --skip-tls --ai gemini --ignore-agent-tools --script ps
 ```
+
 （僅供本地實驗使用。）
 
 ## 10. 快速編輯循環摘要
@@ -146,6 +153,7 @@ specify init demo --skip-tls --ai gemini --ignore-agent-tools --script ps
 ## 11. 清理
 
 快速移除建置產物／虛擬環境：
+
 ```bash
 rm -rf .venv dist build *.egg-info
 ```
@@ -153,17 +161,15 @@ rm -rf .venv dist build *.egg-info
 ## 12. 常見問題
 
 | 症狀 | 解決方法 |
-|---------|-----|
+|------|----------|
 | `ModuleNotFoundError: typer` | 執行 `uv pip install -e .` |
 | 腳本無法執行（Linux） | 重新執行 init 或 `chmod +x scripts/*.sh` |
-| Git 步驟被略過 | 你傳入了 `--no-git` 或尚未安裝 Git |
-| 下載到錯誤的腳本類型 | 請明確傳入 `--script sh` 或 `--script ps` |
-| 在企業網路出現 TLS 錯誤 | 嘗試 `--skip-tls`（勿用於正式環境） |
+| Git 步驟被略過 | 你傳遞了 `--no-git` 或尚未安裝 Git |
+| 下載到錯誤的腳本類型 | 請明確傳遞 `--script sh` 或 `--script ps` |
+| 企業網路出現 TLS 錯誤 | 嘗試 `--skip-tls`（請勿用於生產環境） |
 
 ## 13. 下一步
 
-- 更新文件並使用你修改後的 CLI 執行快速入門
-- 滿意後提交 Pull Request
-- （選用）當變更合併至 `main` 後標記一個版本
-
-
+- 更新文件並使用你修改過的 CLI 執行快速入門
+- 當你滿意後，提交 Pull Request
+- （選用）當變更合併到 `main` 後，標記一個 release
