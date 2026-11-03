@@ -64,6 +64,7 @@
     "cleanupCacheHistory": false,
     "disableGitFeatures": false,
     "globalMetadata": {
+      "_lang": "zh-TW",
       "_appTitle": "Spec Kit Documentation",
       "_appName": "Spec Kit",
       "_appLogoPath": "images/spec-kit-logo.webp",
