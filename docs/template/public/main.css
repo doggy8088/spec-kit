@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
 /* Spec Kit landing page — GitHub Primer colors */
 
 :root {
@@ -275,4 +277,434 @@ body[data-layout="landing"][data-bs-theme="dark"] {
   font-size: 1.05rem;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
+}
+
+/* ============================================================
+   zh-TW design layer — typography, color system, component polish
+   Appended after the upstream landing styles; loaded after
+   docfx.min.css, so these rules refine the whole site.
+   ============================================================ */
+
+:root {
+  --sk-pink: #ec4899;
+  --sk-purple: #a855f7;
+  --sk-blue: #3b82f6;
+  --sk-gradient: linear-gradient(120deg, var(--sk-pink), var(--sk-purple) 52%, var(--sk-blue));
+  --sk-accent: #7c3aed;
+  --sk-accent-soft: rgba(168, 85, 247, 0.1);
+  --sk-font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", -apple-system, "Segoe UI", sans-serif;
+  --sk-font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --sk-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+[data-bs-theme="dark"] {
+  --sk-accent: #c084fc;
+  --sk-accent-soft: rgba(192, 132, 252, 0.13);
+}
+
+/* ---- Global typography ---- */
+body {
+  font-family: var(--sk-font-sans);
+  letter-spacing: 0.012em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+article p,
+article li,
+article td,
+article blockquote {
+  line-height: 1.85;
+}
+
+article p {
+  margin-bottom: 1.1rem;
+}
+
+article ul,
+article ol {
+  margin-bottom: 1.1rem;
+}
+
+article li + li {
+  margin-top: 0.3rem;
+}
+
+::selection {
+  background: rgba(168, 85, 247, 0.32);
+}
+
+/* ---- Headings: serif display for article titles ---- */
+article h1,
+article h2,
+article h3,
+.landing-hero h1 {
+  font-family: var(--sk-font-serif);
+  letter-spacing: 0.015em;
+}
+
+article h1 {
+  font-size: 2.45rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 1.4rem;
+}
+
+article h2 {
+  font-size: 1.68rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-top: 2.8rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+article h3 {
+  font-size: 1.28rem;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-top: 2.1rem;
+  margin-bottom: 0.8rem;
+}
+
+article h4,
+article h5,
+article h6 {
+  font-weight: 700;
+  line-height: 1.5;
+  margin-top: 1.6rem;
+}
+
+/* Comfortable reading measure on article pages (not the landing page) */
+body:not([data-layout="landing"]) article {
+  max-width: 54rem;
+}
+
+/* ---- Links ---- */
+article a:not(.btn):not(.nav-card) {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* ---- Navbar ---- */
+header > nav.navbar,
+.navbar {
+  backdrop-filter: saturate(1.5) blur(12px);
+  -webkit-backdrop-filter: saturate(1.5) blur(12px);
+  box-shadow: 0 1px 0 var(--bs-border-color-translucent);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.navbar .nav-link {
+  font-weight: 500;
+}
+
+.navbar .dropdown-menu {
+  border-radius: 0.85rem;
+  padding: 0.45rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+}
+
+[data-bs-theme="dark"] .navbar .dropdown-menu {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.navbar .dropdown-item {
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.8rem;
+  line-height: 1.5;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background: var(--sk-accent-soft);
+}
+
+#search-query {
+  border-radius: 999px;
+  padding-left: 2.4rem;
+}
+
+/* ---- Breadcrumb ---- */
+.breadcrumb {
+  font-size: 0.92rem;
+  margin-bottom: 0.75rem;
+}
+
+/* ---- Landing hero & buttons ---- */
+.landing-hero {
+  padding-top: 4rem;
+}
+
+.landing-hero h1 {
+  font-weight: 900;
+  background: var(--sk-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.landing-hero .btn {
+  border-radius: 999px;
+  padding: 0.55rem 1.5rem;
+  font-weight: 500;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.landing-hero .btn:hover {
+  transform: translateY(-1px);
+}
+
+.landing-hero .btn-primary,
+.landing-hero .btn-primary:hover {
+  background: var(--sk-gradient);
+  border: none;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35);
+}
+
+.landing-hero .btn-outline-primary {
+  color: var(--sk-accent);
+  border-color: var(--sk-accent);
+}
+
+.landing-hero .btn-outline-primary:hover {
+  background: var(--sk-accent-soft);
+  border-color: var(--sk-accent);
+  color: var(--sk-accent);
+}
+
+/* ---- Cards ---- */
+.nav-card,
+.pillar-card {
+  border-radius: 0.9rem;
+  background: var(--bs-body-bg);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.nav-card {
+  border-left: 1px solid var(--bs-border-color);
+  padding: 1.15rem 1.35rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--sk-gradient);
+  opacity: 0.85;
+}
+
+.nav-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--sk-purple);
+  box-shadow: 0 10px 28px rgba(168, 85, 247, 0.16);
+  color: inherit;
+}
+
+.nav-card strong {
+  color: var(--bs-heading-color);
+  font-size: 1.02rem;
+  margin-bottom: 0.35rem;
+}
+
+.nav-card span {
+  line-height: 1.7;
+  opacity: 0.78;
+}
+
+.pillar-card {
+  border-top: 3px solid transparent;
+}
+
+.pillar-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ---- Alerts: soften the stock DocFX severity blocks ---- */
+.alert {
+  border-radius: 0.9rem;
+  border-width: 1px;
+  padding: 1.05rem 1.3rem;
+  margin: 1.4rem 0;
+  line-height: 1.85;
+}
+
+.alert .alert-title {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.alert-danger {
+  background: rgba(207, 34, 46, 0.06);
+  border-color: rgba(207, 34, 46, 0.35);
+  color: inherit;
+}
+
+.alert-danger .alert-title { color: #cf222e; }
+
+.alert-warning {
+  background: rgba(191, 135, 0, 0.07);
+  border-color: rgba(191, 135, 0, 0.38);
+  color: inherit;
+}
+
+.alert-warning .alert-title { color: #9a6700; }
+
+.alert-info {
+  background: rgba(9, 105, 218, 0.06);
+  border-color: rgba(9, 105, 218, 0.32);
+  color: inherit;
+}
+
+.alert-info .alert-title { color: #0969da; }
+
+.alert-success {
+  background: rgba(26, 127, 55, 0.06);
+  border-color: rgba(26, 127, 55, 0.32);
+  color: inherit;
+}
+
+.alert-success .alert-title { color: #1a7f37; }
+
+[data-bs-theme="dark"] .alert-danger {
+  background: rgba(248, 81, 73, 0.09);
+  border-color: rgba(248, 81, 73, 0.4);
+}
+
+[data-bs-theme="dark"] .alert-danger .alert-title { color: #ff9d97; }
+
+[data-bs-theme="dark"] .alert-warning {
+  background: rgba(210, 153, 34, 0.1);
+  border-color: rgba(210, 153, 34, 0.42);
+}
+
+[data-bs-theme="dark"] .alert-warning .alert-title { color: #e3b341; }
+
+[data-bs-theme="dark"] .alert-info {
+  background: rgba(88, 166, 255, 0.09);
+  border-color: rgba(88, 166, 255, 0.38);
+}
+
+[data-bs-theme="dark"] .alert-info .alert-title { color: #79c0ff; }
+
+[data-bs-theme="dark"] .alert-success {
+  background: rgba(63, 185, 80, 0.09);
+  border-color: rgba(63, 185, 80, 0.38);
+}
+
+[data-bs-theme="dark"] .alert-success .alert-title { color: #56d364; }
+
+/* ---- Code ---- */
+pre {
+  font-family: var(--sk-font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.8rem;
+  padding: 1rem 1.15rem;
+}
+
+code {
+  font-family: var(--sk-font-mono);
+}
+
+:not(pre) > code {
+  background: var(--sk-accent-soft);
+  color: var(--sk-accent);
+  padding: 0.12em 0.4em;
+  border-radius: 0.4rem;
+  font-size: 0.88em;
+  word-break: break-word;
+}
+
+a > code {
+  color: inherit;
+}
+
+/* ---- Tables ---- */
+article table {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+article table th {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---- Blockquote & rules ---- */
+article blockquote {
+  border-left: 3px solid var(--sk-purple);
+  background: var(--sk-accent-soft);
+  padding: 0.9rem 1.2rem;
+  border-radius: 0 0.8rem 0.8rem 0;
+  margin: 1.4rem 0;
+}
+
+article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+article hr {
+  margin: 2.4rem 0;
+  opacity: 0.14;
+}
+
+/* ---- Right-side article outline (affix) ---- */
+.affix h5,
+#affix h5 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: none;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0.7rem;
+}
+
+.affix ul li a,
+#affix ul li a {
+  line-height: 1.6;
+  padding-top: 0.22rem;
+  padding-bottom: 0.22rem;
+}
+
+.affix ul li.active > a,
+#affix ul li.active > a,
+.affix a.active,
+#affix a.active {
+  color: var(--sk-accent);
+  font-weight: 600;
+}
+
+/* ---- Footer ---- */
+footer.border-top {
+  margin-top: 3rem;
+}
+
+/* ---- Scrollbar (webkit) ---- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 140, 160, 0.4);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.55);
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
