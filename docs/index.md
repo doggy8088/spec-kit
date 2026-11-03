@@ -142,51 +142,51 @@ CI Guard 與 Architecture Guard 等社群擴充功能，加入符合團隊既有
 
 <div class="nav-cards">
   <a href="guides/agentic-sdlc.md" class="nav-card">
-    <strong>Spec Kit's Agentic SDLC</strong>
+    <strong>Spec Kit 的代理式 SDLC</strong>
     <span>此專案如何評估、打造、測試、交付與修復變更</span>
   </a>
   <a href="quickstart.md" class="nav-card">
-    <strong>Spec-Driven Development</strong>
+    <strong>規格驅動開發</strong>
     <span>定義、規劃、實作功能並使其收斂</span>
   </a>
   <a href="guides/bugfix.md" class="nav-card">
-    <strong>Bug Fixing</strong>
+    <strong>錯誤修正</strong>
     <span>評估原因、套用範圍明確的修復並驗證結果</span>
   </a>
   <a href="guides/assessment.md" class="nav-card">
-    <strong>Idea Assessment</strong>
+    <strong>構想評估</strong>
     <span>研究構想並決定是否值得投入</span>
   </a>
   <a href="guides/customization.md" class="nav-card">
-    <strong>Customize Spec Kit</strong>
+    <strong>自訂 Spec Kit</strong>
     <span>調整流程、加入能力，或打包以角色為基礎的設定</span>
   </a>
   <a href="guides/existing-projects.md" class="nav-card">
-    <strong>Existing Projects</strong>
+    <strong>既有專案</strong>
     <span>在既有程式碼庫中安全採用 Spec Kit</span>
   </a>
   <a href="upgrade.md" class="nav-card">
-    <strong>Upgrade</strong>
+    <strong>升級</strong>
     <span>讓既有 Spec Kit 專案在各 release 間保持最新</span>
   </a>
   <a href="reference/overview.md" class="nav-card">
-    <strong>Reference</strong>
+    <strong>參考</strong>
     <span>核心命令、目錄、整合、擴充功能、預設集與工作流程</span>
   </a>
   <a href="community/overview.md" class="nav-card">
-    <strong>Community</strong>
+    <strong>社群</strong>
     <span>擴充功能、預設集、實作導覽與 Friend 專案</span>
   </a>
   <a href="local-development.md" class="nav-card">
-    <strong>Development</strong>
+    <strong>開發</strong>
     <span>為 Spec Kit 貢獻</span>
   </a>
   <a href="concepts/sdd.md" class="nav-card">
-    <strong>What is SDD?</strong>
+    <strong>什麼是 SDD？</strong>
     <span>規格驅動開發背後的理念</span>
   </a>
   <a href="history.md" class="nav-card">
-    <strong>History</strong>
+    <strong>歷史</strong>
     <span>Spec Kit 如何從 SDD 基礎成長為可擴充的流程框架</span>
   </a>
 </div>

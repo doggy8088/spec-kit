@@ -1,10 +1,10 @@
-# Agentic SDD
+# 代理式 SDD
 
-`/speckit.*` 斜線命令驅動核心規格驅動開發（SDD）流程，這是由程式代理逐步執行的 **agentic 流程**。如需引導式的端到端執行，請參見[快速入門指南](../quickstart.md)；本頁是每個命令的詳細參考，包括參數、輸出與它們之間的互動。如需流程背後的理念，請參見[什麼是 SDD？](../concepts/sdd.md)。錯誤分流請參見 [Agentic 錯誤修復](agentic-bugfix.md)。
+`/speckit.*` 斜線命令驅動核心規格驅動開發（SDD）流程，這是由程式代理逐步執行的 **agentic 流程**。如需引導式的端到端執行，請參見[快速入門指南](../quickstart.md)；本頁是每個命令的詳細參考，包括參數、輸出與它們之間的互動。如需流程背後的理念，請參見[什麼是 SDD？](../concepts/sdd.md)。錯誤分流請參見 [代理式錯誤修復](agentic-bugfix.md)。
 
 這些命令設計為依序執行，但只有 `/speckit.specify` 是在 `/speckit.plan` 之前嚴格必須的。釐清、檢核清單與分析命令是品質關卡，適用於任何有明顯模糊之處的情況。
 
-若要在投入規格前評估想法，請參見[Agentic 想法評估](agentic-assessment.md)。評估是選用的，且獨立於 SDD 流程。
+若要在投入規格前評估想法，請參見[代理式想法評估](agentic-assessment.md)。評估是選用的，且獨立於 SDD 流程。
 
 > [!NOTE]
 > 本頁的命令一律以 `/speckit.*` 形式撰寫。GitHub Copilot 的預設 skills 模式使用 `/speckit-*`；部分其他代理使用 `$speckit-*`（例如 Codex、ZCode）或 `/skill:speckit-*`（例如 Kimi）。請參見[命令呼叫方式](../integrations/cli.md#command-invocation)。

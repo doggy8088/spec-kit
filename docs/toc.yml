@@ -1,48 +1,48 @@
-# Home page
-- name: Home
+# 首頁
+- name: 首頁
   href: index.md
 
-# Project history
-- name: Project History
+# 專案歷史
+- name: 專案歷史
   href: history.md
 
-# Getting started section
-- name: Getting Started
+# 入門指南
+- name: 入門指南
   items:
-    - name: Installation
+    - name: 安裝
       href: installation.md
-    - name: Spec Kit's Agentic SDLC
+    - name: Spec Kit 的代理式 SDLC
       href: guides/agentic-sdlc.md
-    - name: Spec-Driven Development
+    - name: 規格驅動開發
       href: quickstart.md
-    - name: Bug Fixing
+    - name: 錯誤修正
       href: guides/bugfix.md
-    - name: Idea Assessment
+    - name: 構想評估
       href: guides/assessment.md
-    - name: Existing Projects
+    - name: 既有專案
       href: guides/existing-projects.md
-    - name: Customize or Bring Your Own
+    - name: 自訂或自帶流程
       href: guides/customization.md
-    - name: Upgrade
+    - name: 升級
       href: upgrade.md
-    - name: Install uv
+    - name: 安裝 uv
       href: install/uv.md
-    - name: Install from PyPI
+    - name: 從 PyPI 安裝
       href: install/pypi.md
-    - name: Install with pipx
+    - name: 使用 pipx 安裝
       href: install/pipx.md
-    - name: One-time Usage (uvx)
+    - name: 一次性使用（uvx）
       href: install/one-time.md
-    - name: Enterprise / Air-Gapped
+    - name: 企業／氣隙環境
       href: install/air-gapped.md
 
-# Agent integrations
-- name: Integrations
+# 代理整合
+- name: 整合
   href: integrations/index.md
   items:
-    - name: Overview
+    - name: 總覽
       href: integrations/index.md
-    - name: CLI Reference
+    - name: 整合 CLI 參考
       href: integrations/cli.md
     - name: Alquimia AI
       href: integrations/alquimia.md
@@ -104,7 +104,7 @@
       href: integrations/vibe.md
     - name: Muse Code
       href: integrations/muse.md
-    - name: None (shared scaffolding only)
+    - name: 無（僅共用骨架）
       href: integrations/none.md
     - name: Oh My Pi
       href: integrations/omp.md
@@ -128,97 +128,97 @@
       href: integrations/zcode.md
     - name: Zed
       href: integrations/zed.md
-    - name: Generic (bring your own agent)
+    - name: 通用（自備代理）
       href: integrations/generic.md
-    - name: Catalogs and External Adapters
+    - name: 目錄與外部轉接器
       href: integrations/catalog.md
-    - name: Contributing Integrations
+    - name: 貢獻整合
       href: integrations/contributing.md
 
-# Extensions
-- name: Extensions
+# 擴充功能
+- name: 擴充功能
   href: extensions/overview.md
   items:
-    - name: Overview
+    - name: 總覽
       href: extensions/overview.md
-    - name: Developing
+    - name: 開發擴充功能
       href: extensions/developing.md
-    - name: API Reference
+    - name: 擴充功能 API 參考
       href: extensions/api.md
-    - name: Publishing
+    - name: 擴充功能發佈指南
       href: extensions/publishing.md
 
-# Reference
-- name: Reference
+# 參考
+- name: 參考
   items:
-    - name: Overview
+    - name: 總覽
       href: reference/overview.md
-    - name: Core Commands
+    - name: 核心命令
       href: reference/core.md
-    - name: MCP Server
+    - name: MCP 伺服器
       href: reference/mcp.md
-    - name: Integration Management
+    - name: 整合管理
       href: integrations/cli.md
-    - name: Catalogs
+    - name: 目錄
       href: reference/catalogs.md
-    - name: Extensions
+    - name: 擴充功能
       href: reference/extensions.md
-    - name: Presets
+    - name: 預設集
       href: reference/presets.md
-    - name: Artifacts
+    - name: 成品
       href: reference/artifacts.md
-    - name: Workflows
+    - name: 工作流程
       href: reference/workflows.md
-    - name: Bundles
+    - name: 套件組
       href: reference/bundles.md
-    - name: Agentic SDD
+    - name: 代理式 SDD
       href: reference/agentic-sdd.md
-    - name: Agentic Bug Fix
+    - name: 代理式錯誤修復
       href: reference/agentic-bugfix.md
-    - name: Agentic Idea Assessment
+    - name: 代理式想法評估
       href: reference/agentic-assessment.md
-    - name: Authentication
+    - name: 驗證
       href: reference/authentication.md
 
-# Concepts
-- name: Concepts
+# 概念
+- name: 概念
   items:
-    - name: What is SDD?
+    - name: 什麼是 SDD？
       href: concepts/sdd.md
-    - name: Spec Persistence Models
+    - name: 規格保存模型
       href: concepts/spec-persistence.md
-    - name: Handling Complex Features
+    - name: 處理複雜功能
       href: concepts/complex-features.md
-    - name: Spec of Specs
+    - name: 規格的規格
       href: concepts/spec-of-specs.md
 
-# Development workflows
-- name: Development
+# 開發工作流程
+- name: 開發
   items:
-    - name: Local Development
+    - name: 本地開發
       href: local-development.md
-    - name: Evolving Specs
+    - name: 規格演進
       href: guides/evolving-specs.md
-    - name: Contract-Driven Development
+    - name: 契約驅動開發
       href: guides/contract-driven-development.md
-    - name: Monorepos
+    - name: Monorepo
       href: guides/monorepo.md
 
-# Community
-- name: Community
+# 社群
+- name: 社群
   href: community/overview.md
   items:
-    - name: Overview
+    - name: 總覽
       href: community/overview.md
-    - name: Extensions
+    - name: 社群擴充功能
       href: community/extensions.md
-    - name: Presets
+    - name: 社群預設集
       href: community/presets.md
-    - name: Bundles
+    - name: 社群套件組
       href: community/bundles.md
-    - name: Workflow Step Types
+    - name: 工作流程步驟類型
       href: community/workflow-steps.md
-    - name: Walkthroughs
+    - name: 實作導覽
       href: community/walkthroughs.md
     - name: Friends
       href: community/friends.md

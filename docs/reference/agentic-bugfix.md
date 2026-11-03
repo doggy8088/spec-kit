@@ -1,6 +1,6 @@
-# Agentic 錯誤修復
+# 代理式錯誤修復
 
-**bug** 擴充功能新增三步驟的錯誤分流流程，也就是評估、修復與驗證，由程式代理與核心 [Agentic SDD](agentic-sdd.md) 流程並行執行。每個錯誤在 `.specify/bugs/<slug>/` 下各自有獨立目錄，每個階段各有一份 Markdown 報告。
+**bug** 擴充功能新增三步驟的錯誤分流流程，也就是評估、修復與驗證，由程式代理與核心 [代理式 SDD](agentic-sdd.md) 流程並行執行。每個錯誤在 `.specify/bugs/<slug>/` 下各自有獨立目錄，每個階段各有一份 Markdown 報告。
 
 如需引導式範例，請參閱[錯誤修復快速入門](../guides/bugfix.md)。修復錯誤不需先進行 SDD 功能流程。若要評估想法而非修復損壞的行為，請參見[想法評估](agentic-assessment.md)。
 

@@ -62,20 +62,20 @@ Specify CLI（`specify`）管理規格驅動開發的完整生命週期，從專
 
 上述章節涵蓋由 `specify` CLI 管理的原語。以下是程式代理執行的獨立流程，不是終端機命令。參考文件使用 `/speckit.*` 記法；你的代理語法請參見[命令呼叫方式](../integrations/cli.md#command-invocation)。如需引導式範例，請從 [SDD](../quickstart.md)、[錯誤修復](../guides/bugfix.md) 或[想法評估](../guides/assessment.md)開始。
 
-### Agentic SDD
+### 代理式 SDD
 
 驅動核心規格驅動開發流程的 `/speckit.*` 斜線命令，由程式代理逐步執行，包括憲章、規格、釐清、計畫、檢核清單、任務、分析、實作與收斂。請依序執行，對於有明顯模糊之處，加入釐清、檢核清單、分析等品質關卡。
 
-[Agentic SDD 參考 →](agentic-sdd.md)
+[代理式 SDD 參考 →](agentic-sdd.md)
 
-### Agentic 錯誤修復
+### 代理式錯誤修復
 
 隨附的 **bug** 擴充功能新增三步驟的錯誤分流流程，也就是評估、修復與驗證，每個錯誤在 `.specify/bugs/` 下各自有獨立目錄。使用 `specify extension add bug` 安裝。
 
-[Agentic 錯誤修復參考 →](agentic-bugfix.md)
+[代理式錯誤修復參考 →](agentic-bugfix.md)
 
-### Agentic 想法評估
+### 代理式想法評估
 
 隨附、需主動啟用的 **assess** 擴充功能，透過受理、研究、定義、塑形與 go／needs-clarification／kill 決策來評估想法。它不需要原始碼即可運作，也不需要、也不會自動啟動 SDD。使用 `specify extension add assess` 安裝。
 
-[Agentic 想法評估參考 →](agentic-assessment.md)
+[代理式想法評估參考 →](agentic-assessment.md)
