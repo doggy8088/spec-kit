@@ -2,7 +2,7 @@
 
 <img class="landing-hero-logo" src="images/spec-kit-logo.webp" alt="" width="120" height="120">
 
-# GitHub Spec Kit
+<h1 id="github-spec-kit"><span class="h-word-1">GitHub</span> <span class="h-word-2">Spec</span> <span class="h-word-3">Kit</span></h1>
 
 **以規格打造、修正錯誤，或評估構想，交給你的程式代理。**
 
