@@ -1,31 +1,23 @@
 # Amp
 
-Install the [Amp CLI](https://ampcode.com/) before setup.
-The integration key is `amp`.
+設定前請先安裝 [Amp CLI](https://ampcode.com/)。整合鍵為 `amp`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration amp
 ```
 
-For an existing Spec Kit project, use `specify integration install amp`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install amp`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Commands
+## 已安裝的命令
 
-Markdown commands are installed under `.agents/commands/`.
-Invoke them in the agent's chat using dotted notation, for example
-`/speckit.specify` or `/speckit.bug.assess` for the installed bug extension.
+Markdown 命令會安裝在 `.agents/commands/` 之下。在代理的聊天中以點記法呼叫它們，例如 `/speckit.specify`，或已安裝 bug 擴充功能的 `/speckit.bug.assess`。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Workflow steps use `amp --execute <prompt>`, adding `--stream-json` when
-structured output is requested. The integration does not forward the workflow
-`model` setting: Amp's `--mode` selects an agent mode, not a model.
-There are no integration-specific setup options.
+工作流程步驟使用 `amp --execute <prompt>`，並在要求結構化輸出時加上 `--stream-json`。本整合不會轉傳工作流程的 `model` 設定：Amp 的 `--mode` 選的是代理模式，而不是模型。沒有整合專屬的設定選項。

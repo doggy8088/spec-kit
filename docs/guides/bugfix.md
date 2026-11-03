@@ -1,82 +1,59 @@
-# Bug Fixing Quickstart
+# 錯誤修復快速入門
 
-Use this process when existing behavior is broken and you need an evidence-based
-diagnosis, a scoped repair, and verification against the original report. You do
-not need to run the SDD feature workflow first.
+當既有行為出錯，需要有憑有據的診斷、限定範圍的修復，以及對照原始回報的驗證時，就使用這套流程。你不必先跑 SDD 功能工作流程。
 
-The bundled, opt-in **bug** extension separates the work into
-**assess → fix → test**. Each bug gets a directory under
-`.specify/bugs/<slug>/` containing the diagnosis, change record, and test results.
+隨附的選用 **bug** 擴充功能把工作拆成 **assess → fix → test** 三個階段。每個錯誤都會在 `.specify/bugs/<slug>/` 下建立一個目錄，存放診斷、變更紀錄與測試結果。
 
-## Set up
+## 安裝設定
 
-First [install Spec Kit](../installation.md) and initialize the repository that
-contains the bug. If it already contains code, follow
-[Adopting Spec Kit in an Existing Project](existing-projects.md).
+先[安裝 Spec Kit](../installation.md)，並初始化包含該錯誤的儲存庫。若儲存庫已有程式碼，請依循[在既有專案中採用 Spec Kit](existing-projects.md)。
 
-In a terminal at the initialized project root, install the extension:
+在已初始化專案根目錄的終端機中，安裝擴充功能：
 
 ```bash
 specify extension add bug
 ```
 
-Then launch your coding agent in that directory. The examples below use
-GitHub Copilot's default skills mode (`--integration copilot`). Other agents
-expose the same steps using their own
-[command invocation syntax](../integrations/cli.md#command-invocation).
-Invoke each `/speckit-bug-*` skill separately in your agent's chat and review its
-output before continuing. These are agent skills, not terminal commands; the
-terminal command above only installs the extension.
+接著在該目錄中啟動你的程式代理。以下範例使用 GitHub Copilot 的預設 skills 模式（`--integration copilot`）。其他代理會以各自的[命令呼叫語法](../integrations/cli.md#command-invocation)提供相同步驟。請在代理的聊天中分別呼叫每個 `/speckit-bug-*` skill，並在繼續之前檢視其輸出。這些是代理 skill，不是終端機命令；上面的終端機命令只是安裝擴充功能。
 
-## 1. Assess the bug
+## 1. 評估錯誤
 
-Provide the symptom, reproduction steps, and expected behavior. A GitHub issue
-URL or stack trace also works. Choose a short, reusable name for the bug:
+提供症狀、重現步驟與預期行為。GitHub issue 連結或堆疊追蹤也可以。為該錯誤選一個簡短、可重複使用的名稱：
 
 ```text
 /speckit-bug-assess "Submitting the login form with an empty password crashes the app instead of showing a validation error." slug=login-crash
 ```
 
-The agent investigates the code and writes
-`.specify/bugs/login-crash/assessment.md`. It does not change source code.
-Review the diagnosis and proposed remediation before asking for a fix; do not
-proceed with an unsupported diagnosis or a report that is not a bug.
+代理會調查程式碼，並寫入 `.specify/bugs/login-crash/assessment.md`。它不會修改原始碼。在要求修復之前，請檢視診斷與建議的補救方式；若診斷沒有依據，或回報的內容根本不是錯誤，不要繼續。
 
-## 2. Fix the assessed cause
+## 2. 修復已評估的原因
 
-Use the same slug:
+使用相同的 slug：
 
 ```text
 /speckit-bug-fix slug=login-crash
 ```
 
-The agent applies the assessed remediation and records the changes in
-`.specify/bugs/login-crash/fix.md`. This is the only stage that edits source
-code. If new evidence requires work outside the assessed scope, the agent must
-record that deviation rather than silently expanding the repair.
+代理會套用已評估的補救方式，並把變更記錄在 `.specify/bugs/login-crash/fix.md`。這是唯一會編輯原始碼的階段。若新證據顯示需要超出已評估範圍的工作，代理必須記錄該偏離，而不是悄悄擴大修復範圍。
 
-## 3. Test the fix
+## 3. 測試修復
 
 ```text
 /speckit-bug-test slug=login-crash
 ```
 
-The agent re-runs the reproduction and relevant tests, then writes
-`.specify/bugs/login-crash/test.md`. This stage records evidence; it does not
-edit source code to make a failing test pass.
+代理會重新執行重現步驟與相關測試，接著寫入 `.specify/bugs/login-crash/test.md`。這個階段記錄證據；它不會為了讓失敗的測試通過而編輯原始碼。
 
-| Verdict | Meaning | What to do |
+| 判定 | 意義 | 下一步 |
 | --- | --- | --- |
-| `verified` | The verification requirements were exercised successfully | Review the patch and evidence before merging |
-| `partial` | Some verification could not be completed | Supply the missing environment or reproduction evidence and test again |
-| `failed` | Verification found a remaining problem | Revisit the diagnosis or fix using that evidence, then test again |
+| `verified` | 驗證要求已成功執行 | 在合併前檢視修補與證據 |
+| `partial` | 部分驗證無法完成 | 提供缺漏的環境或重現證據，再重新測試 |
+| `failed` | 驗證發現仍有問題 | 依該證據重新檢視診斷或修復，再重新測試 |
 
-A passing test suite alone is not enough if the original reproduction was never
-exercised. Keep the assessment, fix record, and test report together so a reviewer
-can trace the repair from symptom to evidence.
+若原始重現步驟從未實際執行，光是測試套件通過並不夠。請把評估、修復紀錄與測試報告放在一起，讓審查者能從症狀一路追溯到證據。
 
-## Learn more
+## 深入了解
 
-- [Bug command reference](../reference/agentic-bugfix.md): arguments, slug handling, and output contracts.
-- [SDD quickstart](../quickstart.md): use this when the work is a new feature rather than a repair.
-- [Idea assessment quickstart](assessment.md): investigate whether a proposed change is worth pursuing.
+- [錯誤命令參考](../reference/agentic-bugfix.md)：引數、slug 處理與輸出契約。
+- [SDD 快速入門](../quickstart.md)：當工作是新功能而非修復時使用。
+- [構想評估快速入門](assessment.md)：調查一項提議的變更是否值得投入。

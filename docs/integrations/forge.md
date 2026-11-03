@@ -1,36 +1,25 @@
 # Forge
 
-Install [Forge](https://forgecode.dev/) before setup.
-The integration key is `forge`.
+設定前請先安裝 [Forge](https://forgecode.dev/)。整合鍵為 `forge`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration forge
 ```
 
-For an existing Spec Kit project, use `specify integration install forge`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install forge`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Commands
+## 已安裝的命令
 
-Markdown commands are installed under `.forge/commands/`, using dotted
-filenames such as `speckit.specify.md`. Their frontmatter command names are
-hyphenated, such as `speckit-specify`; filenames and invocation names differ.
-Invoke them in the agent's chat as `/speckit-specify` or
-`/speckit-bug-assess` for the installed bug extension, not dotted commands.
+Markdown 命令會安裝在 `.forge/commands/` 之下，使用點記法檔名，例如 `speckit.specify.md`。它們在 frontmatter 中的命令名稱則是連字號形式，例如 `speckit-specify`；檔名與呼叫名稱並不相同。在代理的聊天中以 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess` 呼叫它們，不要使用點記法命令。
 
-Forge templates use `{{parameters}}` for arguments. Spec Kit strips incompatible
-`handoffs` frontmatter during core setup.
+Forge 範本使用 `{{parameters}}` 作為參數。Spec Kit 會在核心設定期間移除不相容的 `handoffs` frontmatter。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Workflow steps use `forge -p <prompt>`. The adapter does not forward a configured
-`model` or add a structured-output flag. Select the model in Forge's own
-configuration, for example with `forge config set model`.
-There are no integration-specific setup options.
+工作流程步驟使用 `forge -p <prompt>`。轉接器不會轉傳已設定的 `model`，也不會加上結構化輸出旗標。請在 Forge 自己的設定中選取模型，例如使用 `forge config set model`。沒有整合專屬的設定選項。

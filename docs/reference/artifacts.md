@@ -1,22 +1,22 @@
-# Artifacts
+# 成品
 
-An **artifact** is any command, template, script, or hook Spec Kit exposes in a project, regardless of which layer contributes it — built-in assets, an installed preset, an installed extension, or a project-local override in `.specify/templates/overrides/`.
+**成品**是 Spec Kit 在專案中公開的任何命令、範本、指令碼或 hook，無論由哪一層貢獻，包括內建資產、已安裝的預設集、已安裝的擴充功能，或 `.specify/templates/overrides/` 中的專案本機覆寫。
 
-The `specify artifact` command group is the read-only introspection surface for that inventory. `specify preset resolve <name>` answers "which file wins for this preset-managed name?"; `specify artifact` answers "what exists at all, and what is the full composition stack behind it?" — including built-in artifacts that no preset touches.
+`specify artifact` 命令群組是該清單的唯讀檢視介面。`specify preset resolve <name>` 回答「對於這個由預設集管理的名稱，哪個檔案勝出？」；`specify artifact` 回答「到底存在什麼，其背後的完整組成堆疊為何？」，包括沒有預設集觸及的內建成品。
 
-All subcommands currently require `--json`. Omitting it exits with code `2` and prints a usage message on stderr; no stdout is produced. Text rendering is deliberately deferred so the JSON shapes below are the only contract, and adding a default text renderer later stays a non-breaking, additive change.
+目前所有子命令都需要 `--json`。省略它會以代碼 `2` 結束，並在 stderr 列印使用訊息；不會產生 stdout。文字呈現被刻意延後，因此下方的 JSON 形狀是唯一的合約，日後新增預設文字呈現器仍是非破壞性、附加性的變更。
 
-## List Artifacts
+## 列出成品
 
 ```bash
 specify artifact list --json
 ```
 
-| Option   | Description                                              |
+| 選項 | 說明 |
 | -------- | -------------------------------------------------------- |
-| `--json` | Required. Emit the inventory as a JSON array on stdout.  |
+| `--json` | 必要。以 JSON 陣列形式將清單輸出到 stdout。  |
 
-Prints the full inventory of every visible artifact — one row per `(kind, name)` pair, including its composition `stack`. Named artifacts are sorted by kind (`command`, then `template`, then `script`) and name. Hook rows follow them, sorted by event and then by the first declaration's priority.
+列印每個可見成品的完整清單，每個 `(kind, name)` 配對一列，包含其組成 `stack`。具名成品依種類（`command`，然後 `template`，然後 `script`）與名稱排序。Hook 列在其後，依事件排序，然後依第一個宣告的優先順序排序。
 
 ```json
 [
@@ -65,28 +65,28 @@ Prints the full inventory of every visible artifact — one row per `(kind, name
 ]
 ```
 
-| Field         | Description                                                               |
+| 欄位 | 說明 |
 | ------------- | ------------------------------------------------------------------------- |
-| `id`          | `{kind}:{name}` — the shorthand `artifact info` accepts as its argument    |
-| `name`        | Logical artifact name (commands use the `speckit.<stem>` namespace)        |
-| `kind`        | One of `command`, `template`, `script`, `hook`                             |
-| `description` | Description from the highest-precedence layer that declares one, else `""` |
-| `stack`       | Composition stack for this artifact, using the same row shape as `artifact info` |
+| `id`          | `{kind}:{name}`，即 `artifact info` 接受作為參數的簡寫    |
+| `name`        | 邏輯成品名稱（命令使用 `speckit.<stem>` 命名空間）        |
+| `kind`        | `command`、`template`、`script`、`hook` 其中之一                             |
+| `description` | 來自宣告它的最高優先層的說明，否則為 `""` |
+| `stack`       | 此成品的組成堆疊，使用與 `artifact info` 相同的列形狀 |
 
-Built-in artifacts always appear, even when nothing overrides them. Descriptions come from the highest-priority layer that has one — a preset or project override that hides a built-in command reports its own description, not the hidden built-in text. Skills (`.github/skills/**/SKILL.md`) are excluded: they are integration-specific output, not a shipped asset family.
+內建成品永遠會出現，即使沒有任何東西覆寫它們。說明來自具有說明的最高優先層，隱藏內建命令的預設集或專案覆寫會回報自己的說明，而非被隱藏的內建文字。Skills（`.github/skills/**/SKILL.md`）被排除：它們是整合專屬輸出，不是隨附的資產家族。
 
-## Artifact Info
+## 成品資訊
 
 ```bash
 specify artifact info <name> --json
 ```
 
-| Option           | Description                                                        |
+| 選項 | 說明 |
 | ---------------- | ------------------------------------------------------------------- |
-| `--json`         | Required. Emit the composition stack as a JSON object on stdout.    |
-| `--kind <kind>`  | Narrow the lookup to `command`, `template`, `script`, or `hook`      |
+| `--json`         | 必要。以 JSON 物件形式將組成堆疊輸出到 stdout。    |
+| `--kind <kind>`  | 將查詢限縮為 `command`、`template`、`script` 或 `hook`      |
 
-`<name>` accepts either a bare name (`speckit.specify`) or the `kind:name` shorthand (`command:speckit.specify`). When both the shorthand and `--kind` are supplied they must agree.
+`<name>` 接受裸名稱（`speckit.specify`）或 `kind:name` 簡寫（`command:speckit.specify`）。當簡寫與 `--kind` 同時提供時，兩者必須一致。
 
 ```json
 {
@@ -125,117 +125,94 @@ specify artifact info <name> --json
 }
 ```
 
-The top-level `id`, `name`, `kind`, `description`, and `stack` fields match the corresponding row on `artifact list --json`.
+最上層的 `id`、`name`、`kind`、`description` 與 `stack` 欄位，與 `artifact list --json` 上對應的列相符。
 
-### Stack semantics
+### 堆疊語意
 
-For command, template, and script artifacts, `stack` is ordered by resolution precedence: index `0` is the winning layer. Hook stacks are additive rather than winner-based: multiple entries may be active, and their declaration ordering is described in [Hook artifacts](#hook-artifacts). Each row describes one contributing layer:
+對於 command、template 與 script 成品，`stack` 依解析優先順序排列：索引 `0` 是勝出層。Hook 堆疊是附加性的，而非以勝出者為基礎：多個項目可以同時啟用，其宣告順序在 [Hook 成品](#hook-artifacts) 中說明。每一列描述一個貢獻層：
 
-| Field          | Description                                                                     |
+| 欄位 | 說明 |
 | -------------- | -------------------------------------------------------------------------------- |
-| `id`           | `{kind}:{name}` — the source-agnostic round-trip key, identical on every row of the same artifact's stack |
-| `layer`        | `project`, `preset`, or `extension`; `null` for built-in layers                    |
-| `sourceId`     | Installed preset or extension ID used by the resolver, or `null` when the layer has no provenance |
-| `presetId`     | Preset pack directory id; `null` on built-in, `project`, and `extension` rows       |
-| `presetName`   | Preset display name when its manifest declares one, else the pack id; `null` when `presetId` is `null` |
-| `strategy`     | `replace`, `wrap`, `prepend`, `append`, or `additive`                              |
-| `active`       | Whether the layer is active; for named artifacts this is `true` only at index `0` |
-| `hidden`       | `true` when a lower-index `replace` layer cuts this layer out of the composition |
-| `manifestPath` | Project-relative path to the declaring manifest, or `null` when none applies      |
-| `lookupId`     | Deterministic `{layer}:{sourceId}:{kind}:{name}` identifier, or `null` for built-in layers |
-| `sourcePath`   | Project-relative POSIX path to the concrete file backing the layer, or `null` for built-in/synthetic layers |
+| `id`           | `{kind}:{name}`，與來源無關的來回鍵，在同一個成品堆疊的每一列上都相同 |
+| `layer`        | `project`、`preset` 或 `extension`；內建層為 `null`                    |
+| `sourceId`     | 解析器使用的已安裝預設集或擴充功能 ID，當該層沒有來源時為 `null` |
+| `presetId`     | 預設集套件目錄 id；在內建、`project` 與 `extension` 列上為 `null`       |
+| `presetName`   | 當其資訊清單宣告了顯示名稱時為該名稱，否則為套件 id；當 `presetId` 為 `null` 時為 `null` |
+| `strategy`     | `replace`、`wrap`、`prepend`、`append` 或 `additive`                              |
+| `active`       | 該層是否啟用；對於具名成品，只有在索引 `0` 時為 `true` |
+| `hidden`       | 當較低索引的 `replace` 層將此層從組成中切除時為 `true` |
+| `manifestPath` | 宣告資訊清單的專案相對路徑，當不適用時為 `null`      |
+| `lookupId`     | 確定性的 `{layer}:{sourceId}:{kind}:{name}` 識別碼，內建層為 `null` |
+| `sourcePath`   | 支援該層的具體檔案的專案相對 POSIX 路徑，內建／合成層為 `null` |
 
-`active` and `hidden` are independent labels, not opposites. For command, template, and script artifacts, `active` identifies the highest-precedence layer selected by the existing Spec Kit layer-resolution order; it does not validate that the layer content can be read or composed. This preserves the diagnostic behavior of `specify preset resolve`, which reports the discovered layer chain even when content composition later produces a warning. Composing strategies (`wrap`, `prepend`, `append`) keep lower layers in the composed output, so an inactive layer is not necessarily hidden: only layers below the first `replace` layer are marked `hidden`. Built-in rows have no provenance: `layer`, `sourceId`, and `lookupId` are `null` — but `id` is always populated, even on built-in rows. `id` is the round-trip key: `specify artifact info` accepts it as input (for example, `specify artifact info command:speckit.specify --json`), and it resolves the same artifact whether the caller passes the bare name or the `id`.
+`active` 與 `hidden` 是獨立標籤，不是相反。對於 command、template 與 script 成品，`active` 標識由既有 Spec Kit 層解析順序選出的最高優先層；它不驗證該層內容是否可讀取或組成。這保留了 `specify preset resolve` 的診斷行為，該命令即使內容組成之後產生警告，也會回報已發現的層鏈。組成策略（`wrap`、`prepend`、`append`）會將較低層保留在組成的輸出中，因此未啟用的層不一定被隱藏：只有第一個 `replace` 層以下的層會被標為 `hidden`。內建列沒有來源：`layer`、`sourceId` 與 `lookupId` 為 `null`，但 `id` 永遠有值，即使在內建列上也是如此。`id` 是來回鍵：`specify artifact info` 接受它作為輸入（例如 `specify artifact info command:speckit.specify --json`），且無論呼叫者傳入裸名稱還是 `id`，它都解析到同一個成品。
 
-Here, **provenance** means the origin of one artifact layer: the installed
-preset or extension that supplied it, the manifest that declared it, and the
-concrete file that backs it. Lookup IDs use the installed preset or extension
-ID, matching the identity and ordering used by the existing resolver. The
-installed ID is the registry/directory name and may differ from the logical
-`id` declared inside the manifest. Using the installed ID keeps separate
-installed directories distinct even when their manifests declare the same
-logical ID.
+此處的**來源**是指單一成品層的起源：提供它的已安裝預設集或擴充功能、宣告它的資訊清單，以及支援它的具體檔案。查詢 ID 使用已安裝的預設集或擴充功能 ID，與既有解析器使用的身分與順序相符。已安裝 ID 是登錄／目錄名稱，可能與資訊清單內宣告的邏輯 `id` 不同。使用已安裝 ID 可讓獨立的已安裝目錄保持區分，即使其資訊清單宣告了相同的邏輯 ID。
 
-Project-local overrides carry a synthetic `project:_:{kind}:{name}` ID, while
-built-in layers have no `lookupId`. These values identify artifact-stack
-provenance; they are not the artifact round-trip key — use `id` with
-`artifact info` for that. `manifestPath` identifies the declaring manifest,
-and `sourcePath` identifies the concrete file backing the layer when one
-exists. Core, project-override, and other synthetic rows may report
-`sourcePath: null`.
+專案本機覆寫帶有合成的 `project:_:{kind}:{name}` ID，而內建層沒有 `lookupId`。這些值標識成品堆疊的來源；它們不是成品來回鍵，來回請使用 `id` 搭配 `artifact info`。`manifestPath` 標識宣告資訊清單，`sourcePath` 在存在時標識支援該層的具體檔案。核心、專案覆寫與其他合成列可能回報 `sourcePath: null`。
 
-## Contribution Lookup
+## 貢獻查詢
 
 ```bash
 specify artifact lookup <lookupId> --json
 ```
 
-Resolves a manifest-backed stack `lookupId` to the validated preset or extension
-declaration that Spec Kit uses. The returned declaration reflects normal
-manifest processing, including canonical extension command names, injected
-defaults such as empty alias lists, and lowercase preset strategies. It is not
-a verbatim representation of the authored YAML.
+將資訊清單支援的堆疊 `lookupId` 解析為 Spec Kit 使用的已驗證預設集或擴充功能宣告。回傳的宣告反映正常的資訊清單處理，包括標準的擴充功能命令名稱、注入的預設值（例如空的別名清單）與小寫的預設集策略。它不是撰寫的 YAML 的逐字呈現。
 
-This keeps cross-reference behavior inside the artifact command: preset and
-extension commands, manifests, and resolver return shapes are unchanged.
+這讓跨參照行為保留在 artifact 命令內：預設集與擴充功能命令、資訊清單與解析器回傳形狀都不變。
 
-The response includes the stable lookup ID, provider coordinates, manifest and
-source paths, and the effective declaration under `contribution`.
-Convention-only contributions and project overrides have no originating
-manifest declaration, so lookup returns
-`{"error": "unknown contribution <lookupId>"}` with exit code `1`. Built-in
-rows never have a `lookupId`.
+回應包含穩定的查詢 ID、提供者座標、資訊清單與來源路徑，以及 `contribution` 下的有效宣告。僅依慣例的貢獻與專案覆寫沒有起源資訊清單宣告，因此查詢會回傳 `{"error": "unknown contribution <lookupId>"}`，結束代碼為 `1`。內建列永遠沒有 `lookupId`。
 
-### Hook artifacts
+### Hook 成品
 
-Hook rows project hook declarations from extensions included by the standard preset and extension resolver. The round-trip shorthand is:
+Hook 列從標準預設集與擴充功能解析器包含的擴充功能中，投影 hook 宣告。來回簡寫為：
 
 ```text
 hook:{encodedEventName}:{encodedTargetCommand}
 ```
 
-For example, both of these select the same hook artifact:
+例如，以下兩者選取同一個 hook 成品：
 
 ```bash
 specify artifact info hook:before_specify:speckit.compliance.pre-check --json
 specify artifact info before_specify:speckit.compliance.pre-check --kind hook --json
 ```
 
-Hook event and target-command components are UTF-8 percent-encoded using URL quoting: ASCII letters, digits, `-`, `.`, `_`, and `~` remain literal, while all other bytes are encoded. This encoding is limited to the hook components in the artifact `id`, `name`, and `lookupId`; hook manifests, runtime bindings, `eventName`, and `targetCommand` are unchanged. For example, an event named `custom:after` targeting `/skill:speckit-test-ext-hello` has the artifact ID:
+Hook 事件與目標命令元件使用 URL 引用的 UTF-8 百分比編碼：ASCII 字母、數字、`-`、`.`、`_` 與 `~` 保持字面，其餘所有位元組都會編碼。此編碼僅限於成品 `id`、`name` 與 `lookupId` 中的 hook 元件；hook 資訊清單、執行時期繫結、`eventName` 與 `targetCommand` 不變。例如，名為 `custom:after`、目標為 `/skill:speckit-test-ext-hello` 的事件，其成品 ID 為：
 
 ```text
 hook:custom%3Aafter:%2Fskill%3Aspeckit-test-ext-hello
 ```
 
-Hook rows add three top-level fields:
+Hook 列新增三個最上層欄位：
 
-| Field           | Description                                                                    |
+| 欄位 | 說明 |
 | --------------- | ------------------------------------------------------------------------------ |
-| `eventName`     | Hook event that triggers the declaration                                       |
-| `targetCommand` | Command invoked by the hook declaration                                        |
-| `registered`    | `true` when at least one declaring stack entry has an enabled runtime binding  |
+| `eventName`     | 觸發宣告的 hook 事件                                       |
+| `targetCommand` | hook 宣告呼叫的命令                                        |
+| `registered`    | 當至少一個宣告堆疊項目具有已啟用的執行時期繫結時為 `true`  |
 
-Each hook stack entry also includes the declaration's normalized `priority` and `optional` values. Hook entries always use `strategy: "additive"` and `hidden: false`: multiple extensions may declare and register the same event-command pair, and every enabled declaration remains active. Stack entries are sorted by hook priority, with the resolver's deterministic declaration order used as the tiebreaker. This ordering describes the declaration inventory; it is not a promise that equal-priority hooks execute in the same order at runtime.
+每個 hook 堆疊項目還包含宣告正規化後的 `priority` 與 `optional` 值。Hook 項目永遠使用 `strategy: "additive"` 與 `hidden: false`：多個擴充功能可以宣告並註冊相同的事件—命令配對，且每個已啟用的宣告都保持啟用。堆疊項目依 hook 優先順序排序，並以解析器的確定性宣告順序作為同分時的決斷依據。此順序描述宣告清單；它不保證同優先順序的 hook 在執行時期以相同順序執行。
 
-For hooks, `active` reports registration state from `.specify/extensions.yml`, not condition evaluation. A declaration is active only when the runtime configuration contains an enabled binding with the same extension id, event, and command. Conditions are evaluated later when the hook executes. Missing, malformed, or unreadable runtime configuration therefore leaves declarations visible with `registered: false` and `active: false`.
+對於 hook，`active` 回報的是來自 `.specify/extensions.yml` 的註冊狀態，不是條件評估。宣告只有在執行時期設定包含具有相同擴充功能 id、事件與命令的已啟用繫結時才啟用。條件在 hook 執行時稍後才評估。因此，遺失、格式錯誤或無法讀取的執行時期設定，會讓宣告以 `registered: false` 與 `active: false` 保持可見。
 
-Declared-but-unregistered hooks remain visible when their extension is included by the normal resolver. Registry-disabled extensions are excluded entirely, consistently with their other contributions. Invalid individual extension manifests are also omitted by the existing resolver and remain diagnosable through extension inspection and validation commands.
+已宣告但未註冊的 hook，在其擴充功能被正常解析器包含時仍保持可見。在登錄中停用的擴充功能會被完全排除，與其其他貢獻一致。無效的個別擴充功能資訊清單同樣會被既有解析器省略，並可透過擴充功能檢查與驗證命令診斷。
 
-Hook lookup IDs use the artifact-private `{layer}:{sourceId}:hook:{encodedEventName}:{encodedTargetCommand}` grammar, where `sourceId` is the installed provider ID. Hook provenance is restricted to `preset` and `extension` layers; hooks never receive a built-in/core layer. The current manifest API exposes extension hook declarations, so current rows use the `extension` layer. The `preset` layer remains reserved by the hook identifier grammar for preset-provided hooks without requiring artifact IDs to be added to preset or extension manifest APIs.
+Hook 查詢 ID 使用成品私有的 `{layer}:{sourceId}:hook:{encodedEventName}:{encodedTargetCommand}` 文法，其中 `sourceId` 是已安裝的提供者 ID。Hook 來源限於 `preset` 與 `extension` 層；hook 永遠不會收到內建／核心層。目前的資訊清單 API 公開擴充功能 hook 宣告，因此目前的列使用 `extension` 層。`preset` 層在 hook 識別碼文法中保留給預設集提供的 hook，無需將成品 ID 新增到預設集或擴充功能資訊清單 API。
 
-## JSON Errors
+## JSON 錯誤
 
-On failure, nothing is written to stdout. A single-key JSON envelope is written to stderr and the process exits with code `1`:
+失敗時，不會寫入任何內容到 stdout。單鍵 JSON 信封會寫入 stderr，行程以代碼 `1` 結束：
 
 ```json
 { "error": "unknown artifact command:nope" }
 ```
 
-| Message                                             | Cause                                                            |
+| 訊息 | 原因 |
 | --------------------------------------------------- | ---------------------------------------------------------------- |
-| `not a Spec Kit project: no .specify/ directory found` | Run outside an initialized project                             |
-| `unknown artifact <name>`                           | No artifact matches the requested name (and kind, when given)     |
-| `ambiguous artifact <name>: matches kinds [...]`    | The bare name matches more than one kind — re-run with `--kind`   |
-| `artifact resolution failed`                        | The extension registry could not be read, or an error prevented the artifact layer stack from being collected |
+| `not a Spec Kit project: no .specify/ directory found` | 在已初始化專案外執行                             |
+| `unknown artifact <name>`                           | 沒有成品符合所請求的名稱（以及給定時的 kind）     |
+| `ambiguous artifact <name>: matches kinds [...]`    | 裸名稱符合多於一種 kind，請以 `--kind` 重新執行   |
+| `artifact resolution failed`                        | 無法讀取擴充功能登錄，或有錯誤阻止成品層堆疊被蒐集 |
 
-Exit code `2` is reserved for usage errors — a missing `--json` flag or an invalid `--kind` value — and emits a plain-text message on stderr rather than a JSON envelope.
+結束代碼 `2` 保留給使用錯誤，也就是遺失 `--json` 旗標或無效的 `--kind` 值，並在 stderr 發出純文字訊息，而非 JSON 信封。

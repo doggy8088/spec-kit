@@ -1,124 +1,123 @@
-# Constitution Template Sync
+# 憲章範本同步
 
-An **opt-in** preset that restores materialized constitution workflows. It refreshes an unchanged
-generated `.specify/memory/constitution.md` when constitution-providing presets are installed,
-removed, enabled, disabled, or reprioritized. After `/constitution` updates the live file, it also
-aligns `plan-template.md`, `spec-template.md`, `tasks-template.md`, project-local command files, and
-guidance docs so they reflect the current principles.
+一個**選擇加入**的預設集，用來還原具體化的憲章工作流程。當提供憲章的預設集被安裝、
+移除、啟用、停用或重新排序優先級時，它會重新整理一份未經變更的
+已產生 `.specify/memory/constitution.md`。在 `/constitution` 更新即時檔案後，它也會
+對齊 `plan-template.md`、`spec-template.md`、`tasks-template.md`、專案本機命令檔案與
+指引文件，使其反映目前的原則。
 
-This propagation used to be built into `/constitution`; it was dropped when the command moved to the
-preset model. Installing this preset opts you back into materialization: preset stack changes refresh
-the generated constitution, and `/constitution` propagates its guidance into reviewed, committed
-artifacts instead of relying on runtime resolution alone.
+這種傳播以往內建於 `/constitution`；當命令轉移到
+預設集模型時被移除了。安裝這個預設集即選擇重新加入具體化：預設集堆疊變更會重新整理
+已產生的憲章，而 `/constitution` 會將其指引傳播到經審查、已提交的
+產出物，而不是只仰賴執行期解析。
 
-> **What you're opting into.** Propagation was removed deliberately — it duplicates the constitution
-> as the source of truth and can fight the composition stack (materialized edits get shadowed or
-> clobbered on the next recompose). This preset knowingly **reintroduces** that behavior, and those
-> tradeoffs, for teams that want it. Read the [caveats](#caveats-you-take-on) before installing.
+> **你選擇加入的是什麼。**傳播是刻意被移除的 — 它會複製憲章
+> 作為事實來源，並可能與組成堆疊衝突（具體化的編輯會在下一次重新組成時被遮蔽或
+> 覆蓋）。這個預設集在知情下**重新引入**這種行為及其
+> 取捨，供想要它的團隊使用。安裝前請先閱讀[注意事項](#你所承擔的注意事項)。
 
-For most projects the default composable stack is the **recommended** approach, and at organization
-scale it is usually the stronger governance model. Runtime resolution keeps the live constitution as
-the single source of truth (nothing to re-sync, so nothing drifts), and the stack composes the
-**entire** Spec Kit ecosystem — not just the SDD commands, but every command, template, script and
-extension — with explicit priority levels, strategies, and independent versioning. It is a
-capability, not automatic governance: a core team authors its own organizational presets and
-extensions, then owns, versions, and audits that policy in one place and rolls it across many
-repositories, instead of scattering frozen, per-repo copies no central team can see. This preset is
-a supported escape hatch for teams whose workflow depends on reviewing materialized artifacts
-directly — useful as a bridge, though for org-wide policy the better long-term path is usually a
-versioned preset a core team maintains.
+對大多數專案而言，預設的可組成堆疊是**建議**的做法，而在組織
+規模下，它通常是更強的治理模型。執行期解析讓即時憲章保持為
+唯一的事實來源（無需重新同步，因此不會漂移），而且堆疊可以組成
+**整個** Spec Kit 生態系 — 不只是 SDD 命令，還包括每個命令、範本、指令碼與
+擴充功能 — 並帶有明確的優先級、策略與獨立版本管理。它是一種
+能力，而不是自動治理：核心團隊撰寫自己的組織預設集與
+擴充功能，然後在同一個地方擁有、版本管理與稽核該政策，並將其推廣到許多
+儲存庫，而不是散布凍結的、每個儲存庫各一份、中央團隊看不見的副本。這個預設集是
+一個受支援的逃生口，供工作流程仰賴直接審查具體化產出物的團隊
+使用 — 作為橋梁很有用，不過就組織層級的政策而言，長期的更好做法通常是
+由核心團隊維護的有版本預設集。
 
-## What it does
+## 它的功能
 
-Its presence enables core's guarded install-time constitution reconciliation. Installing the preset
-materializes the currently resolved `constitution-template`; later stack changes re-materialize it
-only while the live file still matches its recorded generated-content hash. Human edits disable
-automatic replacement.
+它的存在會啟用核心受保護的安裝期憲章對帳。安裝這個預設集
+會將目前解析出的 `constitution-template` 具體化；之後的堆疊變更只會在即時檔案仍與其記錄的已產生內容雜湊相符時，才重新具體化它。
+人工編輯會停用自動取代。
 
-It also ships a single `wrap`-strategy override of `speckit.constitution`. It composes on top of the
-current core command (via `{CORE_TEMPLATE}`), so it stays forward-compatible with core changes, and
-appends a propagation pass that, after the constitution is written:
+它還附帶一個 `wrap` 策略的 `speckit.constitution` 覆寫。它組成於
+目前核心命令之上（透過 `{CORE_TEMPLATE}`），因此能與核心變更保持向前相容，並
+在憲章寫入後附加一次傳播，內容如下：
 
-- Aligns `plan/spec/tasks-template.md` in `.specify/templates/` with the updated principles.
-- Updates **project-local** command files and guidance docs to correct stale references.
-- Extends the Sync Impact Report in `.specify/memory/constitution.md` with the files it touched.
+- 將 `.specify/templates/` 中的 `plan/spec/tasks-template.md` 與更新後的原則對齊。
+- 更新**專案本機**命令檔案與指引文件，修正過時的參照。
+- 在 `.specify/memory/constitution.md` 的 Sync Impact Report 中補上它碰觸過的檔案。
 
-## What it does not do
+## 它不做的事
 
-- It does **not** change behavior for anyone who does not install it — the default runtime
-  resolution model is untouched.
-- It does **not** disable runtime resolution. `plan`, `tasks`, and `analyze` still read the live
-  constitution every run; this preset adds materialized copies on top — it does not replace the
-  source of truth.
-- It does **not** overwrite an authored or edited constitution. Install-time reconciliation only
-  replaces content whose provenance proves it is an unchanged generated file.
-- It does **not** edit versioned, package-owned files — templates or command files provided or
-  wrapped by another preset or extension. Those are recomposed from the resolution stack, so it
-  only ever writes into your project's own `.specify/templates/` scaffolds and command files that
-  are not managed by a preset/extension.
+- 它**不會**改變未安裝者的行為 — 預設的執行期
+  解析模型不受影響。
+- 它**不會**停用執行期解析。`plan`、`tasks` 與 `analyze` 每次執行仍會讀取即時
+  憲章；這個預設集是在其上加上具體化副本 — 它不會取代
+  事實來源。
+- 它**不會**覆寫已撰寫或已編輯的憲章。安裝期對帳只會
+  取代來源證明其為未經變更之已產生檔案的內容。
+- 它**不會**編輯有版本、由套件擁有的檔案 — 由其他預設集或擴充功能提供或
+  包裝的範本或命令檔案。這些檔案是從解析堆疊重新組成的，因此它
+  只會寫入你專案自身的 `.specify/templates/` 骨架，以及
+  不受預設集／擴充功能管理的命令檔案。
 
-## When to use it
+## 適用時機
 
-Install it **only** if your team treats the materialized templates and commands as
-**reviewed, committed artifacts** — for example, if `plan-template.md`'s Constitution Check is
-read in PRs as "here are our current gates" and is expected to track the constitution.
+**只有**當你的團隊將具體化的範本與命令視為
+**經審查、已提交的產出物**時才安裝它 — 例如，若 `plan-template.md` 的 Constitution Check
+在 PR 中被當作「這是我們目前的關卡」來閱讀，並預期它會追蹤憲章。
 
-If you rely on the default runtime-resolution model, you do **not** need this preset: the live
-constitution is already the single source of truth and there is nothing to sync.
+若你仰賴預設的執行期解析模型，就**不需要**這個預設集：即時
+憲章已經是唯一的事實來源，沒有什麼需要同步。
 
-## Caveats you take on
+## 你所承擔的注意事項
 
-The preset resolution stack is how Spec Kit composes templates and commands going forward: they are
-**layered, package-owned artifacts recomposed on demand**, not frozen files you edit in place.
-Propagation is the opposite idea — it **materializes** guidance into files and freezes it. That
-tension is the main thing to understand before installing:
+預設集解析堆疊是 Spec Kit 未來組成範本與命令的方式：它們是
+**分層、由套件擁有、依需求重新組成的產出物**，而不是凍結後就地編輯的檔案。
+傳播正好是相反的概念 — 它將指引**具體化**到檔案中並將其凍結。這個
+張力是安裝前最需要理解的一點：
 
-- **Materialized copies can drift.** Anything propagated is a snapshot; if you amend the
-  constitution and do not re-run `/constitution`, the copies fall out of sync. The default runtime
-  model has no drift because it reads the live constitution every run.
+- **具體化副本可能漂移。**任何被傳播的內容都是快照；若你修訂
+  憲章卻沒有重新執行 `/constitution`，副本就會失去同步。預設的執行期
+  模型沒有漂移問題，因為它每次執行都讀取即時憲章。
 
-- **Edits to composed files do not survive reconciliation.** If the rest of your SDD flow is
-  preset/extension-managed, the commands it materializes (`speckit.plan`, `speckit.specify`,
-  `speckit.tasks`, `speckit.analyze`, `speckit.implement`, …) are recomputed from the stack. Any
-  guidance propagated into them is clobbered the next time the stack reconciles — on
-  `specify integration use <key>` / `switch`, `specify integration upgrade`, or any preset/extension
-  install or remove. The same applies to templates owned by another preset/extension. This is why
-  the preset restricts itself to project-local files; propagation is reliable **only** for
-  artifacts you own outright.
+- **對已組成檔案的編輯無法在對帳後保留。**若你的其餘 SDD 流程是
+  由預設集／擴充功能管理的，它具體化的命令（`speckit.plan`、`speckit.specify`、
+  `speckit.tasks`、`speckit.analyze`、`speckit.implement`、……）會從堆疊重新計算。任何
+  傳播進其中的指引，都會在堆疊下一次對帳時被覆蓋 — 包括
+  `specify integration use <key>`／`switch`、`specify integration upgrade`，或任何預設集／擴充功能
+  的安裝或移除。由其他預設集／擴充功能擁有的範本也是如此。這就是為什麼
+  這個預設集將自己限制在專案本機檔案；傳播**只有**對
+  你完全擁有的產出物才可靠。
 
-- **A pre-filled Constitution Check can bias `/plan`.** Materializing concrete gates into
-  `plan-template.md` replaces the runtime pointer, so the first `/plan` pass may anchor on the
-  frozen text. Keep the pointer unless you specifically want committed gates.
+- **預先填好的 Constitution Check 可能使 `/plan` 產生偏誤。**將具體關卡具體化到
+  `plan-template.md` 會取代執行期指標，因此第一次 `/plan` 可能會錨定在
+  凍結的文字上。除非你特別想要已提交的關卡，否則請保留指標。
 
-**Bottom line:** this preset fits projects whose governed templates and commands are project-local
-artifacts they review, with the rest of the SDD flow on the plain bundled core. If your
-`plan`/`specify`/`tasks`/`analyze` commands or templates come from other presets or extensions,
-prefer the default runtime-resolution model.
+**結論：**這個預設集適合其受治理範本與命令是專案本機
+產出物、且會加以審查的專案，其餘 SDD 流程則使用原生的內建核心。若你的
+`plan`／`specify`／`tasks`／`analyze` 命令或範本來自其他預設集或擴充功能，
+請優先使用預設的執行期解析模型。
 
-## Installation
+## 安裝
 
 ```bash
-# constitution-sync is a bundled preset — no download needed
+# constitution-sync 是內建預設集 — 無需下載
 specify preset add constitution-sync
 ```
 
-## Development
+## 開發
 
 ```bash
-# Test from local directory
+# 從本機目錄測試
 specify preset add --dev ./presets/constitution-sync
 
-# Verify the wrapped command resolves
+# 驗證包裝後的命令解析結果
 specify preset resolve speckit.constitution
 
-# Remove when done
+# 完成後移除
 specify preset remove constitution-sync
 ```
 
-## Migrating back to the default
+## 遷移回預設模式
 
-To move back to runtime resolution, reset each materialized `## Constitution Check` section in
-`.specify/templates/plan-template.md` to the pointer:
+要回到執行期解析，請將 `.specify/templates/plan-template.md` 中每個具體化的 `## Constitution Check` 區段
+重設為指標：
 
 ```text
 ## Constitution Check
@@ -128,8 +127,8 @@ To move back to runtime resolution, reset each materialized `## Constitution Che
 [Gates determined based on constitution file]
 ```
 
-Then remove this preset. See `docs/upgrade.md` for details.
+然後移除這個預設集。詳情請參閱 `docs/upgrade.md`。
 
-## License
+## 授權
 
 MIT

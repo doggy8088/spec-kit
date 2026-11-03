@@ -1,103 +1,54 @@
-# Agent Integration Design
+# 代理整合設計
 
-Integrations adapt the shared Spec Kit processes to an AI coding agent. Their
-**availability** (built-in, generic, or catalog-only) is separate from their
-**output format** (commands, recipes, skills, or a custom layout). The Python
-integration registry owns installation behavior; catalogs provide discovery,
-not executable integration implementations. Trusted external adapter packages
-are installed separately and loaded into that registry for their project.
+整合負責把共用的 Spec Kit 程序適配到某個 AI 程式代理。其**可用性**（內建、通用或僅目錄提供）與其**輸出格式**（命令、配方、技能或自訂版面）是兩回事。Python 整合註冊表掌管安裝行為；目錄提供探索功能，而非可執行的整合實現。受信任的外部適配器套件會另外安裝，並載入該註冊表供其專案使用。
 
-## Availability
+## 可用性
 
-| Route | What ships | How users get it |
+| 途徑 | 隨附內容 | 使用者取得方式 |
 |---|---|---|
-| Built-in | A registered class under `src/specify_cli/integrations/` and, for discovery, an entry in `integrations/catalog.json` | `specify init my-project --integration copilot` or, in an initialized project, `specify integration install copilot` |
-| Generic | The registered `generic` integration, with a user-supplied `--commands-dir` and optional `--skills` | `specify init my-project --integration generic --integration-options="--commands-dir .agent/commands"` |
-| External | A catalog entry pointing to an adapter archive | Register a trusted catalog, review the adapter, then `specify integration install sample-agent` |
-| Community discovery | Metadata in the default `integrations/catalog.community.json` | Discover with `specify integration list --catalog` or `search`; review its source before configuring an install-enabled catalog |
+| 內建 | `src/specify_cli/integrations/` 下已註冊的類別，以及供探索用的 `integrations/catalog.json` 項目 | `specify init my-project --integration copilot`，或在已初始化的專案中執行 `specify integration install copilot` |
+| 通用 | 已註冊的 `generic` 整合，搭配使用者提供的 `--commands-dir` 與選用的 `--skills` | `specify init my-project --integration generic --integration-options="--commands-dir .agent/commands"` |
+| 外部 | 指向適配器封存檔的目錄項目 | 註冊受信任的目錄、審查適配器，然後執行 `specify integration install sample-agent` |
+| 社群探索 | 預設 `integrations/catalog.community.json` 中的中繼資料 | 以 `specify integration list --catalog` 或 `search` 探索；設定可安裝的目錄前，先審查其來源 |
 
-The default community catalog is discovery-only. Listing, searching, or
-fetching catalog metadata never imports catalog code. An install-enabled
-catalog permits download, not execution without consent: installation prompts
-before downloading/importing an adapter, or accepts explicit
-`--trust-integration` authorization. Users must review external code; a catalog
-listing is not a code audit or security endorsement.
+預設的社群目錄僅供探索。列出、搜尋或取得目錄中繼資料，絕不會匯入目錄程式碼。可安裝的目錄允許下載，但不代表未經同意即可執行：安裝時會在下載／匯入適配器前提示，或接受明確的 `--trust-integration` 授權。使用者必須審查外部程式碼；目錄中的條目不是程式碼稽核，也不是安全背書。
 
-## Built-in contract
+## 內建合約
 
-Each built-in agent has one Python-safe subpackage: `copilot` lives in
-`src/specify_cli/integrations/copilot/` and exposes `CopilotIntegration`.
-Hyphenated keys use underscores in package names. Its class declares:
+每個內建代理都有一個 Python 安全的子套件：`copilot` 位於 `src/specify_cli/integrations/copilot/`，並公開 `CopilotIntegration`。帶連字號的鍵在套件名稱中使用底線。其類別宣告：
 
-- `key`: unique user-facing identifier. CLI-backed integrations normally use
-  the executable name: tool checks use the key and runtime dispatch defaults
-  to it. Agents with a different executable must handle both paths explicitly;
-  IDE-only agents use their canonical identifier.
-- `config`: agent name, folder, commands subdirectory, install URL, and
-  `requires_cli`.
-- `registrar_config`: output directory, format, argument placeholder, and
-  file extension.
+- `key`：唯一的使用者面向識別字。以 CLI 為後端的整合通常使用可執行檔名稱：工具檢查使用該鍵，執行期派送也預設使用它。可執行檔不同的代理必須明確處理兩條路徑；僅限 IDE 的代理使用其標準識別字。
+- `config`：代理名稱、資料夾、命令子目錄、安裝 URL 與 `requires_cli`。
+- `registrar_config`：輸出目錄、格式、參數佔位符與副檔名。
 
-Import and `_register()` the class in `src/specify_cli/integrations/__init__.py`
-(both lists alphabetically). This registry is the source of built-in Python
-integration behavior. If the agent supports non-interactive workflows, implement
-`build_exec_args()` with the full base signature; `options()` declares
-install-time `--integration-options`, not per-workflow runtime options.
-Agent-specific native events can be declared on the integration. Set
-`multi_install_safe = True` only when the integration emits no files or uses a
-static, non-overlapping agent root and command directory; shared dynamic paths
-are not safe by default.
+在 `src/specify_cli/integrations/__init__.py` 中匯入該類別並呼叫 `_register()`（兩個清單皆按字母順序）。此註冊表是內建 Python 整合行為的來源。若代理支援非互動式工作流程，請以完整的基底簽章實作 `build_exec_args()`；`options()` 宣告的是安裝期的 `--integration-options`，而非每個工作流程的執行期選項。代理專屬的原生事件可宣告在整合上。僅當整合不產生任何檔案，或使用靜態、不重疊的代理根目錄與命令目錄時，才設定 `multi_install_safe = True`；共用的動態路徑預設並不安全。
 
-## Output flavors
+## 輸出風格
 
-Choose the smallest base class that matches the agent's native format. The
-format bases render shared `templates/commands/*.md`; `IntegrationBase.setup()`
-copies templates raw unless overridden. Paths below are relative to each
-agent's configured root.
+選擇符合代理原生格式的最小基底類別。格式基底會算繪共用的 `templates/commands/*.md`；`IntegrationBase.setup()` 預設直接複製原始範本，除非被覆寫。以下路徑皆相對於各代理設定的根目錄。
 
-| Flavor | Base class | Typical output | Arguments |
+| 風格 | 基底類別 | 典型輸出 | 參數 |
 |---|---|---|---|
-| Markdown commands | `MarkdownIntegration` | `commands/speckit.plan.md` | `$ARGUMENTS` |
-| TOML commands | `TomlIntegration` | `commands/speckit.plan.toml` | `{{args}}` |
-| YAML recipes | `YamlIntegration` | `recipes/speckit.plan.yaml` | `{{args}}` |
-| Agent skills | `SkillsIntegration` | `skills/speckit-plan/SKILL.md` | `$ARGUMENTS` |
-| Nonstandard or dual-mode | `IntegrationBase` or a targeted override of a format base | Agent-specific files, companions, or settings | Agent-specific |
+| Markdown 命令 | `MarkdownIntegration` | `commands/speckit.plan.md` | `$ARGUMENTS` |
+| TOML 命令 | `TomlIntegration` | `commands/speckit.plan.toml` | `{{args}}` |
+| YAML 配方 | `YamlIntegration` | `recipes/speckit.plan.yaml` | `{{args}}` |
+| 代理技能 | `SkillsIntegration` | `skills/speckit-plan/SKILL.md` | `$ARGUMENTS` |
+| 非標準或雙模式 | `IntegrationBase` 或針對格式基底的覆寫 | 代理專屬檔案、附屬檔案或設定 | 代理專屬 |
 
-`registrar_config["args"]` selects the installed argument syntax;
-`command_filename()` and `setup()` are override points when the native layout
-demands them. Keep mode selection, invocation spelling, and registration in
-sync. Agent-specific layouts and options belong in the integration code and
-the agent's [integration guide](../docs/integrations/index.md).
+`registrar_config["args"]` 決定安裝後的參數語法；當原生版面有需要時，`command_filename()` 與 `setup()` 是覆寫點。請保持模式選擇、呼叫拼寫與註冊同步。代理專屬的版面與選項應放在整合程式碼與該代理的[整合指南](../docs/integrations/index.md)中。
 
-Core templates that call scripts declare `sh`, `ps`, and `py` commands in
-`scripts:` frontmatter; template processing replaces `{SCRIPT}` with the
-selected variant. `py` is opt-in; non-interactive init defaults to `sh` on
-POSIX or `ps` on Windows. Maintain equivalent stdout behavior across all three.
-All PowerShell scripts in the repository and all PowerShell functionality
-generated from repository templates MUST target Windows PowerShell 5.1. All
-such code must use only language features, cmdlets, parameters, and runtime
-APIs available in Windows PowerShell 5.1. Implementations must also account for
-encoding, .NET Framework, and process/runtime differences in Windows
-PowerShell 5.1 while preserving the required Bash and Python behavioral parity.
-Validation evidence for behavioral PowerShell changes must exercise Windows
-PowerShell 5.1 or otherwise demonstrate 5.1 compatibility.
-Bundled extension commands do not yet use this core-template script routing.
-`__AGENT__` and command references are resolved during rendering, not by
-adding per-agent wrapper scripts. For `generic`, extension registration
-resolves the persisted `--commands-dir` rather than the static registry
-placeholder; `--skills` emits skills into that same directory.
+呼叫指令碼的核心範本，會在 `scripts:` frontmatter 中宣告 `sh`、`ps` 與 `py` 命令；範本處理會以選定的變體取代 `{SCRIPT}`。`py` 為選用；非互動式 init 在 POSIX 上預設為 `sh`，在 Windows 上預設為 `ps`。三者須維持等效的 stdout 行為。儲存庫中的所有 PowerShell 指令碼，以及由儲存庫範本產生的所有 PowerShell 功能，都必須以 Windows PowerShell 5.1 為目標。所有這類程式碼只能使用 Windows PowerShell 5.1 提供的語言功能、cmdlet、參數與執行期 API。實現時還必須考量 Windows PowerShell 5.1 的編碼、.NET Framework 與行程／執行期差異，同時保留與 Bash 及 Python 所需的行為一致性。PowerShell 行為變更的驗證證據，必須實際在 Windows PowerShell 5.1 上執行驗證，或以其他方式證明與 5.1 相容。隨附的擴充功能命令尚未使用這套核心範本指令碼路由。`__AGENT__` 與命令參照在算繪期間解析，不透過為每個代理新增包裝指令碼來處理。對於 `generic`，擴充功能註冊會解析保存下來的 `--commands-dir`，而非靜態註冊表中的佔位符；`--skills` 會把技能輸出到同一個目錄。
 
-## External adapter package contract
+## 外部適配器套件合約
 
-A standalone ZIP, tar.gz, or tgz archive needs only these root files (a single
-enclosing archive directory is also accepted):
+獨立的 ZIP、tar.gz 或 tgz 封存檔只需要以下根目錄檔案（也接受單一外層封存目錄）：
 
 ```text
 integration.yml
 __init__.py
 ```
 
-The descriptor is adapter metadata, not an inventory of Spec Kit commands:
+描述檔是適配器的中繼資料，不是 Spec Kit 命令的清單：
 
 ```yaml
 schema_version: "1.0"
@@ -110,23 +61,9 @@ requires:
   speckit_version: ">=1.1.2.dev0"
 ```
 
-`integration.author`, `repository`, and `license` are optional metadata.
-When present in a descriptor or catalog entry, each must be a non-empty string.
-Their types are validated before importing package code and on installed reload.
-`requires.tools` is an optional list of mappings with a non-empty `name`,
-optional boolean `required` (default `true`), and optional PEP 440 `version`
-constraint. Installation and `specify check` probe required descriptor tools on
-PATH. If a CLI adapter declares no required tools, `specify check` probes its
-runtime executable rather than assuming its catalog ID is an executable.
-Tool version detection is adapter-specific, not a generic invocation of arbitrary
-`--version` commands. The Spec Kit constraint is parsed and enforced on install
-and load, including development versions. Legacy `provides.commands` and
-`provides.scripts` remain accepted and validated as optional metadata, but
-are neither required nor used to install core commands.
+`integration.author`、`repository` 與 `license` 是選用的中繼資料。當它們出現在描述檔或目錄項目中時，每個都必須是非空字串。其型別會在匯入套件程式碼之前驗證，已安裝後的重新載入時也會驗證。`requires.tools` 是選用的對應清單，每項包含非空的 `name`、選用的布林值 `required`（預設 `true`），以及選用的 PEP 440 `version` 限制。安裝與 `specify check` 會在 PATH 上探測描述檔中要求的工具。若某個 CLI 適配器未宣告任何必要工具，`specify check` 會探測其執行期可執行檔，而不是假設其目錄 ID 就是可執行檔。工具版本偵測是適配器專屬的，不是對任意 `--version` 命令的通用呼叫。Spec Kit 限制會在安裝與載入時解析並強制執行，包括開發版本。舊版的 `provides.commands` 與 `provides.scripts` 仍被接受並驗證為選用中繼資料，但既非必要，也不用於安裝核心命令。
 
-The root module exports exactly one concrete `IntegrationBase` subclass with
-`key == integration.id`. It can inherit a host format base and use relative
-imports from helper modules in its own package:
+根模組恰好匯出一個具體的 `IntegrationBase` 子類別，且 `key == integration.id`。它可以繼承主機的格式基底，並使用自身套件中輔助模組的相對匯入：
 
 ```python
 from specify_cli.integrations.base import SkillsIntegration
@@ -150,311 +87,47 @@ class SampleIntegration(SkillsIntegration):
     multi_install_safe = True
 ```
 
-`config.name` must match the descriptor. An optional class `version` must match
-its version. Display names are rendered as literal text in discovery and lifecycle output;
-brackets and Rich-like tags are valid name content, not console formatting.
-`config` and `registrar_config` must provide the fields above; the registration
-directory must match `folder/commands_subdir`. Output paths
-must be canonical, project-local, and outside `.git` and `.specify`.
-Registration extensions must be plain dotted filename suffixes (such as
-`.md`) or, for Markdown skills, `/SKILL.md`; path traversal is not allowed.
-The public class attribute `invoke_separator` must be a non-empty string;
-`dev_no_symlink` and `multi_install_safe` must be booleans, including when
-registrar configuration supplies its own optional values.
-An explicit `registrar_config.invoke_separator` takes precedence over the class
-default. `dev_no_symlink` is enabled when either the class or registrar
-configuration enables it. Healthy registration and persisted recovery metadata
-use the same resolved configuration.
-An optional `registrar_config.legacy_dir` must be a non-empty canonical
-project-relative directory under the same reserved-root and symlink restrictions;
-home-relative destinations are not supported for external adapters.
-An adapter's primary root and optional legacy destination must not overlap,
-regardless of whether it supports multi-install. Multi-install-safe adapters
-also cannot overlap another integration's agent roots or legacy destinations.
-Comparisons use case-folded path components on every platform so
-packages remain safe on case-insensitive filesystems. Custom
-setup must keep generated agent files under its declared root, track writes
-with `IntegrationManifest`, and leave shared infrastructure ownership to the
-host. Use the host's format bases rather than copied core templates.
+`config.name` 必須與描述檔相符。選用的類別 `version` 若有，則必須與其版本相符。顯示名稱在探索與生命週期輸出中以純文字算繪；括號與類似 Rich 的標籤是有效的名稱內容，不是主控台格式。`config` 與 `registrar_config` 必須提供上述欄位；註冊目錄必須與 `folder/commands_subdir` 相符。輸出路徑必須是標準形式、位於專案本機，且在 `.git` 與 `.specify` 之外。註冊副檔名必須是單純的點分隔檔名後綴（例如 `.md`），或 Markdown 技能用的 `/SKILL.md`；不允許路徑穿越。公開的類別屬性 `invoke_separator` 必須是非空字串；`dev_no_symlink` 與 `multi_install_safe` 必須是布林值，包括註冊器設定提供自身選用值時也是如此。明確的 `registrar_config.invoke_separator` 優先於類別預設值。只要類別或註冊器設定任一啟用，`dev_no_symlink` 即視為啟用。健全的註冊與保存下來的復原中繼資料使用同一套解析後的設定。選用的 `registrar_config.legacy_dir` 必須是非空、標準形式的專案相對目錄，且受相同的保留根目錄與符號連結限制；外部適配器不支援以主目錄為相對基準的目的地。適配器的主要根目錄與選用的舊版目的地不得重疊，無論其是否支援多重安裝。支援多重安裝的適配器也不能與其他整合的代理根目錄或舊版目的地重疊。比較時在所有平台上都使用大小寫摺疊後的路徑元件，讓套件在大小寫不敏感的檔案系統上保持安全。自訂 setup 必須把產生的代理檔案保持在其宣告的根目錄之下，以 `IntegrationManifest` 追蹤寫入，並把共用基礎設施的所有權留給主機。請使用主機的格式基底，不要複製核心範本。
 
-CLI adapters override `build_exec_args(prompt, *, model=None,
-output_json=True, integration_args=None, integration_options=None,
-project_root=None)` as appropriate. Every explicitly declared host keyword
-parameter must have a default; accepting omitted keywords through `**kwargs`
-is also supported. Validation checks both prompt-only and complete host calls.
-An adapter using only the host API and
-standard library needs no pip installation or source-registry edit.
-Import-side-effect registration is rejected.
+CLI 適配器會視需要覆寫 `build_exec_args(prompt, *, model=None, output_json=True, integration_args=None, integration_options=None, project_root=None)`。每個明確宣告的主機關鍵字參數都必須有預設值；透過 `**kwargs` 接受省略的關鍵字也受支援。驗證會同時檢查僅含 prompt 的呼叫與完整的主機呼叫。只使用主機 API 與標準函式庫的適配器，不需要 pip 安裝，也不需要編輯來源註冊表。以匯入副作用進行的註冊會被拒絕。
 
-Catalog entries require matching identity, name, version, and description,
-plus `download_url`. Optional descriptor metadata and `requires`, when present
-in the catalog, must match too. `sha256` is an optional 64-character hexadecimal
-digest of the archive bytes; publishing a pinned URL and digest is recommended.
-Downloads use the host authentication configuration, including authenticated
-GitHub release assets. HTTPS is mandatory except for loopback HTTP development
-servers. Redirects, archive format declarations, traversal, symlinks, and
-bounded download/extraction limits are enforced.
+目錄項目要求身分、名稱、版本與說明相符，外加 `download_url`。目錄中若有選用的描述檔中繼資料與 `requires`，也必須相符。`sha256` 是選用的 64 字元十六進位摘要，針對封存檔的位元組計算；建議發佈固定的 URL 與摘要。下載會使用主機的驗證設定，包括經驗證的 GitHub release 資產。除迴路 HTTP 開發伺服器外，一律強制使用 HTTPS。重新導向、封存格式宣告、穿越、符號連結，以及有界的下載／解壓限制都會被強制執行。
 
-### Storage, loading, and lifecycle
+### 儲存、載入與生命週期
 
-Trusted executable packages live in
-`.specify/integrations/packages/<id>/`; their provenance, descriptor metadata,
-and per-file hashes live in
-`.specify/integrations/packages.json`. They are **not** generated agent files
-and do not appear in `<id>.manifest.json`. The managed `.specify/.gitignore`
-excludes both executable packages and their registry.
-Authoritative execution consent lives in `~/.specify/integration-trust.json`,
-never in project metadata. Projects containing that canonical trust path,
-including a project rooted at `~/.specify`, cannot install or load adapters.
-The trust path and local state are validated before importing a candidate.
-Each grant binds the canonical project root,
-integration ID, and the complete verified package file-hash mapping. Copying
-a project, changing users, changing package bytes, or deleting a grant requires
-a new local decision; a legacy project `trusted` field grants no authority.
-Consent is checked before every load, including configuration-cache reuse.
-The trust reader and writer share a 1 MiB byte limit. An update that would
-exceed it fails before replacement, leaving the previous grants and recovery
-records readable; existing grants are never evicted implicitly. The writer
-persists the exact measured UTF-8 bytes, without platform newline translation.
-Only recorded, locally trusted packages are loaded, and hash/descriptor
-validation precedes import. Missing, modified,
-incompatible, or unimportable implementations produce explicit errors.
-Python source is verified again when imported, including relative helper
-modules; cached bytecode is never used to execute package code.
+受信任的可執行套件位於 `.specify/integrations/packages/<id>/`；其來源、描述檔中繼資料與逐檔雜湊位於 `.specify/integrations/packages.json`。它們**不是**產生的代理檔案，也不會出現在 `<id>.manifest.json` 中。受管理的 `.specify/.gitignore` 會排除可執行套件及其註冊表。權威的執行同意位於 `~/.specify/integration-trust.json`，絕不在專案中繼資料中。含有該標準信任路徑的專案，包括根目錄為 `~/.specify` 的專案，無法安裝或載入適配器。信任路徑與本機狀態會在匯入候選套件之前驗證。每份授權都繫結標準專案根目錄、整合 ID，以及完整且經驗證的套件檔案雜湊對應。複製專案、變更使用者、變更套件位元組或刪除授權，都需要新的本機決定；舊版專案的 `trusted` 欄位不授予任何權限。每次載入前都會檢查同意，包括設定快取重用時。信任的讀取器與寫入器共用 1 MiB 的位元組上限。更新若會超過上限，會在取代前失敗，讓先前的授權與復原紀錄保持可讀；既有授權絕不會被隱含逐出。寫入器保存的正是測量到的 UTF-8 位元組，不做平台換行轉換。只有已記錄、且在本機受信任的套件才會被載入，且雜湊／描述檔驗證先於匯入。遺失、被修改、不相容或無法匯入的實現會產生明確錯誤。Python 原始碼在匯入時會再次驗證，包括相對的輔助模組；絕不使用快取的位元組碼來執行套件程式碼。
 
-Execution entry points load installed adapters before setup, agent configuration,
-extension/preset registration, artifact resolution, status, and workflow dispatch. Fresh CLI
-processes use the persisted package, not the catalog. Changing projects unloads
-external registry entries, synthetic Python packages and their submodules, and
-refreshes agent configuration/registrar caches in place. Built-in keys cannot
-be replaced by packages.
-Registry loading and configuration snapshots are synchronized. Each runtime
-dispatch pins a context-local project registry and its verified Python namespaces
-until dispatch finishes, including lazy relative imports. Switching another
-thread to a different project cannot replace that dispatch's adapter, and
-independent agent processes are not serialized by the registry lock.
-Command and skill registration also pin the target project's registry for the
-entire rendering operation, including implementation hooks and lazy relative
-imports. A retained registrar or interleaved registration in another project
-cannot substitute another project's adapter while rendering.
-Catalog listing, catalog discovery, and `integration info` read metadata without
-importing installed adapters. Merely checking that a directory is a Spec Kit
-project does not load adapter code; registration managers load it when they
-actually need the adapter's rendering configuration.
-Workflow metadata inspection (`workflow status` and `workflow info`) also leaves
-adapters unloaded, even if an installed package is damaged. Workflow run/resume
-load adapters within their error-handling boundary and reload before dispatch.
-Extension-native event refresh also loads and pins the project's trusted adapters,
-including fresh-process event-only extension add/remove and enable/disable.
-Adapter loading failures are reported as event-refresh failures, not skipped.
+執行進入點會在 setup、代理設定、擴充功能／預設集註冊、成品解析、狀態與工作流程派送之前載入已安裝的適配器。全新的 CLI 行程使用保存下來的套件，而不是目錄。切換專案時，會卸載外部註冊表項目、合成的 Python 套件及其子模組，並就地重新整理代理設定／註冊器快取。內建鍵不能被套件取代。註冊表載入與設定快照是同步的。每次執行期派送都會把脈絡專屬的專案註冊表及其經驗證的 Python 命名空間固定下來，直到派送完成，包括延遲的相對匯入。把另一個執行緒切換到不同專案，無法取代該次派送的適配器，而獨立的代理行程不會被註冊表鎖序列化。命令與技能註冊同樣會為整個算繪操作固定目標專案的註冊表，包括實現掛鉤與延遲的相對匯入。另一個專案中保留的註冊器或交錯的註冊，無法在算繪期間替換成另一個專案的適配器。目錄列表、目錄探索與 `integration info` 讀取中繼資料，不匯入已安裝的適配器。僅僅檢查某個目錄是否為 Spec Kit 專案，不會載入適配器程式碼；註冊管理器在真正需要適配器的算繪設定時才會載入。工作流程中繼資料檢查（`workflow status` 與 `workflow info`）同樣讓適配器保持未載入，即使已安裝的套件已損壞。工作流程的執行／恢復會在其錯誤處理邊界內載入適配器，並在派送前重新載入。擴充功能原生事件重新整理也會載入並固定專案受信任的適配器，包括全新行程中僅處理事件的擴充功能新增／移除與啟用／停用。適配器載入失敗會回報為事件重新整理失敗，不會被跳過。
 
-`init --integration`, `integration install`, and `integration switch` can
-resolve an uninstalled adapter from an install-enabled catalog. `use` selects
-an already installed adapter. `upgrade` downloads the catalog's current
-version and requires a new trust decision; it still refuses modified generated
-files unless `--force` is supplied. `uninstall` removes executable code and its
-registration while retaining modified generated files unless forced.
-Adapter lifecycle mutations are project-locked and journal operation-owned
-file changes, including package code, metadata, shared infrastructure, and
-generated artifacts. Initial inventories retain only names and filesystem
-metadata; they do not copy agent trees, user data, or the installed package
-store. Content snapshots are created lazily before the first observed mutation,
-with an aggregate limit of 128 MiB of file content and 4,096 entries per
-transaction. Exceeding either limit fails before the affected write or removal.
-Preset and extension package installation/replacement, configuration rescue
-directories, and project extension configuration participate in the journal.
-Package replacements keep one bounded directory snapshot rather than duplicate
-snapshots for every generated descendant. Replacement observations complete at
-the actual copy/config-restore boundary, including failed copies, before command
-registration or registry commit. Later observed descendant writes update that
-directory's recorded identity without taking duplicate snapshots.
-External init aborts its transaction when a requested preset or extension install
-raises; built-in init without an external transaction retains its best-effort
-optional-install behavior. Late external-init failures therefore
-remove new packages and restore pre-existing package contents, not orphan sources
-after their registries and agent outputs have been rolled back.
-Failed setup or durable package commit restores those
-changes, not entire agent directories or all of `.specify`. Independent workflow
-progress and unowned user files are left untouched.
-While the lifecycle journal is active, install/switch failure handlers defer
-cleanup to it rather than forcing teardown or rewriting fallback state first.
-This preserves pending-file conflicts and the original directory inventory.
-Rollback removes newly created empty parent directories only until the first
-pre-existing parent;
-original empty directories are preserved in project and built-in home scopes.
-This includes empty Kimi legacy directories removed during migration or teardown;
-non-empty legacy directories are not snapshotted merely for parent cleanup.
-This also applies when an adapter records an already-written file.
-Custom writes to existing files must use `IntegrationManifest.record_file()`
-or the host's before-write primitives, such as
-`IntegrationBase.write_file_and_record()`. `record_existing()` alone remains
-supported for new files and unchanged existing files; it cannot recover bytes
-already overwritten outside the journal. Such an unobserved overwrite fails
-explicitly, retains the resulting file rather than deleting it, and reports
-that its original bytes cannot be restored.
-Concurrent edits to a managed file are preserved and reported with retained
-recovery snapshots; a later host
-write refuses to overwrite an edit made after its previous write. Extensions and presets
-remain independently installed and follow the active integration as before.
-If a write fails before its completion is observed, changed or newly present
-bytes cannot be attributed to that operation. Rollback leaves those pending
-paths untouched and retains recovery snapshots, including when a previously
-existing path was deleted. An unchanged pending path needs no restoration.
-Host settings merges, native event updates/removal, legacy migrations, and
-extension/preset rendering caches participate in the journal without becoming
-uninstall-owned files. Existing built-in home-scoped destinations are journaled
-only for participating built-ins; external adapters remain project-local.
-Host write helpers reject symlinked destinations and ancestors before creating
-directories or writing. Manifest recording validates lexical paths before
-resolution, including project-local and dangling symlinks, so resolution cannot
-hide a link to an unrelated project file. Removing an owned leaf symlink unlinks
-the link itself without following its target; declared output directories cannot
-be symlinks. Manifest cleanup validates lexical ancestors before reading or
-deleting a tracked file and immediately before unlinking it, even without an
-active lifecycle journal. Unsafe paths are reported as preserved files rather
-than followed through a symlink.
-Cancelling initialization discards the prepared adapter without installing code
-or reporting success. Stable lifecycle locks are user-local and keyed by
-canonical project root, so cancellation does not create target lock scaffolding;
-rollback removes a newly created target root only when it remains empty.
-Local consent is atomic and user-local; a grant for an explicitly authorized
-package may remain after failed setup, but cannot authorize different bytes or
-a different project.
-Metadata changed by another operation during preparation is not overwritten;
-the operation exits with an explicit retry error.
-External uninstall unregisters the adapter's owned extension/preset artifacts
-before unloading its code, preserves user-modified contributions, and
-re-registers contributions for a remaining default integration.
-If filesystem recovery itself fails, the error reports retained snapshot
-paths for manual recovery rather than deleting the only backup.
-`upgrade --force` and `uninstall --force` can recover a recorded adapter whose
-implementation is missing, modified, incompatible, or fails to import. Recovery
-excludes only that adapter, validates the others, and uses validated manifest
-ownership and registrar configuration saved in the user-local trust store for
-cleanup. Recovery records bind the project and adapter to the previously trusted
-package identity, verified registrar configuration, and generated paths.
-New records retain the verified package file-hash mapping locally, so recovery
-checks the package identity against its original project, key, and hashes,
-not damaged bytes or edited project metadata. The identity must still have a
-local trust grant; otherwise cleanup treats ownership proof as unavailable and
-preserves generated files. Older hash-less ownership records remain supported
-when their package identity has a local grant.
-Ownership is replaced only after the durable package loads successfully, so a
-failed upgrade cannot replace the previous adapter's recovery authority.
-Generated-file manifests distinguish `whole`, `partial`, and `shared`
-ownership. The event dispatcher is shared; merged native event settings are
-partial. Trusted host event refreshes update only their touched ownership
-claims in the user-local record, and active lifecycle transactions defer those
-updates until their project writes commit. Editable project manifests cannot
-add unrelated cleanup authority or promote shared settings to whole-file
-ownership. Damaged fallback cleanup preserves shared and partial files,
-including with `--force`; manual event cleanup may be needed. Older local
-records without ownership modes conservatively preserve unproven files.
-Edited project configuration or forged manifest ownership is rejected, as is
-cleanup overlapping another integration's root. It reports this
-recovery explicitly and never bypasses catalog source policy or the replacement
-package's trust decision. Ordinary selection and lifecycle operations still fail
-explicitly for damaged installed implementations.
-After copying a project or changing users, review the adapter and run
-`specify integration upgrade <id> --force --trust-integration` using an
-install-enabled catalog to establish local consent. Forced uninstall can remove
-an untrusted or missing package without importing it.
-Forced recovery also accepts a recorded package leaf replaced by a regular file
-or a symlink: it unlinks that owned leaf without following it, while rejecting
-symlinked ancestors. Failed commits restore the original damaged leaf.
-When local ownership proof is unavailable, including copied projects or older
-grant-only trust stores, recovery preserves old generated files from cleanup and
-warns that manual cleanup may be needed. A newly trusted replacement still
-renders its declared destination under normal `upgrade --force` semantics;
-old-only destinations are not deleted using unverified project metadata.
+`init --integration`、`integration install` 與 `integration switch` 可以從可安裝的目錄解析尚未安裝的適配器。`use` 選取已安裝的適配器。`upgrade` 會下載目錄的目前版本，並需要新的信任決定；除非提供 `--force`，否則仍會拒絕被修改的產生檔案。`uninstall` 會移除可執行程式碼及其註冊，但保留被修改的產生檔案，除非強制執行。適配器生命週期的變更受專案鎖保護，並以日誌記錄操作擁有的檔案變更，包括套件程式碼、中繼資料、共用基礎設施與產生的成品。初始清單只保留名稱與檔案系統中繼資料；不會複製代理樹、使用者資料或已安裝的套件存放區。內容快照會在首次觀察到變更之前延遲建立，每筆交易的彙總上限為 128 MiB 的檔案內容與 4,096 個項目。超過任一上限都會在受影響的寫入或移除之前失敗。預設集與擴充功能套件的安裝／取代、設定救援目錄，以及專案擴充功能設定，都參與日誌記錄。套件取代只保留一份有界的目錄快照，而不是為每個產生的後代建立重複快照。取代的觀察會在實際的複製／設定還原邊界完成，包括失敗的複製，且在命令註冊或註冊表提交之前完成。之後觀察到的後代寫入會更新該目錄記錄的身分，不再拍攝重複快照。外部 init 在要求的預設集或擴充功能安裝拋出例外時，會中止其交易；沒有外部交易的內建 init 則保留其盡力而為的選用安裝行為。因此，外部 init 後段的失敗會移除新套件並還原先前存在的套件內容，而不是在其註冊表與代理輸出已回滾後留下孤立的來源。setup 失敗或持久套件提交失敗時，會還原那些變更，而不是整個代理目錄或整個 `.specify`。獨立的工作流程進度與不屬於任何人的使用者檔案不會被觸碰。當生命週期日誌處於作用中時，install／switch 的失敗處理常式會把清理工作延後給日誌處理，而不是先強制拆解或重寫後備狀態。這保留了待處理檔案的衝突與原始目錄清單。回滾只會移除新建的空父目錄，直到第一個先前存在的父目錄為止；原始的空目錄在專案與內建主目錄範圍內都會保留。這包括遷移或拆解期間移除的空 Kimi 舊版目錄；非空的舊版目錄不會僅為了父目錄清理而被快照。當適配器記錄一個已寫入的檔案時也適用此規則。對既有檔案的自訂寫入必須使用 `IntegrationManifest.record_file()` 或主機的寫入前原語，例如 `IntegrationBase.write_file_and_record()`。`record_existing()` 本身仍支援新檔案與未變更的既有檔案；它無法復原已在日誌之外被覆寫的位元組。這類未被觀察到的覆寫會明確失敗，保留產生的檔案而不是刪除它，並回報其原始位元組無法還原。對受管理檔案的並行編輯會被保留並連同保留的復原快照一起回報；之後的主機寫入會拒絕覆寫在其先前寫入之後所做的編輯。擴充功能與預設集仍獨立安裝，並如以往一樣跟隨作用中的整合。若寫入在觀察到其完成之前失敗，已變更或新出現的位元組無法歸因於該操作。回滾會讓那些待處理路徑保持原樣並保留復原快照，包括先前存在的路徑已被刪除的情況。未變更的待處理路徑不需要還原。主機設定合併、原生事件更新／移除、舊版遷移，以及擴充功能／預設集的算繪快取，都參與日誌記錄，但不會變成解除安裝所擁有的檔案。既有的內建主目錄範圍目的地，僅針對參與的內建整合記錄日誌；外部適配器仍限於專案本機。主機寫入輔助函式會在建立目錄或寫入之前，拒絕符號連結的目的地與祖先。Manifest 記錄會在解析前驗證詞彙路徑，包括專案本機與懸空的符號連結，讓解析無法隱藏指向無關專案檔案的連結。移除自有的葉符號連結時，只解除連結本身，不追隨其目標；宣告的輸出目錄不能是符號連結。Manifest 清理會在讀取或刪除受追蹤檔案之前，以及在解除連結之前即刻，驗證詞彙祖先，即使沒有作用中的生命週期日誌也是如此。不安全的路徑會回報為保留的檔案，而不是透過符號連結追隨。取消初始化會捨棄準備好的適配器，不安裝程式碼，也不回報成功。穩定的生命週期鎖是使用者本機的，並以標準專案根目錄為鍵，因此取消不會建立目標鎖的鷹架；回滾只會在新建立的目標根目錄仍為空時才移除它。本機同意是原子且使用者本機的；針對明確授權套件的授權，在 setup 失敗後可能仍保留，但不能授權不同的位元組或不同的專案。準備期間被其他操作變更的中繼資料不會被覆寫；該操作會以明確的重試錯誤退出。外部解除安裝會在卸載其程式碼之前，先取消註冊適配器自有的擴充功能／預設集成品，保留使用者修改的貢獻，並為剩餘的預設整合重新註冊貢獻。若檔案系統復原本身失敗，錯誤會回報保留的快照路徑供手動復原，而不是刪除唯一的備份。`upgrade --force` 與 `uninstall --force` 可以復原已記錄但其實現遺失、被修改、不相容或匯入失敗的適配器。復原只排除該適配器，驗證其他適配器，並使用保存在使用者本機信任存放區中、經驗證的 manifest 所有權與註冊器設定進行清理。復原紀錄把專案與適配器繫結到先前受信任的套件身分、經驗證的註冊器設定與產生的路徑。新紀錄會在本機保留經驗證的套件檔案雜湊對應，因此復原會以其原始專案、鍵與雜湊檢查套件身分，而不是損壞的位元組或被編輯的專案中繼資料。該身分仍必須有本機信任授權；否則清理會把所有權證明視為不可用，並保留產生的檔案。較舊、無雜湊的所有權紀錄，在其套件身分有本機授權時仍受支援。所有權只有在持久套件成功載入後才會被取代，因此失敗的升級無法取代先前適配器的復原權限。產生檔案的 manifest 區分 `whole`、`partial` 與 `shared` 所有權。事件派送器是共用的；合併後的原生事件設定是 partial。受信任的主機事件重新整理只會更新其在使用者本機紀錄中觸及的所有權主張，而作用中的生命週期交易會把這些更新延後到其專案寫入提交為止。可編輯的專案 manifest 不能新增無關的清理權限，也不能把共用設定提升為整檔所有權。損壞時的後備清理會保留共用與 partial 檔案，即使使用 `--force` 也是如此；可能需要手動清理事件。沒有所有權模式的較舊本機紀錄，會保守地保留未經證明的檔案。被編輯的專案設定或偽造的 manifest 所有權會被拒絕，與其他整合根目錄重疊的清理同樣會被拒絕。它會明確回報這次復原，絕不繞過目錄來源政策或取代套件的信任決定。一般的選取與生命週期操作，對於損壞的已安裝實現仍會明確失敗。複製專案或變更使用者後，請審查適配器，並使用可安裝的目錄執行 `specify integration upgrade <id> --force --trust-integration` 以建立本機同意。強制解除安裝可以在不匯入的情況下，移除不受信任或遺失的套件。強制復原也接受已記錄的套件葉被一般檔案或符號連結取代的情況：它會解除該自有葉的連結而不追隨它，同時拒絕符號連結的祖先。失敗的提交會還原原始損壞的葉。當本機所有權證明不可用時，包括複製的專案或較舊的僅授權信任存放區，復原會保留舊的產生檔案不予清理，並警告可能需要手動清理。新受信任的取代品仍會依一般的 `upgrade --force` 語意，把其宣告的目的地算繪出來；僅屬於舊版的目的地不會使用未經驗證的專案中繼資料來刪除。
 
-See the [catalog contract](../docs/integrations/catalog.md) and
-[user reference](../docs/integrations/cli.md) for public commands.
+詳見[目錄合約](../docs/integrations/catalog.md)與[使用者參考](../docs/integrations/cli.md)中的公開命令。
 
-## Ownership and lifecycle
+## 所有權與生命週期
 
-An installation records its files and SHA-256 hashes in
-`.specify/integrations/<key>.manifest.json`. Custom `setup()` code must track
-files it creates via the manifest (`record_file()` or the base class's
-write-and-record helpers). These APIs accept `ownership="whole"` (the default
-for generated files), `"partial"`, or `"shared"` where applicable; recording
-an existing file without a new mode retains its current mode. Do not claim
-whole-file ownership merely because you merged settings into a user file:
-partial and shared files are preserved by manifest-only uninstall.
-`teardown()` preserves modified tracked files by default; `--force` can remove
-them. Keep agent-specific settings and events consistent with that lifecycle.
+安裝會把其檔案與 SHA-256 雜湊記錄在 `.specify/integrations/<key>.manifest.json` 中。自訂 `setup()` 程式碼必須透過 manifest 追蹤它建立的檔案（`record_file()` 或基底類別的寫入並記錄輔助函式）。這些 API 接受 `ownership="whole"`（產生檔案的預設值）、`"partial"` 或適用的 `"shared"`；記錄既有檔案時若未提供新模式，會保留其目前模式。不要僅因為你把設定合併進使用者檔案，就主張整檔所有權：partial 與 shared 檔案在僅依 manifest 的解除安裝中會被保留。`teardown()` 預設保留被修改的受追蹤檔案；`--force` 可以移除它們。請讓代理專屬的設定與事件與該生命週期保持一致。
 
-`integration install`, `switch` and `upgrade` call
-`preflight_setup(project_root, parsed_options, *, script_type)` before they
-write shared templates, scripts or integration files. Override it to reject a
-setup that would fail partway, raising `ValueError` or `OSError`; the CLI then
-exits with the message and changes nothing. The default accepts every setup.
+`integration install`、`switch` 與 `upgrade` 會在寫入共用範本、指令碼或整合檔案之前，呼叫 `preflight_setup(project_root, parsed_options, *, script_type)`。覆寫它來拒絕會中途失敗的 setup，拋出 `ValueError` 或 `OSError`；CLI 隨後會以該訊息退出且不做任何變更。預設實作接受所有 setup。
 
-Event cleanup releases only the departing integration's dispatcher claim.
-It deletes `.specify/events.py` only when that integration's current or prior
-manifest records a produced copy and no other installed integration references
-it. Unowned, partial, or merely recovered files are preserved, even with `--force`;
-modified managed dispatchers are preserved with a warning unless forced.
-An exact match with the current generated dispatcher (LF or CRLF) also permits
-last-consumer cleanup when another integration regenerated the file and left
-this integration's recorded hash stale. Matching generated content alone never
-establishes ownership.
-If the prior ownership manifest or non-forced dispatcher content cannot be
-read, cleanup warns and preserves the dispatcher without blocking cleanup of
-other integration-owned files.
-Empty-event upgrades consult the prior manifest so the last managed dispatcher
-is still cleaned up. Event helpers accept keyword-only `force=False`.
-Teardown forwards `force` to `remove_events()` overrides that accept it
-explicitly or via `**kwargs`; legacy `(project_root, manifest)` overrides
-remain supported without that keyword. Signature compatibility is checked
-before invocation, so errors raised inside an override are not retried.
-Custom `setup()` implementations forwarding event emission should pass through
-`opts["force"]` when present.
+事件清理只會釋放離開的整合所主張的派送器。當某整合目前或先前的 manifest 記錄了產生的副本，且沒有其他已安裝整合參照它時，才會刪除 `.specify/events.py`。未擁有、partial 或僅被復原的檔案都會保留，即使使用 `--force` 也是如此；被修改的受管理派送器會連同警告一起保留，除非強制執行。與目前產生的派送器完全相符（LF 或 CRLF）也允許在另一個整合重新產生該檔案、並讓此整合記錄的雜湊過期時，進行最後消費者清理。僅憑產生的內容相符，絕不足以建立所有權。若先前的所有權 manifest 或未強制的派送器內容無法讀取，清理會發出警告並保留派送器，且不阻擋其他整合自有檔案的清理。空事件升級會查閱先前的 manifest，讓最後一個受管理的派送器仍能被清理。事件輔助函式接受僅限關鍵字的 `force=False`。Teardown 會把 `force` 轉交給明確接受它或透過 `**kwargs` 接受的 `remove_events()` 覆寫；舊版的 `(project_root, manifest)` 覆寫在沒有該關鍵字時仍受支援。簽章相容性會在呼叫前檢查，因此覆寫內部拋出的錯誤不會被重試。轉交事件發送的自訂 `setup()` 實現，應在 `opts["force"]` 存在時將其透傳。
 
-The integration does **not** own agent context files such as `AGENTS.md` or
-`CLAUDE.md`. The opt-in `extensions/agent-context/` owns their defaults,
-configuration, and managed sections; do not add `context_file` fields or
-context-file handling to the CLI. `specify init` does not enable the extension
-implicitly. Extensions and presets register command or skill overrides for the
-current default integration, not every installed integration.
+整合**不**擁有代理脈絡檔案，例如 `AGENTS.md` 或 `CLAUDE.md`。選用的 `extensions/agent-context/` 擁有其預設值、設定與受管理區段；不要在 CLI 中新增 `context_file` 欄位或脈絡檔案處理。`specify init` 不會隱含啟用該擴充功能。擴充功能與預設集為目前的預設整合註冊命令或技能覆寫，而不是為每個已安裝的整合註冊。
 
-## Integration delivery boundary
+## 整合交付邊界
 
-Integration-specific behavior belongs in the integration package. Its delivery
-PR may also include registry wiring, catalog metadata, integration-specific
-tests, documentation, and agent-specific devcontainer tooling outside that
-package. File location alone does not determine whether a separate PR is needed.
+整合專屬的行為屬於整合套件。其交付 PR 也可以包含註冊表接線、目錄中繼資料、整合專屬的測試、文件，以及該套件之外代理專屬的 devcontainer 工具。僅憑檔案位置無法決定是否需要另開 PR。
 
-Every user-visible, agent-specific integration change MUST update
-`docs/integrations/<key>.md` in the same change. Document behavior shared across
-integrations in the [shared CLI reference](../docs/integrations/cli.md),
-not in individual agent pages.
+每個使用者可見、代理專屬的整合變更，都必須在同一個變更中更新 `docs/integrations/<key>.md`。跨整合共用的行為應記錄在[共用 CLI 參考文件](../docs/integrations/cli.md)中，而不是個別代理頁面。
 
-If delivery requires changes to shared runtime behavior, integration base
-classes, rendering, lifecycle management, CLI behavior, or core templates or
-scripts, it requires **at least two PRs**: a separate prerequisite PR for the
-shared behavior and a PR for the integration itself. The shared change must
-have independent justification and behavioral coverage, including regression
-evidence for bug fixes, and must work and be testable without the new
-integration. An agent-specific workaround is not sufficient justification for
-changing core behavior.
+若交付需要變更共用執行期行為、整合基底類別、算繪、生命週期管理、CLI 行為，或核心範本或指令碼，則至少需要兩個 PR：一個獨立的共用行為前置 PR，以及整合本身的 PR。共用變更必須有獨立的理由與行為涵蓋，包括錯誤修正的迴歸證據，且必須在沒有新整合的情況下也能運作並可測試。代理專屬的變通做法，不足以構成變更核心行為的理由。
 
-The integration PR must identify its prerequisite PRs and must not merge until
-they have merged. See the
-[integration PR submission requirements](../CONTRIBUTING.md#integration-pull-requests).
+整合 PR 必須標明其前置 PR，且在它們合併之前不得合併。詳見[整合 PR 提交要求](../CONTRIBUTING.md#integration-pull-requests)。
 
-## Adding an agent
+## 新增代理
 
-1. Create the integration subpackage and class using the smallest matching
-   format base. Define `config` and `registrar_config` for the agent's actual
-   output layout.
-2. Register the class alphabetically and add a matching entry to
-   `integrations/catalog.json`.
-3. Add focused coverage in `tests/integrations/test_integration_<package_dir>.py`
-   for metadata, generated output, installation, and uninstall (including
-   preservation of edited files where applicable).
-4. Exercise `specify init my-project --integration <key>` and the install/uninstall
-   lifecycle; update the [supported agents](../docs/integrations/index.md)
-   and devcontainer setup if the agent needs additional tooling.
+1. 使用最小且相符的格式基底，建立整合子套件與類別。依代理實際的輸出版面定義 `config` 與 `registrar_config`。
+2. 按字母順序註冊該類別，並在 `integrations/catalog.json` 中新增相符的項目。
+3. 在 `tests/integrations/test_integration_<package_dir>.py` 中新增聚焦的測試涵蓋，涵蓋中繼資料、產生的輸出、安裝與解除安裝（包括適用時保留被編輯的檔案）。
+4. 實際執行 `specify init my-project --integration <key>` 與安裝／解除安裝生命週期；若代理需要額外工具，更新[支援的代理](../docs/integrations/index.md)與 devcontainer 設定。
 
-Prefer existing bases and shared processing over copied setup loops.
+優先使用既有基底與共用處理，不要複製 setup 迴圈。

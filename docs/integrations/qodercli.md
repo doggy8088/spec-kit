@@ -1,36 +1,25 @@
 # Qoder CLI
 
-Install [Qoder CLI](https://qoder.com/cli) before setup.
-The integration key is `qodercli`.
+設定前請先安裝 [Qoder CLI](https://qoder.com/cli)。整合鍵為 `qodercli`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration qodercli
 ```
 
-For an existing Spec Kit project, use `specify integration install qodercli`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install qodercli`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Skills are installed as `.qoder/skills/speckit-<command>/SKILL.md`.
-Invoke them in the agent's chat, for example `/speckit-specify` or
-`/speckit-bug-assess` for the installed bug extension.
+技能會安裝為 `.qoder/skills/speckit-<command>/SKILL.md`。在代理的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。
 
-The skills layout replaces legacy `.qoder/commands/` scanning. When enabled
-extensions are re-registered, old flat extension command files are retired
-only after their replacement skill files exist. Back up edits to those legacy
-extension commands before re-registration: that retirement does not compare
-their content hashes.
+技能版式取代了舊版的 `.qoder/commands/` 掃描方式。當已啟用的擴充功能重新註冊時，舊的平面擴充功能命令檔案只有在其替代技能檔案存在後才會退役。重新註冊前，請先備份你對那些舊版擴充功能命令的編輯：該退役程序不會比對它們的內容雜湊。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Workflow steps use `qodercli -p <prompt>`, with `--model` when configured and
-`--output-format json` when structured output is requested.
-There are no integration-specific setup options; skills mode is unconditional.
+工作流程步驟使用 `qodercli -p <prompt>`，並在已設定時傳入 `--model`、在要求結構化輸出時傳入 `--output-format json`。沒有整合專屬的設定選項；技能模式是無條件適用的。

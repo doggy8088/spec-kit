@@ -1,33 +1,25 @@
 # SHAI (OVHcloud)
 
-Install [SHAI](https://github.com/ovh/shai) before setup.
-The integration key is `shai`.
+設定前請先安裝 [SHAI](https://github.com/ovh/shai)。整合鍵為 `shai`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration shai
 ```
 
-For an existing Spec Kit project, use `specify integration install shai`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install shai`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Commands
+## 已安裝的命令
 
-Markdown commands are installed under `.shai/commands/`, using dotted names
-such as `speckit.specify.md`.
+Markdown 命令會安裝在 `.shai/commands/` 之下，使用點記法名稱，例如 `speckit.specify.md`。
 
-## Workflow Limitation
+## 工作流程限制
 
-Workflow `command` and `prompt` steps cannot run through SHAI. Its CLI accepts
-prompt text as arguments, on stdin, or through `shai agent`, but hands it to
-its auto-fix agent and never loads `.shai/commands/`, so those steps fail.
+工作流程的 `command` 與 `prompt` 步驟無法透過 SHAI 執行。它的 CLI 接受以參數、stdin 或透過 `shai agent` 傳入的提示詞文字，但會將其交給自動修復代理，且從不載入 `.shai/commands/`，因此這些步驟會失敗。
 
-The adapter explicitly declines CLI dispatch rather than reporting success
-without running the installed command. There are no integration-specific
-setup options.
+轉接器會明確拒絕 CLI 分派，而不是在未執行已安裝命令的情況下回報成功。沒有整合專屬的設定選項。

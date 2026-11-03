@@ -1,37 +1,25 @@
 # Cursor
 
-Install [Cursor](https://cursor.sh/) before setup.
-The integration key is `cursor-agent`; no separate CLI is required for IDE setup.
+設定前請先安裝 [Cursor](https://cursor.sh/)。整合鍵為 `cursor-agent`；IDE 設定不需要另外的 CLI。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration cursor-agent
 ```
 
-For an existing Spec Kit project, use `specify integration install cursor-agent`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install cursor-agent`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Skills are installed as `.cursor/skills/speckit-<command>/SKILL.md`.
-Invoke them in Cursor's chat, for example `/speckit-specify` or
-`/speckit-bug-assess` for the installed bug extension.
+技能會安裝為 `.cursor/skills/speckit-<command>/SKILL.md`。在 Cursor 的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。
 
-## Options and Workflow Permissions
+## 選項與工作流程權限
 
-The optional `--integration-options="--skills"` flag restates the default;
-this integration always scaffolds skills. Native events use
-`.cursor/hooks.json`; `--events false` disables Spec Kit event handlers.
-See [runtime events](cli.md#runtime-events).
+選用的 `--integration-options="--skills"` 旗標只是重述預設值；本整合一律產生技能。原生事件使用 `.cursor/hooks.json`；`--events false` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#runtime-events)。
 
-Workflow command and prompt steps additionally require the `cursor-agent` CLI.
-Dispatch uses `-p --trust --approve-mcps --force`: these flags bypass workspace
-trust prompts and approve MCP loading and tool actions. Run workflows only in
-a project where you intend to grant those permissions. A configured `--model`
-and requested `--output-format json` are forwarded.
+工作流程的命令與提示詞步驟另外需要 `cursor-agent` CLI。分派使用 `-p --trust --approve-mcps --force`：這些旗標會繞過工作區信任提示，並核准 MCP 載入與工具動作。請只在你打算授予這些權限的專案中執行工作流程。已設定的 `--model` 與要求的 `--output-format json` 都會被轉傳。

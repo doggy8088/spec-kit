@@ -1,18 +1,18 @@
-# Feature Specification: [FEATURE NAME]
+# 功能規格：[FEATURE NAME]
 
-**Created**: [DATE]
-**Status**: Draft
+**建立日期**：[DATE]
+**狀態**：草稿
 
-## Overview
+## 概覽
 
 [Brief description of the feature]
 
-## Requirements
+## 需求
 
-- [ ] Requirement 1
-- [ ] Requirement 2
+- [ ] 需求 1
+- [ ] 需求 2
 
-## Acceptance Criteria
+## 驗收標準
 
-- [ ] Criterion 1
-- [ ] Criterion 2
+- [ ] 標準 1
+- [ ] 標準 2

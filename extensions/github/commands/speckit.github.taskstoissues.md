@@ -1,5 +1,5 @@
 ---
-description: Convert existing tasks into actionable, dependency-ordered GitHub issues for the feature based on available design artifacts.
+description: 根據可用的設計產出，將既有任務轉換為可執行、依相依順序排列的 GitHub issues，供該功能使用。
 tools: ['github/github-mcp-server/list_issues', 'github/github-mcp-server/issue_write']
 scripts:
   sh: scripts/bash/resolve-tasks.sh --json
@@ -7,26 +7,26 @@ scripts:
   py: scripts/python/resolve_tasks.py --json
 ---
 
-## User Input
+## 使用者輸入
 
 ```text
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+在繼續之前，你**必須**考量使用者輸入（若非空）。
 
-## Pre-Execution Checks
+## 執行前檢查
 
-**Check for extension hooks (before tasks-to-issues conversion)**:
-- Check if `.specify/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_taskstoissues` key
-- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**檢查擴充功能 hooks（在任務轉換為 issues 之前）**：
+- 檢查專案根目錄是否存在 `.specify/extensions.yml`。
+- 若存在，讀取它並尋找 `hooks.before_taskstoissues` 鍵下的條目
+- 若 YAML 無法解析或無效，不要默默略過：告訴使用者 `.specify/extensions.yml` 無法讀取（附上解析器錯誤），且未檢查任何 hooks，包括在該處註冊的任何強制（`optional: false`）hooks，然後正常繼續
+- 濾除 `enabled` 明確為 `false` 的 hooks。沒有 `enabled` 欄位的 hooks 預設視為啟用。
+- 對每個其餘的 hook，**不要**試圖解讀或求值 hook 的 `condition` 運算式：
+  - 若 hook 沒有 `condition` 欄位，或其為 null/空，則視該 hook 為可執行
+  - 若 hook 定義了非空的 `condition`，略過該 hook，將條件求值留給 HookExecutor 實作
+- 對每個可執行的 hook，依其 `optional` 旗標輸出以下內容：
+  - **選擇性 hook**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -37,7 +37,7 @@ You **MUST** consider the user input before proceeding (if not empty).
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **強制 hook**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -47,43 +47,43 @@ You **MUST** consider the user input before proceeding (if not empty).
 
     Wait for the result of the hook command before proceeding to the Outline.
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
+    在輸出上述區塊之後，你必須實際叫用該 hook 並等待其完成，才能繼續。以你自己在此代理／工作階段中執行命令的相同方式執行它（實際叫用方式可能與上方顯示的字面 `{command}` id 不同，例如 skills 模式的代理會以 `/skill:speckit-...` 或 `$speckit-...` 執行它）。僅輸出區塊並不會執行 hook。
+- 若沒有註冊任何 hooks，或 `.specify/extensions.yml` 不存在，默默略過
 
-## Outline
+## 大綱
 
-1. Run `{SCRIPT}` from repo root and parse FEATURE_DIR, TASKS and the AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
-1. **IF EXISTS**: Load `/memory/constitution.md` for project principles and governance constraints.
-1. From the executed script, extract the path to **tasks** (the `TASKS` value).
-1. Get the Git remote by running:
+1. 在儲存庫根目錄執行 `{SCRIPT}`，並解析 FEATURE_DIR、TASKS 與 AVAILABLE_DOCS 清單。所有路徑都必須是絕對路徑。對於引數中像 "I'm Groot" 這樣的單引號，使用跳脫語法：例如 'I'\''m Groot'（或儘可能用雙引號："I'm Groot"）。
+1. **若存在**：載入 `/memory/constitution.md`，取得專案原則與治理限制。
+1. 從已執行指令碼的結果中，擷取 **tasks** 的路徑（即 `TASKS` 值）。
+1. 執行以下命令取得 Git 遠端：
 
 ```bash
 git config --get remote.origin.url
 ```
 
 > [!CAUTION]
-> ONLY PROCEED TO NEXT STEPS IF THE REMOTE IS A GITHUB URL
+> 只有當遠端是 GitHub URL 時，才繼續進行後續步驟
 
-1. **Fetch existing issues for deduplication**: Before creating anything, build the set of task IDs you are about to process from `tasks.md` (each is a `T` followed by **at least** three digits, e.g. `T001` — `__SPECKIT_COMMAND_CONVERGE__` assigns new IDs with `T{M+1:03d}`, which is a floor rather than a cap, so once a file has more than 999 tasks the IDs are four digits or longer). Then use the GitHub MCP server's `list_issues` tool to look for issues that already cover those IDs. Do not pass a `state` value, since omitting it makes the tool return both open and closed issues. Request `perPage: 100` to keep the number of calls down, and since the tool uses cursor-based pagination, request pages with the `after` parameter (using the `endCursor` from the previous response). For each issue title, match it against the task ID pattern `\bT\d{3,}\b` (the `{3,}` accepts four-digit and longer IDs — with `\d{3}` a title containing `T1000` would not match at all, because the trailing `\b` cannot fall between two digits, so that task would be silently neither deduplicated nor created; word boundaries still stop a token like `ST001` from matching, and force the whole digit run to be consumed so `T100` can never match inside `T1000`; this also recognises titles written as `T001 ...`, `T001: ...` or `[T001] ...`) and, when it matches one of your task IDs, mark that ID as already having an issue. Stop paginating as soon as every task ID has been matched, or when there are no more pages, so you do not keep fetching the whole repository's issue history once all task IDs are accounted for. This bounds the number of calls on repos with large issue histories and still prevents duplicates when the command is re-run after `tasks.md` is regenerated or the skill is re-invoked.
-1. For each task in the list, use the GitHub MCP server to create a new issue in the repository that is representative of the Git remote. Task lines in `tasks.md` start with a markdown checkbox, so first strip the leading `- [ ]` (and any `[P]` / `[US#]` markers) to recover the task ID and its description. Create the issue with a single canonical title of the form `T001: <description>`, with the ID written once followed by the task description (for example, the line `- [ ] T001 Create project structure` becomes the title `T001: Create project structure`).
-   - **Skip** any task whose ID is already present in the set of existing issues from the previous step, and report it (for example, `T001 already has an issue, skipping`).
-   - Only create issues for tasks that do not yet have a matching issue.
+1. **擷取既有 issues 以便去重**：在建立任何東西之前，先從 `tasks.md` 建立你即將處理的任務 ID 集合（每個 ID 都是 `T` 後接**至少**三位數字，例如 `T001`——`__SPECKIT_COMMAND_CONVERGE__` 以 `T{M+1:03d}` 指派新 ID，這是下限而非上限，因此當檔案中的任務超過 999 個時，ID 就會是四位數或更長）。接著使用 GitHub MCP server 的 `list_issues` 工具，尋找已涵蓋這些 ID 的 issues。不要傳入 `state` 值，因為省略它會讓工具同時回傳開啟中與已關閉的 issues。要求 `perPage: 100` 以減少呼叫次數；由於該工具使用以游標為基礎的分頁，以 `after` 參數請求後續頁面（使用前一次回應的 `endCursor`）。對每個 issue 標題，以任務 ID 模式 `\bT\d{3,}\b` 比對（`{3,}` 接受四位數及更長的 ID——若用 `\d{3}`，含有 `T1000` 的標題將完全無法命中，因為尾端的 `\b` 無法落在兩個數字之間，如此該任務就會被默默地既不去重、也不建立；單字邊界仍能阻止像 `ST001` 這樣的詞元命中，並強制整個數字串被完整消耗，因此 `T100` 永遠無法在 `T1000` 內部命中；這也能辨識寫成 `T001 ...`、`T001: ...` 或 `[T001] ...` 的標題），當它命中你的一個任務 ID 時，將該 ID 標記為已有 issue。一旦每個任務 ID 都已命中，或已沒有更多頁面，立即停止分頁，以免在所有任務 ID 都已交代清楚後，還繼續擷取整個儲存庫的 issue 歷史。這能限制 issue 歷史龐大之儲存庫的呼叫次數，同時在 `tasks.md` 重新產生或 skill 被重新叫用後再次執行此命令時，仍可防止重複。
+1. 對清單中的每個任務，使用 GitHub MCP server 在 Git 遠端所代表的儲存庫中建立一個新 issue。`tasks.md` 中的任務行以 Markdown 核取方塊開頭，因此先去除開頭的 `- [ ]`（以及任何 `[P]`／`[US#]` 標記），以還原任務 ID 與其說明。以 `T001: <description>` 形式的單一正式標題建立 issue，ID 只寫一次，其後接任務說明（例如，`- [ ] T001 Create project structure` 這一行會成為標題 `T001: Create project structure`）。
+   - **略過** ID 已出現在前一步既有 issues 集合中的任何任務，並回報它（例如 `T001 already has an issue, skipping`）。
+   - 只為尚未有相符 issue 的任務建立 issues。
 
 > [!CAUTION]
-> UNDER NO CIRCUMSTANCES EVER CREATE ISSUES IN REPOSITORIES THAT DO NOT MATCH THE REMOTE URL
+> 在任何情況下，絕對不要在與遠端 URL 不相符的儲存庫中建立 issues
 
-## Post-Execution Checks
+## 執行後檢查
 
-**Check for extension hooks (after tasks-to-issues conversion)**:
-Check if `.specify/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.after_taskstoissues` key
-- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**檢查擴充功能 hooks（在任務轉換為 issues 之後）**：
+檢查專案根目錄是否存在 `.specify/extensions.yml`。
+- 若存在，讀取它並尋找 `hooks.after_taskstoissues` 鍵下的條目
+- 若 YAML 無法解析或無效，不要默默略過：告訴使用者 `.specify/extensions.yml` 無法讀取（附上解析器錯誤），且未檢查任何 hooks，包括在該處註冊的任何強制（`optional: false`）hooks，然後正常繼續
+- 濾除 `enabled` 明確為 `false` 的 hooks。沒有 `enabled` 欄位的 hooks 預設視為啟用。
+- 對每個其餘的 hook，**不要**試圖解讀或求值 hook 的 `condition` 運算式：
+  - 若 hook 沒有 `condition` 欄位，或其為 null/空，則視該 hook 為可執行
+  - 若 hook 定義了非空的 `condition`，略過該 hook，將條件求值留給 HookExecutor 實作
+- 對每個可執行的 hook，依其 `optional` 旗標輸出以下內容：
+  - **選擇性 hook**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -94,7 +94,7 @@ Check if `.specify/extensions.yml` exists in the project root.
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **強制 hook**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -102,5 +102,5 @@ Check if `.specify/extensions.yml` exists in the project root.
     Executing: `/{command}`
     EXECUTE_COMMAND: {command}
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
+    在輸出上述區塊之後，你必須實際叫用該 hook 並等待其完成，才能繼續。以你自己在此代理／工作階段中執行命令的相同方式執行它（實際叫用方式可能與上方顯示的字面 `{command}` id 不同，例如 skills 模式的代理會以 `/skill:speckit-...` 或 `$speckit-...` 執行它）。僅輸出區塊並不會執行 hook。
+- 若沒有註冊任何 hooks，或 `.specify/extensions.yml` 不存在，默默略過

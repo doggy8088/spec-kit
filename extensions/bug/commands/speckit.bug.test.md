@@ -1,59 +1,59 @@
 ---
-description: "Validate that a previously fixed bug is resolved and record the verification report"
+description: "驗證先前已修復的缺陷確實獲得解決，並記錄驗證報告"
 ---
 
-# Test Bug Fix
+# 測試缺陷修復
 
-Validate that the fix recorded by `__SPECKIT_COMMAND_BUG_FIX__` actually resolves the bug described by `__SPECKIT_COMMAND_BUG_ASSESS__`. The output is a verification report at `.specify/bugs/<slug>/test.md`.
+驗證 `__SPECKIT_COMMAND_BUG_FIX__` 所記錄的修復，是否確實解決了 `__SPECKIT_COMMAND_BUG_ASSESS__` 所描述的缺陷。輸出為位於 `.specify/bugs/<slug>/test.md` 的驗證報告。
 
-## User Input
+## 使用者輸入
 
 ```text
 $ARGUMENTS
 ```
 
-The user input should identify the bug to validate. Accept any of:
+使用者輸入應能指明要驗證的缺陷。接受以下任一形式：
 
-- `slug=<bug-slug>` or `--slug <bug-slug>` or a bare slug-like token.
-- A path that contains the slug (e.g. `.specify/bugs/login-timeout/`).
-- **Nothing** — fall back to context (see below).
+- `slug=<bug-slug>`、`--slug <bug-slug>`，或一個單獨的 slug 樣式詞元。
+- 含有該 slug 的路徑（例如 `.specify/bugs/login-timeout/`）。
+- **空**——改從脈絡推斷（見下文）。
 
-## Slug Resolution
+## Slug 解析
 
-Resolve `BUG_SLUG` in this order, stopping at the first match:
+依以下順序解析 `BUG_SLUG`，命中第一個符合者即停止：
 
-1. **Explicit user input** — a slug passed in `$ARGUMENTS` (any of the forms above).
-2. **Conversation context** — if the current session has just run `__SPECKIT_COMMAND_BUG_ASSESS__` or `__SPECKIT_COMMAND_BUG_FIX__`, the slug it reported is the working slug. Reuse it without re-prompting. Confirm it by checking that `.specify/bugs/<slug>/fix.md` exists; if it does not, fall through.
-3. **Single candidate on disk** — list `.specify/bugs/*/fix.md`. If exactly one bug has a `fix.md`, use it.
-4. **Disambiguate**:
-   - **Interactive mode**: ask the user which bug to validate and list the candidates.
-   - **Automated mode**: stop with an error listing the candidates. Do not guess.
+1. **明確的使用者輸入**——在 `$ARGUMENTS` 中傳入的 slug（上述任一形式）。
+2. **對話脈絡**——若目前工作階段剛執行過 `__SPECKIT_COMMAND_BUG_ASSESS__` 或 `__SPECKIT_COMMAND_BUG_FIX__`，它回報的 slug 即為工作 slug。直接重用，不必再次提示。透過檢查 `.specify/bugs/<slug>/fix.md` 是否存在來確認；若不存在，繼續往下。
+3. **磁碟上的單一候選**——列出 `.specify/bugs/*/fix.md`。若恰好只有一個缺陷有 `fix.md`，就使用它。
+4. **消歧義**：
+   - **互動模式**：詢問使用者要驗證哪個缺陷，並列出候選。
+   - **自動模式**：停止並回報錯誤，列出候選。不要臆測。
 
-Once resolved, set `BUG_SLUG` and `BUG_DIR = .specify/bugs/<BUG_SLUG>`, and briefly state in your reply which resolution path was used (explicit / from context / single candidate / asked).
+解析完成後，設定 `BUG_SLUG` 與 `BUG_DIR = .specify/bugs/<BUG_SLUG>`，並在回覆中簡短說明所用的解析路徑（明確指定／來自脈絡／單一候選／經詢問）。
 
-## Prerequisites
+## 前置條件
 
-- `BUG_DIR/assessment.md` MUST exist.
-- `BUG_DIR/fix.md` MUST exist. If not, stop and instruct the user to run `__SPECKIT_COMMAND_BUG_FIX__` first.
-- If `BUG_DIR/test.md` already exists, ask the user whether to overwrite it (interactive mode) or refuse (automated mode).
-- Read both `assessment.md` and `fix.md` in full so you know:
-  - The original symptom and reproduction steps (from `assessment.md`).
-  - The actual code changes and tests added (from `fix.md`).
+- `BUG_DIR/assessment.md` 必須存在。
+- `BUG_DIR/fix.md` 必須存在。若不存在，停止並指示使用者先執行 `__SPECKIT_COMMAND_BUG_FIX__`。
+- 若 `BUG_DIR/test.md` 已存在，詢問使用者是否覆寫（互動模式），或拒絕（自動模式）。
+- 完整讀取 `assessment.md` 與 `fix.md`，以便掌握：
+  - 原始症狀與重現步驟（來自 `assessment.md`）。
+  - 實際的程式碼變更與新增的測試（來自 `fix.md`）。
 
-## Pre-Execution Checks
+## 執行前檢查
 
-By this point `BUG_SLUG` and `BUG_DIR` have been resolved, so a hook command run in this session can reuse them from the conversation; nothing is passed to it automatically.
+到此 `BUG_SLUG` 與 `BUG_DIR` 已解析完成，因此在此工作階段中執行的 hook 命令可以直接從對話中重用它們；不會有任何東西自動傳遞給它。
 
-**Check for extension hooks (before bug verification)**:
-- Check if `.specify/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_bug_test` key
-- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**檢查擴充功能 hooks（在缺陷驗證之前）**：
+- 檢查專案根目錄是否存在 `.specify/extensions.yml`。
+- 若存在，讀取它並尋找 `hooks.before_bug_test` 鍵下的條目
+- 若 YAML 無法解析或無效，不要默默略過：告訴使用者 `.specify/extensions.yml` 無法讀取（附上解析器錯誤），且未檢查任何 hooks，包括在該處註冊的任何強制（`optional: false`）hooks，然後正常繼續
+- 濾除 `enabled` 明確為 `false` 的 hooks。沒有 `enabled` 欄位的 hooks 預設視為啟用。
+- 對每個其餘的 hook，**不要**試圖解讀或求值 hook 的 `condition` 運算式：
+  - 若 hook 沒有 `condition` 欄位，或其為 null/空，則視該 hook 為可執行
+  - 若 hook 定義了非空的 `condition`，略過該 hook，將條件求值留給 HookExecutor 實作
+- 對每個可執行的 hook，依其 `optional` 旗標輸出以下內容：
+  - **選擇性 hook**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -64,7 +64,7 @@ By this point `BUG_SLUG` and `BUG_DIR` have been resolved, so a hook command run
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **強制 hook**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -74,35 +74,35 @@ By this point `BUG_SLUG` and `BUG_DIR` have been resolved, so a hook command run
 
     Wait for the result of the hook command before proceeding to Execution.
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
+    在輸出上述區塊之後，你必須實際叫用該 hook 並等待其完成，才能繼續。以你自己在此代理／工作階段中執行命令的相同方式執行它（實際叫用方式可能與上方顯示的字面 `{command}` id 不同，例如 skills 模式的代理會以 `/skill:speckit-...` 或 `$speckit-...` 執行它）。僅輸出區塊並不會執行 hook。
+- 若沒有註冊任何 hooks，或 `.specify/extensions.yml` 不存在，默默略過
 
-## Execution
+## 執行
 
-1. **Plan the validation**
-   - Decide which checks prove the bug is gone:
-     - Re-run the reproduction steps from the assessment (or their automated equivalent).
-     - Run the tests added or updated in the fix.
-     - Run any broader regression suite that touches the changed files.
-   - Decide which checks prove nothing was broken:
-     - Existing test suites for the changed modules.
-     - Lint / type-check if the project uses them.
+1. **規劃驗證**
+   - 決定哪些檢查能證明缺陷已消失：
+     - 重新執行評估中的重現步驟（或其自動化等價作法）。
+     - 執行修復中新增或更新的測試。
+     - 執行任何觸及變更檔案的更廣泛迴歸測試套件。
+   - 決定哪些檢查能證明沒有弄壞其他東西：
+     - 變更模組的既有測試套件。
+     - 若專案有使用，執行 lint／型別檢查。
 
-2. **Run the checks**
-   - Execute each planned check. Capture command, exit status, and a short excerpt of relevant output (last few lines, or the failing assertion).
-   - If a check is destructive, network-dependent, or expensive, skip it and record it as `skipped` with a reason; do not run it without explicit user consent.
-   - If you cannot run a check at all (missing tooling, no test framework configured), record it as `not-run` with a reason instead of fabricating a result.
+2. **執行檢查**
+   - 執行每一項規劃的檢查。擷取命令、結束狀態，以及相關輸出的簡短摘錄（最後幾行，或失敗的斷言）。
+   - 若某項檢查具破壞性、依賴網路或代價高昂，略過它並記錄為 `skipped` 附上原因；未經使用者明確同意，不要執行它。
+   - 若某項檢查根本無法執行（缺少工具、未設定測試框架），記錄為 `not-run` 附上原因，不要捏造結果。
 
-3. **Judge the outcome**
-   - Mark the fix as:
-     - **verified** — all critical checks pass and the original symptom no longer reproduces.
-     - **partial** — the original symptom is gone but unrelated regressions appeared, or some checks are inconclusive.
-     - **failed** — the symptom still reproduces or the regression suite is broken by the fix.
-   - Do not over-claim. If reproduction was not actually performed (e.g., the bug required a production environment), say so explicitly.
+3. **判定結果**
+   - 將修復標記為：
+     - **verified**——所有關鍵檢查皆通過，且原始症狀不再重現。
+     - **partial**——原始症狀已消失，但出現無關的迴歸，或部分檢查無法得出結論。
+     - **failed**——症狀仍會重現，或迴歸測試套件被修復弄壞。
+   - 不要過度宣稱。若實際上並未執行重現（例如該缺陷需要正式環境），明確說明。
 
-4. **Write the verification report**
+4. **撰寫驗證報告**
 
-   Write to `BUG_DIR/test.md` using this structure:
+   使用以下結構寫入 `BUG_DIR/test.md`：
 
    ```markdown
    # Bug Verification: <short title>
@@ -142,22 +142,22 @@ By this point `BUG_SLUG` and `BUG_DIR` have been resolved, so a hook command run
    - "Reopen — symptom still reproduces; rerun `__SPECKIT_COMMAND_BUG_ASSESS__`."
    ```
 
-## Mandatory Post-Execution Hooks
+## 強制執行後 Hooks
 
-**You MUST complete this section before reporting completion to the user.**
+**在向使用者回報完成之前，你必須完成本節。**
 
-By this point `BUG_SLUG` and `BUG_DIR` have been resolved and the written report is available, so a hook command run in this session can reuse them from the conversation; nothing is passed to it automatically.
+到此 `BUG_SLUG` 與 `BUG_DIR` 已解析完成，且已寫入的報告可供使用，因此在此工作階段中執行的 hook 命令可以直接從對話中重用它們；不會有任何東西自動傳遞給它。
 
-Check if `.specify/extensions.yml` exists in the project root.
-- If it does not exist, or no hooks are registered under `hooks.after_bug_test`, skip to the Completion Report.
-- If it exists, read it and look for entries under the `hooks.after_bug_test` key.
-- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue to the Completion Report.
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- For each executable hook, output the following based on its `optional` flag:
-  - **Mandatory hook** (`optional: false`) — **You MUST emit `EXECUTE_COMMAND:` for each mandatory hook**:
+檢查專案根目錄是否存在 `.specify/extensions.yml`。
+- 若不存在，或 `hooks.after_bug_test` 下未註冊任何 hooks，跳至完成報告。
+- 若存在，讀取它並尋找 `hooks.after_bug_test` 鍵下的條目。
+- 若 YAML 無法解析或無效，不要默默略過：告訴使用者 `.specify/extensions.yml` 無法讀取（附上解析器錯誤），且未檢查任何 hooks，包括在該處註冊的任何強制（`optional: false`）hooks，然後繼續進行完成報告。
+- 濾除 `enabled` 明確為 `false` 的 hooks。沒有 `enabled` 欄位的 hooks 預設視為啟用。
+- 對每個其餘的 hook，**不要**試圖解讀或求值 hook 的 `condition` 運算式：
+  - 若 hook 沒有 `condition` 欄位，或其為 null/空，則視該 hook 為可執行
+  - 若 hook 定義了非空的 `condition`，略過該 hook，將條件求值留給 HookExecutor 實作
+- 對每個可執行的 hook，依其 `optional` 旗標輸出以下內容：
+  - **強制 hook**（`optional: false`）——**你必須為每個強制 hook 輸出 `EXECUTE_COMMAND:`**：
     ```
     ## Extension Hooks
 
@@ -165,8 +165,8 @@ Check if `.specify/extensions.yml` exists in the project root.
     Executing: `/{command}`
     EXECUTE_COMMAND: {command}
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
-  - **Optional hook** (`optional: true`):
+    在輸出上述區塊之後，你必須實際叫用該 hook 並等待其完成，才能繼續。以你自己在此代理／工作階段中執行命令的相同方式執行它（實際叫用方式可能與上方顯示的字面 `{command}` id 不同，例如 skills 模式的代理會以 `/skill:speckit-...` 或 `$speckit-...` 執行它）。僅輸出區塊並不會執行 hook。
+  - **選擇性 hook**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -178,16 +178,16 @@ Check if `.specify/extensions.yml` exists in the project root.
     To execute: `/{command}`
     ```
 
-## Completion Report
+## 完成報告
 
-**Report back** with:
+**回報**以下內容：
 
-- The slug and `BUG_DIR/test.md` path.
-- The result (`verified`, `partial`, `failed`).
-- If the result is `failed`, recommend re-running `__SPECKIT_COMMAND_BUG_ASSESS__` with the new evidence captured in `test.md`.
+- slug 與 `BUG_DIR/test.md` 路徑。
+- 結果（`verified`、`partial`、`failed`）。
+- 若結果為 `failed`，建議以 `test.md` 中擷取的新證據，重新執行 `__SPECKIT_COMMAND_BUG_ASSESS__`。
 
-## Guardrails
+## 護欄
 
-- This command MUST NOT modify source code. It only runs checks and writes inside `.specify/bugs/<slug>/`.
-- Never overwrite an existing `test.md` without confirmation.
-- Never mark a fix as `verified` based on tests alone if the original assessment listed a reproduction that you did not actually exercise — downgrade to `partial` and say so.
+- 此命令不得修改原始碼。它只執行檢查，並只在 `.specify/bugs/<slug>/` 內寫入。
+- 未經確認，絕不覆寫既有的 `test.md`。
+- 若原始評估列出的重現步驟你實際上並未執行，絕不只憑測試就將修復標記為 `verified`——降為 `partial` 並說明原因。

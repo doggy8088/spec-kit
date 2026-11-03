@@ -1,47 +1,31 @@
 # Hermes
 
-Install [Hermes Agent](https://github.com/NousResearch/hermes-agent) before setup.
-The integration key is `hermes`.
+設定前請先安裝 [Hermes Agent](https://github.com/NousResearch/hermes-agent)。整合鍵為 `hermes`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe. Its skills are shared across
-projects in the same user's home directory. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全。它的技能會在同一位使用者的主目錄中跨專案共用。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration hermes
 ```
 
-For an existing Spec Kit project, use `specify integration install hermes`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install hermes`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Unlike project-local skills integrations, Hermes installs skills globally as
-`~/.hermes/skills/speckit-<command>/SKILL.md`.
-Invoke them in Hermes's chat, for example `/speckit-specify` or
-`/speckit-bug-assess` for the installed bug extension.
+與專案本機技能整合不同，Hermes 會將技能全域安裝為 `~/.hermes/skills/speckit-<command>/SKILL.md`。在 Hermes 的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。
 
-An empty project-local `.hermes/skills/` marker enables integration detection;
-the generated core skill files themselves are not copied into the project.
-The optional `--integration-options="--skills"` flag restates the default.
+專案本機的空白 `.hermes/skills/` 標記可啟用整合偵測；產生的核心技能檔案本身不會複製到專案中。選用的 `--integration-options="--skills"` 旗標只是重述預設值。
 
-## Global Ownership and Removal
+## 全域所有權與移除
 
-Setup can replace another project's global Spec Kit skill files.
+設定程序可以取代另一個專案的全域 Spec Kit 技能檔案。
 
-**Uninstall removes every global `speckit-*` skill directory, even if edited
-and even without `--force`.** These global files are not protected by the
-project-local manifest's modified-file checks. Back up customizations before
-uninstalling or switching away from Hermes. An empty project-local marker is
-also removed; non-Spec-Kit global skills remain.
+**解除安裝會移除每一個全域 `speckit-*` 技能目錄，即使已被編輯、即使未使用 `--force` 也一樣。** 這些全域檔案不受專案本機清單的已修改檔案檢查保護。解除安裝或切離 Hermes 之前，請先備份你的自訂內容。專案本機的空白標記也會被移除；非 Spec Kit 的全域技能則會保留。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Workflow steps use `hermes chat -Q`. Slash-prefixed prompts select a skill with
-`-s`; remaining text is passed with `-q`. Other prompts use `-q` directly.
-The adapter forwards a configured model with `-m` and requests `--json` for
-structured output.
+工作流程步驟使用 `hermes chat -Q`。以斜線開頭的提示詞會以 `-s` 選取技能，其餘文字以 `-q` 傳入。其他提示詞則直接使用 `-q`。轉接器會以 `-m` 轉傳已設定的模型，並在要求結構化輸出時傳入 `--json`。

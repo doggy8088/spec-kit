@@ -1,57 +1,57 @@
 ---
-description: "Validate the lifecycle of an extension from the catalog."
+description: "驗證目錄中某個擴充功能的生命週期。"
 ---
 
-# Extension Self-Test: `$ARGUMENTS`
+# 擴充功能自我測試：`$ARGUMENTS`
 
-This command drives a self-test simulating the developer experience with the `$ARGUMENTS` extension.
+本命令執行自我測試，模擬開發者使用 `$ARGUMENTS` 擴充功能的體驗。
 
-## Goal
+## 目標
 
-Validate the end-to-end lifecycle (discovery, installation, registration) for the extension: `$ARGUMENTS`.
-If `$ARGUMENTS` is empty, you must tell the user to provide an extension name, for example: `/speckit.selftest.extension linear`.
+驗證該擴充功能的端對端生命週期（探索、安裝、註冊）：`$ARGUMENTS`。
+若 `$ARGUMENTS` 為空白，你必須告知使用者提供擴充功能名稱，例如：`/speckit.selftest.extension linear`。
 
-## Steps
+## 步驟
 
-### Step 1: Catalog Discovery Validation
+### 步驟 1：驗證目錄探索
 
-Check if the extension exists in the Spec Kit catalog.
-Execute this command and verify that it completes successfully and that the returned extension ID exactly matches `$ARGUMENTS`. If the command fails or the ID does not match `$ARGUMENTS`, fail the test.
+檢查該擴充功能是否存在於 Spec Kit 目錄中。
+執行這個命令，並確認它成功完成，且回傳的擴充功能 ID 與 `$ARGUMENTS` 完全相符。若命令失敗，或 ID 與 `$ARGUMENTS` 不符，則測試失敗。
 
 ```bash
 specify extension info "$ARGUMENTS"
 ```
 
-### Step 2: Simulate Installation
+### 步驟 2：模擬安裝
 
-First, try to add the extension to the current workspace configuration directly. If the catalog provides the extension as `install_allowed: false` (discovery-only), this step is *expected* to fail.
+先嘗試直接將擴充功能加入目前工作區設定。若目錄將該擴充功能標示為 `install_allowed: false`（僅供探索），此步驟*預期*會失敗。
 
 ```bash
 specify extension add "$ARGUMENTS"
 ```
 
-Then, simulate adding the extension by installing it from its catalog download URL, which should bypass the restriction.
-Obtain the extension's `download_url` from the catalog metadata (for example, via a catalog info command or UI), then run:
+接著，從目錄下載 URL 安裝該擴充功能以模擬加入流程，這應能繞過該限制。
+從目錄詮釋資料取得擴充功能的 `download_url`（例如透過目錄資訊命令或 UI），然後執行：
 
 ```bash
 specify extension add "$ARGUMENTS" --from "<download_url>"
 ```
 
-### Step 3: Registration Verification
+### 步驟 3：驗證註冊
 
-Once the `add` command completes, verify the installation by checking the project configuration.
-Use terminal tools (like `cat`) to verify that the following file contains a record for `$ARGUMENTS`.
+`add` 命令完成後，檢查專案設定以驗證安裝結果。
+使用終端機工具（例如 `cat`）確認下列檔案包含 `$ARGUMENTS` 的記錄。
 
 ```bash
 cat .specify/extensions/.registry/$ARGUMENTS.json
 ```
 
-### Step 4: Verification Report
+### 步驟 4：驗證報告
 
-Analyze the standard output of the three steps.
-Generate a terminal-style test output format detailing the results of discovery, installation, and registration. Return this directly to the user.
+分析這三個步驟的標準輸出。
+產生終端機風格的測試輸出格式，詳述探索、安裝與註冊的結果。直接將結果回傳給使用者。
 
-Example output format:
+輸出格式範例：
 ```text
 ============================= test session starts ==============================
 collected 3 items

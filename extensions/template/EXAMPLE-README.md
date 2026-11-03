@@ -1,25 +1,25 @@
-# EXAMPLE: Extension README
+# 範例：擴充功能 README
 
-This is an example of what your extension README should look like after customization.
-**Delete this file and replace README.md with content similar to this.**
+這是擴充功能 README 在完成自訂後應呈現的範例。
+**刪除本檔案，並將 README.md 換成與此類似的內容。**
 
 ---
 
 # My Extension
 
-<!-- CUSTOMIZE: Replace with your extension description -->
+<!-- CUSTOMIZE: 換成你的擴充功能說明 -->
 
-Brief description of what your extension does and why it's useful.
+簡要說明你的擴充功能的功能，以及它為何實用。
 
-## Features
+## 功能
 
-<!-- CUSTOMIZE: List key features -->
+<!-- CUSTOMIZE: 列出主要功能 -->
 
-- Feature 1: Description
-- Feature 2: Description
-- Feature 3: Description
+- 功能 1：說明
+- 功能 2：說明
+- 功能 3：說明
 
-## Installation
+## 安裝
 
 ```bash
 # Install from catalog
@@ -29,23 +29,23 @@ specify extension add my-extension
 specify extension add --dev /path/to/my-extension
 ```
 
-## Configuration
+## 設定
 
-1. Create configuration file:
+1. 建立設定檔：
 
    ```bash
    cp .specify/extensions/my-extension/config-template.yml \
       .specify/extensions/my-extension/my-extension-config.yml
    ```
 
-2. Edit configuration:
+2. 編輯設定：
 
    ```bash
    vim .specify/extensions/my-extension/my-extension-config.yml
    ```
 
-3. Set required values:
-   <!-- CUSTOMIZE: List required configuration -->
+3. 設定必填的值：
+   <!-- CUSTOMIZE: 列出必填的設定 -->
    ```yaml
    connection:
      url: "https://api.example.com"
@@ -55,50 +55,50 @@ specify extension add --dev /path/to/my-extension
      id: "your-project-id"
    ```
 
-## Usage
+## 使用方式
 
-<!-- CUSTOMIZE: Add usage examples -->
+<!-- CUSTOMIZE: 加入使用範例 -->
 
-### Command: example
+### 命令：example
 
-Description of what this command does.
+說明這個命令的功能。
 
 ```bash
 # In Claude Code
 > /speckit.my-extension.example
 ```
 
-**Prerequisites**:
+**前置條件**：
 
-- Prerequisite 1
-- Prerequisite 2
+- 前置條件 1
+- 前置條件 2
 
-**Output**:
+**輸出**：
 
-- What this command produces
-- Where results are saved
+- 這個命令會產生什麼
+- 結果儲存在何處
 
-## Configuration Reference
+## 設定參考
 
-<!-- CUSTOMIZE: Document all configuration options -->
+<!-- CUSTOMIZE: 記錄所有設定選項 -->
 
-### Connection Settings
+### 連線設定
 
-| Setting | Type | Required | Description |
+| 設定 | 類型 | 必填 | 說明 |
 |---------|------|----------|-------------|
-| `connection.url` | string | Yes | API endpoint URL |
-| `connection.api_key` | string | Yes | API authentication key |
+| `connection.url` | string | 是 | API 端點 URL |
+| `connection.api_key` | string | 是 | API 驗證金鑰 |
 
-### Project Settings
+### 專案設定
 
-| Setting | Type | Required | Description |
+| 設定 | 類型 | 必填 | 說明 |
 |---------|------|----------|-------------|
-| `project.id` | string | Yes | Project identifier |
-| `project.workspace` | string | No | Workspace or organization |
+| `project.id` | string | 是 | 專案識別碼 |
+| `project.workspace` | string | 否 | 工作區或組織 |
 
-## Environment Variables
+## 環境變數
 
-Override configuration with environment variables:
+透過環境變數覆寫設定：
 
 ```bash
 # Override connection settings
@@ -106,11 +106,11 @@ export SPECKIT_MY_EXTENSION_CONNECTION_URL="https://custom-api.com"
 export SPECKIT_MY_EXTENSION_CONNECTION_API_KEY="custom-key"
 ```
 
-## Examples
+## 範例
 
-<!-- CUSTOMIZE: Add real-world examples -->
+<!-- CUSTOMIZE: 加入實際情境範例 -->
 
-### Example 1: Basic Workflow
+### 範例 1：基本工作流程
 
 ```bash
 # Step 1: Create specification
@@ -123,34 +123,34 @@ export SPECKIT_MY_EXTENSION_CONNECTION_API_KEY="custom-key"
 > /speckit.my-extension.example
 ```
 
-## Troubleshooting
+## 疑難排解
 
-<!-- CUSTOMIZE: Add common issues -->
+<!-- CUSTOMIZE: 加入常見問題 -->
 
-### Issue: Configuration not found
+### 問題：找不到設定
 
-**Solution**: Create config from template (see Configuration section)
+**解決方式**：從範本建立設定（見「設定」一節）
 
-### Issue: Command not available
+### 問題：命令無法使用
 
-**Solutions**:
+**解決方式**：
 
-1. Check extension is installed: `specify extension list`
-2. Restart AI agent
-3. Reinstall extension
+1. 檢查擴充功能是否已安裝：`specify extension list`
+2. 重新啟動 AI 代理
+3. 重新安裝擴充功能
 
-## License
+## 授權
 
-MIT License - see LICENSE file
+MIT License - 請參閱 LICENSE 檔案
 
-## Support
+## 支援
 
-- **Issues**: <https://github.com/your-org/spec-kit-my-extension/issues>
-- **Spec Kit Docs**: <https://github.com/statsperform/spec-kit>
+- **Issues**：<https://github.com/your-org/spec-kit-my-extension/issues>
+- **Spec Kit Docs**：<https://github.com/statsperform/spec-kit>
 
-## Changelog
+## 變更紀錄
 
-See [CHANGELOG.md](CHANGELOG.md) for version history.
+版本歷程請參閱 [CHANGELOG.md](CHANGELOG.md)。
 
 ---
 

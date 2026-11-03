@@ -1,120 +1,104 @@
-# Bundles
+# 套件組
 
-Bundles compose existing Spec Kit components — extensions, presets, workflows, and steps — into a single, versioned, installable unit. Where extensions and presets are primitives, a bundle is a curated stack that declares everything a team or role needs and installs it in one step through each component's own machinery. Bundles add no new runtime behavior of their own: they are a distribution and composition layer over the primitives you already use.
+套件組將既有的 Spec Kit 元件（擴充功能、預設集、工作流程與步驟）組合成單一、具版本、可安裝的單位。擴充功能與預設集是基礎建構元素，套件組則是經過策劃的組合，宣告團隊或角色所需的完整內容，並透過各元件自身的機制在一個步驟內完成安裝。套件組本身不新增任何執行期行為：它只是疊加在您已在使用的基礎建構元素上的發佈與組合層。
 
-A bundle is described by a `bundle.yml` manifest and is discovered through the same catalog stack as other components. Installing a bundle resolves its declared components against pinned versions, checks active-integration and shared-component-version conflicts, and applies each component idempotently with full provenance tracking so it can be cleanly removed or refreshed later.
+套件組由 `bundle.yml` 資訊清單描述，並透過與其他元件相同的目錄堆疊來探索。安裝套件組時，系統會依釘選版本解析其宣告的元件，檢查作用中整合與共用元件版本的衝突，並以冪等方式套用每個元件，同時完整追蹤溯源資訊，以便日後能乾淨地移除或重新整理。
 
-For a concrete starting point, see the
-[example bundle manifests](https://github.com/github/spec-kit/tree/main/examples/bundles)
-for product managers, business analysts, security researchers, and developers.
-These demonstrate packaging a role-based setup, not filled generated feature
-specs; for end-to-end usage examples, see
-[community walkthroughs](../community/walkthroughs.md).
+如需具體的入門範例，請參閱
+[套件組資訊清單範例](https://github.com/github/spec-kit/tree/main/examples/bundles)
+，涵蓋產品經理、業務分析師、安全研究人員與開發人員等角色。
+這些範例展示的是以角色為基礎的設定封裝，而非填入內容的功能
+規格；如需端到端使用範例，請參閱
+[社群逐步教學](../community/walkthroughs.md)。
 
-## First-party Bundles
+## 官方套件組
 
-Spec Kit ships a first-party bundle catalog in `bundles/catalog.json`. These bundles are curated, marked `verified: true`, and resolve through the built-in `builtin://default` catalog source.
+Spec Kit 在 `bundles/catalog.json` 中隨附官方套件組目錄。這些套件組經過策劃、標記為 `verified: true`，並透過內建的 `builtin://default` 目錄來源解析。
 
-| Bundle    | Role        | Components                                            | Use case                                |
+| 套件組    | 角色        | 元件                                            | 使用案例                                |
 | --------- | ----------- | ----------------------------------------------------- | --------------------------------------- |
-| `bugfix`  | `developer` | `bug` extension + `bugfix` workflow                   | Guided assess → gate → fix → test       |
-| `assess`  | `developer` | `assess` extension + `assess` workflow                | Idea triage before Spec-Driven Development |
+| `bugfix`  | `developer` | `bug` 擴充功能 + `bugfix` 工作流程                   | 引導式評估 → 關卡 → 修復 → 測試       |
+| `assess`  | `developer` | `assess` 擴充功能 + `assess` 工作流程                | 在規格驅動開發之前先進行構想分流 |
 
-Install a first-party bundle the same way you install any bundle (`add` is an alias for `install`):
+安裝官方套件組的方式與安裝任何套件組相同（`add` 是 `install` 的別名）：
 
 ```bash
 specify bundle install bugfix
 specify bundle add assess
 ```
 
-The first-party catalog is fetched from the repository online and falls back to the packaged wheel snapshot offline so discovery works without network access. A local bundle manifest can install bundled extensions and workflows with `--offline`. Catalog-discovered bundle manifests still resolve from their `download_url`, so `specify bundle add <id>` requires network today; fully offline catalog installation is tracked as follow-up work.
+官方目錄會從線上的儲存庫擷取，在離線時則退回使用封裝在 wheel 中的快照，因此探索功能無需網路存取也能運作。本地套件組資訊清單可以使用 `--offline` 安裝隨附的擴充功能與工作流程。透過目錄探索的套件組資訊清單仍會從其 `download_url` 解析，因此 `specify bundle add <id>` 目前需要網路；完整的離線目錄安裝已列為後續工作。
 
-## Search Available Bundles
+## 搜尋可用的套件組
 
 ```bash
 specify bundle search [query]
 ```
 
-| Option      | Description                  |
+| 選項      | 說明                  |
 | ----------- | ---------------------------- |
-| `--offline` | Do not access the network    |
-| `--json`    | Emit machine-readable JSON   |
+| `--offline` | 不存取網路    |
+| `--json`    | 輸出機器可讀的 JSON   |
 
-Searches all active catalogs for bundles matching the query. Without a query, lists every available bundle with its version, role, source, and a trust indicator (`verified` for org-curated catalog entries, `community` otherwise) so you can judge trust before installing.
+在所有作用中的目錄中搜尋符合查詢的套件組。未提供查詢時，會列出每個可用的套件組及其版本、角色、來源與信任指標（組織策劃的目錄項目為 `verified`，其餘為 `community`），讓您在安裝前判斷其可信度。
 
-## Bundle Info
+## 套件組資訊
 
 ```bash
 specify bundle info <bundle_id>
 specify bundle info <bundle_id> --versions
 ```
 
-| Option       | Description                       |
+| 選項       | 說明                       |
 | ------------ | --------------------------------- |
-| `--offline`  | Do not access the network         |
-| `--json`     | Emit machine-readable JSON        |
-| `--versions` | List the current and historical catalog releases |
+| `--offline`  | 不存取網路         |
+| `--json`     | 輸出機器可讀的 JSON        |
+| `--versions` | 列出目前與歷史目錄發行版本 |
 
-Shows full metadata for a bundle along with the **fully expanded component set** it installs — every extension, preset, step, and workflow with its pinned version, plus preset priority and strategy. The output also includes a trust indicator (`verified` vs `community`) so you can judge trust before installing. This preview is the same plan `install` applies, so you can see exactly what will be added before committing. For bundles with references, text output includes a `References` summary, with each referenced bundle's own trust level (`verified` or `community`), and marks referenced components with their shortest origin chain; overridden components show the overridden version and origin. JSON adds `references` entries with `id`, `version`, resolved `source`, `install_policy`, `via`, and the referenced bundle's own `verified` and `trust`; for bundles with references, component entries also include `source` when the manifest declares one (flat bundles omit it), `origin` (the chain of bundles that contributed the component) when it comes from a referenced bundle, and `overrides` whenever the entry replaced other declarations, including a parent's own declaration, which has no `origin`. Each `overrides` item carries the replaced `version` and `origin`, plus any `source`, `priority`, or `strategy`; an override entry names every distinct bundle that declared the replaced value (keeping the shortest route to each), not only the first route. Discovery-only references are marked `discovery-only, not installable`. Foreseeable overlaps and version conflicts with components already required by installed bundles are surfaced here as well; a bundle can require a component without having installed it.
+顯示套件組的完整中繼資料，以及它會安裝的**完整展開元件集合**：每個擴充功能、預設集、步驟與工作流程及其釘選版本，外加預設集優先級與策略。輸出也包含信任指標（`verified` 與 `community`），讓您在安裝前判斷其可信度。這個預覽與 `install` 實際套用的計畫相同，因此您可以在提交前精確看到將新增的內容。對於含有引用的套件組，文字輸出會包含 `References` 摘要，列出每個被引用套件組自身的信任等級（`verified` 或 `community`），並標示被引用元件的最短來源鏈；被覆寫的元件會顯示被覆寫的版本與來源。JSON 會新增 `references` 項目，包含 `id`、`version`、解析後的 `source`、`install_policy`、`via`，以及被引用套件組自身的 `verified` 與 `trust`；對於含有引用的套件組，元件項目在資訊清單有宣告時也會包含 `source`（平面套件組會省略此欄位）、元件來自被引用套件組時的 `origin`（貢獻該元件的套件組鏈），以及每當該項目取代其他宣告時出現的 `overrides`，包括取代父套件組自身宣告的情況（此時沒有 `origin`）。每個 `overrides` 項目都帶有被取代的 `version` 與 `origin`，外加任何 `source`、`priority` 或 `strategy`；覆寫項目會列出宣告被取代值的每個不同套件組（保留通往各套件組的最短路徑），而非僅列出第一條路徑。僅供探索的引用會標記為 `discovery-only, not installable`。此處也會呈現與已安裝套件組已要求的元件之間可預見的重疊與版本衝突；套件組可以要求某個元件，但不一定已安裝該元件。
 
-Use `specify bundle info <bundle_id> --versions` to inspect the catalog history without downloading a bundle manifest. With `--json`, it emits the bundle ID, available versions, current version, source, and install policy.
+使用 `specify bundle info <bundle_id> --versions` 可以檢查目錄歷史，無需下載套件組資訊清單。搭配 `--json` 時，它會輸出套件組 ID、可用版本、目前版本、來源與安裝原則。
 
-## Install a Bundle
+## 安裝套件組
 
 ```bash
 specify bundle install <bundle_id | path>
 ```
 
-| Option           | Description                                                         |
+| 選項           | 說明                                                         |
 | ---------------- | ------------------------------------------------------------------ |
-| `--integration`  | Override the integration used when initializing/installing         |
-| `--offline`      | Do not access the network                                          |
-| `--refresh`      | Refresh owned components from the supplied bundle source           |
-| `--version`      | Install an exact historical or current catalog release             |
+| `--integration`  | 覆寫初始化／安裝時使用的整合         |
+| `--offline`      | 不存取網路                                          |
+| `--refresh`      | 從所提供的套件組來源重新整理自有元件           |
+| `--version`      | 安裝精確的歷史或目前目錄發行版本             |
 
-Installs a bundle's full component set through each primitive's machinery. The argument may be a catalog bundle id, or a local path to a built `.zip` artifact, a bundle directory, or a `bundle.yml` file; local sources install directly without consulting the catalog stack, unless the manifest declares `provides.bundles`. A local parent with bundle references resolves those children through the catalog stack at command time, so it needs catalog and network access (see [Bundle references](#bundle-references)).
+透過每個基礎建構元素自身的機制，安裝套件組完整的元件集合。參數可以是目錄中的套件組 ID，或是本地路徑，指向已建置的 `.zip` 封存檔、套件組目錄或 `bundle.yml` 檔案；本地來源會直接安裝，不查詢目錄堆疊，除非資訊清單宣告了 `provides.bundles`。本地父套件組若含有套件組引用，會在命令執行時透過目錄堆疊解析那些子套件組，因此需要目錄與網路存取（參閱[套件組引用](#bundle-references)）。
 
-If the current directory is not yet a Spec Kit project, `install` initializes one first so a fresh checkout reaches a working state in a single command. `--integration` selects the integration when initializing a new project, and confirms the target when a bundle pins a specific integration but the project's active integration can't be determined (missing or unreadable `.specify/integration.json`). It does **not** override an already-initialized project's active integration: if a bundle targets a different integration than the project's, install aborts with no changes. Integration-agnostic bundles inherit the project's active integration. Without `--refresh`, installation is idempotent — already-installed components matching their pins are skipped, as are bundle-owned compatible packaged patch releases with a warning (see below). Other differing or missing installed versions cannot satisfy a pin. Only `--refresh` can repair a drifted version owned exclusively by this bundle; independently installed components are skipped and never adopted or replaced. On failure, no provenance record is written (a failed install records nothing), and the components installed during that run are removed on a best-effort basis — removal errors are swallowed, so partial on-disk state may remain.
+若目前目錄尚未是 Spec Kit 專案，`install` 會先初始化一個專案，讓全新檢出的程式碼能在單一命令內達到可運作狀態。`--integration` 會在初始化新專案時選取整合，並在套件組釘選了特定整合但專案的作用中整合無法判定時（`.specify/integration.json` 缺失或無法讀取）確認目標。它**不會**覆寫已初始化專案的作用中整合：若套件組的目標整合與專案不同，安裝會中止且不做任何變更。與整合無關的套件組會繼承專案的作用中整合。未加上 `--refresh` 時，安裝是冪等的：已安裝且符合釘選版本的元件會跳過，套件組自有且相容的封裝修補發行版本也會跳過並發出警告（參閱下方說明）。其他版本不同或缺失的已安裝版本無法滿足釘選要求。只有 `--refresh` 能修復完全由本套件組擁有的漂移版本；獨立安裝的元件會跳過，且永遠不會被收編或取代。失敗時，不會寫入任何溯源記錄（安裝失敗即不記錄任何內容），該次執行期間安裝的元件會以盡力而為的方式移除：移除錯誤會被吞沒，因此磁碟上可能殘留部分狀態。
 
-Installed-bundle records store required component pins separately from contributed components. A compatible independently installed component satisfies a bundle's requirement but remains independently owned: its pin still blocks a later bundle from installing an incompatible version, while removing the bundle does not uninstall it. An unpinned install or refresh cannot replace a component another bundle requires at a pinned version; sharing an already installed matching version without refreshing remains allowed. Shared bundles must also agree on component source and, for presets, priority and strategy before installing or refreshing the shared component. Older records without the requirement list retain their known contributed pins; reinstall or refresh the bundle to record its full requirements.
+已安裝套件組的記錄會將要求的元件釘選與貢獻的元件分開儲存。相容的獨立安裝元件可以滿足套件組的要求，但仍保持獨立擁有：其釘選仍會阻止後續套件組安裝不相容的版本，而移除該套件組不會解除安裝該元件。未釘選的安裝或重新整理無法取代另一個套件組以釘選版本要求的元件；共用已安裝的相符版本且不重新整理仍是允許的。共用套件組在安裝或重新整理共用元件之前，還必須就元件來源達成一致，對於預設集則還包括優先級與策略。沒有要求清單的舊記錄會保留其已知的貢獻釘選；請重新安裝或重新整理套件組，以記錄其完整要求。
 
-A normal install rejects a change to an already-recorded bundle's version or owned component metadata (version, source, preset priority, or strategy), including removal of an owned component. This applies even if a local manifest keeps the same bundle version. Reordering unchanged components or adding new components does not require refresh. To apply changes to a local bundle without adding it to a catalog, pass the revised source with `--refresh`:
+一般安裝會拒絕變更已記錄套件組的版本或自有元件中繼資料（版本、來源、預設集優先級或策略），包括移除自有元件。即使本地資訊清單保持相同的套件組版本，此規則同樣適用。重新排序未變更的元件或新增元件不需要重新整理。若要將變更套用到本地套件組而不將其加入目錄，請連同修訂後的來源加上 `--refresh`：
 
 ```bash
 specify bundle install ./new-release/bundle.yml --refresh
 ```
 
-The source may also be a bundle directory or `.zip` artifact. Refresh uses the same primitive update path as `bundle update`, re-applies components owned by a bundle, and removes previously owned components omitted from the new manifest unless another bundle still needs them. Components installed independently remain untouched and are not adopted. The success summary includes refreshed and removed counts. The bundle record advances only after the operation succeeds; as with `bundle update`, already-installed components modified during a failed refresh are not rolled back.
+來源也可以是套件組目錄或 `.zip` 封存檔。重新整理使用與 `bundle update` 相同的基礎建構元素更新路徑，重新套用套件組擁有的元件，並移除新資訊清單中省略的先前自有元件，除非另一個套件組仍需要它們。獨立安裝的元件保持不變，也不會被收編。成功摘要會包含重新整理與移除的數量。套件組記錄只會在操作成功後才前進；與 `bundle update` 相同，在重新整理失敗期間已修改的已安裝元件不會復原。
 
-A local bundle source supplies the manifest, not its component payloads. Components resolved through catalogs still require network access to refresh, even when already installed. Add `--offline` only when the components being installed or refreshed ship with Spec Kit; otherwise the command reports which component needs network access. Re-run without `--offline` to fetch that component through its catalog.
+本地套件組來源提供的是資訊清單，而非其元件酬載。透過目錄解析的元件即使已安裝，重新整理時仍需要網路存取。只有當要安裝或重新整理的元件隨 Spec Kit 一起提供時才加上 `--offline`；否則命令會回報哪個元件需要網路存取。請在不加 `--offline` 的情況下重新執行，透過其目錄擷取該元件。
 
-**Packaged patch compatibility.** When an extension, preset, or workflow shipped
-with the CLI is a newer stable patch release within the pinned major/minor
-version, installation and refresh warn and use that packaged release. For
-example, a bundle pinning `bug` to `1.0.0` can use packaged `bug` `1.0.1` without
-editing its manifest. Validation reports the same warning. Downgrades,
-major/minor mismatches, and differing prerelease versions remain errors; an
-explicit component `source` also retains exact-pin enforcement. Catalog-resolved
-components still require exact matches. This exception improves compatibility
-across CLI upgrades, but a patch release is not a guarantee of unchanged behavior.
+**封裝修補相容性。** 當隨 CLI 一起提供的擴充功能、預設集或工作流程，在釘選的主版本／次版本範圍內有較新的穩定修補發行版本時，安裝與重新整理會發出警告並使用該封裝版本。例如，釘選 `bug` 為 `1.0.0` 的套件組可以使用封裝的 `bug` `1.0.1`，無需編輯其資訊清單。驗證時會回報相同的警告。降級、主版本／次版本不符，以及預發行版本不同仍視為錯誤；明確的元件 `source` 也會保留精確釘選的強制執行。透過目錄解析的元件仍需要精確相符。這個例外提升了 CLI 升級之間的相容性，但修補發行版本並不保證行為不變。
 
-Bundle records retain requested versions in `required_components` and
-`contributed_components` and
-store actual known installed versions under `installed_versions`, keyed by
-`kind:id` (for example, `"extensions:bug": "1.0.1"`). These are also visible in
-`specify bundle list --json`. Component version ranges, `latest`, and omitted
-extension versions are not supported.
+套件組記錄會在 `required_components` 與
+`contributed_components` 中保留要求的版本，並將實際已知的已安裝版本儲存在 `installed_versions` 下，以 `kind:id` 為鍵（例如 `"extensions:bug": "1.0.1"`）。這些內容也會在
+`specify bundle list --json` 中顯示。不支援元件版本範圍、`latest`，以及省略擴充功能版本。
 
-> **Step payloads resolve through the step catalog only.** A bundle's `provides.steps` entries still resolve exclusively through the active step catalogs. Bundle-local `steps/<id>/` payloads and relative `provides.steps[].source` overrides are **not** resolved in this release, so a step declared that way cannot be installed offline. To ship a step with a bundle today, publish it to a step catalog the bundle's users can reach.
+> **步驟酬載僅透過步驟目錄解析。** 套件組的 `provides.steps` 項目仍僅透過作用中的步驟目錄解析。套件組本地的 `steps/<id>/` 酬載與相對的 `provides.steps[].source` 覆寫，在此發行版本中**不會**被解析，因此以該方式宣告的步驟無法離線安裝。若要在今日隨套件組一起提供步驟，請將其發佈到套件組使用者可存取的步驟目錄。
 
-## Bundle References
+## 套件組引用
 
-A bundle can compose other bundles with exact, pinned references in
-`provides.bundles`. A non-empty reference list requires manifest schema `1.1`;
-empty or null lists are treated as no references. Each reference has a bundle
-ID, an exact SemVer `version`, and an optional `source` naming the expected
-winning bundle catalog (not a URL). Reference IDs are safe slugs, must be
-unique within the manifest, and cannot name the parent bundle:
+套件組可以在 `provides.bundles` 中以精確、釘選的引用組合其他套件組。非空的引用清單需要資訊清單結構描述 `1.1`；空清單或 null 清單視為沒有引用。每個引用包含一個套件組 ID、一個精確的 SemVer `version`，以及一個可選的 `source`，用來命名預期勝出的套件組目錄（不是 URL）。引用 ID 是安全代稱，在資訊清單內必須唯一，且不能與父套件組同名：
 
 ```yaml
 schema_version: "1.1"
@@ -137,67 +121,26 @@ provides:
       version: 2.0.0
 ```
 
-References resolve at command time through the effective bundle catalog stack.
-The stack's winning entry is selected for each exact pin; an explicit `source`
-is an assertion that this is the winning catalog, not a request to change
-precedence; a mismatch is an error and does not fall through to another
-catalog. A referenced bundle from a discovery-only source can be inspected
-by `info`, but `install`, `update`, and online `validate` reject it as
-non-installable. Every bundle ID may have only one version in an expansion;
-cycles and a second version for the same ID are errors. Resolve a second
-version by choosing releases of the referencing bundles that agree on it.
+引用會在命令執行時透過有效的套件組目錄堆疊解析。堆疊的勝出項目會依每個精確釘選選取；明確的 `source` 是一種斷言，表明這就是勝出的目錄，而非要求變更優先順序；不符即為錯誤，且不會退到另一個目錄。來自僅供探索來源的被引用套件組可以透過 `info` 檢查，但 `install`、`update` 與線上 `validate` 會將其拒絕為不可安裝。每次展開中，每個套件組 ID 只能有一個版本；循環以及同一 ID 出現第二個版本都是錯誤。若要解決第二個版本的衝突，請選取在該版本上達成一致的引用套件組發行版本。
 
-The expansion is one flat component plan. Referenced bundles are walked
-recursively in declaration order (depth-first), followed by the declaring
-bundle's own components, while preserving the existing extension, preset, step,
-and workflow grouping. A component is installed at most once per `kind:id`.
-Copies agree when their version and `source` match (omitted and set `source`
-values differ); extension and preset copies must also have the same `priority`,
-and preset copies must also have the same `strategy`. Extensions may omit
-`priority`; an omitted value means the default, `10`, so it agrees with an
-explicit `10`. Presets must declare an integer `priority`.
-Other differences between sibling references are conflicts that must be fixed
-in the parent. At every level, a bundle's own declaration wins over its
-references, takes the declaration's position, and emits a warning describing
-the override and its origin chain.
+展開的結果是單一平面元件計畫。被引用的套件組會依宣告順序以遞迴方式（深度優先）走訪，接著是宣告套件組自身的元件，同時保留既有的擴充功能、預設集、步驟與工作流程分組。每個 `kind:id` 最多安裝一次。當元件的版本與 `source` 相符時，副本即視為一致（省略與設定 `source` 的值視為不同）；擴充功能與預設集副本還必須具有相同的 `priority`，預設集副本還必須具有相同的 `strategy`。擴充功能可以省略 `priority`；省略的值表示預設值 `10`，因此與明確的 `10` 一致。預設集必須宣告整數 `priority`。同層引用之間的其他差異屬於衝突，必須在父套件組中修正。在每個層級，套件組自身的宣告優先於其引用，佔據宣告的位置，並發出描述覆寫及其來源鏈的警告。
 
-Expansion allows at most 10 levels of reference nesting and 50 distinct
-referenced bundle IDs, excluding the root. A cycle is rejected with its
-reference chain. At install and update time, the Spec Kit version requirement
-is checked for every bundle in the graph, and an incompatible requirement is
-a hard error, while the root bundle remains the only integration gate: a
-referenced bundle's differing or unknown integration is a warning.
-`requires.tools` and `requires.mcp` are unioned across the graph
-and rendered through the existing tool and MCP warnings.
+展開最多允許 10 層引用巢狀與 50 個不同的被引用套件組 ID（不含根套件組）。循環會連同其引用鏈一起被拒絕。在安裝與更新時，系統會針對圖中的每個套件組檢查 Spec Kit 版本要求，不相容的要求是硬性錯誤，而根套件組仍是唯一的整合關卡：被引用套件組不同或未知的整合只會產生警告。`requires.tools` 與 `requires.mcp` 會在整個圖中取聯集，並透過既有的工具與 MCP 警告呈現。
 
-The installed parent record contains the expanded component set and an
-optional `bundle_references` JSON key listing each direct and transitive
-reference once with its resolved catalog source. There are no child-bundle
-records. `bundle update` follows the parent's current manifest and its pinned
-references; remove and refresh retain the existing ownership and component
-lifecycle rules.
+已安裝的父記錄包含展開後的元件集合，以及一個可選的 `bundle_references` JSON 鍵，列出每個直接與遞移引用（各出現一次）及其解析後的目錄來源。不存在子套件組記錄。`bundle update` 會遵從父套件組目前的資訊清單及其釘選引用；移除與重新整理則保留既有的擁有權與元件生命週期規則。
 
-Referenced manifests require network access. For a local root manifest,
-`install` can identify the first reference and fail offline with that reference
-named. A catalog-root `install`, `info`, or `update` can instead fail earlier
-while fetching its catalog or root manifest, before any reference can be known.
-`validate --offline` warns once per declared reference that it was not expanded.
-`bundle build` performs only the structural checks for references and does not
-resolve or embed them.
+被引用的資訊清單需要網路存取。對於本地根資訊清單，`install` 可以識別第一個引用，並在離線時以該引用名稱回報失敗。透過目錄的根 `install`、`info` 或 `update` 則可能更早失敗，在擷取其目錄或根資訊清單時就失敗，此時尚無法得知任何引用。`validate --offline` 會針對每個已宣告的引用各警告一次，說明該引用未被展開。`bundle build` 只會對引用執行結構檢查，不會解析或嵌入它們。
 
-**Known limitations.**
+**已知限制。**
 
-- Offline and local resolution of referenced bundles is not supported; referenced
-  manifests need network-backed catalog downloads.
-- First-party bundle catalogs keep no release history, so an exact pin to a
-  first-party bundle can break when that bundle publishes its next release.
-- A local bundle with references cannot be previewed with `bundle info`; local
-  preview is deferred.
-- Broader schema versioning and CLI compatibility checks/ranges are deferred.
+- 不支援被引用套件組的離線與本地解析；被引用的資訊清單需要有網路支援的目錄下載。
+- 官方套件組目錄不保留發行歷史，因此對官方套件組的精確釘選，可能在該套件組發佈下一個發行版本時失效。
+- 含有引用的本地套件組無法使用 `bundle info` 預覽；本地預覽已延後。
+- 更廣泛的結構描述版本控制與 CLI 相容性檢查／範圍已延後。
 
-## Catalog Release History
+## 目錄發行歷史
 
-A catalog entry can advertise a current release and approved historical releases. Older single-version catalogs continue to work unchanged.
+目錄項目可以宣傳目前發行版本與經核准的歷史發行版本。舊的單版本目錄會維持不變、繼續運作。
 
 ```json
 {
@@ -214,162 +157,156 @@ A catalog entry can advertise a current release and approved historical releases
 }
 ```
 
-Each historical release needs its own `download_url` and a 64-character SHA-256 digest; as with current releases, a digest may use a case-insensitive `sha256:` prefix and surrounding whitespace, and other algorithm prefixes are rejected. A release's `requires`, `provides`, and `verified` fields are not inherited from the current release: put them in that release's record, or the release has no requirements, no provided counts, and is shown as `community`. Other shared metadata, such as the name, description, and author, is inherited, and a release record may override it. A release record cannot contain `id`, `version`, or `releases`.
+每個歷史發行版本都需要自己的 `download_url` 與 64 字元的 SHA-256 摘要；與目前發行版本相同，摘要可以使用不區分大小寫的 `sha256:` 前綴與前後空白，其他演算法前綴會被拒絕。發行版本的 `requires`、`provides` 與 `verified` 欄位不會從目前發行版本繼承：請將它們放入該發行版本的記錄中，否則該發行版本將沒有要求、沒有提供數量，並顯示為 `community`。其他共用中繼資料（例如名稱、說明與作者）會被繼承，發行版本記錄可以覆寫它們。發行版本記錄不能包含 `id`、`version` 或 `releases`。
 
-`specify bundle install team-setup --version 1.1.0` selects the bundle release, downloads that release's artifact, verifies its digest, and checks that its manifest declares the catalog ID and the same version as the selected release. Equivalent spellings such as `v1.1.0` and `1.1.0` match; the catalog key spelling is display-only. It never overrides component pins inside `bundle.yml`. `--version` is catalog-only, so it cannot be blank, used with a local path, or combined with `--refresh`.
+`specify bundle install team-setup --version 1.1.0` 會選取該套件組發行版本、下載該發行版本的成品、驗證其摘要，並檢查其資訊清單是否宣告目錄 ID 且版本與所選發行版本相同。`v1.1.0` 與 `1.1.0` 等等效拼寫視為相符；目錄鍵的拼寫僅供顯示。它永遠不會覆寫 `bundle.yml` 內部的元件釘選。`--version` 僅適用於目錄，因此不能為空、不能與本地路徑併用，也不能與 `--refresh` 組合使用。
 
-Only the highest-precedence catalog that lists a bundle is consulted; a missing version does not fall through to a lower-priority catalog. Discovery-only sources remain non-installable, including exact historical releases. Duplicate JSON keys anywhere in a catalog are rejected while it is read. Historical `download_url` values must use HTTPS (or HTTP on localhost), and release keys must be strict SemVer values that are PEP 440-comparable. Version keys must be distinct, including PEP 440-equivalent spellings such as `1.0.0-rc.1` and `1.0.0-rc1`, and cannot repeat the current version. `bundle update` always selects the current release. The first-party and community catalogs currently advertise one release per bundle.
+系統只會查詢列出該套件組的最高優先級目錄；缺失的版本不會退到較低優先級的目錄。僅供探索的來源仍不可安裝，包括精確的歷史發行版本。目錄中任何位置出現重複的 JSON 鍵，都會在讀取時被拒絕。歷史 `download_url` 值必須使用 HTTPS（或 localhost 上的 HTTP），且發行版本鍵必須是可與 PEP 440 比較的嚴格 SemVer 值。版本鍵必須互不相同，包括 PEP 440 等效拼寫（例如 `1.0.0-rc.1` 與 `1.0.0-rc1`），且不能重複目前版本。`bundle update` 一律選取目前發行版本。官方與社群目錄目前每個套件組只宣傳一個發行版本。
 
-Release history is validated when its catalog source loads. A malformed `releases` mapping makes `install`, `info`, `update`, and `search` fail while that source is consulted. Resolution stops after the first source that lists the bundle, so a malformed lower-precedence source remains unobserved when a higher-precedence source supplies that ID; `search` loads every source, so a shadowed malformed entry still causes it to fail.
+發行歷史會在其目錄來源載入時驗證。格式錯誤的 `releases` 對應，會使 `install`、`info`、`update` 與 `search` 在查詢該來源時失敗。解析會在第一個列出該套件組的來源後停止，因此當較高優先級來源提供該 ID 時，較低優先級來源中被遮蔽的格式錯誤項目仍不會被觀察到；`search` 會載入每個來源，因此被遮蔽的格式錯誤項目仍會導致它失敗。
 
-## Update Bundles
+## 更新套件組
 
 ```bash
 specify bundle update [<bundle_id>]
 ```
 
-| Option           | Description                                                                                                            |
+| 選項           | 說明                                                                                                            |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `--all`          | Update every installed bundle                                                                                         |
-| `--integration`  | Override the integration used when refreshing components; applied only when the project's active integration can't be determined |
-| `--offline`      | Do not access the network                                                                                             |
+| `--all`          | 更新每個已安裝的套件組                                                                                         |
+| `--integration`  | 覆寫重新整理元件時使用的整合；僅在專案的作用中整合無法判定時套用 |
+| `--offline`      | 不存取網路                                                                                             |
 
-Re-resolves a bundle and **refreshes** its components through each primitive's update path, bringing already-installed components up to the bundle's newly pinned versions (or compatible newer packaged patches, with a warning) while preserving primitive-level overrides (such as preset priority). Provide a bundle id, or use `--all` to update everything installed.
+重新解析套件組，並透過每個基礎建構元素的更新路徑**重新整理**其元件，將已安裝的元件提升到套件組新釘選的版本（或相容的較新封裝修補版本，並發出警告），同時保留基礎建構元素層級的覆寫（例如預設集優先級）。請提供套件組 ID，或使用 `--all` 更新所有已安裝的套件組。
 
-**Pinned catalog releases.** Extensions, presets, workflows, and steps with version pins select that exact release from the highest-priority active catalog entry. Historical releases must be advertised under `releases` with their own artifact URL and SHA-256 digest; the bundler never guesses an old URL from the current one or falls through to another catalog. Legacy extension and preset entries that advertise no version are an exception: the bundler uses the winning entry as-is and cannot enforce its pin or verify the installed archive's version. Publish a versioned entry to make that pin enforceable. The primitive installer uses the selected workflow or step record without re-reading the catalog, and verifies downloaded archive or workflow/step metadata against that release. A pinned workflow that ships with Spec Kit uses its bundled copy when the version matches, and the catalog release when it differs and network access is allowed. A step without a pin installs the current catalog release.
+**釘選的目錄發行版本。** 帶有版本釘選的擴充功能、預設集、工作流程與步驟，會從最高優先級的作用中目錄項目選取該精確發行版本。歷史發行版本必須在 `releases` 下宣傳，並帶有自己的成品 URL 與 SHA-256 摘要；打包器永遠不會從目前 URL 猜測舊 URL，也不會退到另一個目錄。未宣傳版本的舊擴充功能與預設集項目是例外：打包器會原樣使用勝出項目，無法強制執行其釘選，也無法驗證已安裝封存檔的版本。請發佈帶版本的項目，讓該釘選可強制執行。基礎建構元素安裝程式會使用所選的工作流程或步驟記錄，不重新讀取目錄，並針對該發行版本驗證下載的封存檔或工作流程／步驟中繼資料。隨 Spec Kit 一起提供且版本相符的釘選工作流程，會使用其隨附副本；版本不同且允許網路存取時，則使用目錄發行版本。沒有釘選的步驟會安裝目前的目錄發行版本。
 
-Without an explicit `source`, bundled extensions and presets take precedence over catalog releases. Validation rejects an incompatible pin even when a matching catalog release exists; compatible newer stable packaged patches produce a warning instead. Specify the winning catalog as `source` to opt into its exact release.
+在沒有明確 `source` 的情況下，隨附的擴充功能與預設集優先於目錄發行版本。即使存在相符的目錄發行版本，驗證仍會拒絕不相容的釘選；相容的較新穩定封裝修補版本則會產生警告。若要選用其精確發行版本，請將勝出的目錄指定為 `source`。
 
-> **One installed version per component ID.** Bundles sharing a component must agree on its pinned version. A different or unknown pin from another bundle is rejected before installation, including during `bundle update`; refreshing one bundle cannot replace a version required by another.
+> **每個元件 ID 只能安裝一個版本。** 共用某個元件的套件組必須就其釘選版本達成一致。來自另一個套件組的不同或未知釘選會在安裝前被拒絕，包括在 `bundle update` 期間；重新整理一個套件組無法取代另一個套件組要求的版本。
 
-A bundle may list a component ID only once per kind; duplicate references in the same manifest are invalid, even if their pins agree.
+套件組在同一資訊清單中，每種元件類型只能列出一個元件 ID 一次；同一資訊清單中的重複引用無效，即使其釘選一致。
 
-An optional `source` in a `provides.<kind>` reference names the expected winning component catalog (as displayed by `specify <kind> catalog list`, or `specify workflow step catalog list` for steps). It is **not** an artifact URL and does not override catalog priority or install policy. When specified, the component is verified against that catalog even if already installed, rather than resolved from a Spec Kit-bundled copy; a different winning catalog or a discovery-only source prevents installation. If multiple active catalogs share the named source, bundle validation and installation reject it as ambiguous; give each catalog a unique name. Verifying an explicit source requires network access. Direct primitive `--from` URLs are a separate, explicitly requested route.
+`provides.<kind>` 引用中可選的 `source`，用來命名預期勝出的元件目錄（如 `specify <kind> catalog list` 所顯示，步驟則為 `specify workflow step catalog list`）。它**不是**成品 URL，也不會覆寫目錄優先級或安裝原則。指定時，即使元件已安裝，也會針對該目錄驗證，而非從 Spec Kit 隨附副本解析；不同的勝出目錄或僅供探索的來源會阻止安裝。若多個作用中目錄共用同名的來源，套件組驗證與安裝會將其拒絕為不明確；請為每個目錄指定唯一名稱。驗證明確來源需要網路存取。基礎建構元素的直接 `--from` URL 是另一條明確要求的獨立路徑。
 
-## Remove a Bundle
+## 移除套件組
 
 ```bash
 specify bundle remove <bundle_id>
 ```
 
-Uninstalls only the components this bundle contributed, leaving any component that another installed bundle still needs in place (no collateral removals). If no other bundle owns a retained component, its contribution is transferred to a remaining requiring bundle so removing that bundle later can clean it up. Independently installed components are never adopted.
+只解除安裝此套件組貢獻的元件，讓另一個已安裝套件組仍需要的任何元件保持原樣（不附帶移除）。若沒有其他套件組擁有保留的元件，其貢獻會轉移到仍要求它的剩餘套件組，以便日後移除該套件組時能將其清除。獨立安裝的元件永遠不會被收編。
 
-## List Installed Bundles
+## 列出已安裝的套件組
 
 ```bash
 specify bundle list
 ```
 
-| Option   | Description                  |
+| 選項   | 說明                  |
 | -------- | ---------------------------- |
-| `--json` | Emit machine-readable JSON   |
+| `--json` | 輸出機器可讀的 JSON   |
 
-Lists the bundles installed in the project with their versions, required component counts (including components supplied independently), and install timestamps. With `--json`, a reference-bearing record also includes `bundle_references`, containing each resolved direct or transitive reference and its winning catalog source.
+列出專案中已安裝的套件組及其版本、要求的元件數量（包括獨立提供的元件）與安裝時間戳記。搭配 `--json` 時，含有引用的記錄還會包含 `bundle_references`，其中包含每個已解析的直接或遞移引用及其勝出的目錄來源。
 
-## Initialize a Project with a Bundle
+## 使用套件組初始化專案
 
 ```bash
 specify bundle init [<bundle_id>]
 ```
 
-| Option           | Description                              |
+| 選項           | 說明                              |
 | ---------------- | ---------------------------------------- |
-| `--integration`  | Integration override                     |
-| `--offline`      | Do not access the network                |
+| `--integration`  | 整合覆寫                     |
+| `--offline`      | 不存取網路                |
 
-Ensures the current directory is a Spec Kit project (initializing it idempotently if needed), then optionally installs the given bundle. Useful as an explicit one-step bootstrap for a new checkout.
+確保目前目錄是 Spec Kit 專案（如有需要，以冪等方式初始化），然後視需要安裝指定的套件組。適合作為新檢出的明確單步驟引導。
 
-Repeating `bundle init` skips components already installed by the bundle and preserves their local edits. It follows the same rules as a normal [`bundle install`](#install-a-bundle): components newly added to the manifest are installed and recorded, but it fails without changing the installed bundle if the manifest changes the recorded bundle version, changes an owned component's version, source, preset priority, or strategy, or removes an owned component. To refresh components or apply such changes, use `bundle update <id>` for a catalog bundle or `bundle install <path> --refresh` for a local source.
+重複執行 `bundle init` 會跳過套件組已安裝的元件，並保留其本地編輯。它遵循與一般 [`bundle install`](#install-a-bundle) 相同的規則：資訊清單中新增加的元件會被安裝並記錄，但若資訊清單變更了已記錄的套件組版本、變更了自有元件的版本、來源、預設集優先級或策略，或移除了自有元件，它會失敗且不變更已安裝的套件組。若要重新整理元件或套用這類變更，請對目錄套件組使用 `bundle update <id>`，或對本地來源使用 `bundle install <path> --refresh`。
 
-## Validate a Bundle
+## 驗證套件組
 
 ```bash
 specify bundle validate
 ```
 
-| Option       | Description                                                          |
+| 選項       | 說明                                                          |
 | ------------ | ------------------------------------------------------------------- |
-| `--path`     | Bundle directory or `bundle.yml` (default: current directory)       |
-| `--offline`  | Verify references against bundled/installed components only          |
+| `--path`     | 套件組目錄或 `bundle.yml`（預設：目前目錄）       |
+| `--offline`  | 僅針對隨附／已安裝的元件驗證引用          |
 
-Reports whether a `bundle.yml` is well-formed and whether every declared component reference resolves at its pinned version. For a reference-bearing manifest, online validation expands the complete reference graph and checks every component in the expanded plan, including structural, cycle, version, source, conflict, and install-policy checks. References are checked against matching bundled or installed components and — when online — the exact release in the winning install-allowed catalog. An explicit `source` is verified against the winning catalog instead of resolving locally. Missing releases, mismatched sources, discovery-only sources, and malformed catalog metadata fail validation; component references that cannot be checked offline or because a catalog is unreachable produce warnings. Bundle-reference fetch failures (such as an unreachable bundle catalog or a failed child-manifest download) fail online validation, while `--offline` keeps the per-reference warning. In `--offline` mode, each declared bundle reference produces a warning that it was not expanded. If a higher-priority catalog is unreachable before a match is found, the lookup remains unverified; a lower-priority match cannot settle it. Validation does not evaluate `requires.speckit_version` against the running CLI; `install` and `update` enforce that runtime compatibility gate. As with installation, legacy extension and preset entries advertising no version are accepted without verifying their pins.
+回報 `bundle.yml` 是否格式正確，以及每個已宣告的元件引用是否能以其釘選版本解析。對於含有引用的資訊清單，線上驗證會展開完整的引用圖，並檢查展開計畫中的每個元件，包括結構、循環、版本、來源、衝突與安裝原則檢查。引用會針對相符的隨附或已安裝元件檢查，並在線上時針對勝出且允許安裝的目錄中的精確發行版本檢查。明確的 `source` 會針對勝出目錄驗證，而非在本地解析。缺失的發行版本、來源不符、僅供探索的來源，以及格式錯誤的目錄中繼資料都會使驗證失敗；無法離線檢查或因目錄無法連線而無法檢查的元件引用會產生警告。套件組引用擷取失敗（例如套件組目錄無法連線或子資訊清單下載失敗）會使線上驗證失敗，而 `--offline` 則保留逐引用警告。在 `--offline` 模式下，每個已宣告的套件組引用都會產生一則未展開的警告。若在找到相符項目之前，較高優先級的目錄無法連線，查詢仍保持未驗證狀態；較低優先級的相符項目無法定案。驗證不會針對正在執行的 CLI 評估 `requires.speckit_version`；`install` 與 `update` 會強制執行該執行期相容性關卡。與安裝相同，未宣傳版本的舊擴充功能與預設集項目會被接受，不驗證其釘選。
 
-## Build a Bundle Artifact
+## 建置套件組成品
 
 ```bash
 specify bundle build
 ```
 
-| Option      | Description                                              |
+| 選項      | 說明                                              |
 | ----------- | ------------------------------------------------------- |
-| `--path`    | Bundle directory (default: current directory)           |
-| `--output`  | Output directory for the artifact                       |
+| `--path`    | 套件組目錄（預設：目前目錄）           |
+| `--output`  | 成品的輸出目錄                       |
 
-Produces a single versioned, distributable `.zip` artifact from a bundle directory. The artifact embeds the manifest and can be installed directly with `specify bundle install <artifact.zip>`.
+從套件組目錄產生單一、具版本、可發佈的 `.zip` 成品。該成品內嵌資訊清單，可以直接使用 `specify bundle install <artifact.zip>` 安裝。
 
-## Publish a Bundle
+## 發佈套件組
 
-Bundle authors validate and package bundles locally, then host the generated artifact and catalog metadata where users can access it. A bundle catalog entry points at the bundle artifact, but the components declared inside `bundle.yml` still resolve through bundled components, installed components, or active extension, preset, workflow, and step catalogs.
+套件組作者在本地驗證並封裝套件組，然後將產生的成品與目錄中繼資料託管在使用者可存取的位置。套件組目錄項目指向該套件組成品，但 `bundle.yml` 內部宣告的元件仍透過隨附元件、已安裝元件，或作用中的擴充功能、預設集、工作流程與步驟目錄解析。
 
-If your bundle references components from non-default catalogs, document those catalog URLs and test the install path from a clean project with those catalogs added. Community bundle submissions should include that dependency-resolution evidence in the [Bundle Submission](https://github.com/github/spec-kit/issues/new?template=bundle_submission.yml) issue.
+若您的套件組引用了來自非預設目錄的元件，請記錄那些目錄 URL，並在加入那些目錄的乾淨專案中測試安裝路徑。社群套件組提交應在 [Bundle Submission](https://github.com/github/spec-kit/issues/new?template=bundle_submission.yml) 議題中包含該相依性解析證據。
 
-### What Happens After You Submit
+### 提交後會發生什麼
 
-1. GitHub applies the `triage-must-have` verdict when the issue is opened through the Bundle Submission form. Bundle submissions join extension and preset submissions in using this intake automation; the manual triage rubric for other issues remains unchanged.
-2. A maintainer reviews the issue during issue triage and applies the separate `bundle-submission` label, which starts the automated catalog validation. On this public repository, contributors cannot apply that label themselves, so there is nothing to label or re-request — the issue simply waits in triage.
-3. The automated workflow validates the submission and, when validation passes, updates `bundles/catalog.community.json` and `docs/community/bundles.md` in a draft pull request
-4. A maintainer reviews the generated pull request and merges it when approved
-5. Your bundle becomes discoverable via `specify bundle search`
+1. 透過 Bundle Submission 表單開啟議題時，GitHub 會套用 `triage-must-have` 判定。套件組提交與擴充功能、預設集提交共用此受理自動化；其他議題的人工分流評分標準維持不變。
+2. 維護者在議題分流期間審查該議題，並套用獨立的 `bundle-submission` 標籤，藉此啟動自動化目錄驗證。在此公開儲存庫中，貢獻者無法自行套用該標籤，因此無需標記或重新提出請求：議題只須在分流中等待即可。
+3. 自動化工作流程會驗證提交內容，並在驗證通過時，於草稿提取請求中更新 `bundles/catalog.community.json` 與 `docs/community/bundles.md`
+4. 維護者審查產生的提取請求，並在核准時將其合併
+5. 您的套件組即可透過 `specify bundle search` 探索
 
-## Manage Catalog Sources
+## 管理目錄來源
 
-Bundles are discovered through a priority-ordered stack of catalog sources (project, user, and built-in scopes). The built-in sources are:
+套件組透過具優先順序的目錄來源堆疊探索（專案、使用者與內建範圍）。內建來源如下：
 
-- `builtin://default` — first-party bundles shipped in `bundles/catalog.json` (`bugfix`, `assess`, ...), install-allowed.
-- `builtin://community` — community submissions in `bundles/catalog.community.json`, discovery-only.
+- `builtin://default` — 隨附於 `bundles/catalog.json` 的官方套件組（`bugfix`、`assess` 等），允許安裝。
+- `builtin://community` — 位於 `bundles/catalog.community.json` 的社群提交，僅供探索。
 
-Each source has an install policy. `install-allowed` sources can be installed
-from; `discovery-only` sources appear in `search` and `info` but refuse
-installation. Inspect the active stack before installing a bundle from a
-non-default source.
+每個來源都有安裝原則。`install-allowed` 來源可以從中安裝；`discovery-only` 來源會出現在 `search` 與 `info` 中，但拒絕安裝。在從非預設來源安裝套件組之前，請先檢查作用中的堆疊。
 
-> **Vet both the bundle source and its component catalogs.** A project can supply its own bundle catalog and `install-allowed` component catalogs (extension, preset, workflow, and step) under `.specify/`; that project configuration existing is not evidence anything in it was reviewed. Before installing a bundle from an unfamiliar project, run `specify bundle catalog list` — and the equivalent `extension`/`preset`/`workflow catalog list` and `specify workflow step catalog list` commands for the components it pulls in — and treat any source you didn't add yourself as unvetted until you've reviewed it.
+> **請同時審查套件組來源與其元件目錄。** 專案可以在 `.specify/` 下提供自己的套件組目錄，以及允許安裝的元件目錄（擴充功能、預設集、工作流程與步驟）；該專案設定存在，並不表示其中任何內容已經過審查。在從不熟悉的專案安裝套件組之前，請執行 `specify bundle catalog list`，以及它所引入元件對應的 `extension`／`preset`／`workflow catalog list` 與 `specify workflow step catalog list` 命令，並將任何不是您自己新增的來源視為未經審查，直到您已審查為止。
 
-For workflow components, inspect shell `run` and `env` fields and their
-referenced code, including changes introduced by active overlays. This applies
-even to `strict: true` steps: environment bindings can change executable lookup
-or runtime loading. See [Reviewing shell execution](workflows.md#reviewing-shell-execution).
+對於工作流程元件，請檢查 shell 的 `run` 與 `env` 欄位及其引用的程式碼，包括作用中覆疊所引入的變更。這也適用於 `strict: true` 步驟：環境繫結可以變更可執行檔查詢或執行期載入。參閱[審查 shell 執行](workflows.md#reviewing-shell-execution)。
 
-### List the Catalog Stack
+### 列出目錄堆疊
 
 ```bash
 specify bundle catalog list
 ```
 
-Prints the active, priority-ordered catalog stack with each source's scope and install policy.
+列印作用中、具優先順序的目錄堆疊，以及每個來源的範圍與安裝原則。
 
-### Add a Catalog Source
+### 新增目錄來源
 
 ```bash
 specify bundle catalog add <url>
 ```
 
-| Option        | Description                                              |
+| 選項        | 說明                                              |
 | ------------- | ------------------------------------------------------- |
-| `--policy`    | `install-allowed` or `discovery-only`                   |
-| `--priority`  | Source priority (lower = higher precedence; default 10) |
-| `--id`        | Explicit source id                                      |
+| `--policy`    | `install-allowed` 或 `discovery-only`                   |
+| `--priority`  | 來源優先級（數值越小 = 優先級越高；預設 10） |
+| `--id`        | 明確的來源 ID                                      |
 
-Registers a project-scoped catalog source and persists it.
+註冊專案範圍的目錄來源並將其保存。
 
-Re-adding the same source with the same ID, URL, policy, and priority succeeds without changing the configuration; different settings are rejected.
+以相同的 ID、URL、原則與優先級重新新增同一個來源會成功且不變更設定；不同的設定會被拒絕。
 
-### Remove a Catalog Source
+### 移除目錄來源
 
 ```bash
 specify bundle catalog remove <id_or_url>
 ```
 
-Removes a project-scoped catalog source. Built-in default sources cannot be deleted.
+移除專案範圍的目錄來源。內建的預設來源無法刪除。
 
-> **Note:** `search` and `info` work anywhere — with no project they fall back to the built-in/user catalog stack. The remaining state-changing commands (`list`, `update`, `remove`, `catalog`) require a project already initialized with `specify init`. `install` and `init` will initialize a project on demand when run in an uninitialized directory.
+> **注意：** `search` 與 `info` 可在任何地方運作：沒有專案時，它們會退回使用內建／使用者目錄堆疊。其餘會變更狀態的命令（`list`、`update`、`remove`、`catalog`）需要已使用 `specify init` 初始化的專案。`install` 與 `init` 在未初始化的目錄中執行時，會視需要初始化專案。

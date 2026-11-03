@@ -1,1 +1,1 @@
-- **User Story 1:** I want a test script that prints "Hello hooks!".
+- **使用者故事 1：** 我想要一個會印出 "Hello hooks!" 的測試指令碼。

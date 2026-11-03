@@ -1,32 +1,23 @@
 # Zed
 
-Install [Zed](https://zed.dev/) before setup.
-The integration key is `zed`; no separate CLI is required.
+設定前請先安裝 [Zed](https://zed.dev/)。整合鍵為 `zed`，不需要另外的 CLI。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration zed
 ```
 
-For an existing Spec Kit project, use `specify integration install zed`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install zed`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Skills are installed as `.agents/skills/speckit-<command>/SKILL.md`.
-Invoke them in the agent's chat, for example `/speckit-specify` or
-`/speckit-bug-assess` for the installed bug extension.
-This directory is shared with other integrations, so do not assume their
-generated skills can coexist without overlap.
+技能會安裝為 `.agents/skills/speckit-<command>/SKILL.md`。在代理的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。此目錄與其他整合共用，因此不要假設它們產生的技能可以毫無重疊地共存。
 
-## Workflow Limitation
+## 工作流程限制
 
-This integration does not support CLI dispatch for workflow command or prompt
-steps. It installs editor skills only and has no integration-specific setup
-options; a `--skills` flag is not needed or declared.
+本整合不支援工作流程命令或提示詞步驟的 CLI 分派。它只安裝編輯器技能，也沒有整合專屬的設定選項；不需要、也未宣告 `--skills` 旗標。

@@ -1,17 +1,17 @@
-# Tasks (Self-Test Preset)
+# 任務（Self-Test 預設集）
 
 <!-- preset:self-test -->
 
-> This template is provided by the self-test preset.
+> 這個範本由 self-test 預設集提供。
 
-## Task List
+## 任務清單
 
-- [ ] Task 1
-- [ ] Task 2
+- [ ] 任務 1
+- [ ] 任務 2
 
-## Estimation
+## 估算
 
-| Task | Estimate |
+| 任務 | 估算 |
 |------|----------|
-| Task 1 | TBD |
-| Task 2 | TBD |
+| 任務 1 | TBD |
+| 任務 2 | TBD |

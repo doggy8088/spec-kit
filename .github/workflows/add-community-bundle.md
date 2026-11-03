@@ -1,5 +1,5 @@
 ---
-description: "Process community bundle submission issues - validate, add to catalog, and open a PR for maintainer review"
+description: "處理社群套件組提交 issue——驗證、加入目錄，並開啟 PR 供維護者審查"
 emoji: "📦"
 
 on:
@@ -69,7 +69,7 @@ safe-outputs:
 jobs:
   conclusion:
     pre-steps:
-      - name: Mark bundle submission passed after PR creation
+      - name: 在 PR 建立後將套件組提交標記為通過
         if: needs.safe_outputs.result == 'success' && needs.safe_outputs.outputs.created_pr_number != ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
@@ -84,275 +84,249 @@ jobs:
             await github.rest.issues.addLabels({ ...issue, labels: ['validation-passed'] });
 ---
 
-# Add Community Bundle from Issue Submission
+# 從 Issue 提交新增社群套件組
 
-You are a catalog maintenance agent for the Spec Kit project. Process community
-bundle submission issues and create draft pull requests that add or update
-entries in the community bundle catalog.
+你是 Spec Kit 專案的目錄維護代理。處理社群套件組提交 issue，
+並建立草稿 pull request，將項目新增或更新到社群套件組目錄中。
 
-Community bundles are untrusted. Validate metadata and distribution evidence,
-but do not claim to audit, endorse, or support bundle code or the components it
-installs. Never register a submitted companion catalog automatically.
+社群套件組不受信任。驗證中繼資料與散佈證據，但不要宣稱稽核、背書
+或支援套件組程式碼或它安裝的元件。絕對不要自動註冊提交的伴隨目錄。
 
-## Label Responsibilities
+## 標籤責任
 
-Applying the outcome labels is your responsibility, not a recommendation for a
-maintainer. Use the `add_labels` safe output on source issue
-#${{ github.event.issue.number }}, with plain strings in its `labels` array.
-Never emit label objects with `suggest: true` or suggestion-only output.
-For a Passed outcome, emit `labels: ["validation-passed"]`; for a Failed
-outcome, emit `labels: ["validation-failed"]`. Follow the outcome rules below
-for timing, stale-label removal, and Blocked validation; this requirement does
-not turn environment blockers into submission failures.
+套用結果標籤是你的責任，不是給維護者的建議。請在來源 issue
+#${{ github.event.issue.number }} 上使用 `add_labels` 安全輸出，
+其 `labels` 陣列使用純字串。絕對不要輸出帶有 `suggest: true` 的標籤物件，
+或僅供建議的輸出。結果為 Passed 時，輸出 `labels: ["validation-passed"]`；
+結果為 Failed 時，輸出 `labels: ["validation-failed"]`。時機、過期標籤的移除，
+以及 Blocked 驗證的處理，請遵循下方的結果規則；此要求不會把環境阻礙
+變成提交失敗。
 
-## Triggering Conditions
+## 觸發條件
 
-This workflow is triggered by an `issues: labeled` event and is gated to the
-`bundle-submission` label. Before processing, verify that the issue title starts
-with `[Bundle]:`.
-If it does not, emit one `add_comment` on the issue:
+此工作流程由 `issues: labeled` 事件觸發，並以 `bundle-submission`
+標籤把關。處理前，先確認 issue 標題以 `[Bundle]:` 開頭。
+若不是，在該 issue 上發出一則 `add_comment`：
 
 > The bundle-submission workflow stopped before validation because the issue title does not start with `[Bundle]:`.
 
-Include `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`,
-then stop without validation, label changes, catalog/docs edits, or PR creation.
-Do not substitute `noop` for this comment. Otherwise, continue to Step 1.
+附上 `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`，
+然後停止，不進行驗證、標籤變更、目錄／文件編輯或 PR 建立。
+不要以 `noop` 取代這則留言。否則，繼續進行步驟 1。
 
-## Step 1 - Read and Parse the Issue
+## 步驟 1——讀取並解析 Issue
 
-Read issue #${{ github.event.issue.number }} and extract these issue-form fields:
+讀取 issue #${{ github.event.issue.number }}，並擷取下列 issue 表單欄位：
 
-| Field | Issue Form ID | Required |
+| 欄位 | Issue 表單 ID | 必填 |
 |-------|---------------|----------|
-| Bundle ID | `bundle-id` | Yes |
-| Bundle Name | `bundle-name` | Yes |
-| Version | `version` | Yes |
-| Role or Team | `role` | Yes |
-| Description | `description` | Yes |
-| Author | `author` | Yes |
-| Repository URL | `repository` | Yes |
-| Download URL | `download-url` | Yes |
-| Documentation URL | `documentation` | Yes |
-| License | `license` | Yes |
-| Required Spec Kit Version | `speckit-version` | Yes |
-| Integration Target | `integration` | No |
-| Components Provided | `components-provided` | Yes |
-| Required Component Catalogs | `required-catalogs` | Yes |
-| Tags | `tags` | Yes |
-| Key Features | `features` | Yes |
-| Testing Details | `testing-details` | Yes |
-| Example Usage | `example-usage` | Yes |
-| Proposed Catalog Entry | `catalog-entry` | Yes |
+| 套件組 ID | `bundle-id` | 是 |
+| 套件組名稱 | `bundle-name` | 是 |
+| 版本 | `version` | 是 |
+| 角色或團隊 | `role` | 是 |
+| 說明 | `description` | 是 |
+| 作者 | `author` | 是 |
+| 儲存庫 URL | `repository` | 是 |
+| 下載 URL | `download-url` | 是 |
+| 文件 URL | `documentation` | 是 |
+| 授權 | `license` | 是 |
+| 所需 Spec Kit 版本 | `speckit-version` | 是 |
+| 整合目標 | `integration` | 否 |
+| 提供的元件 | `components-provided` | 是 |
+| 所需元件目錄 | `required-catalogs` | 是 |
+| 標籤（Tags） | `tags` | 是 |
+| 主要功能 | `features` | 是 |
+| 測試詳情 | `testing-details` | 是 |
+| 使用範例 | `example-usage` | 是 |
+| 建議的目錄項目 | `catalog-entry` | 是 |
 
-Issue-form values appear beneath headings matching their labels.
+issue 表單的值出現在與其標籤相符的標題之下。
 
-The optional checksum is free-form submission data, not a dedicated issue-form input.
-Extract `submitted_sha256` from the submitted issue, not release metadata or the
-computed digest. Accept a manually appended `### SHA-256` heading (including
-`### SHA-256 (sha256)`) or the `sha256` field in the Proposed Catalog Entry.
-If both sources supply a checksum, they must agree after trimming whitespace
-and normalizing hexadecimal case. A supplied checksum must contain exactly 64
-hexadecimal characters; malformed or conflicting values are submission failures,
-not an absent checksum.
+選填的總和檢查碼是自由格式的提交資料，不是專屬的 issue 表單輸入欄位。
+請從提交的 issue 中擷取 `submitted_sha256`，不要取自發行中繼資料或
+計算出的摘要值。接受手動附加的 `### SHA-256` 標題（包括
+`### SHA-256 (sha256)`），或 Proposed Catalog Entry 中的 `sha256` 欄位。
+若兩個來源都提供總和檢查碼，它們在去除前後空白並將十六進位大小寫
+正規化後必須一致。提供的總和檢查碼必須恰好包含 64 個十六進位字元；
+格式錯誤或互相衝突的值屬於提交失敗，不是缺少總和檢查碼。
 
-## Step 2 - Validate the Submission
+## 步驟 2——驗證提交內容
 
-Run every check and collect all failures before deciding the outcome.
+執行每個檢查，在判定結果前先收集所有失敗。
 
-### 2a. Bundle ID and version
+### 2a. 套件組 ID 與版本
 
-- The bundle ID must match
-  `^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$`.
-- The version must be semantic version `X.Y.Z` with digits only and no `v`
-  prefix.
+- 套件組 ID 必須符合
+  `^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$`。
+- 版本必須是語意化版本 `X.Y.Z`，僅含數字且不帶 `v` 前綴。
 
-### 2b. Repository and documentation
+### 2b. 儲存庫與文件
 
-- Restrict repository and documentation URLs to public GitHub URLs before
-  fetching them.
-- Confirm the repository exists and contains `bundle.yml`, `README.md`, and a
-  license file (`LICENSE`, `LICENSE.md`, or `LICENSE.txt`).
-- The documentation URL must resolve to a readable Markdown file that explains
-  the bundle's intended role, installed components, required catalogs, and
-  installation steps.
-- Confirm the repository's `bundle.yml` matches the submitted bundle ID,
-  version, role, author, license, Spec Kit requirement, integration target, and
-  component summary.
+- 在擷取之前，將儲存庫與文件 URL 限制為公開的 GitHub URL。
+- 確認儲存庫存在，且包含 `bundle.yml`、`README.md`，以及授權檔案
+  （`LICENSE`、`LICENSE.md` 或 `LICENSE.txt`）。
+- 文件 URL 必須解析為可讀取的 Markdown 檔案，說明套件組的預定角色、
+  安裝的元件、所需目錄與安裝步驟。
+- 確認儲存庫的 `bundle.yml` 與提交的套件組 ID、版本、角色、作者、
+  授權、Spec Kit 需求、整合目標與元件摘要相符。
 
-### 2c. Release artifact
+### 2c. 發行成品
 
-- The download URL MUST belong to the submitted repository
-  (`https://github.com/<owner>/<repo>/...` with the same `<owner>/<repo>` as
-  the Repository URL). Reject URLs for any other GitHub repository.
-- The download URL MUST follow the accepted tag-pinned pattern:
-  `https://github.com/<owner>/<repo>/releases/download/<tag>/<asset>.zip`.
-- If the download URL path contains `releases/latest/`, reject with an
-  explanation — this URL is floating and not acceptable. Mark this pinning
-  check failed and skip the HTTP request for this URL, then continue the
-  remaining validations.
-- The `<tag>` segment in the URL MUST correspond to the submitted version.
-  Accept `vX.Y.Z`, `X.Y.Z`, and scoped tags whose version suffix matches
-  (for example `aide-v1.0.0` for version `1.0.0`). Reject a tag whose
-  embedded semver does not equal the submitted version.
-- Only after all pinning checks pass, fetch the download URL and perform the
-  remaining artifact checks:
-  - Verify the URL returns HTTP 200.
-  - If `sha256` is included, verify it matches the downloaded archive. Requiring
-    `sha256` on every catalog entry is follow-up work and MUST NOT fail this
-    check when the field is absent.
-  - Confirm the release exists and the exact ZIP asset is attached to it.
-- Confirm the asset name is versioned and consistent with the submitted bundle
-  ID and version.
+- 下載 URL 必須屬於提交的儲存庫
+  （`https://github.com/<owner>/<repo>/...`，其 `<owner>/<repo>` 與
+  儲存庫 URL 相同）。拒絕任何其他 GitHub 儲存庫的 URL。
+- 下載 URL 必須遵循可接受的標籤固定模式：
+  `https://github.com/<owner>/<repo>/releases/download/<tag>/<asset>.zip`。
+- 若下載 URL 路徑包含 `releases/latest/`，加以拒絕並說明原因
+  ——此 URL 是浮動的，不可接受。將此固定檢查標記為失敗，並略過對此 URL 的
+  HTTP 請求，然後繼續其餘驗證。
+- URL 中的 `<tag>` 區段必須與提交的版本對應。
+  接受 `vX.Y.Z`、`X.Y.Z`，以及版本後綴相符的限定範圍標籤
+  （例如版本 `1.0.0` 對應 `aide-v1.0.0`）。拒絕內嵌 semver 與提交版本
+  不相等的標籤。
+- 只有在所有固定檢查都通過後，才擷取下載 URL 並執行其餘成品檢查：
+  - 驗證 URL 回傳 HTTP 200。
+  - 若包含 `sha256`，驗證它與下載的封存檔相符。要求每個目錄項目都必須有
+    `sha256` 是後續工作；欄位缺失時絕對不可讓此檢查失敗。
+  - 確認該發行存在，且確切的 ZIP 資產已附加於其上。
+- 確認資產名稱有版本編號，且與提交的套件組 ID 及版本一致。
 
-Use `curl` for binary downloads. After the URL passes the pinning checks,
-require the entire URL to match `^[A-Za-z0-9._~%/:-]+$`, with no whitespace or
-control characters. Reject disallowed characters as a submission failure without
-fetching the URL. Do not decode or rewrite the URL to make it pass.
+使用 `curl` 下載二進位檔案。URL 通過固定檢查後，要求整個 URL 符合
+`^[A-Za-z0-9._~%/:-]+$`，不得含有空白或控制字元。含有不允許字元時，
+直接判為提交失敗，不要擷取該 URL。不要為了讓 URL 通過而解碼或改寫它。
 
-Then use the edit tool (not a shell command) to write the exact URL as one line
-plus a trailing newline to `/tmp/gh-aw/validated_download_url.txt`. Do not
-interpolate issue values into shell commands, including commands to create this
-file. Run this fixed command unchanged:
+然後使用編輯工具（不是 shell 命令）將確切的 URL 寫成一行並加上結尾換行，
+寫入 `/tmp/gh-aw/validated_download_url.txt`。不要將 issue 的值插入
+shell 命令，包括建立此檔案的命令。原樣執行這條固定命令：
 
 ```bash
 curl --location --proto '=https' --proto-redir '=https' --max-time 60 --silent --show-error --write-out '%{http_code}' --output /tmp/gh-aw/community-archive.zip "$(cat /tmp/gh-aw/validated_download_url.txt)"
 ```
 
-Run the download and checksum as separate shell calls, without `mkdir`, pipelines,
-or chained commands. The fixed, double-quoted `$(cat ...)` above is the only command
-substitution allowed; do not embed issue text in it. `/tmp/gh-aw/` already exists.
-Compute SHA-256 only after a successful download with final HTTP 200.
-Use `sha256sum /tmp/gh-aw/community-archive.zip` to record its digest as `actual_sha256`.
-If no checksum was submitted, skip the comparison without failing validation.
-Otherwise, use the edit tool to write `/tmp/gh-aw/community-archive.sha256` with
-exactly this one line and a trailing newline, replacing `EXPECTED_SHA256` with
-the validated `submitted_sha256` (two spaces before the fixed archive path):
+下載與總和檢查碼比較須以各自獨立的 shell 呼叫執行，不要使用 `mkdir`、
+管線或串連命令。上方固定且以雙引號包住的 `$(cat ...)` 是唯一允許的
+命令替換；不要在其中嵌入 issue 文字。`/tmp/gh-aw/` 已存在。
+只有在下載成功且最終 HTTP 狀態為 200 之後，才計算 SHA-256。
+使用 `sha256sum /tmp/gh-aw/community-archive.zip` 將其摘要記錄為 `actual_sha256`。
+若未提交總和檢查碼，略過比較且不讓驗證失敗。
+否則，使用編輯工具寫入 `/tmp/gh-aw/community-archive.sha256`，內容恰好為
+下列一行並加上結尾換行，將 `EXPECTED_SHA256` 換成驗證過的
+`submitted_sha256`（固定封存路徑前有兩個空格）：
 
 ```text
 EXPECTED_SHA256  /tmp/gh-aw/community-archive.zip
 ```
 
-Run this comparison as a separate shell call:
+以獨立的 shell 呼叫執行此比較：
 
 ```bash
 sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 ```
 
-Require exit code 0 and an `OK` result before marking the checksum check passed.
-A `FAILED` checksum comparison is a Failed outcome: report the submitted and
-actual digests, remove `validation-passed`, add `validation-failed`, and stop
-without catalog/docs edits or a PR. Never replace a mismatching submitted checksum
-with the computed or release-metadata digest. A command that cannot run or read
-the archive is Blocked, not a successful comparison.
-A blocked or failed download must not count as a passed check; repository/release metadata is not a
-substitute for fetching the archive. Never execute downloaded content.
+在將總和檢查碼檢查標記為通過前，要求結束代碼為 0 且結果為 `OK`。
+總和檢查碼比較 `FAILED` 屬於 Failed 結果：回報提交的與實際的摘要值，
+移除 `validation-passed`，加上 `validation-failed`，然後停止，不編輯
+目錄／文件、不建立 PR。絕對不要以計算出的或發行中繼資料的摘要值取代
+不相符的提交總和檢查碼。無法執行或無法讀取封存檔的命令屬於 Blocked，
+不是成功的比較。
+受阻或失敗的下載不得算作通過的檢查；儲存庫／發行中繼資料不能替代
+實際擷取封存檔。絕對不要執行下載的內容。
 
-Do not fetch arbitrary user-provided URLs. Do not claim the artifact was
-executed or audited; rely on the required submission attestations for build and
-installation evidence.
+不要擷取任意由使用者提供的 URL。不要宣稱成品已被執行或稽核；
+建置與安裝證據以必要的提交聲明為準。
 
-### 2d. Catalog entry
+### 2d. 目錄項目
 
-Parse the proposed JSON and require one entry under the submitted bundle ID.
-Confirm that:
+解析建議的 JSON，並要求在提交的套件組 ID 之下恰好有一個項目。
+確認：
 
-- `id`, `name`, `version`, `role`, `description`, `author`, `license`,
-  `download_url`, and `repository` match the submission and manifest.
-- `requires.speckit_version` matches the submission.
-- `provides` contains non-negative integer counts for `extensions`, `presets`,
-  `steps`, and `workflows`, matching the manifest.
-- `tags` contains 2-5 lowercase strings and matches the submitted tags.
-- `verified` is the boolean value `false`. Community entries must never be
-  marked verified.
+- `id`、`name`、`version`、`role`、`description`、`author`、`license`、
+  `download_url` 與 `repository` 與提交內容及資訊清單相符。
+- `requires.speckit_version` 與提交內容相符。
+- `provides` 包含 `extensions`、`presets`、`steps` 與 `workflows` 的
+  非負整數計數，且與資訊清單相符。
+- `tags` 包含 2–5 個小寫字串，且與提交的標籤相符。
+- `verified` 是布林值 `false`。社群項目絕對不可標記為已驗證。
 
-### 2e. Component resolution
+### 2e. 元件解析
 
-- `Required Component Catalogs` must explicitly say `None` or list every
-  non-default extension, preset, workflow, and step catalog needed by the
-  bundle.
-- Compare the manifest references, README, required-catalog field, testing
-  details, and example usage for consistency.
-- If non-default catalogs are required, ensure each URL is HTTPS, the README
-  documents the corresponding `catalog add` command, and the testing details
-  say those catalogs were registered in the clean-project test.
-- If the field says `None` but a component is not bundled and cannot be
-  installed from a default Spec Kit catalog, fail validation and ask the
-  submitter to list and document an install-allowed companion catalog.
+- `Required Component Catalogs` 必須明確寫 `None`，或列出套件組需要的
+  每個非預設擴充功能、預設集、工作流程與步驟目錄。
+- 比較資訊清單參照、README、required-catalog 欄位、測試詳情與使用
+  範例的一致性。
+- 若需要非預設目錄，確保每個 URL 都是 HTTPS、README 有記錄對應的
+  `catalog add` 命令，且測試詳情說明那些目錄已在乾淨專案測試中註冊。
+- 若該欄位寫 `None`，但某個元件未隨附且無法從預設的 Spec Kit 目錄
+  安裝，驗證失敗，並請提交者列出並記錄一個允許安裝的伴隨目錄。
 
-The community bundle catalog itself remains discovery-only. Companion catalog
-URLs are documentation and validation metadata, not catalogs this workflow
-should add to Spec Kit.
+社群套件組目錄本身仍僅供探索。伴隨目錄 URL 是文件與驗證中繼資料，
+不是此工作流程應加入 Spec Kit 的目錄。
 
-### 2f. Checklists and testing evidence
+### 2f. 檢核清單與測試證據
 
-- Confirm every required checkbox in Testing Checklist and Submission
-  Requirements is checked (`[x]`).
-- Confirm Testing Details describe validation, build, artifact installation,
-  and clean-project testing.
-- Confirm Example Usage includes artifact installation and, when applicable,
-  all required catalog setup commands.
+- 確認 Testing Checklist 與 Submission Requirements 中每個必填的
+  核取方塊都已勾選（`[x]`）。
+- 確認 Testing Details 描述了驗證、建置、成品安裝與乾淨專案測試。
+- 確認 Example Usage 包含成品安裝，以及（如適用）所有必要的目錄
+  設定命令。
 
-### Validation outcome
+### 驗證結果
 
-Choose exactly one outcome below, in order. A check that could not run is
-incomplete, not a passed check or a confirmed submission defect.
+依序從下方恰好選擇一個結果。無法執行的檢查屬於未完成，
+不是通過的檢查，也不是已確認的提交缺陷。
 
 #### Blocked
 
-If a permission denial, sandbox/network restriction, timeout, or service outage
-prevents a required check, validation is blocked by the workflow environment:
-- Comment with the attempted URL, exact error, and workflow run link, asking a
-  maintainer to investigate and rerun validation.
-- Do not ask the submitter to change a URL or resubmit solely
-  because the workflow could not perform the check.
-- Remove `validation-passed`. Do not add `validation-failed` or `needs-info` solely for an
-  environment blocker. Do not describe unperformed checks as passed.
-- If independent submission checks failed, report those separately
-  and apply `validation-failed` for those failures only. An observed HTTP 404
-  or a checksum mismatch is a submission failure, not a permission failure.
-- Stop processing here without editing catalog/docs files or opening a PR.
-  Do not evaluate the Failed or Passed outcomes below.
+若權限拒絕、沙箱／網路限制、逾時或服務中斷導致必要檢查無法執行，
+驗證即被工作流程環境阻礙：
+- 留言說明嘗試的 URL、確切錯誤與工作流程執行連結，請維護者調查並
+  重新執行驗證。
+- 不要僅因工作流程無法執行檢查，就要求提交者更改 URL 或重新提交。
+- 移除 `validation-passed`。不要僅因環境阻礙而加上 `validation-failed`
+  或 `needs-info`。不要把未執行的檢查描述為已通過。
+- 若有獨立的提交檢查失敗，另行回報那些失敗，並僅針對那些失敗套用
+  `validation-failed`。觀察到的 HTTP 404 或總和檢查碼不符是提交失敗，
+  不是權限失敗。
+- 在此停止處理，不編輯目錄／文件檔案、不開啟 PR。
+  不要評估下方的 Failed 或 Passed 結果。
 
 #### Failed
 
-If there are no environment blockers and a completed check found a submission defect:
+若沒有環境阻礙，且已完成的檢查發現提交缺陷：
 
-1. Comment once with every failed check and a specific correction.
-2. Remove `validation-passed`.
-3. Add `validation-failed`; add `needs-info` when submitter input is needed.
-4. Stop without editing files or creating a pull request.
+1. 留言一次，列出每個失敗的檢查與具體的更正方式。
+2. 移除 `validation-passed`。
+3. 加上 `validation-failed`；在需要提交者提供資訊時，加上 `needs-info`。
+4. 停止，不編輯檔案、不建立 pull request。
 
 #### Passed
 
-If there are no environment blockers and every required check completed and passed:
-remove `validation-failed` and `needs-info`, add `validation-passed`, and continue.
-After successful PR creation, the `conclusion` job also applies these
-issue labels independently of the agent. It does not run when no PR was created
-or safe-output processing failed.
+若沒有環境阻礙，且每個必要檢查都已完成並通過：
+移除 `validation-failed` 與 `needs-info`，加上 `validation-passed`，然後繼續。
+PR 建立成功後，`conclusion` job 也會獨立於代理之外套用這些 issue 標籤。
+若未建立 PR，或安全輸出處理失敗，它不會執行。
 
-## Step 3 - Determine Add or Update
+## 步驟 3——判定新增或更新
 
-Search `bundles/catalog.community.json` for the bundle ID.
+在 `bundles/catalog.community.json` 中搜尋套件組 ID。
 
-- If absent, add a new entry.
-- If present, update the existing entry in place.
+- 若不存在，新增一個項目。
+- 若已存在，原地更新既有項目。
 
-Treat a submitted version lower than or equal to the existing catalog version
-as a validation failure unless the issue clearly documents a metadata-only
-correction at the same version.
+提交的版本低於或等於既有目錄版本時，視為驗證失敗，除非 issue 清楚
+記錄了同版本的純中繼資料更正。
 
-## Step 4 - Update the Community Catalog
+## 步驟 4——更新社群目錄
 
-Edit `bundles/catalog.community.json`. Insert new entries alphabetically by
-bundle ID.
+編輯 `bundles/catalog.community.json`。新項目依套件組 ID 的字母順序插入。
 
-For both new entries and updates, only after every required validation passes,
-set `sha256` to `actual_sha256` from the downloaded archive. Do this even when no
-checksum was submitted. Replace any previous catalog digest; do not reuse a digest
-from an older archive. A submitted mismatch must fail validation before this step;
-writing the computed digest must never be used to bypass that failure.
+無論新增或更新，都只有在每個必要驗證通過後，才將 `sha256` 設定為
+從下載封存檔取得的 `actual_sha256`。即使未提交總和檢查碼也要這樣做。
+取代先前目錄中的任何摘要值；不要重用舊封存檔的摘要值。提交的不符
+必須在此步驟之前就讓驗證失敗；絕對不可用寫入計算出的摘要值來繞過
+該失敗。
 
-The entry shape is:
+項目結構如下：
 
 ```json
 {
@@ -382,68 +356,65 @@ The entry shape is:
 }
 ```
 
-Use the validated proposed entry for submitted metadata and set `sha256` as above. Keep
-`verified: false`. Update the top-level `updated_at` to today's UTC date at
-midnight and preserve the top-level `catalog_url`.
+提交的中繼資料使用驗證過的建議項目，並如上設定 `sha256`。保持
+`verified: false`。將最上層的 `updated_at` 更新為今天 UTC 日期的午夜，
+並保留最上層的 `catalog_url`。
 
-Validate the complete file:
+驗證完整的檔案：
 
 ```bash
 python3 -c "import json; json.load(open('bundles/catalog.community.json')); print('Valid JSON')"
 ```
 
-## Step 5 - Update Community Documentation
+## 步驟 5——更新社群文件
 
-Add or update the bundle in `docs/community/bundles.md`. Keep rows alphabetical
-by bundle name:
+在 `docs/community/bundles.md` 中新增或更新套件組。列依套件組名稱的
+字母順序排列：
 
 ```text
 | <Name> | <Description> | `<role>` | <component counts> | <None or documented> | [<repo-name>](<repository>) |
 ```
 
-Before rendering the row, convert every user-derived display value to
-single-line plain text: collapse CR/LF sequences to spaces, remove control
-characters, and backslash-escape `\`, `|`, backticks, `*`, `_`, `[`, `]`, `<`,
-and `>`. Use the validated HTTPS GitHub repository URL unchanged only as the
-Markdown link destination.
+在呈現該列之前，將每個源自使用者的顯示值轉換為單行純文字：將 CR/LF
+序列摺疊為空格、移除控制字元，並以反斜線逸出 `\`、`|`、反引號、`*`、
+`_`、`[`、`]`、`<` 與 `>`。驗證過的 HTTPS GitHub 儲存庫 URL 僅作為
+Markdown 連結目的地，原樣不變。
 
-Render component counts compactly, omitting zero-valued component types. Use
-`None` when no companion catalogs are needed and `Documented` otherwise; the
-repository README remains the source for the actual URLs.
+元件計數以精簡方式呈現，省略計數為零的元件類型。無需伴隨目錄時
+使用 `None`，否則使用 `Documented`；實際 URL 以儲存庫 README 為準。
 
-## Step 6 - Create a Draft Pull Request
+## 步驟 6——建立草稿 Pull Request
 
-Create one draft pull request.
+建立一個草稿 pull request。
 
-This repository-owned gh-aw maintenance workflow does not perform the contributor
-open-PR count check or request confirmation. After successful validation and
-allowed catalog/docs file updates, emit the configured draft `create_pull_request`
-safe output regardless of the submitter's or filing account's open PR count.
+這個由儲存庫擁有的 gh-aw 維護工作流程不執行貢獻者未結 PR 數量檢查，
+也不要求確認。驗證成功且允許的目錄／文件檔案更新完成後，無論提交者
+或提出帳號目前有多少未結 PR，一律發出已設定的草稿 `create_pull_request`
+安全輸出。
 
-- New entry branch:
+- 新項目分支：
   `community/${{ github.event.issue.number }}-add-<bundle-id>-bundle`
-- Update branch:
+- 更新分支：
   `community/${{ github.event.issue.number }}-update-<bundle-id>-bundle`
-- New title: `Add <Bundle Name> bundle to community catalog`
-- Update title: `Update <Bundle Name> bundle to v<version>`
+- 新標題：`Add <Bundle Name> bundle to community catalog`
+- 更新標題：`Update <Bundle Name> bundle to v<version>`
 
-The commit and PR description must summarize the catalog and documentation
-changes, list the validation results, include
-`Closes #${{ github.event.issue.number }}`, and mention the submitter with
-`cc @<issue-author>`.
+提交訊息與 PR 說明必須摘要目錄與文件的變更、列出驗證結果、包含
+`Closes #${{ github.event.issue.number }}`，並以 `cc @<issue-author>`
+提及提交者。
 
-End the commit message with this authorship trailer:
+提交訊息以下列作者身分尾註結尾：
 
 ```text
 Assisted-by: GitHub Copilot (model: <name-if-known>, autonomous)
 ```
 
-## Important Rules
+## 重要規則
 
-- Modify only `bundles/catalog.community.json` and
-  `docs/community/bundles.md`.
-- Keep JSON entries sorted by ID and documentation rows sorted by name.
-- Never set a community bundle's `verified` field to true.
-- Never add, enable, or change the policy of a submitted catalog.
-- Never describe validation as a security audit or endorsement.
-- Use `Closes`, not `Fixes`, for the submission issue.
+- 只修改 `bundles/catalog.community.json` 與
+  `docs/community/bundles.md`。
+- JSON 項目依 ID 排序，文件列依名稱排序。
+- 絕對不要將社群套件組的 `verified` 欄位設為 true。
+- 絕對不要新增、啟用或更改提交目錄的政策。
+- 絕對不要將驗證描述為安全稽核或背書。
+- 提交 issue 使用 `Closes`，不要用 `Fixes`。

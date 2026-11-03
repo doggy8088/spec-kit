@@ -1,17 +1,17 @@
-# Bug Fix Bundle
+# 錯誤修正套件組
 
-A first-party GitHub Spec Kit bundle that installs an orchestrated bug-fixing pipeline.
+GitHub Spec Kit 官方出品的套件組，安裝一條經過編排的錯誤修正流程。
 
-## What it provides
+## 提供的內容
 
-- **Bug extension** (`extensions/bug`) — the `speckit.bug.assess`, `speckit.bug.fix`, and `speckit.bug.test` commands.
-- **Bugfix workflow** (`workflows/bugfix`) — a guided, resumable pipeline:
-  1. `assess` the bug report.
-  2. `review-assessment` gate — approve to proceed, reject to abort.
-  3. `fix` the bug.
-  4. `test` the fix.
+- **Bug 擴充功能**（`extensions/bug`）——`speckit.bug.assess`、`speckit.bug.fix` 與 `speckit.bug.test` 命令。
+- **Bugfix 工作流程**（`workflows/bugfix`）——一條有引導、可恢復的流程：
+  1. `assess` 評估錯誤回報。
+  2. `review-assessment` 關卡——核准即繼續，拒絕即中止。
+  3. `fix` 修正錯誤。
+  4. `test` 測試修正結果。
 
-## Install
+## 安裝
 
 ```bash
 specify bundle install bugfix
@@ -19,7 +19,7 @@ specify bundle install bugfix
 specify bundle add bugfix
 ```
 
-## Run the workflow
+## 執行工作流程
 
 ```bash
 specify workflow run bugfix \
@@ -27,12 +27,12 @@ specify workflow run bugfix \
   --input slug="callback-token"
 ```
 
-Required inputs must be supplied with `--input`: `report` and `slug`. The slug is used as the working directory under `.specify/bugs/<slug>/` for all artifacts.
+必要輸入必須透過 `--input` 提供：`report` 與 `slug`。所有產出物都以該 slug 作為 `.specify/bugs/<slug>/` 下的工作目錄。
 
-## Remove
+## 移除
 
 ```bash
 specify bundle remove bugfix
 ```
 
-Removing the bundle uninstalls the workflow and the extension it contributed, unless they are still depended on by another installed bundle (FR-022). Components you installed independently are not attributed to this bundle and survive removal.
+移除套件組會解除安裝其帶來的工作流程與擴充功能，除非它們仍被其他已安裝的套件組相依（FR-022）。您自行獨立安裝的元件不會歸屬於這個套件組，移除後仍會保留。

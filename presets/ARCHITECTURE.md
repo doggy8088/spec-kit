@@ -1,12 +1,12 @@
-# Preset System Architecture
+# 預設集系統架構
 
-This document describes the internal architecture of the preset system — how template resolution, command registration, and catalog management work under the hood.
+本文件說明預設集系統的內部架構 — 範本解析、命令註冊與目錄管理在幕後如何運作。
 
-For usage instructions, see [README.md](README.md).
+使用說明請參閱 [README.md](README.md)。
 
-## Template Resolution
+## 範本解析
 
-When Spec Kit needs a template (e.g. `spec-template`), the `PresetResolver` walks a priority stack and returns the first match:
+當 Spec Kit 需要一個範本（例如 `spec-template`）時，`PresetResolver` 會走訪一個優先級堆疊，並回傳第一個相符項：
 
 ```mermaid
 flowchart TD
@@ -27,56 +27,56 @@ flowchart TD
     style H fill:#9e9e9e,color:#fff
 ```
 
-| Priority | Source | Path | Use case |
+| 優先級 | 來源 | 路徑 | 使用情境 |
 |----------|--------|------|----------|
-| 1 (highest) | Override | `.specify/templates/overrides/` | One-off project-local tweaks |
-| 2 | Preset | `.specify/presets/<id>/templates/` | Shareable, stackable customizations |
-| 3 | Extension | `.specify/extensions/<id>/templates/` | Extension-provided templates |
-| 4 (lowest) | Core | `.specify/templates/` | Shipped defaults |
+| 1（最高） | Override | `.specify/templates/overrides/` | 一次性的專案本機微調 |
+| 2 | Preset | `.specify/presets/<id>/templates/` | 可分享、可堆疊的自訂設定 |
+| 3 | Extension | `.specify/extensions/<id>/templates/` | 擴充功能提供的範本 |
+| 4（最低） | Core | `.specify/templates/` | 隨附的預設值 |
 
-When multiple presets are installed, they're sorted by their `priority` field (lower number = higher precedence). This is set via `--priority` on `specify preset add`.
+當安裝多個預設集時，它們會依其 `priority` 欄位排序（數字越小 = 優先級越高）。這是透過 `specify preset add` 的 `--priority` 設定的。
 
-The resolution is implemented three times to ensure consistency:
+這套解析邏輯實作了三次，以確保一致性：
 
-- **Python**: `PresetResolver` in `src/specify_cli/presets.py`
-- **Bash**: `resolve_template()` in `scripts/bash/common.sh`
-- **PowerShell**: `Resolve-Template` in `scripts/powershell/common.ps1`
+- **Python**：`src/specify_cli/presets.py` 中的 `PresetResolver`
+- **Bash**：`scripts/bash/common.sh` 中的 `resolve_template()`
+- **PowerShell**：`scripts/powershell/common.ps1` 中的 `Resolve-Template`
 
-### Composition Strategies
+### 組成策略
 
-Templates, commands, and scripts support a `strategy` field that controls how a preset's content is combined with lower-priority content instead of fully replacing it:
+範本、命令與指令碼支援一個 `strategy` 欄位，控制預設集的內容如何與優先級較低的內容組合，而不是完全取代它：
 
-| Strategy | Description | Templates | Commands | Scripts |
+| 策略 | 說明 | 範本 | 命令 | 指令碼 |
 |----------|-------------|-----------|----------|---------|
-| `replace` (default) | Fully replaces lower-priority content | ✓ | ✓ | ✓ |
-| `prepend` | Places content before lower-priority content (separated by a blank line) | ✓ | ✓ | — |
-| `append` | Places content after lower-priority content (separated by a blank line) | ✓ | ✓ | — |
-| `wrap` | Content contains `{CORE_TEMPLATE}` (templates/commands) or `$CORE_SCRIPT` (scripts) placeholder replaced with lower-priority content | ✓ | ✓ | ✓ |
+| `replace`（預設） | 完全取代優先級較低的內容 | ✓ | ✓ | ✓ |
+| `prepend` | 將內容放在優先級較低的內容之前（以空行分隔） | ✓ | ✓ | — |
+| `append` | 將內容放在優先級較低的內容之後（以空行分隔） | ✓ | ✓ | — |
+| `wrap` | 內容包含 `{CORE_TEMPLATE}`（範本／命令）或 `$CORE_SCRIPT`（指令碼）佔位符，會被優先級較低的內容取代 | ✓ | ✓ | ✓ |
 
-Composition is recursive — multiple composing presets chain. The `PresetResolver.resolve_content()` method walks the full priority stack bottom-up and applies each layer's strategy.
+組成是遞迴的 — 多個組成中的預設集會串連。`PresetResolver.resolve_content()` 方法會由下而上走訪完整的優先級堆疊，並套用每一層的策略。
 
-Content resolution functions for composition:
+用於組成的內容解析函式：
 
-- **Python**: `PresetResolver.resolve_content()` in `src/specify_cli/presets.py` (templates, commands, and scripts)
-- **Bash**: `resolve_template_content()` in `scripts/bash/common.sh` (templates only; command/script composition is handled by the Python resolver)
-- **PowerShell**: `Resolve-TemplateContent` in `scripts/powershell/common.ps1` (templates only; command/script composition is handled by the Python resolver)
+- **Python**：`src/specify_cli/presets.py` 中的 `PresetResolver.resolve_content()`（範本、命令與指令碼）
+- **Bash**：`scripts/bash/common.sh` 中的 `resolve_template_content()`（僅範本；命令／指令碼的組成由 Python 解析器處理）
+- **PowerShell**：`scripts/powershell/common.ps1` 中的 `Resolve-TemplateContent`（僅範本；命令／指令碼的組成由 Python 解析器處理）
 
-### Constitution lifecycle
+### 憲章生命週期
 
-Initialization resolves `constitution-template` through the full stack and seeds
-`.specify/memory/constitution.md` once. Existing files are preserved byte-for-byte. On subsequent
-`/constitution` runs, the command resolves the current composed template at runtime and uses the live
-constitution as the source of project-specific values and amendments.
+初始化會透過完整堆疊解析 `constitution-template`，並植入
+`.specify/memory/constitution.md` 一次。既有檔案會逐位元組保留。在後續的
+`/constitution` 執行中，命令會在執行期解析目前組成的範本，並使用即時
+憲章作為專案專屬值與修訂的來源。
 
-Preset installation, removal, enablement, disablement, and priority changes do not materialize
-`constitution-template` by default. When the enabled preset registry contains `constitution-sync`,
-those operations may reconcile the live file, but only if its provenance hash proves it is still
-generated content. Missing files may be seeded when the preset is installed; authored or edited
-constitutions are never overwritten.
+預設集的安裝、移除、啟用、停用與優先級變更，預設不會具體化
+`constitution-template`。當啟用的預設集註冊表包含 `constitution-sync` 時，
+這些操作可能對即時檔案進行對帳，但前提是其來源雜湊證明它仍是
+已產生的內容。檔案遺失時，可以在安裝預設集時植入；已撰寫或已編輯的
+憲章永遠不會被覆寫。
 
-## Command Registration
+## 命令註冊
 
-When a preset is installed with `type: "command"` entries, the `PresetManager` registers them into all detected agent directories using the shared `CommandRegistrar` from `src/specify_cli/agents.py`.
+當預設集以 `type: "command"` 項目安裝時，`PresetManager` 會使用 `src/specify_cli/agents.py` 中共用的 `CommandRegistrar`，將它們註冊到所有偵測到的代理目錄。
 
 ```mermaid
 flowchart TD
@@ -102,27 +102,27 @@ flowchart TD
     style N fill:#4caf50,color:#fff
 ```
 
-### Extension safety check
+### 擴充功能安全檢查
 
-Command names follow the pattern `speckit.<ext-id>.<cmd-name>`. When a command has 3+ dot segments, the system extracts the extension ID and checks if `.specify/extensions/<ext-id>/` exists. If the extension isn't installed, the command is skipped — preventing orphan files referencing non-existent extensions.
+命令名稱遵循 `speckit.<ext-id>.<cmd-name>` 模式。當命令有 3 個以上的點分隔區段時，系統會擷取擴充功能 ID，並檢查 `.specify/extensions/<ext-id>/` 是否存在。若擴充功能未安裝，該命令會被略過 — 避免產生參照不存在擴充功能的孤立檔案。
 
-Core commands (e.g. `speckit.specify`, with only 2 segments) are always registered.
+核心命令（例如只有 2 個區段的 `speckit.specify`）一律會註冊。
 
-### Agent format rendering
+### 代理格式渲染
 
-The `CommandRegistrar` renders commands differently per agent:
+`CommandRegistrar` 會依代理以不同方式渲染命令：
 
-| Agent | Format | Extension | Arg placeholder |
+| 代理 | 格式 | 副檔名 | 參數佔位符 |
 |-------|--------|-----------|-----------------|
-| Claude, Kilo Code, opencode, etc. | Markdown | `.md` | `$ARGUMENTS` |
+| Claude、Kilo Code、opencode 等 | Markdown | `.md` | `$ARGUMENTS` |
 | Copilot | Markdown | `.agent.md` + `.prompt.md` | `$ARGUMENTS` |
-| Gemini, Qwen, Tabnine | TOML | `.toml` | `{{args}}` |
+| Gemini、Qwen、Tabnine | TOML | `.toml` | `{{args}}` |
 
-### Cleanup on removal
+### 移除時清理
 
-When `specify preset remove` is called, the registered commands are read from the registry metadata and the corresponding files are deleted from each agent directory, including Copilot companion `.prompt.md` files.
+當呼叫 `specify preset remove` 時，會從註冊表中繼資料讀取已註冊的命令，並從每個代理目錄刪除對應檔案，包括 Copilot 的附屬 `.prompt.md` 檔案。
 
-## Catalog System
+## 目錄系統
 
 ```mermaid
 flowchart TD
@@ -144,9 +144,9 @@ flowchart TD
     style K fill:#9e9e9e,color:#fff
 ```
 
-Catalogs are fetched with a 1-hour cache (per-URL, SHA256-hashed cache files). Each catalog entry has a `priority` (for merge ordering) and `install_allowed` flag.
+目錄以 1 小時快取擷取（依 URL 區分、經 SHA256 雜湊的快取檔案）。每個目錄項目都有一個 `priority`（用於合併排序）與 `install_allowed` 旗標。
 
-## Repository Layout
+## 儲存庫佈局
 
 ```text
 presets/
@@ -176,7 +176,7 @@ presets/
         └── constitution-template.md
 ```
 
-## Module Structure
+## 模組結構
 
 ```text
 src/specify_cli/

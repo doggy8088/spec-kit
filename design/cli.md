@@ -1,54 +1,36 @@
-# Specify CLI Command Architecture
+# Specify CLI 命令架構
 
-This document defines the CLI adapter structure for Specify commands. It
-explains where Typer handlers, CLI infrastructure, CLI-private phases, nested
-command groups, and their tests belong.
+本文件定義 Specify 命令的 CLI 配接器結構。它說明 Typer 處理常式、CLI 基礎設施、CLI 專屬階段、巢狀命令群組及其測試應置於何處。
 
-Every CLI leaf that has another delivery adapter invokes the shared application
-operation defined by
-[Shared Command Application Architecture](shared.md). This document owns the
-CLI surface; it does not redefine semantic validation, orchestration, results,
-warnings, errors, or side effects.
+每個具有其他交付配接器的 CLI 葉節點，都會呼叫由[共用命令應用架構](shared.md)定義的共用應用操作。本文件擁有 CLI 介面；它不重新定義語意驗證、協調、結果、警告、錯誤或副作用。
 
-The extension command hierarchy under
-[Nested command groups](#nested-command-groups) supplies the reference shape
-used in this document. The separate
-[Extension Architecture](extension.md) defines extension-domain behavior and
-boundaries. Do not create extra modules merely to make a small command conform
-visually.
+[巢狀命令群組](#巢狀命令群組)之下的擴充功能命令階層，提供了本文件使用的參考形狀。獨立的[擴充功能架構](extension.md)定義擴充功能領域的行為與邊界。不要僅為了讓小型命令在視覺上符合規範，就建立額外模組。
 
-## Design goals
+## 設計目標
 
-The CLI structure should make the answer to "where does this command live?"
-predictable from the command line itself.
+CLI 結構應讓「這個命令位於何處？」的答案能從命令列本身預測。
 
-The design optimizes for:
+本設計的優化方向為：
 
-- **Direct navigation:** a command maps to an obvious source file and test.
-- **Small working context:** changing one command should not require loading an
-  entire command group into memory.
-- **Parallel development:** unrelated commands should rarely require edits to
-  the same file.
-- **Explicit ownership:** shared infrastructure and command-private behavior
-  should not be mixed.
-- **Adapter discipline:** CLI modules invoke shared operations rather than
-  becoming the application implementation.
-- **Stable behavior:** structural refactoring must preserve registration,
-  output, error handling, compatibility paths, and tests.
-- **Agentic development:** coding agents should be able to infer the relevant
-  files from the CLI surface without broad repository searches.
+- **直接導覽：**命令對應到明顯的來源檔案與測試。
+- **小型工作內容：**變更一個命令不應需要將整個命令群組載入記憶體。
+- **平行開發：**不相關的命令很少需要編輯同一個檔案。
+- **明確擁有權：**共用基礎設施與命令專屬行為不應混雜。
+- **配接器紀律：**CLI 模組呼叫共用操作，而不是成為應用實作。
+- **穩定行為：**結構重構必須保留註冊、輸出、錯誤處理、相容性路徑與測試。
+- **代理開發：**程式代理應能從 CLI 介面推斷相關檔案，而不需要大範圍搜尋儲存庫。
 
-## Naming and ownership
+## 命名與擁有權
 
-### Registered command modules
+### 已註冊的命令模組
 
-Each real CLI command uses:
+每個真實的 CLI 命令使用：
 
 ```text
 command_<name>.py
 ```
 
-For example:
+例如：
 
 ```text
 specify extension add           -> extensions/command_add.py
@@ -56,35 +38,27 @@ specify extension set-priority  -> extensions/command_set_priority.py
 specify extension update        -> extensions/command_update.py
 ```
 
-Only modules representing actual CLI commands use the non-underscored
-`command_*.py` prefix. A command module owns:
+只有表示實際 CLI 命令的模組才使用不帶底線的 `command_*.py` 前綴。命令模組擁有：
 
-- The Typer-decorated handler.
-- User-facing arguments and options.
-- Mapping parsed values into the shared operation request.
-- CLI prompting, progress, rendering, JSON streams, and exit-code mapping.
-- Small helpers used only by that command.
+- 以 Typer 裝飾的處理常式。
+- 面向使用者的引數與選項。
+- 將解析後的值對應到共用操作請求。
+- CLI 提示、進度、呈現、JSON 串流與結束代碼對應。
+- 僅供該命令使用的小型輔助工具。
 
-Semantic validation, application orchestration, typed outcomes, warnings,
-expected errors, and side effects belong below the adapter as defined in
-[the shared design](shared.md). A CLI-only command may keep small behavior in
-its command module, but behavior needed by another adapter must first move to a
-shared operation or domain module.
+語意驗證、應用協調、型別結果、警告、預期錯誤與副作用，依[共用設計](shared.md)的定義，位於配接器之下。僅供 CLI 使用的命令可將小型行為保留在其命令模組中，但另一個配接器需要的行為，必須先移至共用操作或領域模組。
 
-The command function's docstring is user-facing because Typer may display it
-as help text. A module docstring is internal and should identify the command,
-registration path, and any adjacent private implementation modules.
+命令函式的 docstring 面向使用者，因為 Typer 可能將其顯示為說明文字。模組 docstring 則為內部用途，應標明命令、註冊路徑與任何相鄰的私有實作模組。
 
-### Command-private implementation modules
+### 命令專屬實作模組
 
-When a CLI adapter has cohesive *CLI-specific* phases that are independently
-understandable or testable, use:
+當 CLI 配接器具有內聚、*CLI 專屬*且可獨立理解或測試的階段時，使用：
 
 ```text
 _command_<name>_<phase>.py
 ```
 
-For example:
+例如：
 
 ```text
 command_init.py
@@ -92,60 +66,44 @@ _command_init_prompting.py
 _command_init_rendering.py
 ```
 
-The leading underscore marks the module as private implementation. The
-`command_init` portion groups it with the registered handler in searches and
-file listings. The phase suffix communicates its ownership.
+開頭的底線將模組標記為私有實作。`command_init` 部分使其在搜尋與檔案列表中與已註冊的處理常式歸為一組。階段後綴傳達其擁有權。
 
-Private phase modules must not register additional CLI commands. The public
-`command_<name>.py` module remains the sole CLI adapter.
+私有階段模組不得註冊額外的 CLI 命令。公開的 `command_<name>.py` 模組仍是唯一的 CLI 配接器。
 
-Split a command when a phase:
+在以下情況下拆分命令的某個階段：
 
-- Is specific to CLI invocation or presentation.
-- Has distinct invariants or failure behavior.
-- Can be tested as a meaningful boundary.
-- Has enough implementation detail to distract from the CLI handler.
-- Is likely to change independently from other phases.
+- 專屬於 CLI 呼叫或呈現。
+- 具有不同的不變條件或失敗行為。
+- 可作為有意義的邊界進行測試。
+- 具有足夠的實作細節，會分散對 CLI 處理常式的注意力。
+- 可能獨立於其他階段而變更。
 
-If the phase performs semantic validation, planning, mutation, rollback, or
-other behavior another adapter needs, use `_operation_<name>_<phase>.py`
-instead, following [the shared design](shared.md#naming-and-layout).
+若該階段執行語意驗證、規劃、變更、回滾，或另一個配接器需要的其他行為，則改用 `_operation_<name>_<phase>.py`，遵循[共用設計](shared.md#命名與版面)。
 
-Do not split a command solely because it crossed an arbitrary line count.
-Excessive fragmentation makes control flow harder to follow and increases the
-number of files an agent must inspect.
+不要僅因命令超過任意行數就拆分它。過度碎片化會使控制流程更難追蹤，並增加代理必須檢查的檔案數量。
 
-### Command-group infrastructure
+### 命令群組基礎設施
 
-For a multi-command group, `_commands.py` owns:
+對於多命令群組，`_commands.py` 擁有：
 
-- The command group's Typer application.
-- Registration of the group's command modules.
-- CLI infrastructure genuinely shared by multiple commands or external CLI
-  flows.
-- Thin compatibility forwarders needed to preserve established import or
-  monkeypatch paths.
+- 命令群組的 Typer 應用程式。
+- 群組命令模組的註冊。
+- 確實由多個命令或外部 CLI 流程共用的 CLI 基礎設施。
+- 為保留既定匯入或 monkeypatch 路徑所需的精簡相容性轉發器。
 
-`_commands.py` must not contain decorated command handlers. A helper used by
-only one command belongs in that command's module or one of its private phase
-modules.
+`_commands.py` 不得包含已裝飾的命令處理常式。僅供單一命令使用的輔助工具，應屬於該命令的模組或其某個私有階段模組。
 
-Compatibility forwarders do not transfer ownership back to `_commands.py`.
-They should remain thin and delegate to the module that owns the behavior.
-Avoid turning `_commands.py` into a service locator for new code.
+相容性轉發器不會將擁有權轉回 `_commands.py`。它們應保持精簡，並委派給擁有該行為的模組。避免將 `_commands.py` 變成新程式碼的服務定位器。
 
-### Package `__init__.py`
+### 套件 `__init__.py`
 
-The package `__init__.py` owns the package's domain API and package-level
-behavior. It should provide a brief map to the CLI modules, but it is not the
-home for command handlers.
+套件的 `__init__.py` 擁有套件的領域 API 與套件層級行為。它應提供 CLI 模組的簡短對照，但不是命令處理常式的所在地。
 
-Moving command handlers out of `__init__.py` keeps importing the domain package
-separate from understanding or modifying its CLI surface.
+將命令處理常式移出 `__init__.py`，可使匯入領域套件與理解或修改其 CLI 介面分開。
 
-## Nested command groups
+## 巢狀命令群組
 
-Nested CLI groups use directories matching the command surface:
+巢狀 CLI 群組使用與命令介面相符的目錄：
 
 ```text
 specify extension catalog add
@@ -153,7 +111,7 @@ specify extension catalog add
                           remove
 ```
 
-maps to:
+對應到：
 
 ```text
 extensions/
@@ -168,89 +126,53 @@ extensions/
 └── ...
 ```
 
-The nested package's `__init__.py` owns its Typer application and registration.
-Shared helpers for that nested surface can live in `_helpers.py`.
+巢狀套件的 `__init__.py` 擁有其 Typer 應用程式與註冊。該巢狀介面的共用輔助工具可置於 `_helpers.py`。
 
-A nested CLI hierarchy may also be the root of a bounded subdomain when its
-concept depends on the parent domain but owns a distinct resource and lifecycle
-that the parent commands do not cover. In that case, keep the subdomain's
-non-command modules and its `command_*.py` adapters together in the nested
-package. Storage, validation, composition, or distribution behavior specific to
-that resource are signals that the namespace is a domain root, not merely a CLI
-group.
+當巢狀 CLI 階層的概念依賴父領域，但擁有父命令未涵蓋的獨特資源與生命週期時，它也可以是有界子領域的根。在這種情況下，將子領域的非命令模組與其 `command_*.py` 配接器一起保留在巢狀套件中。專屬於該資源的儲存、驗證、組合或散發行為，是該命名空間為領域根而非僅是 CLI 群組的訊號。
 
-Creating a nested CLI package solely to group commands does not transfer
-same-named parent-domain behavior into that package. If an existing domain
-module merely collides with a new nested command namespace, keep the
-implementation in the parent domain package (or a focused domain module there).
-Preserve an established import path through thin compatibility exports from the
-nested package when required.
+僅為了將命令分組而建立巢狀 CLI 套件，不會將同名的父領域行為轉移到該套件中。若既有領域模組只是與新的巢狀命令命名空間同名衝突，請將實作保留在父領域套件（或該處的聚焦領域模組）中。必要時，透過巢狀套件的精簡相容性匯出，保留既定的匯入路徑。
 
-Do not add a nested `_commands.py` merely for symmetry. Create one only when
-the nested group develops substantial shared command infrastructure that no
-longer fits cleanly in `__init__.py` and `_helpers.py`.
+不要僅為了對稱而新增巢狀 `_commands.py`。只有當巢狀群組發展出龐大的共用命令基礎設施，無法再整齊地置於 `__init__.py` 與 `_helpers.py` 時，才建立它。
 
-### Singular command groups
+### 單數命令群組
 
-Use the repository's plural command-package convention even when a user-facing
-CLI namespace is singular. The `specify self` group therefore lives in
-`specify_cli/selfs/`, while the established `specify_cli._version` module
-remains the version-domain API and monkeypatch surface. The command adapters
-resolve patch-owned `_version` attributes at execution time, and `_version`
-re-exports the command symbols for compatibility.
+即使面向使用者的 CLI 命名空間是單數，也使用儲存庫的複數命令套件慣例。因此 `specify self` 群組位於 `specify_cli/selfs/`，而既定的 `specify_cli._version` 模組仍是版本領域 API 與 monkeypatch 介面。命令配接器在執行時解析由 patch 擁有的 `_version` 屬性，`_version` 則為相容性重新匯出命令符號。
 
-Do not create a nested directory for an implementation phase that is not a CLI
-subcommand. For example, an `update/` directory would incorrectly suggest an
-`extension update ...` subcommand group. Use `_command_update_<phase>.py` for
-a CLI-private phase and `_operation_update_<phase>.py` for semantic validation,
-planning, mutation, rollback, or other behavior shared with another adapter.
+不要為不是 CLI 子命令的實作階段建立巢狀目錄。例如，`update/` 目錄會錯誤地暗示存在 `extension update ...` 子命令群組。CLI 專屬階段使用 `_command_update_<phase>.py`，語意驗證、規劃、變更、回滾或與另一個配接器共用的其他行為，則使用 `_operation_update_<phase>.py`。
 
-## Registration
+## 註冊
 
-Command registration remains centralized at the command-group boundary.
+命令註冊仍集中在命令群組邊界。
 
-For the extension group:
+對於擴充功能群組：
 
-1. `src/specify_cli/extensions/_commands.py` owns `extension_app`.
-2. `_commands.register()` registers the nested catalog group.
-3. It imports each `command_*.py` module so its decorator registers the
-   handler.
-4. It attaches `extension_app` to the root application.
+1. `src/specify_cli/extensions/_commands.py` 擁有 `extension_app`。
+2. `_commands.register()` 註冊巢狀的 catalog 群組。
+3. 它匯入每個 `command_*.py` 模組，使其裝飾器註冊處理常式。
+4. 它將 `extension_app` 附加到根應用程式。
 
-The nested catalog group follows the same pattern through
-`catalog.register()`.
+巢狀的 catalog 群組透過 `catalog.register()` 遵循相同模式。
 
-Registration imports should be explicit and ordered consistently. Do not rely
-on filesystem discovery to import arbitrary modules, because command exposure
-should remain reviewable in one place.
+註冊匯入應明確且順序一致。不要依賴檔案系統探索來匯入任意模組，因為命令的公開方式應能在一處審查。
 
-## Shared operation invocation
+## 共用操作呼叫
 
-The CLI adapter maps parsed arguments and options into the shared typed request,
-invokes the operation, and renders its outcome.
+CLI 配接器將解析後的引數與選項對應到共用的型別請求，呼叫操作，並呈現其結果。
 
-For project-scoped commands, the adapter supplies the explicit project or
-target directory. When the user omits it, the CLI uses the cwd captured when
-the invocation begins. The shared operation validates and resolves that path;
-neither layer changes process-wide cwd.
+對於專案範圍的命令，配接器提供明確的專案或目標目錄。當使用者省略它時，CLI 使用呼叫開始時擷取的 cwd。共用操作驗證並解析該路徑；兩層都不變更全行程 cwd。
 
-The CLI runs with the invoking user's ordinary operating-system permissions.
-It does not construct a shared policy or filesystem runtime. Prompting remains
-CLI-specific:
+CLI 以呼叫使用者的一般作業系統權限執行。它不建構共用政策或檔案系統執行階段。提示仍是 CLI 專屬的：
 
-- `--json`, `--non-interactive`, and local invocation do not imply `force`.
-- External-source trust and overwrite consent remain explicit request values.
-- A prompt may collect consent before constructing or retrying the request, but
-  the adapter does not add consent silently.
-- Network and self-modifying behavior remain those defined by the operation and
-  CLI contract.
+- `--json`、`--non-interactive` 與本機呼叫不表示 `force`。
+- 外部來源信任與覆寫同意仍為明確的請求值。
+- 提示可在建構或重試請求前收集同意，但配接器不會靜默新增同意。
+- 網路與自我修改行為仍為操作與 CLI 合約所定義者。
 
-## Test structure
+## 測試結構
 
-Command-focused tests mirror the source command surface under
-`tests/specify_cli/`.
+以命令為焦點的測試，對應 `tests/specify_cli/` 之下的來源命令介面。
 
-For example:
+例如：
 
 ```text
 src/specify_cli/extensions/command_add.py
@@ -260,28 +182,20 @@ src/specify_cli/extensions/catalog/command_add.py
 tests/specify_cli/extensions/catalog/test_command_add.py
 ```
 
-CLI-private phases use:
+CLI 專屬階段使用：
 
 ```text
 src/specify_cli/_command_init_prompting.py
 tests/specify_cli/test_command_init_prompting.py
 ```
 
-The primary `test_command_<name>.py` suite verifies the public command surface.
-Phase-specific suites verify detailed invariants without obscuring the primary
-command behavior.
+主要的 `test_command_<name>.py` 套件驗證公開的命令介面。階段專屬套件驗證詳細的不變條件，而不掩蓋主要的命令行為。
 
-CLI adapter tests verify explicit targets outside the launch directory and the
-rule that machine modes do not add force, trust, or destructive consent.
+CLI 配接器測試驗證啟動目錄之外的明確目標，以及機器模式不新增 force、信任或破壞性同意的規則。
 
-Shared operation and phase tests use `test_operation_<name>.py` and
-`test_operation_<name>_<phase>.py` as defined in
-[the shared testing structure](shared.md#testing-structure). They do not move
-under `test_command_*.py` merely because the CLI is one caller.
+共用操作與階段測試使用 `test_operation_<name>.py` 與 `test_operation_<name>_<phase>.py`，如[共用測試結構](shared.md#測試結構)所定義。它們不會僅因 CLI 是其中一個呼叫端，就移至 `test_command_*.py` 之下。
 
-Domain source remains in the parent package's `__init__.py` or a focused
-domain module without the `command_` prefix. Its mirrored tests use the domain
-subject name, for example:
+領域來源保留在父套件的 `__init__.py` 或不帶 `command_` 前綴的聚焦領域模組中。其對應測試使用領域主體名稱，例如：
 
 ```text
 src/specify_cli/integrations/__init__.py      # catalog domain API
@@ -291,15 +205,11 @@ src/specify_cli/integrations/command_search.py
 tests/specify_cli/integrations/test_command_search.py
 ```
 
-Do not put `test_<domain>.py` under a nested command directory merely because
-the domain has the same name as that CLI namespace. The nested directory is
-reserved for `test_command_<name>.py` suites that exercise its actual
-subcommands.
+不要僅因領域與該 CLI 命名空間同名，就將 `test_<domain>.py` 置於巢狀命令目錄之下。巢狀目錄保留給行使其實際子命令的 `test_command_<name>.py` 套件。
 
-When a domain implementation is split into private modules, mirror those
-boundaries in its tests, dropping the source module's leading underscore:
+當領域實作拆分為私有模組時，在其測試中對應這些邊界，去掉來源模組開頭的底線：
 
-| Preset implementation | Mirrored test under `tests/specify_cli/presets/` |
+| 預設集實作 | `tests/specify_cli/presets/` 之下的對應測試 |
 | --- | --- |
 | `_manifest.py` | `test_manifest.py` |
 | `_registry.py` | `test_registry.py` |
@@ -309,36 +219,20 @@ boundaries in its tests, dropping the source module's leading underscore:
 | `_manager_commands.py` | `test_manager_commands.py` |
 | `_manager_skills.py` | `test_manager_skills.py` |
 
-`test_manager_commands.py` exercises domain command-artifact behavior, not a
-registered CLI handler. The `test_command_*.py` suites continue to cover the
-CLI surface. `test_catalog.py` belongs at the parent preset package level;
-`catalog/test_command_*.py` covers the nested catalog CLI. Package export
-compatibility is covered separately by `test_domain_exports.py`.
+`test_manager_commands.py` 行使的是領域命令構件行為，而不是已註冊的 CLI 處理常式。`test_command_*.py` 套件繼續涵蓋 CLI 介面。`test_catalog.py` 屬於父層預設集套件層級；`catalog/test_command_*.py` 涵蓋巢狀的 catalog CLI。套件匯出相容性另外由 `test_domain_exports.py` 涵蓋。
 
-Not every test is a command test, even when it belongs in the mirrored package
-tree:
+並非每個測試都是命令測試，即使它屬於對應的套件樹：
 
-- Domain model, registry, manager, and catalog behavior belongs at the parent
-  package level, not under a nested command namespace and not in
-  `test_command_*.py`. Existing consolidated domain suites such as
-  `tests/test_extensions.py` may remain in place until separately reorganized.
-- Cross-domain CLI contracts remain with the broader integration tests.
-- Shared fixtures belong in the narrowest `conftest.py` that serves all of
-  their consumers.
-- Test helpers should be shared rather than copied when both command and domain
-  tests depend on the same behavior.
+- 領域模型、註冊表、管理員與目錄行為屬於父套件層級，而不是巢狀命令命名空間之下，也不在 `test_command_*.py` 中。既有的整合領域套件，例如 `tests/test_extensions.py`，可保留原位，直到另外重新組織。
+- 跨領域 CLI 合約保留在更廣泛的整合測試中。
+- 共用固定資料屬於能服務其所有消費者的最窄 `conftest.py`。
+- 當命令與領域測試都依賴相同行為時，測試輔助工具應共用而非複製。
 
-Moving tests must preserve coverage rather than duplicating it. Run both the
-new command-focused suites and the legacy suites from which tests were moved.
-For domain splits, also run all new domain suites and any remaining cross-domain
-tests in the legacy file. Compare full-suite collection before and after the
-move: the count must not decrease, and every existing parametrized test case
-must remain represented. A matching total alone does not prove preservation.
+移動測試必須保留涵蓋範圍，而不是重複它。同時執行新的以命令為焦點的套件，以及測試被移出的舊套件。對於領域拆分，也執行所有新的領域套件與舊檔案中任何剩餘的跨領域測試。比較移動前後的完整套件收集結果：數量不得減少，且每個既有的參數化測試案例都必須仍有對應。僅總數相符並不能證明已保留。
 
-## Reference layout
+## 參考版面
 
-An extension command group using the shared application boundary has this
-shape:
+使用共用應用邊界的擴充功能命令群組形狀如下：
 
 ```text
 src/specify_cli/extensions/
@@ -365,71 +259,59 @@ src/specify_cli/extensions/
     └── command_remove.py
 ```
 
-The update command illustrates the distinction:
+更新命令說明了這個區別：
 
-- `command_update.py` is the registered CLI adapter.
-- `_operation_update.py` is the shared application entry point.
-- `_operation_update_discovery.py` determines available updates.
-- `_operation_update_artifacts.py` prepares and validates update archives.
-- `_operation_update_transaction.py` owns backup, installation, rollback, and
-  cleanup behavior for every adapter.
+- `command_update.py` 是已註冊的 CLI 配接器。
+- `_operation_update.py` 是共用應用進入點。
+- `_operation_update_discovery.py` 決定可用的更新。
+- `_operation_update_artifacts.py` 準備並驗證更新封存檔。
+- `_operation_update_transaction.py` 擁有每個配接器的備份、安裝、回滾與清理行為。
 
-## Decision guide
+## 決策指南
 
-When deciding where code belongs:
+在決定程式碼應置於何處時：
 
-| Question | Location |
+| 問題 | 位置 |
 |---|---|
-| Does it define a real CLI command? | `command_<name>.py` |
-| Is it a small CLI-only mapping or rendering helper? | That command module |
-| Is it a cohesive CLI-only phase? | `_command_<name>_<phase>.py` |
-| Does it define semantic validation or orchestration for an operation? | Existing domain module or `_operation_<name>.py` |
-| Is it a cohesive shared operation phase? | `_operation_<name>_<phase>.py` |
-| Is it CLI infrastructure shared by multiple command adapters? | `_commands.py` or a focused CLI helper |
-| Does it define a nested CLI namespace? | A directory matching that namespace |
-| Is it shared only by commands in a nested namespace? | The nested package's `_helpers.py` |
-| Is it domain behavior independent of the CLI? | The package domain modules, not command modules |
+| 它定義了真實的 CLI 命令嗎？ | `command_<name>.py` |
+| 它是小型且僅供 CLI 使用的對應或呈現輔助工具嗎？ | 該命令模組 |
+| 它是內聚且僅供 CLI 使用的階段嗎？ | `_command_<name>_<phase>.py` |
+| 它定義了操作的語意驗證或協調嗎？ | 既有領域模組或 `_operation_<name>.py` |
+| 它是內聚的共用操作階段嗎？ | `_operation_<name>_<phase>.py` |
+| 它是由多個命令配接器共用的 CLI 基礎設施嗎？ | `_commands.py` 或聚焦的 CLI 輔助工具 |
+| 它定義了巢狀 CLI 命名空間嗎？ | 與該命名空間相符的目錄 |
+| 它僅由巢狀命名空間中的命令共用嗎？ | 巢狀套件的 `_helpers.py` |
+| 它是獨立於 CLI 的領域行為嗎？ | 套件領域模組，而非命令模組 |
 
-## Anti-patterns
+## 反模式
 
-Avoid:
+避免：
 
-- Adding decorated handlers back to `_commands.py` or package `__init__.py`.
-- Naming a private implementation module `command_*.py`.
-- Creating nested directories that do not correspond to CLI namespaces.
-- Creating `_commands.py` files only for visual symmetry.
-- Keeping semantic validation, orchestration, or side effects in a CLI adapter
-  when another adapter exposes the same logical operation.
-- Calling or parsing another delivery adapter instead of invoking the shared
-  operation.
-- Moving command-private helpers into shared infrastructure preemptively.
-- Duplicating fixtures or helpers to make tests appear more mirrored.
-- Splitting a linear function into many files without cohesive phase
-  boundaries.
-- Changing established monkeypatch or import paths without either migrating
-  their consumers or preserving a thin compatibility forwarder.
+- 將已裝飾的處理常式加回 `_commands.py` 或套件 `__init__.py`。
+- 將私有實作模組命名為 `command_*.py`。
+- 建立與 CLI 命名空間不對應的巢狀目錄。
+- 僅為了視覺對稱而建立 `_commands.py` 檔案。
+- 當另一個配接器公開相同的邏輯操作時，將語意驗證、協調或副作用保留在 CLI 配接器中。
+- 呼叫或解析另一個交付配接器，而不是呼叫共用操作。
+- 過早將命令專屬輔助工具移入共用基礎設施。
+- 複製固定資料或輔助工具，讓測試看起來更對應。
+- 在沒有內聚階段邊界的情況下，將線性函式拆成許多檔案。
+- 在未移轉其消費者或未保留精簡相容性轉發器的情況下，變更既定的 monkeypatch 或匯入路徑。
 
-## Review checklist
+## 審查檢核清單
 
-For a new or refactored command:
+對於新增或重構的命令：
 
-- [ ] The CLI path maps predictably to a `command_<name>.py` module.
-- [ ] Only the real command module registers a handler.
-- [ ] The owning hierarchy records exactly one MCP inventory disposition for
-      the CLI leaf, including when it is unavailable or excluded.
-- [ ] If another adapter exposes the operation, the CLI adapter maps into the
-      shared operation defined by `design/shared.md`.
-- [ ] For a multi-adapter operation, semantic validation, orchestration, and
-      side effects are below the CLI adapter.
-- [ ] When a shared request exists, project and target directories map into it
-      explicitly.
-- [ ] CLI-private phase modules use `_command_<name>_<phase>.py`; shared phases
-      use `_operation_<name>_<phase>.py`.
-- [ ] `_commands.py` contains only group infrastructure and genuinely shared
-      CLI behavior.
-- [ ] Nested directories correspond to real CLI namespaces.
-- [ ] Command tests mirror the source structure.
-- [ ] Domain and cross-domain tests remain in their appropriate suites.
-- [ ] Compatibility paths and user-visible help remain unchanged unless the
-      change explicitly requires otherwise.
-- [ ] Focused tests, relevant legacy suites, lint, and the full test suite pass.
+- [ ] CLI 路徑可預測地對應到 `command_<name>.py` 模組。
+- [ ] 只有真實的命令模組註冊處理常式。
+- [ ] 擁有階層為該 CLI 葉節點記錄恰好一個 MCP 清單處置，包括它無法使用或被排除的情況。
+- [ ] 若另一個配接器公開該操作，CLI 配接器對應到 `design/shared.md` 定義的共用操作。
+- [ ] 對於多配接器操作，語意驗證、協調與副作用位於 CLI 配接器之下。
+- [ ] 當共用請求存在時，專案與目標目錄明確對應到其中。
+- [ ] CLI 專屬階段模組使用 `_command_<name>_<phase>.py`；共用階段使用 `_operation_<name>_<phase>.py`。
+- [ ] `_commands.py` 僅包含群組基礎設施與確實共用的 CLI 行為。
+- [ ] 巢狀目錄對應真實的 CLI 命名空間。
+- [ ] 命令測試對應來源結構。
+- [ ] 領域與跨領域測試保留在其適當的套件中。
+- [ ] 相容性路徑與面向使用者的說明維持不變，除非變更明確要求否則。
+- [ ] 焦點測試、相關舊套件、程式碼檢查與完整測試套件皆通過。

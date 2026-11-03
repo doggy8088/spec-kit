@@ -1,140 +1,79 @@
-# MCP Server
+# MCP 伺服器
 
 > [!WARNING]
-> `specify mcp` is experimental. Its command inventory and tool contracts may
-> change before the MCP surface is declared stable.
+> `specify mcp` 為實驗性功能。其命令清單與工具合約在 MCP 介面宣告穩定前可能變更。
 
 ```bash
 specify mcp
 ```
 
-Starts a Model Context Protocol server over **stdio only**. The command does
-not provide HTTP, SSE, daemon/service management, or transport-selection
-options. Configure an MCP host to launch `specify mcp` as a local subprocess.
+透過 **stdio 專用**方式啟動 Model Context Protocol 伺服器。此命令不提供 HTTP、SSE、daemon／服務管理或傳輸選擇選項。請設定 MCP 主機，將 `specify mcp` 作為本機子行程啟動。
 
-Because stdout carries MCP protocol frames, the server does not print the Spec
-Kit banner, Rich output, startup messages, warnings, or logs there.
+由於 stdout 承載 MCP 通訊協定訊框，伺服器不會在該處列印 Spec Kit 橫幅、Rich 輸出、啟動訊息、警告或記錄。
 
-## Tools
+## 工具
 
-The server exposes first-class tools with typed inputs and results. All are
-read-only, local-only (no network access), and reject unexpected arguments.
+伺服器公開具型別輸入與結果的一級工具。全部皆為唯讀、僅限本機（不存取網路），並拒絕未預期的參數。
 
-| Tool | Purpose |
+| 工具 | 用途 |
 | --- | --- |
-| `specify_version` | Return the installed CLI version, runtime, system, and feature capabilities. Takes no arguments. |
-| `specify_artifact_list` | Return one paginated page of a project's artifact inventory (`command`, `template`, `script`, `hook`) |
-| `specify_artifact_info` | Return one artifact and its complete composition stack |
-| `specify_workflow_list` | List installed workflows and skipped-entry warnings in registry order |
+| `specify_version` | 回傳已安裝的 CLI 版本、執行環境、系統與功能能力。不接受任何參數。 |
+| `specify_artifact_list` | 回傳專案成品清單的一個分頁頁面（`command`、`template`、`script`、`hook`） |
+| `specify_artifact_info` | 回傳單一成品及其完整的組成堆疊 |
+| `specify_workflow_list` | 依登錄順序列出已安裝的工作流程與被跳過項目的警告 |
 
-The artifact tools take an optional absolute `project_directory`; it defaults
-to the directory the server was launched from.
+成品工具接受選用的絕對路徑 `project_directory`；預設為伺服器啟動時所在的目錄。
 
-`specify_artifact_list` also takes `limit` (1-1000, default 100) and `cursor`.
-Its result has `rows`, `next_cursor`, and `truncated`; while `truncated` is
-true, pass `next_cursor` as `cursor` to get the next page.
+`specify_artifact_list` 還接受 `limit`（1-1000，預設 100）與 `cursor`。其結果包含 `rows`、`next_cursor` 與 `truncated`；當 `truncated` 為 true 時，將 `next_cursor` 作為 `cursor` 傳入以取得下一頁。
 
-`specify_artifact_info` takes `identifier` (bare name or `kind:name`) and an
-optional `kind` (`command`, `template`, `script`, or `hook`).
+`specify_artifact_info` 接受 `identifier`（裸名稱或 `kind:name`）與選用的 `kind`（`command`、`template`、`script` 或 `hook`）。
 
-`specify artifact lookup` is not available through MCP: it does not yet have a
-shared typed operation, so no `specify_artifact_lookup` tool is registered.
+`specify artifact lookup` 無法透過 MCP 使用：它尚無共用的具型別操作，因此未註冊 `specify_artifact_lookup` 工具。
 
-Three generic tools are also registered, and support only the dotted command
-`version`; every other command name is rejected with an `unavailable_command`
-tool error.
+另外還註冊了三個通用工具，且僅支援以點號表示的命令 `version`；其他所有命令名稱都會以 `unavailable_command` 工具錯誤拒絕。
 
-| Tool | Purpose |
+| 工具 | 用途 |
 | --- | --- |
-| `specify_list_commands` | List CLI commands supported by the generic tools |
-| `specify_describe_command` | Describe one supported dotted CLI command |
-| `specify_run_command` | Run one supported command through the real Specify CLI |
+| `specify_list_commands` | 列出通用工具支援的 CLI 命令 |
+| `specify_describe_command` | 描述一個受支援的以點號表示的 CLI 命令 |
+| `specify_run_command` | 透過真正的 Specify CLI 執行一個受支援的命令 |
 
-The server does not expose mutations, installation or update operations,
-workflow execution, confirmations, or access tiers.
+伺服器不公開變更、安裝或更新操作、工作流程執行、確認或存取層級。
 
-## Installed workflow list
+## 已安裝工作流程清單
 
-`specify_workflow_list` accepts an optional absolute `project_directory`
-(default: the server launch directory) and `limit` (1–1000, default 100).
-It reads only the installed workflow registry; it never loads custom steps,
-fetches catalogs, repairs files, or executes workflows.
+`specify_workflow_list` 接受選用的絕對路徑 `project_directory`（預設：伺服器啟動目錄）與 `limit`（1–1000，預設 100）。它只讀取已安裝的工作流程登錄；絕不載入自訂步驟、取得目錄、修復檔案或執行工作流程。
 
-The result has ordered `items` and a `truncated` boolean. Workflow items have
-`kind: "workflow"`, `id`, `name`, `version`, nullable `description`, and `enabled`.
-Malformed individual registry entries produce `kind: "warning"` items with
-`code: "invalid_registry_entry"`, `workflow_id`, and `message` in their original
-positions. The limit counts both workflows and warnings. `truncated: true`
-explicitly indicates omitted entries; increase `limit` to retrieve more, up to
-1000. There is no continuation cursor. The CLI retains its complete listing.
+結果包含依序排列的 `items` 與布林值 `truncated`。工作流程項目包含 `kind: "workflow"`、`id`、`name`、`version`、可為 null 的 `description` 與 `enabled`。格式錯誤的個別登錄項目會產生 `kind: "warning"` 項目，包含 `code: "invalid_registry_entry"`、`workflow_id` 與 `message`，並位於其原始位置。limit 同時計算工作流程與警告。`truncated: true` 明確表示有項目被省略；將 `limit` 調高以取得更多，最多 1000。沒有接續游標。CLI 保留其完整清單。
 
-Missing registry files produce an empty list. Corrupt or unreadable registry
-files produce `workflow_registry_read_failed`; unsafe storage produces
-`unsafe_workflow_storage`. Other expected errors are `invalid_project_directory`
-and `not_a_spec_kit_project`. Errors contain `code`, `message`,
-`details`, and `retryable` under `error`, with `isError: true`.
-Unexpected failures use sanitized `internal_error`; invalid operation outcomes
-use `invalid_operation_result`. Responses exceeding 1 MiB produce a retryable
-`response_too_large` error instead of partial success; retry with a smaller
-limit. Registry exception details are not exposed through MCP.
+遺失的登錄檔案會產生空清單。損毀或無法讀取的登錄檔案會產生 `workflow_registry_read_failed`；不安全的儲存會產生 `unsafe_workflow_storage`。其他預期錯誤為 `invalid_project_directory` 與 `not_a_spec_kit_project`。錯誤在 `error` 之下包含 `code`、`message`、`details` 與 `retryable`，並有 `isError: true`。未預期的失敗使用已清理的 `internal_error`；無效的操作結果使用 `invalid_operation_result`。超過 1 MiB 的回應會產生可重試的 `response_too_large` 錯誤，而非部分成功；請以較小的 limit 重試。登錄例外詳細資訊不會透過 MCP 公開。
 
-Out-of-range `limit` values are rejected before the operation runs and produce
-text-only input-validation errors with no structured content; see
-[Input validation errors](#input-validation-errors).
+超出範圍的 `limit` 值會在操作執行前被拒絕，並產生僅含文字的輸入驗證錯誤，無結構化內容；請參見[輸入驗證錯誤](#input-validation-errors)。
 
-Workflow listing reads registry content through the selected project's
-`FileHelper` policy owner, rejecting Windows junctions and unsupported reparse
-points at the read boundary. Ordinary workflow registry symlinks remain
-disallowed. Other workflow registry callers are not migrated by this tool.
-These checks do not provide an OS sandbox or race-free filesystem confinement;
-the registry is still parsed in full before the entry limit is applied.
+工作流程清單透過所選專案的 `FileHelper` 原則擁有者讀取登錄內容，在讀取邊界拒絕 Windows junction 與不支援的 reparse point。一般的工作流程登錄符號連結仍不允許。其他工作流程登錄呼叫者不會被此工具遷移。這些檢查不提供作業系統沙箱或無競爭條件的檔案系統隔離；在套用項目限制前，登錄仍會完整解析。
 
-Operation outcomes exceeding the requested entry limit, or claiming truncation
-without filling that limit, are rejected as `invalid_operation_result`. The
-output schema also caps `items` at 1000.
+超出所請求項目限制的操作結果，或聲稱截斷卻未填滿該限制的結果，會以 `invalid_operation_result` 拒絕。輸出結構描述也將 `items` 上限設為 1000。
 
-## Input validation errors
+## 輸入驗證錯誤
 
-The first-class tools validate arguments against their input schema before
-running. Unexpected arguments, an out-of-range `limit`, a malformed `cursor`,
-or an unsupported `kind` are rejected as a text-only MCP tool error with no
-structured content, so clients cannot read an `error.code` from it.
+一級工具在執行前，會依其輸入結構描述驗證參數。未預期的參數、超出範圍的 `limit`、格式錯誤的 `cursor` 或不支援的 `kind`，會以僅含文字的 MCP 工具錯誤拒絕，無結構化內容，因此使用者端無法從中讀取 `error.code`。
 
-## Version tool result and errors
+## 版本工具結果與錯誤
 
-`specify_version` returns the result object directly. If the operation fails,
-it returns an MCP tool error whose structured content has `error.code`
-(`invalid_operation_result` or `internal_error`), `error.message`, and
-`error.details`.
+`specify_version` 直接回傳結果物件。若操作失敗，它會回傳 MCP 工具錯誤，其結構化內容包含 `error.code`（`invalid_operation_result` 或 `internal_error`）、`error.message` 與 `error.details`。
 
-## Artifact results and errors
+## 成品結果與錯誤
 
-Artifact tools return their result as structured content. Operation failures
-are MCP tool errors whose structured content has `error.code`,
-`error.message`, `error.details`, and `error.retryable`.
-Both artifact tools can return `invalid_project_directory`,
-`not_a_spec_kit_project`, `artifact_resolution_failed`,
-`invalid_operation_result`, and `internal_error`.
-`specify_artifact_info` can also return `invalid_artifact_identifier`,
-`unknown_artifact`, `unknown_hook`, and `ambiguous_artifact`. Results larger
-than 1 MiB return a retryable `response_too_large` error; for the list tool,
-retry with a smaller `limit`.
+成品工具以結構化內容回傳其結果。操作失敗為 MCP 工具錯誤，其結構化內容包含 `error.code`、`error.message`、`error.details` 與 `error.retryable`。兩個成品工具都可能回傳 `invalid_project_directory`、`not_a_spec_kit_project`、`artifact_resolution_failed`、`invalid_operation_result` 與 `internal_error`。`specify_artifact_info` 還可能回傳 `invalid_artifact_identifier`、`unknown_artifact`、`unknown_hook` 與 `ambiguous_artifact`。大於 1 MiB 的結果會回傳可重試的 `response_too_large` 錯誤；對於清單工具，請以較小的 `limit` 重試。
 
-## Generic tool result and errors
+## 通用工具結果與錯誤
 
-`specify_run_command` invokes the canonical command below in an isolated child
-process using the same Python environment as the running CLI:
+`specify_run_command` 在隔離的子行程中呼叫下方的標準命令，使用與執行中 CLI 相同的 Python 環境：
 
 ```bash
 specify version --json
 ```
 
-On success, the MCP tool returns that command's direct JSON object with
-`cli_version`, `runtime`, `system`, and `features`. It does not wrap the result
-in universal `schema_version`, `ok`, or `result` fields.
+成功時，MCP 工具回傳該命令的直接 JSON 物件，包含 `cli_version`、`runtime`、`system` 與 `features`。它不會將結果包裝在通用的 `schema_version`、`ok` 或 `result` 欄位中。
 
-On CLI failure, the adapter consumes the structured JSON error from stderr and
-returns an MCP tool error containing `error.code`, `error.message`, and
-`error.details`. Empty, malformed, mixed, or non-JSON child-process output is
-reported as a sanitized `adapter_internal_error`; the server never substitutes
-a success-shaped fallback or exposes a traceback.
+CLI 失敗時，轉接器會取用 stderr 中的結構化 JSON 錯誤，並回傳包含 `error.code`、`error.message` 與 `error.details` 的 MCP 工具錯誤。空的、格式錯誤的、混合的或非 JSON 的子行程輸出會回報為已清理的 `adapter_internal_error`；伺服器絕不以成功形狀的備援結果替代，也絕不公開追蹤資訊。

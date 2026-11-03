@@ -1,57 +1,52 @@
-# Community
+# 社群
 
-The Spec Kit community builds extensions, presets, bundles, workflow steps, walkthroughs, and companion projects that expand what you can do with Spec-Driven Development. All community contributions are independently created and maintained by their respective authors.
+Spec Kit 社群打造了擴充功能、預設集、套件組、工作流程步驟、實作導覽與配套專案，擴展規格驅動開發的應用範圍。所有社群貢獻皆由各自作者獨立建立與維護。
 
 > [!NOTE]
-> Review community source code before installation and use it at your own
-> discretion. A catalog listing is not an audit or endorsement.
+> 安裝前請先檢視社群原始碼，並自行斟酌使用。目錄收錄不等同於稽核或背書。
 
-Learn how discovery-only community sources and approved private sources fit
-together in the [catalog reference](../reference/catalogs.md).
+關於僅供探索的社群來源與經核准的私有來源如何搭配使用，請參閱[目錄參考](../reference/catalogs.md)。
 
-## Extensions
+## 擴充功能
 
-Extensions add new capabilities to Spec Kit — domain-specific commands, external tool integrations, quality gates, and more. Over 130 community extensions are available from 70+ authors, covering everything from accessibility governance to multi-agent orchestration.
+擴充功能為 Spec Kit 加入新能力，包含特定領域命令、外部工具整合、品質關卡等。目前已有來自 70 多位作者的 130 多個社群擴充功能，涵蓋從無障礙治理到多代理協作等各類主題。
 
-[Browse community extensions →](extensions.md)
+[瀏覽社群擴充功能 →](extensions.md)
 
-## Presets
+## 預設集
 
-Presets customize how Spec Kit behaves — overriding templates, commands, and terminology without changing any tooling. Community presets range from language localizations to entirely different development methodologies.
+預設集可自訂 Spec Kit 的行為，在不更動任何工具的情況下覆寫範本、命令與術語。社群預設集的範圍涵蓋語言在地化到截然不同的開發方法。
 
-[Browse community presets →](presets.md)
+[瀏覽社群預設集 →](presets.md)
 
-## Bundles
+## 套件組
 
-Bundles compose extensions, presets, workflows, and steps into role or team stacks that can be installed together.
+套件組將擴充功能、預設集、工作流程與步驟組合成可一同安裝的角色或團隊組合。
 
-[Browse community bundles →](bundles.md)
+[瀏覽社群套件組 →](bundles.md)
 
-## Workflow step types
+## 工作流程步驟類型
 
-Workflow step types add reusable executable behavior that workflows can select
-with `type:`. The community catalog is discovery-only; vet a step's source
-before installing or running it.
+工作流程步驟類型加入可重複使用的可執行行為，工作流程可透過 `type:` 選用。社群目錄僅供探索；安裝或執行步驟前，請先審查其來源。
 
-[Submit a community workflow step type →](workflow-steps.md)
+[提交社群工作流程步驟類型 →](workflow-steps.md)
 
-## Walkthroughs
+## 實作導覽
 
-Step-by-step guides that show Spec-Driven Development in action across different scenarios, languages, and frameworks.
+逐步指南展示規格驅動開發在不同情境、語言與框架中的實際運作。
 
-[Browse community walkthroughs →](walkthroughs.md)
+[瀏覽社群實作導覽 →](walkthroughs.md)
 
 ## Friends
 
-Community projects that extend, visualize, or build on Spec Kit — including VS Code extensions, Claude Code plugins, and more.
+擴展、視覺化或以 Spec Kit 為基礎的社群專案，包含 VS Code 擴充功能、Claude Code 外掛等。
 
-[Browse friend projects →](friends.md)
+[瀏覽 Friend 專案 →](friends.md)
 
-## Contribute a component
+## 貢獻元件
 
-To publish your own work, follow the
-[Extension Publishing Guide](../extensions/publishing.md),
-the [Presets Publishing Guide](https://github.com/github/spec-kit/blob/main/presets/PUBLISHING.md),
-the [Community Bundles guide](bundles.md), or the
-[Community Workflow Step Types guide](workflow-steps.md). For help choosing a
-component type, see [Customize Spec Kit](../guides/customization.md).
+若要發佈自己的作品，請依循
+[擴充功能發佈指南](../extensions/publishing.md)、
+[預設集發佈指南](https://github.com/github/spec-kit/blob/main/presets/PUBLISHING.md)、
+[社群套件組指南](bundles.md)或
+[社群工作流程步驟類型指南](workflow-steps.md)。如需協助選擇元件類型，請參閱[自訂 Spec Kit](../guides/customization.md)。

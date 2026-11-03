@@ -1,38 +1,25 @@
 # Goose
 
-Install [Goose](https://goose-docs.ai/) before setup.
-The integration key is `goose`.
+設定前請先安裝 [Goose](https://goose-docs.ai/)。整合鍵為 `goose`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration goose
 ```
 
-For an existing Spec Kit project, use `specify integration install goose`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install goose`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Recipes
+## 已安裝的配方
 
-Goose uses YAML recipes installed as `.goose/recipes/speckit.<command>.yaml`.
-Spec Kit workflow dispatch translates `/speckit.<command>` invocations into
-recipe execution, passing trailing arguments as the recipe's `args` parameter.
-Use Goose's recipe interface for interactive execution rather than assuming
-the recipes are skills.
+Goose 使用 YAML 配方，安裝為 `.goose/recipes/speckit.<command>.yaml`。Spec Kit 的工作流程分派會將 `/speckit.<command>` 呼叫轉換為配方執行，並把尾隨參數作為配方的 `args` 參數傳入。互動執行請使用 Goose 的配方介面，不要假設這些配方是技能。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Dispatch uses `goose run --recipe <path>` for `/speckit.<command>` prompts,
-and `goose run -t <prompt>` for other prompt text, including non-Spec-Kit
-slash commands. A configured `--model` and requested `--output-format json`
-are forwarded.
+分派時，`/speckit.<command>` 提示詞使用 `goose run --recipe <path>`，其他提示詞文字（包括非 Spec Kit 的斜線命令）則使用 `goose run -t <prompt>`。已設定的 `--model` 與要求的 `--output-format json` 都會被轉傳。
 
-Avoid repeating single-value flags such as `--model`, `--recipe`, or
-`--output-format` in `SPECKIT_INTEGRATION_GOOSE_EXTRA_ARGS`; Goose rejects
-duplicate occurrences rather than using the last value.
-There are no integration-specific setup options.
+請避免在 `SPECKIT_INTEGRATION_GOOSE_EXTRA_ARGS` 中重複單值旗標，例如 `--model`、`--recipe` 或 `--output-format`；Goose 會拒絕重複出現的旗標，而不是採用最後一個值。沒有整合專屬的設定選項。

@@ -1,55 +1,41 @@
-# Presets
+# 預設集
 
-Presets customize how Spec Kit works — overriding templates, commands, and terminology without changing any tooling. They let you enforce organizational standards, adapt the workflow to your methodology, or localize the entire experience. Multiple presets can be stacked with priority ordering.
+預設集自訂 Spec Kit 的運作方式，覆寫範本、命令與術語，不需變更任何工具。它們可讓你落實組織標準、依方法論調整工作流程，或將整個體驗在地化。多個預設集可以依優先順序堆疊。
 
-## Search Available Presets
+## 搜尋可用的預設集
 
 ```bash
 specify preset search [query]
 ```
 
-| Option     | Description          |
+| 選項 | 說明 |
 | ---------- | -------------------- |
-| `--tag`    | Filter by tag        |
-| `--author` | Filter by author     |
+| `--tag`    | 依標籤篩選        |
+| `--author` | 依作者篩選     |
 
-Searches all active catalogs for presets matching the query. Without a query, lists all available presets.
+搜尋所有啟用中的目錄，找出符合查詢的預設集。沒有查詢時，列出所有可用的預設集。
 
-## Install a Preset
+## 安裝預設集
 
 ```bash
 specify preset add [<preset_id>]
 specify preset add <preset_id> --version <version>
 ```
 
-| Option                | Description                                                          |
+| 選項 | 說明 |
 | --------------------- | -------------------------------------------------------------------- |
-| `--dev <path>`        | Install from a local directory (for development)                     |
-| `--from <url>`        | Install from a custom URL instead of the catalog                     |
-| `--version <version>` | Select an exact release from the winning catalog (ID installs only) |
-| `--priority <N>`      | Resolution priority (default: 10; lower = higher precedence)        |
+| `--dev <path>`        | 從本機目錄安裝（供開發使用）                     |
+| `--from <url>`        | 從自訂 URL 安裝，而非目錄                     |
+| `--version <version>` | 從勝出目錄選取精確版本（僅限 ID 安裝） |
+| `--priority <N>`      | 解析優先順序（預設：10；數字越小優先程度越高）        |
 
-Installs a preset from the catalog, a URL, or a local directory. Preset commands
-are automatically registered with supported active AI coding agent integrations.
-The generic integration currently delivers extension invocations but does not
-register preset command or skill overrides.
-`--version` cannot be combined with `--from` or `--dev`. Direct URL installs
-remain independent of catalog lookup. Without `--version`, installation still
-selects the advertised current release (or the locally bundled preset). A
-requested release absent from the winning catalog is an error; lower-priority
-catalogs cannot supply it. Discovery-only catalogs cannot install any release.
-Version-specific catalog installs verify the selected archive's `preset.yml` ID
-and version before modifying installed presets. Historical releases require a
-SHA-256 digest, which is also verified on download; a legacy current release
-may omit the digest.
+從目錄、URL 或本機目錄安裝預設集。預設集命令會自動向受支援的啟用中 AI 程式代理整合註冊。generic 整合目前會交付擴充功能呼叫，但不註冊預設集命令或技能覆寫。`--version` 不能與 `--from` 或 `--dev` 組合使用。直接 URL 安裝仍獨立於目錄查詢。沒有 `--version` 時，安裝仍會選取公告的目前版本（或本機隨附的預設集）。所請求的版本若不在勝出目錄中即為錯誤；較低優先順序的目錄無法提供它。僅供探索的目錄無法安裝任何版本。依版本從目錄安裝時，會在修改已安裝的預設集前，驗證所選封存檔的 `preset.yml` ID 與版本。歷史版本需要 SHA-256 摘要，下載時也會驗證；舊版的目前版本可以省略摘要。
 
-> **Note:** All preset commands require a project already initialized with `specify init`.
+> **注意：**所有預設集命令都需要已以 `specify init` 初始化的專案。
 
-### Exclude development files with `.presetignore`
+### 以 `.presetignore` 排除開發檔案
 
-Place a UTF-8 `.presetignore` (with or without a byte-order mark) beside
-`preset.yml` in the preset source root to filter files copied into
-`.specify/presets/<id>/`. For example:
+在預設集來源根目錄的 `preset.yml` 旁放置 UTF-8 格式的 `.presetignore`（有或沒有位元組順序記號皆可），以篩選複製到 `.specify/presets/<id>/` 的檔案。例如：
 
 ```gitignore
 # Development-only directories
@@ -58,122 +44,63 @@ Place a UTF-8 `.presetignore` (with or without a byte-order mark) beside
 tests/
 ```
 
-Filtering applies to local directory installs and extracted archives, including
-reinstalls and replacements installed by `preset update`. Without
-`.presetignore`, all source files are copied as before. **`.gitignore` is not
-used for installation filtering**, and there are no implicit exclusions for
-development files.
+篩選適用於本機目錄安裝與解壓縮的封存檔，包括由 `preset update` 安裝的重新安裝與取代。若無 `.presetignore`，所有來源檔案會如以往一樣複製。**`.gitignore` 不用於安裝篩選**，且開發檔案沒有隱含的排除。
 
-Patterns follow the same Git-style matching and normalization as
-`.extensionignore`:
+模式遵循與 `.extensionignore` 相同的 Git 風格比對與正規化：
 
-- Use one pattern per line; blank lines and `#` comments are ignored.
-- `*` and `?` do not cross directory boundaries; `**` can match across directories.
-- A trailing `/` matches directories only. A leading `/`, or a `/` within a
-  pattern other than its trailing slash, anchors the pattern to the source root.
-  Patterns without such a slash match names at any depth.
-- A later `!` pattern re-includes a match. An excluded directory is not traversed,
-  so a child cannot be re-included while its parent remains excluded.
-- Pattern whitespace is trimmed and backslashes are normalized to `/`, matching
-  the existing extension behavior. Use UTF-8 for non-ASCII names.
+- 每行一個模式；空白行與 `#` 註解會被忽略。
+- `*` 與 `?` 不跨越目錄邊界；`**` 可以跨目錄比對。
+- 結尾的 `/` 只比對目錄。開頭的 `/`，或模式中除結尾斜線外的 `/`，會將模式錨定到來源根目錄。沒有這類斜線的模式會比對任何深度的名稱。
+- 較後的 `!` 模式會重新包含符合項。被排除的目錄不會被遍歷，因此當其父目錄仍被排除時，子項目無法被重新包含。
+- 模式空白會被修剪，反斜線會正規化為 `/`，與既有的擴充功能行為相符。非 ASCII 名稱請使用 UTF-8。
 
-To keep only `docs/api.md` within `docs/`, exclude the directory's contents
-instead of the directory itself:
+若只保留 `docs/` 內的 `docs/api.md`，請排除目錄的內容，而非目錄本身：
 
 ```gitignore
 docs/*
 !docs/api.md
 ```
 
-Using `docs/`, then `!docs/` and `!docs/api.md`, would re-include all files under
-`docs/`, not just `api.md`, unless other patterns exclude them.
+使用 `docs/`，然後 `!docs/` 與 `!docs/api.md`，會重新包含 `docs/` 下的所有檔案，而不僅是 `api.md`，除非其他模式將它們排除。
 
-Only the source root's `.presetignore` is read; nested ignore files do not add
-rules. When a root `.presetignore` exists, files named `.presetignore` at any
-depth are excluded, even if negated. Otherwise, nested `.presetignore` files
-are copied unchanged.
-Manifest and declared asset files are not exempt from filtering: keep
-`preset.yml` and any templates, commands, or scripts the preset needs included.
-Excluding them can leave an incomplete or unusable installation.
+只有來源根目錄的 `.presetignore` 會被讀取；巢狀的忽略檔案不會新增規則。當根目錄的 `.presetignore` 存在時，任何深度的名為 `.presetignore` 的檔案都會被排除，即使被否定也一樣。否則，巢狀的 `.presetignore` 檔案會原封不動地複製。資訊清單與宣告的資產檔案不豁免於篩選：請保持 `preset.yml` 以及預設集所需的任何範本、命令或指令碼被包含。排除它們可能導致安裝不完整或無法使用。
 
-For local directories and extracted archives, the source-directory installer
-reads and validates `.presetignore` before removing an existing destination,
-including during a forced reinstall. Invalid UTF-8 or malformed patterns raise
-a preset validation error. The separate `preset update` command retains its
-remove-then-add behavior described below; it does not preflight the replacement
-ignore file before removal.
+對於本機目錄與解壓縮的封存檔，來源目錄安裝程式會在移除既有目的地前讀取並驗證 `.presetignore`，包括強制重新安裝期間。無效的 UTF-8 或格式錯誤的模式會引發預設集驗證錯誤。獨立的 `preset update` 命令保留其下方描述的先移除後新增行為；它不會在移除前預先檢查取代用的忽略檔案。
 
-## Update a Preset
+## 更新預設集
 
 ```bash
 specify preset update <preset_id> [--from <url>] [--dev <path>] [--priority <N>]
 ```
 
-Replaces an already-installed preset by running the normal `preset remove`
-operation first and then the normal `preset add` operation. `--from`, `--dev`,
-and `--priority` are forwarded to `preset add`; `--from` and `--dev` cannot be
-combined. Without an explicit source, add resolves the preset through its usual
-bundled and catalog lookup.
+透過先執行正常的 `preset remove` 操作，再執行正常的 `preset add` 操作，來取代已安裝的預設集。`--from`、`--dev` 與 `--priority` 會轉傳給 `preset add`；`--from` 與 `--dev` 不能組合使用。沒有明確來源時，add 會透過其通常的隨附與目錄查詢解析預設集。
 
-Update is deliberately destructive. Arguments are checked before anything is
-removed: `--from` and `--dev` cannot be combined, `--priority` must be 1 or
-higher, and the preset must already be installed. Beyond those checks the
-replacement source itself is not inspected in advance. If removal succeeds but
-replacement installation fails, the previous preset has already been removed.
-The command reports a copy-pastable `specify preset add` retry command,
-including the replacement source and priority. On Windows, the reported command
-is explicitly formatted for PowerShell. There is no source pre-flight,
-version comparison, manifest diff, staging, rollback, automatic repair, or
-recovery transaction. A missing or invalid replacement source can therefore
-leave the preset removed. With
-`--from` or `--dev`, the replacement manifest's `preset.id` is not checked
-against the requested ID before removal; a source declaring a different ID may
-therefore install a different preset after the requested one has been removed.
+更新是刻意具破壞性的。參數會在移除任何東西前檢查：`--from` 與 `--dev` 不能組合，`--priority` 必須為 1 或更高，且預設集必須已安裝。除了這些檢查外，取代來源本身不會事先檢查。若移除成功但取代安裝失敗，先前的預設集已經被移除。此命令會回報可複製貼上的 `specify preset add` 重試命令，包括取代來源與優先順序。在 Windows 上，回報的命令會明確格式化為 PowerShell。沒有來源預先檢查、版本比較、資訊清單差異、暫存、復原、自動修復或復原交易。因此，遺失或無效的取代來源可能讓預設集保持被移除狀態。使用 `--from` 或 `--dev` 時，取代資訊清單的 `preset.id` 不會在移除前與所請求的 ID 比對；宣告不同 ID 的來源，因此可能在所請求的預設集被移除後，安裝不同的預設集。
 
-A successful update follows normal remove and add behavior: it re-enables the
-preset, recreates `installed_at`, removes local modifications tracked by the
-preset, and treats an explicit `--from` or `--dev` as an intentional source
-change. If constitution synchronization is enabled, both normal reconciliation
-passes run. If add fails after removal, a generated constitution may remain
-reconciled against the stack without the removed preset. The generated-file
-guard still protects a hand-edited `.specify/memory/constitution.md`. No
-update-specific constitution optimization is applied, so the normal remove and
-add passes may rewrite the generated constitution even when the final resolved
-content is unchanged.
+成功的更新遵循正常的移除與新增行為：它會重新啟用預設集、重新建立 `installed_at`、移除預設集追蹤的本機修改，並將明確的 `--from` 或 `--dev` 視為有意的來源變更。若啟用了憲章同步，兩個正常的對帳流程都會執行。若 add 在移除後失敗，產生的憲章可能保持與不含被移除預設集的堆疊對帳。產生的檔案防護仍保護手動編輯的 `.specify/memory/constitution.md`。沒有套用更新專屬的憲章最佳化，因此正常的移除與新增流程即使最終解析內容不變，也可能重寫產生的憲章。
 
-## Remove a Preset
+## 移除預設集
 
 ```bash
 specify preset remove <preset_id>
 ```
 
-Removes an installed preset and cleans up its registered commands.
+移除已安裝的預設集，並清理其已註冊的命令。
 
-## List Installed Presets
+## 列出已安裝的預設集
 
 ```bash
 specify preset list
 specify preset list --json
 ```
 
-Lists installed presets with their versions, descriptions, template counts, and current status.
+列出已安裝的預設集，包含其版本、說明、範本數量與目前狀態。
 
-`--json` writes a JSON array to stdout. Every item has the keys `id`, `name`,
-`description`, `version`, `author`, `priority`, `enabled`, `source`, and
-`provides`. `author` is `null` when absent; `source` is `{"kind":"local"}`
-for local, legacy, or malformed provenance, or
-`{"kind":"catalog","catalog":"<catalog-name>"}` for a valid catalog source.
-Preset `provides` contains `commands`, `templates`, and `scripts` counts. On
-success, `--json` writes exactly one array to stdout and exits 0. A runtime
-failure after option parsing writes exactly one `{"error":"..."}` object to
-stderr and exits 1. If parsing raises a usage error and the raw `--json` token
-is present, it writes that JSON error object to stderr and preserves the usage
-exit code (normally 2). Without `--json`, including for help, the existing
-human-readable behavior is unchanged.
+`--json` 將 JSON 陣列寫入 stdout。每個項目都有鍵 `id`、`name`、`description`、`version`、`author`、`priority`、`enabled`、`source` 與 `provides`。`author` 在缺席時為 `null`；`source` 對於本機、舊版或格式錯誤的來源為 `{"kind":"local"}`，對於有效的目錄來源為 `{"kind":"catalog","catalog":"<catalog-name>"}`。預設集的 `provides` 包含 `commands`、`templates` 與 `scripts` 數量。成功時，`--json` 恰好將一個陣列寫入 stdout 並以 0 結束。在選項解析後的執行時期失敗，會恰好將一個 `{"error":"..."}` 物件寫入 stderr 並以 1 結束。若解析引發使用錯誤且原始 `--json` 權杖存在，它會將該 JSON 錯誤物件寫入 stderr 並保留使用結束代碼（通常為 2）。沒有 `--json` 時，包括說明，現有的人類可讀行為不變。
 
-Presets are printed in **resolution/precedence order**: the highest-precedence preset (lowest priority number) is listed first, and ties on priority are broken alphabetically by preset id. This matches the order used when composing commands and resolving templates, so the top entry is the one that wins for overlapping files.
+預設集以**解析／優先順序**列印：優先程度最高的預設集（優先順序數字最小）列在第一位，優先順序相同時依預設集 id 字母順序決斷。這與組成命令與解析範本時使用的順序相符，因此最上面的項目就是重疊檔案的勝出者。
 
-## Preset Info
+## 預設集資訊
 
 ```bash
 specify preset info <preset_id>
@@ -181,130 +108,86 @@ specify preset info <preset_id> --versions
 specify preset info <preset_id> --json
 ```
 
-Shows detailed information about an installed or available preset, including its templates, metadata, and tags.
-`--versions` lists the advertised current version followed by historical
-catalog versions, even for discovery-only entries; listing does not make
-them installable. This view consults the catalog rather than the installed
-preset.
+顯示已安裝或可用預設集的詳細資訊，包括其範本、中繼資料與標籤。`--versions` 列出公告的目前版本，後接歷史目錄版本，即使是僅供探索的項目也一樣；列出不會讓它們變得可安裝。此檢視查詢的是目錄，而非已安裝的預設集。
 
-`--json` describes one installed preset, matched by ID, and writes a single
-JSON object to stdout. The object has the same `id`, `name`, `description`,
-`version`, `author`, `priority`, `enabled`, and `source` keys as the matching
-`specify preset list --json` item. In place of the `provides` counts it has
-`commands`, `templates`, and `scripts` arrays, one entry per manifest
-contribution in declaration order. Each entry has `name`, `description` (`""`
-when absent or empty), `source` (`{"layer": "preset", "presetId": "<id>"}`, the
-preset that provides it; the top-level `source` is where it was installed
-from), `sourcePath` (the manifest
-`file`, relative to the preset directory), and `strategy` (`replace`,
-`prepend`, `append`, or `wrap`; `replace` when the manifest omits it). `--json`
-cannot be combined with `--versions` (usage error, exit 2). A preset that is
-not installed (including one that is only in a catalog), or a missing
-project, writes one `{"error":"..."}` object to stderr and exits 1; usage errors
-keep their exit code (normally 2), as with `list --json`.
+`--json` 描述一個依 ID 比對的已安裝預設集，並將單一 JSON 物件寫入 stdout。此物件具有與對應的 `specify preset list --json` 項目相同的 `id`、`name`、`description`、`version`、`author`、`priority`、`enabled` 與 `source` 鍵。它以 `commands`、`templates` 與 `scripts` 陣列取代 `provides` 數量，每個資訊清單貢獻依宣告順序一項。每項都有 `name`、`description`（缺席或空白時為 `""`）、`source`（`{"layer": "preset", "presetId": "<id>"}`，即提供它的預設集；最上層的 `source` 是它安裝的來源）、`sourcePath`（資訊清單的 `file`，相對於預設集目錄）與 `strategy`（`replace`、`prepend`、`append` 或 `wrap`；資訊清單省略時為 `replace`）。`--json` 不能與 `--versions` 組合（使用錯誤，結束代碼 2）。未安裝的預設集（包括只在目錄中的），或遺失的專案，會將一個 `{"error":"..."}` 物件寫入 stderr 並以 1 結束；使用錯誤保留其結束代碼（通常為 2），與 `list --json` 相同。
 
-## Resolve a File
+## 解析檔案
 
 ```bash
 specify preset resolve <name>
 ```
 
-Shows which file will be used for a given name by tracing the full resolution stack. Useful for debugging when multiple presets provide the same file.
+透過追蹤完整的解析堆疊，顯示給定名稱將使用哪個檔案。當多個預設集提供相同檔案時，對於除錯很有用。
 
-## Enable / Disable a Preset
+## 啟用／停用預設集
 
 ```bash
 specify preset enable <preset_id>
 specify preset disable <preset_id>
 ```
 
-Disable a preset without removing it. Disabled presets are skipped during file resolution but their commands remain registered. Re-enable with `enable`.
+停用預設集而不移除它。停用的預設集在檔案解析時會被略過，但其命令仍保持註冊。以 `enable` 重新啟用。
 
-## Set Preset Priority
+## 設定預設集優先順序
 
 ```bash
 specify preset set-priority <preset_id> <priority>
 ```
 
-Changes the resolution priority of an installed preset. Lower numbers take precedence. When multiple presets provide the same file, the one with the lowest priority number wins.
+變更已安裝預設集的解析優先順序。數字越小優先程度越高。當多個預設集提供相同檔案時，優先順序數字最小者勝出。
 
-## Catalog Management
+## 目錄管理
 
-Preset catalogs control where `search` and `add` look for presets. Catalogs are checked in priority order (lower number = higher precedence).
+預設集目錄控制 `search` 與 `add` 尋找預設集的位置。目錄依優先順序檢查（數字越小優先程度越高）。
 
-> **A project's `.specify/preset-catalogs.yml` can point `add` and `search` at a catalog you didn't choose.** Before installing a preset in an unfamiliar project, run `specify preset catalog list` and inspect any catalog marked install-allowed — a project supplying that config, or marking a catalog install-allowed, is not evidence its presets were reviewed. Only mark a catalog `install_allowed` for one you authored or have vetted yourself; leave unfamiliar and community catalogs discovery-only.
+> **專案的 `.specify/preset-catalogs.yml` 可以將 `add` 與 `search` 指向你沒有選擇的目錄。**在不熟悉的專案中安裝預設集前，請執行 `specify preset catalog list` 並檢查任何標為允許安裝的目錄，專案提供該設定，或將目錄標為允許安裝，都不是其預設集已獲檢視的證據。只將你自己撰寫或已審查的目錄標為 `install_allowed`；不熟悉與社群目錄請保持僅供探索。
 
-### List Catalogs
+### 列出目錄
 
 ```bash
 specify preset catalog list
 ```
 
-Shows all active catalogs with their priorities and install permissions.
+顯示所有啟用中的目錄，包含其優先順序與安裝權限。
 
-### Add a Catalog
+### 新增目錄
 
 ```bash
 specify preset catalog add <url>
 ```
 
-| Option                                       | Description                                        |
+| 選項 | 說明 |
 | -------------------------------------------- | -------------------------------------------------- |
-| `--name <name>`                              | Required. Unique name for the catalog              |
-| `--priority <N>`                             | Priority (default: 10; lower = higher precedence)  |
-| `--install-allowed / --no-install-allowed`   | Whether presets can be installed from this catalog (default: discovery only). Only enable for a catalog you own and vet; never enable it for an unvetted public catalog. |
-| `--description <text>`                       | Optional description                               |
+| `--name <name>`                              | 必要。目錄的唯一名稱              |
+| `--priority <N>`                             | 優先順序（預設：10；數字越小優先程度越高）  |
+| `--install-allowed / --no-install-allowed`   | 是否可從此目錄安裝預設集（預設：僅供探索）。只對你擁有並審查的目錄啟用；絕不對未經審查的公開目錄啟用。 |
+| `--description <text>`                       | 選用的說明                               |
 
-Adds a catalog to the project's `.specify/preset-catalogs.yml`.
+將目錄新增到專案的 `.specify/preset-catalogs.yml`。
 
-Re-adding the same named catalog with identical settings succeeds without changing the configuration; different settings are rejected.
+以相同設定重新新增同名目錄會成功，且不變更設定；不同的設定會被拒絕。
 
-### Remove a Catalog
+### 移除目錄
 
 ```bash
 specify preset catalog remove <name>
 ```
 
-Removes a catalog from the project configuration.
+從專案設定中移除目錄。
 
-### Catalog Resolution Order
+### 目錄解析順序
 
-Catalogs are resolved in this order (first match wins):
+目錄依此順序解析（第一個符合者勝出）：
 
-1. **Environment variable** — `SPECKIT_PRESET_CATALOG_URL` overrides all catalogs
-2. **Project config** — `.specify/preset-catalogs.yml`
-3. **User config** — `~/.specify/preset-catalogs.yml`
-4. **Built-in defaults** — official catalog + community catalog
+1. **環境變數**——`SPECKIT_PRESET_CATALOG_URL` 覆寫所有目錄
+2. **專案設定**——`.specify/preset-catalogs.yml`
+3. **使用者設定**——`~/.specify/preset-catalogs.yml`
+4. **內建預設值**——官方目錄 + 社群目錄
 
-### Versioned catalog entries
+### 具版本的目錄項目
 
-Existing single-version entries remain valid: the top-level `version`,
-`download_url`, optional `sha256`, and `requires` describe the advertised
-current release. To retain older installable releases, add a `releases`
-mapping keyed by version. Each historical record needs its own archive
-`download_url` (HTTPS, or loopback HTTP for local development) and 64-digit
-SHA-256 digest (optionally `sha256:`-prefixed, with surrounding whitespace);
-other algorithm prefixes are rejected. Optional `requires` and `provides`
-apply to that release instead of inheriting the current release's fields.
-Other shared metadata, such as the name and description, is inherited.
-Version keys must be distinct, including PEP 440-equivalent spellings, and
-cannot repeat the current version.
-Duplicate JSON keys are rejected before parsing can discard a release record.
-Historical `requires.extensions` entries follow the preset manifest format:
-extension IDs or mappings with an `id`, optional version constraint, and
-optional boolean `required` flag.
-For an ID lookup, catalogs are checked in priority order and stop at the
-winning entry. Invalid or oversized payloads encountered before that entry
-fail resolution rather than allowing a lower-priority entry to bypass its
-installation policy. A malformed lower-priority source cannot block a valid
-higher-priority match; searches across all sources still fail on malformed
-catalogs. A non-object entry fails exact lookup for its own ID but is skipped
-during all-catalog searches, which retain other valid entries. Unreachable
-catalogs can still be skipped when another source is readable.
-If every source fails, ID lookup (including `info --versions`) reports the
-fetch error instead of claiming the preset has no catalog versions. Search
-validates historical releases on each winning entry; invalid release history
-from a shadowed source does not block its valid higher-priority replacement.
+既有的單一版本項目仍有效：最上層的 `version`、`download_url`、選用的 `sha256` 與 `requires` 描述公告的目前版本。若要保留較舊的可安裝版本，請新增以版本為鍵的 `releases` 對應。每筆歷史記錄都需要自己的封存檔 `download_url`（HTTPS，或本機開發用的 loopback HTTP）與 64 位數 SHA-256 摘要（可選用 `sha256:` 前綴，並有周圍空白）；其他演算法前綴會被拒絕。選用的 `requires` 與 `provides` 適用於該版本，而非繼承目前版本的欄位。其他共用中繼資料，例如名稱與說明，會被繼承。版本鍵必須互不相同，包括 PEP 440 等價拼寫，且不能重複目前版本。重複的 JSON 鍵會在解析丟棄版本記錄前被拒絕。歷史的 `requires.extensions` 項目遵循預設集資訊清單格式：擴充功能 ID 或對應，包含 `id`、選用的版本限制與選用的布林 `required` 旗標。對於 ID 查詢，目錄依優先順序檢查，並在勝出項目停止。在該項目之前遇到的無效或過大酬載會讓解析失敗，而非允許較低優先順序項目繞過其安裝原則。格式錯誤的較低優先順序來源無法阻擋有效的較高優先順序符合項；跨所有來源的搜尋仍會因格式錯誤的目錄而失敗。非物件項目會讓其自身 ID 的精確查詢失敗，但在跨所有目錄搜尋時會被略過，搜尋會保留其他有效項目。當另一個來源可讀取時，無法連線的目錄仍可被略過。若每個來源都失敗，ID 查詢（包括 `info --versions`）會回報取得錯誤，而非聲稱預設集沒有目錄版本。搜尋會驗證每個勝出項目上的歷史版本；來自被遮蔽來源的無效版本歷史，不會阻擋其有效的較高優先順序取代者。
 
 ```json
 {
@@ -326,11 +209,9 @@ from a shadowed source does not block its valid higher-priority replacement.
 }
 ```
 
-The bundled community catalog stays discovery-only and need not publish
-release histories. Bundle pin resolution is a separate capability; adding
-these preset records alone does not make bundle pins installable.
+隨附的社群目錄保持僅供探索，不需發佈版本歷史。套件組釘選解析是獨立功能；僅新增這些預設集記錄，不會讓套件組釘選變得可安裝。
 
-Example `.specify/preset-catalogs.yml`:
+`.specify/preset-catalogs.yml` 範例：
 
 ```yaml
 catalogs:
@@ -341,22 +222,22 @@ catalogs:
     description: "Our approved presets"
 ```
 
-## File Resolution
+## 檔案解析
 
-Presets can provide command files, template files (like `plan-template.md`), and script files. Each file name is evaluated independently against the priority stack, so different files can come from different layers.
+預設集可以提供命令檔案、範本檔案（例如 `plan-template.md`）與指令碼檔案。每個檔案名稱都會獨立對照優先堆疊評估，因此不同檔案可以來自不同層。
 
-Templates and scripts are looked up from the stack when Spec Kit needs them. Commands use the same stack for replacement and composition, but are materialized into the active integration's directory only, instead of being re-resolved by agents or written to every detected agent directory (#2948). During preset install, Spec Kit registers command files for the preset being installed against the currently active integration; post-install and post-removal reconciliation then recomputes and writes the effective command content for affected command names based on the active stack. Install and rescaffold remain active-only, but removal may also update previously targeted inactive directories recorded by the removed preset to restore the surviving command or skill layer. A non-active installed integration does not otherwise receive these command files until it becomes the default — `specify integration use <key>` (or `switch <key>`) rescaffolds enabled presets for the newly active integration. Agents do not re-resolve the stack each time they run a command.
+範本與指令碼在 Spec Kit 需要時從堆疊中查詢。命令使用相同的堆疊進行取代與組成，但只具體化到啟用中整合的目錄，而非由代理重新解析，或寫入每個偵測到的代理目錄（#2948）。在預設集安裝期間，Spec Kit 會針對目前啟用中的整合，註冊正在安裝的預設集的命令檔案；安裝後與移除後的對帳，會依啟用堆疊重新計算並寫入受影響命令名稱的有效命令內容。安裝與重新建立架構仍僅限啟用中，但移除也可能更新被移除預設集記錄的先前鎖定的未啟用目錄，以還原存活的命令或技能層。未啟用的已安裝整合，否則不會收到這些命令檔案，直到它成為預設值為止，`specify integration use <key>`（或 `switch <key>`）會為新啟用的整合重新建立已啟用預設集的架構。代理在每次執行命令時不會重新解析堆疊。
 
-By default, files use a **replace** strategy: the first match in the priority stack wins and is used entirely. Templates and commands can also use composition strategies: **prepend** places preset content before lower-priority content, **append** places it after lower-priority content, and **wrap** replaces `{CORE_TEMPLATE}` with lower-priority content. Scripts support **replace** and **wrap**; script wrappers use `$CORE_SCRIPT` as the placeholder.
+預設情況下，檔案使用 **replace** 策略：優先堆疊中的第一個符合項勝出並被完整使用。範本與命令也可以使用組成策略：**prepend** 將預設集內容放在較低優先順序內容之前，**append** 將其放在較低優先順序內容之後，**wrap** 以較低優先順序內容取代 `{CORE_TEMPLATE}`。指令碼支援 **replace** 與 **wrap**；指令碼包裝器使用 `$CORE_SCRIPT` 作為佔位符。
 
-The resolution stack, from highest to lowest precedence:
+解析堆疊，從最高到最低優先順序：
 
-1. **Project-local overrides** — `.specify/templates/overrides/`
-2. **Installed presets** — sorted by priority (lower = checked first)
-3. **Installed extensions** — sorted by priority
-4. **Spec Kit core** — `.specify/templates/`
+1. **專案本機覆寫**——`.specify/templates/overrides/`
+2. **已安裝的預設集**——依優先順序排序（數字越小越先檢查）
+3. **已安裝的擴充功能**——依優先順序排序
+4. **Spec Kit 核心**——`.specify/templates/`
 
-### Resolution Stack
+### 解析堆疊
 
 ```mermaid
 flowchart TB
@@ -376,15 +257,15 @@ flowchart TB
     style D fill:#999,color:#fff
 ```
 
-Within each layer, files are organized by type:
+在每一層內，檔案依類型組織：
 
-| Type      | Subdirectory   | Override path                              |
+| 類型 | 子目錄 | 覆寫路徑 |
 | --------- | -------------- | ------------------------------------------ |
-| Templates | `templates/`   | `.specify/templates/overrides/`            |
-| Commands  | `commands/`    | `.specify/templates/overrides/`            |
-| Scripts   | `scripts/`     | `.specify/templates/overrides/scripts/`    |
+| 範本 | `templates/`   | `.specify/templates/overrides/`            |
+| 命令 | `commands/`    | `.specify/templates/overrides/`            |
+| 指令碼 | `scripts/`     | `.specify/templates/overrides/scripts/`    |
 
-### Resolution in Action
+### 解析實例
 
 ```mermaid
 flowchart TB
@@ -400,31 +281,31 @@ flowchart TB
     F --> Z
 ```
 
-### Example
+### 範例
 
 ```bash
 specify preset add compliance --priority 5
 specify preset add team-workflow --priority 10
 ```
 
-For any file that both provide, `compliance` wins (priority 5 < 10). For files only one provides, that one is used. For files neither provides, the core default is used.
+對於兩者都提供的任何檔案，`compliance` 勝出（優先順序 5 < 10）。對於只有一方提供的檔案，使用該方。對於兩者都不提供的檔案，使用核心預設值。
 
-## FAQ
+## 常見問題
 
-### Can I use multiple presets at the same time?
+### 我可以同時使用多個預設集嗎？
 
-Yes. Presets stack by priority — each file is resolved independently from the highest-priority source that provides it. Use `specify preset set-priority` to control the order.
+可以。預設集依優先順序堆疊，每個檔案都從提供它的最高優先順序來源獨立解析。使用 `specify preset set-priority` 控制順序。
 
-### How do I see which file is actually being used?
+### 如何查看實際使用的是哪個檔案？
 
-Run `specify preset resolve <name>` to trace the resolution stack and see which file wins.
+執行 `specify preset resolve <name>` 追蹤解析堆疊，查看哪個檔案勝出。
 
-### What's the difference between disabling and removing a preset?
+### 停用與移除預設集有什麼區別？
 
-**Disabling** (`specify preset disable`) keeps the preset installed but excludes it from future template and script resolution. Previously registered commands remain available in your AI coding agent until preset removal, so use removal when you need command changes to stop taking effect. Disabling is useful for temporarily testing template/script behavior without a preset, or comparing template/script output with and without it. Re-enable anytime with `specify preset enable`.
+**停用**（`specify preset disable`）讓預設集保持已安裝，但將它排除在未來的範本與指令碼解析之外。先前註冊的命令在你的 AI 程式代理中仍可使用，直到預設集被移除，因此當你需要命令變更停止生效時，請使用移除。停用對於暫時測試不含預設集的範本／指令碼行為，或比較有無預設集時的範本／指令碼輸出很有用。隨時以 `specify preset enable` 重新啟用。
 
-**Removing** (`specify preset remove`) fully uninstalls the preset — deletes its files, unregisters its commands from your AI coding agent, and removes it from the registry.
+**移除**（`specify preset remove`）會完全解除安裝預設集，刪除其檔案、從你的 AI 程式代理取消註冊其命令，並將它從登錄中移除。
 
-### Who maintains presets?
+### 誰維護預設集？
 
-Most presets are independently created and maintained by their respective authors. The Spec Kit maintainers do not review, audit, endorse, or support preset code. Review a preset's source code before installing and use at your own discretion. For issues with a specific preset, contact its author or file an issue on the preset's repository.
+大多數預設集由其各自的作者獨立建立與維護。Spec Kit 維護者不檢視、稽核、背書或支援預設集程式碼。安裝前請檢視預設集的原始碼，並自行斟酌使用。若特定預設集有問題，請聯絡其作者或在預設集的儲存庫提出 issue。

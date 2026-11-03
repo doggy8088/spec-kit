@@ -1,102 +1,22 @@
-# Scoped FileHelper and project policy
+# 限定範圍的 FileHelper 與專案政策
 
-`specify_cli.file_helper.FileHelper` owns filesystem operations under one
-explicitly established root. Project-command boundaries now validate persisted
-policy, and init-options bootstrap I/O uses the helper. Other existing command
-filesystem operations are **not yet migrated**: loading policy alone does not
-enforce symlink behavior on those operations. Shared infrastructure, registration,
-managed storage, catalogs, scripts and runtime operations retain their existing
-behavior until their dependent migration stages.
+`specify_cli.file_helper.FileHelper` 負責在單一明確建立的根目錄下執行檔案系統操作。專案命令邊界現在會驗證已保存的政策，而初始化選項的啟動 I/O 則使用此輔助工具。其他既有的命令檔案系統操作**尚未移轉**：僅載入政策並不會對這些操作強制執行符號連結行為。共用基礎設施、註冊、受管儲存、目錄、指令碼與執行階段操作，在其相依的移轉階段完成前，仍維持既有行為。
 
-Only `specify init --allow-symlinks` exposes the setting; init defaults to deny
-and persists the literal JSON boolean `allow_symlinks` in
-`.specify/init-options.json`. Re-init without the flag records `false`.
-Other project-scoped commands validate the selected project's current
-configuration each invocation, including successive invocations in one process.
-No global flag, per-command override, mutable global policy, or cache is used.
-Projectless help/version/tool operations do not require configuration.
-`check` is an optional project consumer: it validates any present policy at its
-selected cwd/override boundary before loading installed integrations or checking
-tools, but still permits a missing project marker or configuration in cwd.
-Existing resolution rules, including `SPECIFY_INIT_DIR`, bundle ancestor search,
-direct workflow-file roots and explicit init targets, determine which root is
-checked; policy loading does not add ancestor discovery.
-Event execution retains its cwd-only selection and does not acquire an
-override or project-marker requirement; it preflights any present cwd policy
-before invoking handlers. Bundle ancestor search continues only when a marker
-is genuinely absent. A nearer forbidden/present invalid `.specify` entry fails
-at that candidate rather than selecting an ancestor or initializing elsewhere.
+只有 `specify init --allow-symlinks` 會公開此設定；初始化預設為拒絕，並將字面 JSON 布林值 `allow_symlinks` 保存於 `.specify/init-options.json`。未帶該旗標重新初始化時，記錄為 `false`。其他專案範圍的命令在每次呼叫時都會驗證所選專案目前的設定，包括同一行程中的連續呼叫。不使用全域旗標、逐命令覆寫、可變的全域政策或快取。無專案的說明／版本／工具操作不需要設定。`check` 是選擇性的專案消費者：它會在所選 cwd／覆寫邊界驗證任何現有政策，再載入已安裝的整合或檢查工具，但仍允許 cwd 中缺少專案標記或設定。既有的解析規則，包括 `SPECIFY_INIT_DIR`、套件組祖先搜尋、直接工作流程檔案根目錄與明確的初始化目標，決定要檢查哪個根目錄；政策載入不會新增祖先探索。事件執行維持其僅以 cwd 選擇的行為，不取得覆寫或專案標記要求；它會在呼叫處理常式前，預先檢查任何現有的 cwd 政策。套件組祖先搜尋僅在標記確實不存在時才繼續。較近的禁止／現有無效 `.specify` 項目會在該候選位置失敗，而不是選擇祖先或在其他位置初始化。
 
-Missing configuration or a missing key means deny. Only literal JSON
-`true`/`false` values are valid. Invalid JSON, non-object documents, invalid
-encoding, unreadable files and invalid values fail explicitly before mutations
-at the project boundary. Dangling configuration links are present forbidden
-entries, not missing defaults.
+缺少設定或缺少鍵表示拒絕。只有字面 JSON `true`／`false` 值有效。無效的 JSON、非物件文件、無效編碼、無法讀取的檔案與無效值，都會在專案邊界、變更前明確失敗。懸空的設定連結屬於現有的禁止項目，而非缺少的預設值。
 
-Configuration bootstrap reads **and writes** always use a deny-mode helper,
-even when stored operational policy or the init flag allows symlinks.
-`.specify` and `init-options.json` below the trusted project root must not be
-links or unsupported reparse points. Root/OS aliases retain the foundation's
-trusted-boundary treatment. For a new init root, `prepare_init_root` creates its
-missing suffix using a deny-mode helper rooted at the nearest existing parent;
-an existing explicitly supplied root alias is trusted. `preflight_init_root`
-validates the original requested spelling without creating a root, including
-missing-parent traversal and dangling-parent evidence before canonicalization.
-Before presence probes, every prefix preceding `..` must be an existing
-directory: Windows can otherwise fold `missing/../existing` into an apparently
-existing target. Valid existing-directory/root-alias traversal remains trusted;
-prefix permission and other I/O failures remain explicit errors.
-Init's external-adapter lifecycle validates existing target policy before
-reading integration records, loading adapters or preparing catalog packages.
-When that lifecycle requires a
-transaction, it creates the target under the existing lock using the original
-requested spelling and `prepare_init_root`, before invoking the inner handler.
-The recorded pre-transaction directory state retains that spelling, so a newly
-created root does not become a spurious existing-directory conflict. Lock,
-journal and handler operations retain their canonical project identity after
-the original spelling has been validated.
+設定啟動的讀取**與寫入**一律使用拒絕模式的輔助工具，即使已保存的操作政策或初始化旗標允許符號連結亦然。在受信任的專案根目錄之下，`.specify` 與 `init-options.json` 不得是連結或不支援的重解析點。根目錄／作業系統別名保留基礎所定的受信任邊界處理。對於新的初始化根目錄，`prepare_init_root` 使用以最近的現有父目錄為根的拒絕模式輔助工具，建立其缺少的後綴；現有且明確提供的根目錄別名受信任。`preflight_init_root` 驗證原始請求的拼寫而不建立根目錄，包括正規化前缺少父目錄的遍歷與懸空父目錄證據。在存在性探測之前，`..` 之前的每個前綴都必須是現有目錄：否則 Windows 可能把 `missing/../existing` 摺疊成看似存在的目標。有效的現有目錄／根目錄別名遍歷仍受信任；前綴權限與其他 I/O 失敗仍為明確錯誤。初始化的外部配接器生命週期會在讀取整合記錄、載入配接器或準備目錄套件之前，驗證現有目標政策。當該生命週期需要交易時，它會在既有鎖定下、使用原始請求的拼寫與 `prepare_init_root` 建立目標，再呼叫內層處理常式。記錄的交易前目錄狀態保留該拼寫，因此新建的根目錄不會變成虛假的現有目錄衝突。鎖定、日誌與處理常式操作在原始拼寫驗證後，保留其正規專案身分。
 
-## Policy handoff for dependent migrations
+## 供相依移轉使用的政策交接
 
-`specify_cli._file_policy.read_project_options(root)` is the strict bootstrap
-reader; it is separate from the legacy tolerant `load_init_options` library
-API. `project_files(root)` reads policy afresh and returns an immutable
-`FileHelper(root, allow_symlinks=...)`. Pass that returned operation owner
-explicitly to domain consumers; do not reconstruct a default helper and lose
-the policy. `specify_cli._project.resolve_specify_project_files()` performs the
-normal existing-project resolution and returns the same handoff for new CLI
-adapters. Commands using another established root call `project_files` on
-their actually selected root. Retain a helper only for the current operation;
-a later invocation resolves a new helper, so manual edits take effect.
+`specify_cli._file_policy.read_project_options(root)` 是嚴格的啟動讀取器；它與舊版寬容的 `load_init_options` 程式庫 API 分開。`project_files(root)` 會重新讀取政策，並回傳不可變的 `FileHelper(root, allow_symlinks=...)`。請將該回傳的操作擁有者明確傳給領域消費者；不要重建預設輔助工具而遺失政策。`specify_cli._project.resolve_specify_project_files()` 執行一般的現有專案解析，並為新的 CLI 配接器回傳相同的交接。使用其他既定根目錄的命令，則對其實際選擇的根目錄呼叫 `project_files`。輔助工具只保留給目前操作使用；後續呼叫會解析出新的輔助工具，因此手動編輯會生效。
 
-The `specify_cli.integration_state` helpers are an explicit managed-metadata
-exception to this handoff. Their reads and writes of `.specify/integration.json`
-always use deny mode, including contained links when `allow_symlinks` is true.
-This preserves the
-[integration lifecycle's restriction](integration.md#storage-loading-and-lifecycle)
-against symlinked write destinations before snapshotting and mutation.
-This guarantee does not cover unmigrated consumers such as
-`bundles.project.active_integration`, whose containment-checked reads can still
-follow contained state-file links.
+`specify_cli.integration_state` 輔助工具是此交接的明確受管中繼資料例外。它們對 `.specify/integration.json` 的讀寫一律使用拒絕模式，包括 `allow_symlinks` 為 true 時的受含連結。這保留了[整合生命週期對符號連結寫入目的地的限制](integration.md#storage-loading-and-lifecycle)，在快照與變更之前即加以防範。此保證不涵蓋未移轉的消費者，例如 `bundles.project.active_integration`，其經包含檢查的讀取仍可跟隨受含的狀態檔案連結。
 
-Existing Path-returning resolvers preflight policy without changing their return
-type or domain constructors. They do not implicitly equip unmigrated domain
-consumers with an operation helper. Failures are translated into existing
-command diagnostics, with a single `{"error": "..."}` on stderr and empty
-stdout for JSON policy failures; artifact/list surfaces preserve their error
-envelope contracts. Artifact list/info validate their explicit project roots in
-the shared application operations, so CLI and MCP peer adapters share the same
-policy semantics while retaining their own error envelopes.
+既有的回傳 Path 解析器會預先檢查政策，而不改變其回傳型別或領域建構函式。它們不會隱含地為未移轉的領域消費者配備操作輔助工具。失敗會轉譯為既有的命令診斷，JSON 政策失敗時在 stderr 輸出單一 `{"error": "..."}` 且 stdout 為空；構件／列表介面保留其錯誤封裝合約。構件列表／資訊會在其共用應用操作中驗證其明確的專案根目錄，因此 CLI 與 MCP 對等配接器共用相同的政策語意，同時保留各自的錯誤封裝。
 
-`save_project_options` and the compatibility `save_init_options` writer use
-deny-mode bootstrap I/O. Init merges its owned settings into existing valid
-options, preserving unrelated fields. Integration option update/clear/version
-paths use the strict reader and retain `allow_symlinks`. Unmigrated tolerant
-library readers keep their existing missing/malformed fallback contracts.
-Configuration writers validate their deny-mode destination before the existing
-file-change observer snapshots it, then retain the before/after observer hooks
-around the write. Downstream init failures therefore remain covered by the
-existing lifecycle rollback, including prior policy and unrelated options.
+`save_project_options` 與相容的 `save_init_options` 寫入器使用拒絕模式的啟動 I/O。初始化會將其擁有的設定合併到現有有效選項中，保留不相關的欄位。整合選項的更新／清除／版本路徑使用嚴格讀取器並保留 `allow_symlinks`。未移轉的寬容程式庫讀取器保留其既有的缺少／格式錯誤回退合約。設定寫入器會在現有檔案變更觀察者拍攝快照前，驗證其拒絕模式目的地，然後在寫入前後保留觀察者掛鉤。因此，下游初始化失敗仍由既有生命週期回滾涵蓋，包括先前的政策與不相關選項。
 
 ```python
 from specify_cli.file_helper import FileHelper
@@ -109,124 +29,41 @@ content = files.read_text("generated/config.txt")
 files.delete("generated", recursive=True)
 ```
 
-## Boundary and policy
+## 邊界與政策
 
-Each helper has a frozen root and `allow_symlinks` setting. Relative operation
-paths are root-relative. Absolute paths must be beneath the supplied root or
-its canonical equivalent. User operation paths containing `..` are rejected
-in their root-relative suffix rather than normalized before inspection. A
-caller-established root spelling may itself contain `..`; absolute operation
-paths derived from that exact supplied root prefix are supported. Only that
-trusted prefix is removed before checking operation components, without
-lexically collapsing the root or ignoring traversal in the remaining suffix.
-Link targets may contain `..`, but
-are walked component by component and may not leave the root, even temporarily.
-Windows rooted-but-not-absolute paths (`/outside/file`, `\outside\file`) and
-drive-relative paths (`C:outside/file`, `C:`) are rejected for both operation
-paths and link targets. They are not root-relative: joining them can reset the
-root or drive. Fully absolute paths still require scoped root matching.
-For Windows containment comparisons, extended-length drive and UNC spellings
-(`\\?\D:\project\file`, `\\?\UNC\server\share\project\file`) are compared with
-their ordinary equivalents on both the target and root sides. This does not
-resolve links or collapse `..`: accessed hierarchy evidence is retained for
-the component walk. The UNC namespace marker is matched case-insensitively,
-while the remaining path's original spelling is preserved. External targets,
-ambiguous rooted-relative paths, and
-unsupported device namespaces are still rejected. POSIX filenames are not
-reinterpreted as Windows path spellings.
+每個輔助工具都有凍結的根目錄與 `allow_symlinks` 設定。相對操作路徑以根目錄為基準。絕對路徑必須位於所提供根目錄或其正規等價路徑之下。包含 `..` 的使用者操作路徑，會在其根目錄相對後綴中被拒絕，而不是在檢查前先正規化。呼叫端建立的根目錄拼寫本身可包含 `..`；支援由該確切提供的根目錄前綴衍生的絕對操作路徑。只有該受信任前綴會在檢查操作元件前被移除，不會對根目錄做詞彙摺疊，也不會忽略其餘後綴中的遍歷。連結目標可包含 `..`，但會逐元件走訪，且不得離開根目錄，即使暫時也不行。Windows 的有根但非絕對路徑（`/outside/file`、`\outside\file`）與磁碟相對路徑（`C:outside/file`、`C:`），無論是操作路徑還是連結目標，一律拒絕。它們不是根目錄相對路徑：聯結它們可能重設根目錄或磁碟。完全絕對路徑仍需符合限定範圍的根目錄比對。對於 Windows 包含比較，擴充長度的磁碟與 UNC 拼寫（`\\?\D:\project\file`、`\\?\UNC\server\share\project\file`）會在目標端與根目錄端都與其一般等價形式比較。這不會解析連結或摺疊 `..`：存取階層的證據會保留供元件走訪使用。UNC 命名空間標記以不區分大小寫方式比對，其餘路徑的原始拼寫則予以保留。外部目標、含糊的有根相對路徑與不支援的裝置命名空間仍被拒絕。POSIX 檔案名稱不會被重新詮釋為 Windows 路徑拼寫。
 
-The caller must establish a trusted, existing directory root. Its alias is
-resolved once, including OS and worktree aliases; the root itself and OS
-ancestors above it are not subjected to the traversal policy. Thus explicitly
-establishing a linked directory as a root trusts that alias even in deny mode.
-Links *below* that boundary are checked in both the original accessed path and
-any followed target hierarchy. An unrelated project symlink does not prevent
-an operation. A helper cannot cross to another root; callers establish separate
-helpers for independent project/source/managed boundaries.
+呼叫端必須建立受信任且現有的目錄根。其別名只解析一次，包括作業系統與工作樹別名；根目錄本身與其上方的作業系統祖先不受遍歷政策約束。因此，即使在拒絕模式下，明確將連結目錄建立為根目錄，也表示信任該別名。該邊界*之下*的連結，會同時在原始存取路徑與任何跟隨的目標階層中檢查。無關的專案符號連結不會阻止操作。輔助工具無法跨到另一個根目錄；呼叫端需為獨立的專案／來源／受管邊界建立各自的輔助工具。
 
-| Operation | Default deny | Explicit allow |
+| 操作 | 預設拒絕 | 明確允許 |
 |---|---|---|
-| Read file | Reject accessed parent or leaf links | Follow only existing contained regular-file targets |
-| Create directory | Reject accessed links before creating parents | Follow contained directory links; reject dangling targets |
-| Exclusively create file | Reject accessed links | Follow contained parents; reject an existing leaf without opening its target |
-| Atomic write/upsert | Reject accessed links | Replace the resolved regular-file target and preserve every link |
-| Delete leaf link | Reject without mutation | Unlink the link, including dangling, cyclic, or external-target links |
-| Delete through linked parent | Reject without mutation | Delete the contained target entry, leaving the parent link intact |
-| Recursive delete | Preflight all descendants and reject any link before mutation | Preflight all descendants; unlink links without traversing their targets |
-| Create symlink | Reject | Require an existing contained file/directory target |
+| 讀取檔案 | 拒絕存取的父層或葉節點連結 | 僅跟隨現有且受含的一般檔案目標 |
+| 建立目錄 | 在建立父層前拒絕存取的連結 | 跟隨受含的目錄連結；拒絕懸空目標 |
+| 獨占建立檔案 | 拒絕存取的連結 | 跟隨受含的父層；拒絕現有葉節點而不開啟其目標 |
+| 原子寫入／upsert | 拒絕存取的連結 | 取代已解析的一般檔案目標並保留每個連結 |
+| 刪除葉節點連結 | 拒絕且不變更 | 取消連結，包括懸空、循環或外部目標連結 |
+| 透過連結父層刪除 | 拒絕且不變更 | 刪除受含的目標項目，父層連結保持完整 |
+| 遞迴刪除 | 預檢所有子孫並在變更前拒絕任何連結 | 預檢所有子孫；取消連結而不遍歷其目標 |
+| 建立符號連結 | 拒絕 | 要求現有且受含的檔案／目錄目標 |
 
-## API and failures
+## API 與失敗
 
-- `mkdir(path, parents=False, exist_ok=False)` creates directories.
-- `read_bytes(path)` / `read_text(path, encoding="utf-8")` read regular files.
-- `create_bytes(path, content, mode=0o644)` / `create_text(...)` exclusively
-  create files with existing parents. A no-follow `lstat` preflight rejects
-  existing leaves, including dangling links, before opening the destination.
-  This avoids target creation on backends that follow dangling links despite
-  exclusive-open flags. `O_EXCL` and `O_NOFOLLOW` (where available) remain in use;
-  the static preflight does not eliminate concurrent path-change races.
-- `write_bytes(path, content, mode=0o644)` / `write_text(...)` atomically
-  create or update files with existing parents. Text variants also accept
-  `encoding="utf-8"`. Replacement files use the supplied mode; metadata and
-  hard-link identity are not preserved. Atomic means same-directory
-  `os.replace`, not crash durability.
-- `overwrite_text(path, content, encoding="utf-8")` is a **non-atomic** text
-  upsert with existing parents, used for configuration compatibility. It uses
-  the same accessed-path/link/containment checks as other operations, follows
-  only allowed existing contained file targets, and preserves link chains and
-  the target inode (including hard-link identity and permissions). New files
-  use `0o666` filtered by the process umask; text encoding and native newline
-  translation match the previous configuration writer. An encoding or I/O
-  failure propagates, and a write failure can leave truncated/partial content.
-  This is not hard-link confinement: a hard-linked alias can observe updates.
-- `delete(path, recursive=False)` unlinks files/links or removes directories.
-  Nonrecursive directory deletion requires an empty directory. The established
-  root cannot be deleted.
-- `symlink(target, path)` creates a link exclusively. Relative targets are
-  interpreted relative to the link parent, not the helper root.
+- `mkdir(path, parents=False, exist_ok=False)` 建立目錄。
+- `read_bytes(path)`／`read_text(path, encoding="utf-8")` 讀取一般檔案。
+- `create_bytes(path, content, mode=0o644)`／`create_text(...)` 在父目錄已存在的前提下，獨占建立檔案。不跟隨的 `lstat` 預檢會在開啟目的地前，拒絕現有的葉節點，包括懸空連結。這可避免在某些後端上，即使帶有獨占開啟旗標仍跟隨懸空連結而建立目標。`O_EXCL` 與 `O_NOFOLLOW`（可用時）仍會使用；靜態預檢無法消除並行路徑變更的競態。
+- `write_bytes(path, content, mode=0o644)`／`write_text(...)` 在父目錄已存在的前提下，以原子方式建立或更新檔案。文字變體也接受 `encoding="utf-8"`。取代檔案使用所提供的模式；中繼資料與硬連結身分不保留。原子是指同目錄的 `os.replace`，而非當機耐久性。
+- `overwrite_text(path, content, encoding="utf-8")` 是具現有父目錄的**非原子**文字 upsert，用於設定相容性。它使用與其他操作相同的存取路徑／連結／包含檢查，只跟隨允許的現有受含檔案目標，並保留連結鏈與目標 inode（包括硬連結身分與權限）。新檔案使用 `0o666` 並經行程 umask 篩選；文字編碼與原生換行轉換與先前的設定寫入器一致。編碼或 I/O 失敗會向上傳播，寫入失敗可能留下截斷／部分內容。這不是硬連結限制：硬連結別名可以觀察到更新。
+- `delete(path, recursive=False)` 取消連結檔案／連結或移除目錄。非遞迴的目錄刪除要求目錄為空。已建立的根目錄無法刪除。
+- `symlink(target, path)` 獨占建立連結。相對目標以連結的父目錄為基準詮釋，而非輔助工具根目錄。
 
-`SymlinkDeniedError`, `PathEscapeError`, and `UnsupportedPathError` derive from
-`FileHelperError` and describe policy failures. Missing paths (including
-dangling read/update targets), permissions, existing exclusive-create
-destinations, non-directory parents, and OS I/O failures retain native Python
-exceptions. Nothing prints, warns-and-skips, or exits the CLI. Callers own
-translation into their normal command error envelopes.
+`SymlinkDeniedError`、`PathEscapeError` 與 `UnsupportedPathError` 衍生自 `FileHelperError`，用於描述政策失敗。缺少的路徑（包括懸空的讀取／更新目標）、權限、現有的獨占建立目的地、非目錄父節點與作業系統 I/O 失敗，保留原生 Python 例外。不會列印、警告並跳過或結束 CLI。呼叫端負責轉譯為其一般的命令錯誤封裝。
 
-Only regular files, directories, and explicitly allowed symlinks are supported.
-Below the established root, Windows directory junctions and other non-symlink
-reparse entries are unsupported and rejected with `UnsupportedPathError` in
-**both** policy modes. This includes contained junctions, leaf deletion, and
-recursive deletion: preflight rejects them without traversing or removing
-them. `allow_symlinks=True` does not authorize junction traversal or deletion.
-The trusted root alias boundary may itself resolve through a junction just as
-it may through a symlink; this does not authorize junctions below that root.
-Read/update cycles and excessive link chains fail explicitly. A recursive
-delete includes the entire selected tree; there is no exclusion filter in this
-foundation. Future operations with exclusions must inspect only included
-entries, not reject a whole project for excluded/unrelated links.
+僅支援一般檔案、目錄與明確允許的符號連結。在已建立的根目錄之下，Windows 目錄聯結與其他非符號連結的重解析項目不受支援，且在**兩種**政策模式下都以 `UnsupportedPathError` 拒絕。這包括受含的聯結、葉節點刪除與遞迴刪除：預檢會拒絕它們而不遍歷或移除。`allow_symlinks=True` 不授權聯結的遍歷或刪除。受信任的根目錄別名邊界本身可透過聯結解析，就如同可透過符號連結解析一樣；這不授權該根目錄之下的聯結。讀取／更新循環與過長的連結鏈會明確失敗。遞迴刪除包括整個所選樹；此基礎中沒有排除篩選。未來具排除功能的操作必須只檢查納入的項目，而不是因被排除／無關的連結而拒絕整個專案。
 
-## Safety limits and migration
+## 安全限制與移轉
 
-Preflight detects static policy failures before recursive deletion or parent
-creation. Atomic writes recheck the original path before replacement, and
-deletion rechecks each accessed entry. Portable path checks are **not** a
-race-free sandbox: another process can exchange parents or entries between
-checks and syscalls, and an I/O failure during mutation can leave partial
-results. Protect against concurrent untrusted mutation separately; descriptor-
-relative traversal or platform-specific mechanisms are future work, not a
-claim of this API. The helper does not constrain subprocesses or third-party
-code. Exclusive creation uses `O_EXCL` and `O_NOFOLLOW` where available.
+預檢會在遞迴刪除或建立父目錄之前偵測靜態政策失敗。原子寫入會在取代前重新檢查原始路徑，刪除則重新檢查每個存取的項目。可攜式路徑檢查**不是**無競態的沙箱：另一個行程可以在檢查與系統呼叫之間交換父目錄或項目，變更期間的 I/O 失敗也可能留下部分結果。請另外防範並行的不受信任變更；描述元相對遍歷或平台專用機制屬於未來工作，不在此 API 的宣稱範圍內。此輔助工具不約束子行程或第三方程式碼。獨占建立在可用時使用 `O_EXCL` 與 `O_NOFOLLOW`。
 
-Existing safe-write mechanisms informed this helper, but existing shared
-infrastructure warning/skip behavior and development-mode link creation are
-unchanged. Migrate one owned operation boundary at a time, carrying original
-paths and an explicit root/policy into the helper before any early resolution.
-Linked command directories and development-mode registration remain dependent
-stages. Non-atomic configuration writes preserve legacy metadata semantics;
-portable preflight does not guarantee race-free protection against concurrent
-path replacement.
+既有的安全寫入機制為此輔助工具提供了參考，但既有共用基礎設施的警告／跳過行為與開發模式連結建立維持不變。請一次移轉一個擁有的操作邊界，在任何早期解析之前，將原始路徑與明確的根目錄／政策帶入輔助工具。連結的命令目錄與開發模式註冊仍屬相依階段。非原子設定寫入保留舊版中繼資料語意；可攜式預檢不保證能無競態地防範並行路徑取代。
 
-Windows path classification and directory-mode reparse rejection have portable
-regression tests. Native Windows path and junction tests also exist and are
-skipped on other hosts; running the portable cases on macOS does not validate
-Windows filesystem syscalls or junction behavior.
+Windows 路徑分類與目錄模式重解析拒絕具備可攜式迴歸測試。原生 Windows 路徑與聯結測試也存在，在其他主機上會跳過；在 macOS 上執行可攜式案例並不能驗證 Windows 檔案系統系統呼叫或聯結行為。

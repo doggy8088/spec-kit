@@ -1,20 +1,20 @@
-# Developer bundle
+# Developer 套件組
 
-A role bundle for developers practicing Spec-Driven Development: implementation
-planning, task breakdown, and code review.
+給實踐規格驅動開發的開發人員使用的角色套件組：實作
+規劃、任務拆解與程式碼審查。
 
-## What it installs
+## 安裝內容
 
-- **Extension** `agent-context` — keeps the agent context file in sync.
-- **Preset** `implementation-planning` (priority 10, append) — implementation
-  planning command set.
-- **Steps** `plan-implementation`, `break-down-tasks`.
-- **Workflow** `spec-to-implementation` — drives a spec through to code.
+- **擴充功能** `agent-context`——讓代理上下文檔案保持同步。
+- **預設集** `implementation-planning`（優先順序 10，append）——實作
+  規劃命令集。
+- **步驟** `plan-implementation`、`break-down-tasks`。
+- **工作流程** `spec-to-implementation`——推動規格一路落實為程式碼。
 
-This bundle is **integration-agnostic**: it inherits the project's active
-integration.
+這個套件組**與整合無關**：它會沿用專案目前啟用的
+整合。
 
-## Usage
+## 用法
 
 ```bash
 specify bundle validate --path examples/bundles/developer

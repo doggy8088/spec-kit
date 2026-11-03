@@ -4,12 +4,12 @@
 
 # GitHub Spec Kit
 
-**Build with a spec, fix a bug, or assess an idea — with your coding agent.**
+**以規格打造、修正錯誤，或評估構想，交給你的程式代理。**
 
-Spec Kit gives your coding agent structured processes that keep intent and evidence ahead of implementation. Start with Spec-Driven Development (SDD), bug fixing, or idea assessment. Run a process step by step, automate it, or [shape one of your own](guides/customization.md) — including processes beyond software development.
+Spec Kit 為程式代理提供結構化流程，讓意圖與證據優先於實作。從規格驅動開發（SDD）、錯誤修正或構想評估開始。逐步執行流程、將其自動化，或[塑造屬於自己的流程](guides/customization.md)，包含軟體開發以外的流程。
 
-<a href="installation.md" class="btn btn-primary btn-lg">Install Spec Kit</a>&nbsp;
-<a href="#choose-your-process" class="btn btn-outline-primary btn-lg">Choose your process</a>
+<a href="installation.md" class="btn btn-primary btn-lg">安裝 Spec Kit</a>&nbsp;
+<a href="#choose-your-process" class="btn btn-outline-primary btn-lg">選擇你的流程</a>
 
 </div>
 
@@ -17,21 +17,20 @@ Spec Kit gives your coding agent structured processes that keep intent and evide
 
 ## Choose your process
 
-| What you need | Start here | What you get |
+| 需求 | 從這裡開始 | 你將獲得 |
 | --- | --- | --- |
-| Build a feature or application | [Spec-Driven Development](quickstart.md) | A specification carried through planning, implementation, and convergence |
-| Diagnose and repair broken behavior | [Bug fixing](guides/bugfix.md) | An assessed cause, scoped fix, and recorded verification |
-| Decide whether an idea deserves investment | [Idea assessment](guides/assessment.md) | An evidence-backed go, clarify, or stop decision |
+| 打造功能或應用程式 | [規格驅動開發](quickstart.md) | 一份貫穿計畫、實作與收斂的規格 |
+| 診斷並修復異常行為 | [錯誤修正](guides/bugfix.md) | 經評估的原因、範圍明確的修復與記錄的驗證 |
+| 決定構想是否值得投入 | [構想評估](guides/assessment.md) | 有證據支持的繼續、釐清或停止決策 |
 
-These are independent entry points, not mandatory phases. SDD ships in core.
-Bug fixing and assessment are bundled, opt-in extensions. Assessment can stand
-alone; a decision to proceed does not automatically start implementation.
+這些是各自獨立的切入點，不是必經的階段。SDD 隨核心提供。
+錯誤修正與評估是隨附的選擇性擴充功能。評估可獨立運作；決定繼續並不會自動開始實作。
 
-See [how the Spec Kit project runs its agentic SDLC](guides/agentic-sdlc.md)
-and where it uses Spec Kit itself.
+請參閱 [Spec Kit 專案如何執行其代理式 SDLC](guides/agentic-sdlc.md)
+以及其在何處使用 Spec Kit 本身。
 
-Adding Spec Kit to an established codebase? Start with the
-[existing-project guide](guides/existing-projects.md).
+要將 Spec Kit 加入既有程式碼庫？請從
+[既有專案指南](guides/existing-projects.md)開始。
 
 ---
 
@@ -39,60 +38,60 @@ Adding Spec Kit to an established codebase? Start with the
 
 <div class="pillar-card">
 
-### Spec-driven by default
+### 預設即規格驅動
 
-The core SDD process ships ready to use: **Specify → Plan → Tasks → Implement → Converge**.
+核心 SDD 流程開箱即用：**Specify → Plan → Tasks → Implement → Converge**。
 
-Define what to build before building it. Rich templates, quality checklists, and cross-artifact analysis come out of the box. Each phase produces a Markdown artifact that feeds the next — giving your AI coding agent structured context instead of ad-hoc prompts.
+在打造之前先定義要打造什麼。豐富的範本、品質檢核清單與跨產出物分析皆開箱即用。每個階段產生一份 Markdown 產出物，作為下一階段的輸入，讓 AI 程式代理獲得結構化脈絡，而不是臨時提示詞。
 
-<a href="quickstart.md" class="pillar-link">Walk through the workflow →</a>
-
-</div>
-
-<div class="pillar-card">
-
-### Use any coding agent
-
-<span class="pillar-stat">38 integrations</span> — Copilot, Gemini, Codex, Kilo Code, Zed, Claude, Forge, Kiro, and more. Switch freely between agents with a single command. No lock-in.
-
-Run `specify init` with your agent of choice and Spec Kit sets up the right command files and directory structures automatically. If your agent isn't listed, the `generic` integration is an escape hatch for any tool.
-
-<a href="integrations/index.md" class="pillar-link">See all integrations →</a>
+<a href="quickstart.md" class="pillar-link">導覽工作流程 →</a>
 
 </div>
 
 <div class="pillar-card">
 
-### Make it your own
+### 使用任何程式代理
 
-<span class="pillar-stat">157 community extensions</span> (90+ authors), <span class="pillar-stat">33 presets</span>, and growing. Tune the core process with presets, extend it with extensions, orchestrate it with workflows, and package it all up as bundles you can share — or replace the process entirely. The process itself lives in these building blocks, so you're never locked to SDD, or even to software.
+<span class="pillar-stat">38 integrations</span> — Copilot、Gemini、Codex、Kilo Code、Zed、Claude、Forge、Kiro 等。以單一命令在代理之間自由切換。無綁定。
 
-Including entirely different processes:
+以你選擇的代理執行 `specify init`，Spec Kit 會自動設定正確的命令檔案與目錄結構。若你的代理未列於清單中，`generic` 整合可作為任何工具的備用方案。
 
-- **AIDE** — 7-step AI-driven engineering lifecycle
-- **Canon** — baseline-driven workflows (spec-first, code-first, spec-drift)
-- **Product Forge** — product-management-oriented SDD
-- **FX→.NET** — end-to-end .NET Framework migration across 7 phases
-- **MAQA** — multi-agent orchestration with quality assurance gates
-- **Fiction Book Writing** — novels and long-form fiction, from story bible to submission
-
-<a href="reference/presets.md" class="pillar-link">Presets →</a>&nbsp;&nbsp;
-<a href="reference/extensions.md" class="pillar-link">Extensions →</a>&nbsp;&nbsp;
-<a href="reference/workflows.md" class="pillar-link">Workflows →</a>&nbsp;&nbsp;
-<a href="reference/bundles.md" class="pillar-link">Bundles →</a>
+<a href="integrations/index.md" class="pillar-link">查看所有整合 →</a>
 
 </div>
 
 <div class="pillar-card">
 
-### Integrate into your organization
+### 打造屬於自己的版本
 
-Works offline, behind firewalls, and on **Windows, macOS, and Linux**. Host your own catalogs to curate what integrations, extensions, presets, workflows, and bundles your organization discovers and recommends.
+<span class="pillar-stat">157 community extensions</span>（90+ 位作者）、<span class="pillar-stat">33 presets</span>，且持續成長。以預設集調整核心流程、以擴充功能擴展流程、以工作流程協調流程，並將一切打包為可分享的套件組，或完全取代流程。流程本身就存在於這些建構區塊中，因此你永遠不會被綁在 SDD，甚至不會被綁在軟體上。
 
-Community extensions like CI Guard and Architecture Guard add compliance gates and governance that fit the way your team already works.
+包含截然不同的流程：
 
-<a href="install/air-gapped.md" class="pillar-link">Enterprise / Air-Gapped →</a>&nbsp;&nbsp;
-<a href="reference/overview.md" class="pillar-link">Reference →</a>
+- **AIDE** — 7 步驟 AI 驅動工程生命週期
+- **Canon** — 基線驅動工作流程（spec-first、code-first、spec-drift）
+- **Product Forge** — 以產品管理為導向的 SDD
+- **FX→.NET** — 橫跨 7 個階段的端到端 .NET Framework 遷移
+- **MAQA** — 具品質保證關卡的多代理協作
+- **Fiction Book Writing** — 從故事聖經到投稿的小說與長篇小說寫作
+
+<a href="reference/presets.md" class="pillar-link">預設集 →</a>&nbsp;&nbsp;
+<a href="reference/extensions.md" class="pillar-link">擴充功能 →</a>&nbsp;&nbsp;
+<a href="reference/workflows.md" class="pillar-link">工作流程 →</a>&nbsp;&nbsp;
+<a href="reference/bundles.md" class="pillar-link">套件組 →</a>
+
+</div>
+
+<div class="pillar-card">
+
+### 整合至你的組織
+
+可在離線、防火牆後，以及 **Windows、macOS 與 Linux** 上運作。自行託管目錄，策展你的組織能探索與推薦的整合、擴充功能、預設集、工作流程與套件組。
+
+CI Guard 與 Architecture Guard 等社群擴充功能，加入符合團隊既有工作方式的合規關卡與治理。
+
+<a href="install/air-gapped.md" class="pillar-link">企業版／氣隙環境 →</a>&nbsp;&nbsp;
+<a href="reference/overview.md" class="pillar-link">參考 →</a>
 
 </div>
 
@@ -102,9 +101,9 @@ Community extensions like CI Guard and Architecture Guard add compliance gates a
 
 <div class="community-section">
 
-## Built by the community
+## 由社群打造
 
-**270+ contributors** power the Spec Kit ecosystem — from core integrations to entirely new processes. Anyone can create and publish an extension, preset, or workflow.
+**270+ 位貢獻者**驅動 Spec Kit 生態系，從核心整合到全新的流程。任何人都能建立並發佈擴充功能、預設集或工作流程。
 
 <div class="stats-grid">
   <div class="stat-item">
@@ -133,62 +132,62 @@ Community extensions like CI Guard and Architecture Guard add compliance gates a
   </div>
 </div>
 
-<a href="community/presets.md">Presets</a> · <a href="community/walkthroughs.md">Walkthroughs</a> · <a href="community/friends.md">Friends</a>
+<a href="community/presets.md">預設集</a> · <a href="community/walkthroughs.md">實作導覽</a> · <a href="community/friends.md">Friends</a>
 
 </div>
 
 ---
 
-## Explore the docs
+## 探索文件
 
 <div class="nav-cards">
   <a href="guides/agentic-sdlc.md" class="nav-card">
     <strong>Spec Kit's Agentic SDLC</strong>
-    <span>How this project assesses, builds, tests, ships, and repairs changes</span>
+    <span>此專案如何評估、打造、測試、交付與修復變更</span>
   </a>
   <a href="quickstart.md" class="nav-card">
     <strong>Spec-Driven Development</strong>
-    <span>Define, plan, implement, and converge on a feature</span>
+    <span>定義、規劃、實作功能並使其收斂</span>
   </a>
   <a href="guides/bugfix.md" class="nav-card">
     <strong>Bug Fixing</strong>
-    <span>Assess the cause, apply a scoped fix, and verify the result</span>
+    <span>評估原因、套用範圍明確的修復並驗證結果</span>
   </a>
   <a href="guides/assessment.md" class="nav-card">
     <strong>Idea Assessment</strong>
-    <span>Research an idea and decide whether it deserves investment</span>
+    <span>研究構想並決定是否值得投入</span>
   </a>
   <a href="guides/customization.md" class="nav-card">
     <strong>Customize Spec Kit</strong>
-    <span>Adapt a process, add capabilities, or package a role-based setup</span>
+    <span>調整流程、加入能力，或打包以角色為基礎的設定</span>
   </a>
   <a href="guides/existing-projects.md" class="nav-card">
     <strong>Existing Projects</strong>
-    <span>Adopt Spec Kit safely in an established codebase</span>
+    <span>在既有程式碼庫中安全採用 Spec Kit</span>
   </a>
   <a href="upgrade.md" class="nav-card">
     <strong>Upgrade</strong>
-    <span>Keep an existing Spec Kit project current across releases</span>
+    <span>讓既有 Spec Kit 專案在各 release 間保持最新</span>
   </a>
   <a href="reference/overview.md" class="nav-card">
     <strong>Reference</strong>
-    <span>Core commands, catalogs, integrations, extensions, presets, and workflows</span>
+    <span>核心命令、目錄、整合、擴充功能、預設集與工作流程</span>
   </a>
   <a href="community/overview.md" class="nav-card">
     <strong>Community</strong>
-    <span>Extensions, presets, walkthroughs, and friend projects</span>
+    <span>擴充功能、預設集、實作導覽與 Friend 專案</span>
   </a>
   <a href="local-development.md" class="nav-card">
     <strong>Development</strong>
-    <span>Contribute to Spec Kit</span>
+    <span>為 Spec Kit 貢獻</span>
   </a>
   <a href="concepts/sdd.md" class="nav-card">
     <strong>What is SDD?</strong>
-    <span>The philosophy behind Spec-Driven Development</span>
+    <span>規格驅動開發背後的理念</span>
   </a>
   <a href="history.md" class="nav-card">
     <strong>History</strong>
-    <span>How Spec Kit grew from its SDD foundation into an extensible process harness</span>
+    <span>Spec Kit 如何從 SDD 基礎成長為可擴充的流程框架</span>
   </a>
 </div>
 
@@ -201,7 +200,7 @@ uv tool install specify-cli
 specify init my-project --integration copilot
 ```
 
-Ready to start? [Choose your process](#choose-your-process).
+準備好開始了嗎？[選擇你的流程](#choose-your-process)。
 
 </div>
 

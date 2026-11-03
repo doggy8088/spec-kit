@@ -1,23 +1,19 @@
-# Developing extensions
+# 開發擴充功能
 
-A guide for creating Spec Kit extensions using GitHub Copilot's skills layout.
-Invoke skills in Copilot chat with hyphenated names such as
-`/speckit-my-ext-hello`. Extension manifests still use dotted command identifiers
-such as `speckit.my-ext.hello`; Spec Kit renders them as Copilot skills during
-installation.
+使用 GitHub Copilot skills 配置建立 Spec Kit 擴充功能的指南。在 Copilot 聊天中以連字號名稱呼叫 skills，例如 `/speckit-my-ext-hello`。擴充功能資訊清單仍使用帶點的命令識別碼，例如 `speckit.my-ext.hello`；Spec Kit 會在安裝時將它們轉譯為 Copilot skills。
 
 ---
 
-## Quick Start
+## 快速入門
 
-### 1. Create Extension Directory
+### 1. 建立擴充功能目錄
 
 ```bash
 mkdir my-extension
 cd my-extension
 ```
 
-### 2. Create `extension.yml` Manifest
+### 2. 建立 `extension.yml` 資訊清單
 
 ```yaml
 schema_version: "1.0"
@@ -63,15 +59,15 @@ tags:                                   # Optional: For catalog search
   - "utility"
 ```
 
-### 3. Create Commands Directory
+### 3. 建立命令目錄
 
 ```bash
 mkdir commands
 ```
 
-### 4. Create Command File
+### 4. 建立命令檔案
 
-**File**: `commands/hello.md`
+**檔案**：`commands/hello.md`
 
 ````markdown
 ---
@@ -106,7 +102,7 @@ echo "Arguments: $ARGUMENTS"
 Load extension config from `.specify/extensions/my-ext/my-ext-config.yml`.
 ````
 
-### 5. Test Locally
+### 5. 在本機測試
 
 ```bash
 cd /path/to/spec-kit-project
@@ -114,13 +110,9 @@ specify integration install copilot --integration-options="--skills"
 specify extension add --dev /path/to/my-extension
 ```
 
-For a new project, initialize it with
-`specify init my-project --integration copilot --integration-options="--skills"`.
-If Copilot is already installed in a commands layout, follow the
-[Copilot migration guidance](../integrations/copilot.md#commands-layout)
-instead of installing it again.
+對於新專案，請以 `specify init my-project --integration copilot --integration-options="--skills"` 初始化。如果 Copilot 已以 commands 配置安裝，請遵循 [Copilot 遷移指南](../integrations/copilot.md#commands-layout)，不要再次安裝。
 
-### 6. Verify Installation
+### 6. 驗證安裝
 
 ```bash
 specify extension list
@@ -131,144 +123,139 @@ specify extension list
 #     Commands: 1 | Hooks: 1 | Status: Enabled
 ```
 
-### 7. Test Skill
+### 7. 測試 Skill
 
-Open GitHub Copilot chat and invoke the skill:
+開啟 GitHub Copilot 聊天並呼叫該 skill：
 
 ```text
 /speckit-my-ext-hello world
 ```
 
-The generated skill is available in
-`.github/skills/speckit-my-ext-hello/SKILL.md`. This invocation belongs in
-Copilot chat, not in your terminal.
+產生的 skill 位於 `.github/skills/speckit-my-ext-hello/SKILL.md`。此呼叫應在 Copilot 聊天中進行，不是在終端機中。
 
 ---
 
-## Manifest Schema Reference
+## 資訊清單結構描述參考
 
-### Required Fields
+### 必填欄位
 
 #### `schema_version`
 
-Extension manifest schema version. Currently: `"1.0"`
+擴充功能資訊清單結構描述版本。目前為：`"1.0"`
 
 #### `extension`
 
-Extension metadata block.
+擴充功能後設資料區塊。
 
-**Required sub-fields**:
+**必填子欄位**：
 
-- `id`: Extension identifier (lowercase, alphanumeric, hyphens)
-- `name`: Human-readable name
-- `version`: Semantic version (e.g., "1.0.0")
-- `description`: Short description
+- `id`：擴充功能識別碼（小寫、英數字元、連字號）
+- `name`：方便閱讀的名稱
+- `version`：語意化版本（例如 "1.0.0"）
+- `description`：簡短說明
 
-**Optional sub-fields**:
+**選用子欄位**：
 
-- `author`: Extension author
-- `repository`: Source code URL
-- `license`: SPDX license identifier
-- `homepage`: Extension homepage URL
+- `author`：擴充功能作者
+- `repository`：原始碼 URL
+- `license`：SPDX 授權識別碼
+- `homepage`：擴充功能首頁 URL
 
 #### `requires`
 
-Compatibility requirements.
+相容性需求。
 
-**Required sub-fields**:
+**必填子欄位**：
 
-- `speckit_version`: Semantic version specifier (e.g., ">=0.1.0,<2.0.0")
+- `speckit_version`：語意化版本指定子（例如 ">=0.1.0,<2.0.0"）
 
-**Optional sub-fields**:
+**選用子欄位**：
 
-- `tools`: External tools required (array of tool objects)
-- `commands`: Core spec-kit commands needed (array of command names)
-- `scripts`: Core scripts required (array of script names)
+- `tools`：所需的外部工具（工具物件陣列）
+- `commands`：所需的核心 spec-kit 命令（命令名稱陣列）
+- `scripts`：所需的核心指令碼（指令碼名稱陣列）
 
 #### `provides`
 
-What the extension provides.
+擴充功能提供的內容。
 
-**Optional sub-fields:**
+**選用子欄位：**
 
-- `commands`: Array of command objects
-- `templates`: Array of template objects
-- `scripts`: Array of script objects
+- `commands`：命令物件陣列
+- `templates`：範本物件陣列
+- `scripts`：指令碼物件陣列
 
-`hooks` and `events` are separate top-level manifest fields (siblings of
-`provides`, not nested under it — see [`hooks`](#hooks) below). At least one
-of `provides.commands`, `provides.templates`, `provides.scripts`, `hooks`, or
-`events` is required.
+`hooks` 與 `events` 是獨立的頂層資訊清單欄位（與 `provides` 同層級，不巢狀於其下——見下文 [`hooks`](#hooks)）。`provides.commands`、`provides.templates`、`provides.scripts`、`hooks` 或 `events` 至少需要一個。
 
-**Command object**:
+**命令物件**：
 
-- `name`: Command name (must match `speckit.{ext-id}.{command}`)
-- `file`: Path to command file (relative to extension root)
-- `description`: Command description (optional)
+- `name`：命令名稱（必須符合 `speckit.{ext-id}.{command}`）
+- `file`：命令檔案路徑（相對於擴充功能根目錄）
+- `description`：命令說明（選用）
 
-**Template object**:
+**範本物件**：
 
-- `name`: Template name (lowercase, alphanumeric, hyphens — e.g. `myext-template`)
-- `file`: Path to template file (relative to extension root)
-- `description`: Template description (optional)
+- `name`：範本名稱（小寫、英數字元、連字號——例如 `myext-template`）
+- `file`：範本檔案路徑（相對於擴充功能根目錄）
+- `description`：範本說明（選用）
 
-**Script object**:
+**指令碼物件**：
 
-- `name`: Script name (lowercase, alphanumeric, hyphens — e.g. `myext-collect`)
-- `file`: Path to script file (relative to extension root)
-- `description`: Script description (optional)
-- `runtimes`: Runtimes the script supports (optional, array; subset of `bash`, `powershell`, `python` — informational only, not used to select or invoke the script)
+- `name`：指令碼名稱（小寫、英數字元、連字號——例如 `myext-collect`）
+- `file`：指令碼檔案路徑（相對於擴充功能根目錄）
+- `description`：指令碼說明（選用）
+- `runtimes`：指令碼支援的執行環境（選用，陣列；`bash`、`powershell`、`python` 的子集——僅供資訊參考，不用於選擇或呼叫指令碼）
 
-Extension-provided templates and scripts always resolve as `replace`; a manifest that includes a `strategy` key on one of these entries is rejected with a `ValidationError`. Composable strategies (`wrap`/`prepend`/`append`) are preset-only.
+擴充功能提供的範本與指令碼一律解析為 `replace`；若資訊清單在其中一個條目上包含 `strategy` 鍵，將以 `ValidationError` 拒絕。可組合策略（`wrap`/`prepend`/`append`）僅供預設集使用。
 
-### Optional Fields
+### 選用欄位
 
 #### `hooks`
 
-Integration hooks for automatic execution.
+用於自動執行的整合 hook。
 
-Available hook points:
+可用的 hook 點：
 
-- `before_specify` / `after_specify`: Before/after specification generation
-- `before_plan` / `after_plan`: Before/after implementation planning
-- `before_tasks` / `after_tasks`: Before/after task generation
-- `before_implement` / `after_implement`: Before/after implementation
-- `before_analyze` / `after_analyze`: Before/after cross-artifact analysis
-- `before_checklist` / `after_checklist`: Before/after checklist generation
-- `before_clarify` / `after_clarify`: Before/after spec clarification
-- `before_constitution` / `after_constitution`: Before/after constitution update
-- `before_bug_assess` / `after_bug_assess`: Before/after bug assessment (bundled `bug` extension)
-- `before_bug_fix` / `after_bug_fix`: Before/after bug remediation (bundled `bug` extension)
-- `before_bug_test` / `after_bug_test`: Before/after bug verification (bundled `bug` extension)
+- `before_specify` / `after_specify`：規格產生之前／之後
+- `before_plan` / `after_plan`：實作規劃之前／之後
+- `before_tasks` / `after_tasks`：任務產生之前／之後
+- `before_implement` / `after_implement`：實作之前／之後
+- `before_analyze` / `after_analyze`：跨成品分析之前／之後
+- `before_checklist` / `after_checklist`：檢核清單產生之前／之後
+- `before_clarify` / `after_clarify`：規格釐清之前／之後
+- `before_constitution` / `after_constitution`：憲章更新之前／之後
+- `before_bug_assess` / `after_bug_assess`：錯誤評估之前／之後（內建 `bug` 擴充功能）
+- `before_bug_fix` / `after_bug_fix`：錯誤修復之前／之後（內建 `bug` 擴充功能）
+- `before_bug_test` / `after_bug_test`：錯誤驗證之前／之後（內建 `bug` 擴充功能）
 
-Each event accepts a single hook object or a list of hook objects (multiple commands on one event).
+每個事件可接受單一 hook 物件或 hook 物件清單（一個事件多個命令）。
 
-Hook object:
+Hook 物件：
 
-- `command`: Command to execute (typically from `provides.commands`, but can reference any registered command)
-- `priority`: Run order within the event (integer ≥ 1, default 10; lower runs first; equal priorities keep authoring order)
-- `optional`: If true, prompt user before executing
-- `prompt`: Prompt text for optional hooks
-- `description`: Hook description
-- `condition`: Execution condition (future)
+- `command`：要執行的命令（通常來自 `provides.commands`，但可引用任何已註冊命令）
+- `priority`：事件內的執行順序（整數 ≥ 1，預設 10；數字越小越先執行；優先順序相同時保留撰寫順序）
+- `optional`：若為 true，執行前提示使用者
+- `prompt`：選用 hook 的提示文字
+- `description`：Hook 說明
+- `condition`：執行條件（未來功能）
 
 #### `tags`
 
-Array of tags for catalog discovery.
+用於目錄探索的標籤陣列。
 
 #### `defaults`
 
-Default extension configuration values.
+擴充功能的預設設定值。
 
 #### `config_schema`
 
-JSON Schema for validating extension configuration.
+用於驗證擴充功能設定的 JSON Schema。
 
 ---
 
-## Command File Format
+## 命令檔案格式
 
-### Frontmatter (YAML)
+### Frontmatter（YAML）
 
 ```yaml
 ---
@@ -281,15 +268,15 @@ scripts:                                    # Optional
 ---
 ```
 
-### Body (Markdown)
+### 內文（Markdown）
 
-Use standard Markdown with special placeholders:
+使用標準 Markdown 搭配特殊佔位符：
 
-- `$ARGUMENTS`: User-provided arguments
-- `{SCRIPT}`: Replaced with script path during registration
-- `__SPECKIT_COMMAND_<NAME>__`: Replaced with the invocation of another command, rendered using the active integration's separator (see [Referencing other commands](#referencing-other-commands))
+- `$ARGUMENTS`：使用者提供的參數
+- `{SCRIPT}`：註冊時替換為指令碼路徑
+- `__SPECKIT_COMMAND_<NAME>__`：替換為另一個命令的呼叫方式，使用目前整合的分隔符轉譯（見[引用其他命令](#引用其他命令)）
 
-**Example**:
+**範例**：
 
 ````markdown
 ## Steps
@@ -303,70 +290,60 @@ echo "Running with args: $args"
 ```
 ````
 
-### Referencing other commands
+### 引用其他命令
 
-A command body is a *template* that Spec Kit renders as a Copilot skill.
-When referencing another command from that body, **do not hard-code its
-invocation**. Use a command-reference token so Spec Kit renders the correct
-skill syntax and the extension remains portable.
+命令內文是 Spec Kit 轉譯為 Copilot skill 的*範本*。從該內文引用另一個命令時，**不要硬編碼其呼叫方式**。請使用命令引用權杖，讓 Spec Kit 轉譯出正確的 skill 語法，並保持擴充功能的可攜性。
 
-Use the token `__SPECKIT_COMMAND_<NAME>__`. In Copilot's skills layout,
-Spec Kit resolves it to a `/speckit-...` invocation.
+使用權杖 `__SPECKIT_COMMAND_<NAME>__`。在 Copilot 的 skills 配置中，Spec Kit 會將它解析為 `/speckit-...` 呼叫。
 
-Encode the command name in upper case, dropping the `speckit.` prefix and turning each dotted segment separator into an underscore. A hyphen inside a segment is kept as a hyphen:
+命令名稱以大寫編碼，省略 `speckit.` 前綴，並將每個以點分隔的區段分隔符轉為底線。區段內的連字號保持為連字號：
 
-| Command file | Token |
+| 命令檔案 | 權杖 |
 | --- | --- |
 | `speckit.plan.md` | `__SPECKIT_COMMAND_PLAN__` |
 | `speckit.bug.fix.md` | `__SPECKIT_COMMAND_BUG_FIX__` |
 | `speckit.git.commit.md` | `__SPECKIT_COMMAND_GIT_COMMIT__` |
 | `speckit.agent-context.update.md` | `__SPECKIT_COMMAND_AGENT-CONTEXT_UPDATE__` |
 
-An underscore separates command segments and a hyphen belongs to the segment
-it sits in, so `AGENT-CONTEXT_UPDATE` is the two segments `agent-context` and
-`update` rather than three. Copilot renders this as
-`/speckit-agent-context-update`.
+底線分隔命令區段，連字號屬於它所在的區段，因此 `AGENT-CONTEXT_UPDATE` 是 `agent-context` 與 `update` 兩個區段，而不是三個。Copilot 會將此轉譯為 `/speckit-agent-context-update`。
 
-**Example** — a command body that points the user at the next step:
+**範例**——將使用者指向下一步的命令內文：
 
 ```markdown
 Once the assessment exists, the next step is `__SPECKIT_COMMAND_BUG_FIX__ slug=<slug>`.
 ```
 
-This renders as `/speckit-bug-fix slug=<slug>` in Copilot chat. The first-party
-`bug` and `git` extensions use this token exclusively; see
-`extensions/bug/commands/` for working examples.
+在 Copilot 聊天中，這會轉譯為 `/speckit-bug-fix slug=<slug>`。第一方的 `bug` 與 `git` 擴充功能專門使用此權杖；實際範例見 `extensions/bug/commands/`。
 
-For other integrations' invocation formats, see the shared
-[command invocation reference](../integrations/cli.md#command-invocation).
+其他整合的呼叫格式，請參閱共用的[命令呼叫參考](../integrations/cli.md#command-invocation)。
 
-### Script Path Rewriting
+### 指令碼路徑重寫
 
-Extension commands use relative paths that get rewritten during registration:
+擴充功能命令使用相對路徑，註冊時會被重寫：
 
-**In extension**:
+**在擴充功能中**：
 
 ```yaml
 scripts:
   sh: ../../scripts/bash/helper.sh
 ```
 
-**After registration**:
+**註冊後**：
 
 ```yaml
 scripts:
   sh: .specify/scripts/bash/helper.sh
 ```
 
-This allows scripts to reference core spec-kit scripts.
+這讓指令碼能引用核心 spec-kit 指令碼。
 
 ---
 
-## Configuration Files
+## 設定檔
 
-### Config Template
+### 設定範本
 
-**File**: `my-ext-config.template.yml`
+**檔案**：`my-ext-config.template.yml`
 
 ```yaml
 # My Extension Configuration
@@ -387,16 +364,16 @@ credentials:
   api_key: "${MY_EXT_API_KEY}"
 ```
 
-### Config Loading
+### 設定載入
 
-In your command, load config with layered precedence:
+在你的命令中，以分層優先順序載入設定：
 
-1. Extension defaults (`extension.yml` → `defaults`)
-2. Project config (`.specify/extensions/my-ext/my-ext-config.yml`)
-3. Local overrides (`.specify/extensions/my-ext/my-ext-config.local.yml` - gitignored)
-4. Environment variables (`SPECKIT_MY_EXT_*`)
+1. 擴充功能預設值（`extension.yml` → `defaults`）
+2. 專案設定（`.specify/extensions/my-ext/my-ext-config.yml`）
+3. 本機覆寫（`.specify/extensions/my-ext/my-ext-config.local.yml`——已加入 gitignore）
+4. 環境變數（`SPECKIT_MY_EXT_*`）
 
-**Example loading script**:
+**載入指令碼範例**：
 
 ```bash
 #!/usr/bin/env bash
@@ -415,27 +392,27 @@ echo "$config"
 
 ---
 
-## Excluding Files with `.extensionignore`
+## 以 `.extensionignore` 排除檔案
 
-Extension authors can create a `.extensionignore` file in the extension root to exclude files and folders from being copied when a user installs the extension with `specify extension add`. This is useful for keeping development-only files (tests, CI configs, docs source, etc.) out of the installed copy.
+擴充功能作者可以在擴充功能根目錄建立 `.extensionignore` 檔案，排除使用者以 `specify extension add` 安裝擴充功能時不應複製的檔案與資料夾。這對於將僅供開發的檔案（測試、CI 設定、文件來源等）排除在安裝副本之外很有用。
 
-### Format
+### 格式
 
-The file uses `.gitignore`-compatible patterns (one per line), powered by the [`pathspec`](https://pypi.org/project/pathspec/) library:
+此檔案使用與 `.gitignore` 相容的模式（每行一個），由 [`pathspec`](https://pypi.org/project/pathspec/) 程式庫驅動：
 
-- Blank lines are ignored
-- Lines starting with `#` are comments
-- `*` matches anything **except** `/` (does not cross directory boundaries)
-- `**` matches zero or more directories (e.g., `docs/**/*.draft.md`)
-- `?` matches any single character except `/`
-- A trailing `/` restricts a pattern to directories only
-- Patterns containing `/` (other than a trailing slash) are anchored to the extension root
-- Patterns without `/` match at any depth in the tree
-- `!` negates a previously excluded pattern (re-includes a file)
-- Backslashes in patterns are normalised to forward slashes for cross-platform compatibility
-- The `.extensionignore` file itself is always excluded automatically
+- 空行會被忽略
+- 以 `#` 開頭的行是註解
+- `*` 符合除 `/` 以外的任何內容（不跨目錄邊界）
+- `**` 符合零個或多個目錄（例如 `docs/**/*.draft.md`）
+- `?` 符合除 `/` 以外的任何單一字元
+- 結尾的 `/` 將模式限制為僅目錄
+- 包含 `/` 的模式（結尾斜線除外）會錨定到擴充功能根目錄
+- 不含 `/` 的模式可在樹狀結構的任何深度符合
+- `!` 否定先前已排除的模式（重新包含檔案）
+- 模式中的反斜線會正規化為正斜線，以確保跨平台相容性
+- `.extensionignore` 檔案本身一律自動排除
 
-### Example
+### 範例
 
 ```gitignore
 # .extensionignore
@@ -455,89 +432,88 @@ docs/
 CONTRIBUTING.md
 ```
 
-### Pattern Matching
+### 模式比對
 
-| Pattern | Matches | Does NOT match |
+| 模式 | 符合 | 不符合 |
 |---------|---------|----------------|
-| `*.pyc` | Any `.pyc` file in any directory | — |
-| `tests/` | The `tests` directory (and all its contents) | A file named `tests` |
-| `docs/*.draft.md` | `docs/api.draft.md` (directly inside `docs/`) | `docs/sub/api.draft.md` (nested) |
-| `.env` | The `.env` file at any level | — |
-| `!README.md` | Re-includes `README.md` even if matched by an earlier pattern | — |
-| `docs/**/*.draft.md` | `docs/api.draft.md`, `docs/sub/api.draft.md` | — |
+| `*.pyc` | 任何目錄中的任何 `.pyc` 檔案 | — |
+| `tests/` | `tests` 目錄（及其全部內容） | 名為 `tests` 的檔案 |
+| `docs/*.draft.md` | `docs/api.draft.md`（直接位於 `docs/` 內） | `docs/sub/api.draft.md`（巢狀） |
+| `.env` | 任何層級的 `.env` 檔案 | — |
+| `!README.md` | 即使被先前模式符合，也重新包含 `README.md` | — |
+| `docs/**/*.draft.md` | `docs/api.draft.md`、`docs/sub/api.draft.md` | — |
 
-### Unsupported Features
+### 不支援的功能
 
-The following `.gitignore` features are **not applicable** in this context:
+以下 `.gitignore` 功能在此情境中**不適用**：
 
-- **Multiple `.extensionignore` files**: Only a single file at the extension root is supported (`.gitignore` supports files in subdirectories)
-- **`$GIT_DIR/info/exclude` and `core.excludesFile`**: These are Git-specific and have no equivalent here
-- **Negation inside excluded directories**: Because file copying uses `shutil.copytree`, excluding a directory prevents recursion into it entirely. A negation pattern cannot re-include a file inside a directory that was itself excluded. For example, the combination `tests/` followed by `!tests/important.py` will **not** preserve `tests/important.py` — the `tests/` directory is skipped at the root level and its contents are never evaluated. To work around this, exclude the directory's contents individually instead of the directory itself (e.g., `tests/*.pyc` and `tests/.cache/` rather than `tests/`).
-
----
-
-## Validation Rules
-
-### Extension ID
-
-- **Pattern**: `^[a-z0-9-]+$`
-- **Valid**: `my-ext`, `tool-123`, `awesome-plugin`
-- **Invalid**: `MyExt` (uppercase), `my_ext` (underscore), `my ext` (space)
-
-### Extension Version
-
-- **Format**: Semantic versioning (MAJOR.MINOR.PATCH)
-- **Valid**: `1.0.0`, `0.1.0`, `2.5.3`
-- **Invalid**: `1.0`, `v1.0.0`, `1.0.0-beta`
-
-### Command Name
-
-- **Pattern**: `^speckit\.[a-z0-9-]+\.[a-z0-9-]+$`
-- **Valid**: `speckit.my-ext.hello`, `speckit.tool.cmd`
-- **Invalid**: `my-ext.hello` (missing prefix), `speckit.hello` (no extension namespace)
-
-### Command File Path
-
-- **Must be** relative to extension root
-- **Valid**: `commands/hello.md`, `commands/subdir/cmd.md`
-- **Invalid**: `/absolute/path.md`, `../outside.md`
+- **多個 `.extensionignore` 檔案**：僅支援擴充功能根目錄的單一檔案（`.gitignore` 支援子目錄中的檔案）
+- **`$GIT_DIR/info/exclude` 與 `core.excludesFile`**：這些是 Git 專屬功能，此處無對應功能
+- **已排除目錄內的否定**：由於檔案複製使用 `shutil.copytree`，排除目錄會完全阻止遞迴進入。否定模式無法重新包含本身已被排除的目錄內的檔案。例如，`tests/` 後接 `!tests/important.py` 的組合將**不會**保留 `tests/important.py`——`tests/` 目錄會在根層級被跳過，其內容永遠不會被評估。若要解決此問題，請個別排除目錄的內容，而非目錄本身（例如使用 `tests/*.pyc` 與 `tests/.cache/`，而非 `tests/`）。
 
 ---
 
-## Testing Extensions
+## 驗證規則
 
-### Manual Testing
+### 擴充功能 ID
 
-1. **Create test extension** in a project configured for
-   [Copilot skills](../integrations/copilot.md#setup).
-2. **Install locally**:
+- **模式**：`^[a-z0-9-]+$`
+- **有效**：`my-ext`、`tool-123`、`awesome-plugin`
+- **無效**：`MyExt`（大寫）、`my_ext`（底線）、`my ext`（空格）
+
+### 擴充功能版本
+
+- **格式**：語意化版本（MAJOR.MINOR.PATCH）
+- **有效**：`1.0.0`、`0.1.0`、`2.5.3`
+- **無效**：`1.0`、`v1.0.0`、`1.0.0-beta`
+
+### 命令名稱
+
+- **模式**：`^speckit\.[a-z0-9-]+\.[a-z0-9-]+$`
+- **有效**：`speckit.my-ext.hello`、`speckit.tool.cmd`
+- **無效**：`my-ext.hello`（缺少前綴）、`speckit.hello`（無擴充功能命名空間）
+
+### 命令檔案路徑
+
+- **必須**相對於擴充功能根目錄
+- **有效**：`commands/hello.md`、`commands/subdir/cmd.md`
+- **無效**：`/absolute/path.md`、`../outside.md`
+
+---
+
+## 測試擴充功能
+
+### 手動測試
+
+1. 在已設定 [Copilot skills](../integrations/copilot.md#setup) 的專案中**建立測試擴充功能**。
+2. **在本機安裝**：
 
    ```bash
    specify extension add --dev /path/to/extension
    ```
 
-3. **Verify installation**:
+3. **驗證安裝**：
 
    ```bash
    specify extension list
    ```
 
-4. **Test skills** in Copilot chat, for example `/speckit-my-ext-hello world`.
-5. **Check skill registration**:
+4. 在 Copilot 聊天中**測試 skills**，例如 `/speckit-my-ext-hello world`。
+5. **檢查 skill 註冊**：
 
    ```bash
    ls .github/skills/speckit-my-ext-*/SKILL.md
    ```
 
-6. **Remove extension**:
+6. **移除擴充功能**：
 
    ```bash
    specify extension remove my-ext
    ```
 
-### Automated Testing
+### 自動化測試
 
-Create tests for your extension:
+為你的擴充功能建立測試：
 
 ```python
 # tests/test_my_extension.py
@@ -561,12 +537,12 @@ def test_command_files_exist():
 
 ---
 
-## Distribution
+## 發佈
 
-### Option 1: GitHub Repository
+### 選項 1：GitHub 儲存庫
 
-1. **Create repository**: `spec-kit-my-ext`
-2. **Add files**:
+1. **建立儲存庫**：`spec-kit-my-ext`
+2. **加入檔案**：
 
    ```text
    spec-kit-my-ext/
@@ -579,91 +555,85 @@ def test_command_files_exist():
    └── CHANGELOG.md
    ```
 
-3. **Create release**: Tag with version (e.g., `v1.0.0`)
-4. **Install from repo**:
+3. **建立發行版本**：以版本標記（例如 `v1.0.0`）
+4. **從儲存庫安裝**：
 
    ```bash
    git clone https://github.com/you/spec-kit-my-ext
    specify extension add --dev spec-kit-my-ext/
    ```
 
-### Option 2: ZIP Archive (Future)
+### 選項 2：ZIP 封存檔（未來功能）
 
-Create ZIP archive and host on GitHub Releases:
+建立 ZIP 封存檔並託管在 GitHub Releases：
 
 ```bash
 zip -r spec-kit-my-ext-1.0.0.zip extension.yml commands/ scripts/ docs/
 ```
 
-Users install with:
+使用者以下列方式安裝：
 
 ```bash
 specify extension add <extension-name> --from https://github.com/.../spec-kit-my-ext-1.0.0.zip
 ```
 
-### Option 3: Community Reference Catalog
+### 選項 3：社群參考目錄
 
-Submit to the community catalog for public discovery:
+提交到社群目錄供公開探索：
 
-1. **Create a GitHub release** for your extension
-2. **File an issue** using the [Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml) template
-3. **After review**, a maintainer updates the catalog and your extension becomes available:
-   - Users can browse `catalog.community.json` to discover your extension
-   - Users copy the entry to their own `catalog.json`
-   - Users install with: `specify extension add my-ext` (from their catalog)
+1. 為你的擴充功能**建立 GitHub 發行版本**
+2. 使用 [Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml) 範本**建立 issue**
+3. **審查後**，維護者會更新目錄，你的擴充功能即可用：
+   - 使用者可瀏覽 `catalog.community.json` 探索你的擴充功能
+   - 使用者將條目複製到自己的 `catalog.json`
+   - 使用者安裝：`specify extension add my-ext`（從其目錄）
 
-See the [Extension Publishing Guide](publishing.md) for detailed submission instructions.
-
----
-
-## Best Practices
-
-### Naming Conventions
-
-- **Extension ID**: Use descriptive, hyphenated names (`jira-integration`, not `ji`)
-- **Commands**: Use verb-noun pattern (`create-issue`, `sync-status`)
-- **Config files**: Match extension ID (`jira-config.yml`)
-
-### Documentation
-
-- **README.md**: Overview, installation, usage
-- **CHANGELOG.md**: Version history
-- **docs/**: Detailed guides
-- **Command descriptions**: Clear, concise
-
-### Versioning
-
-- **Follow SemVer**: `MAJOR.MINOR.PATCH`
-- **MAJOR**: Breaking changes
-- **MINOR**: New features
-- **PATCH**: Bug fixes
-- **Bump on every content change**: update offers from `specify extension
-  update` are version-driven, so a content change shipped without a
-  version bump is never delivered automatically to already-installed
-  copies. For the bundled extensions in this repository the bump is
-  enforced by CI (`extension-version-guard.yml`): a PR that changes
-  files under `extensions/<id>/` must also bump that extension's
-  `extension.yml` version and keep `extensions/catalog.json` in sync.
-
-### Security
-
-- **Never commit secrets**: Use environment variables
-- **Validate input**: Sanitize user arguments
-- **Document permissions**: What files/APIs are accessed
-
-### Compatibility
-
-- **Specify version range**: Don't require exact version
-- **Test with multiple versions**: Ensure compatibility
-- **Graceful degradation**: Handle missing features
+詳細提交說明請參閱[擴充功能發佈指南](publishing.md)。
 
 ---
 
-## Example Extensions
+## 最佳實務
 
-### Minimal Extension
+### 命名慣例
 
-Smallest possible extension:
+- **擴充功能 ID**：使用具描述性的連字號名稱（`jira-integration`，而非 `ji`）
+- **命令**：使用動詞-名詞模式（`create-issue`、`sync-status`）
+- **設定檔**：與擴充功能 ID 相符（`jira-config.yml`）
+
+### 文件
+
+- **README.md**：概覽、安裝、使用
+- **CHANGELOG.md**：版本歷史
+- **docs/**：詳細指南
+- **命令說明**：清晰、簡潔
+
+### 版本管理
+
+- **遵循 SemVer**：`MAJOR.MINOR.PATCH`
+- **MAJOR**：破壞性變更
+- **MINOR**：新功能
+- **PATCH**：錯誤修正
+- **每次內容變更都要提升版本**：`specify extension update` 的更新提供由版本驅動，因此未提升版本就出貨的內容變更，永遠不會自動交付給已安裝的副本。對於此儲存庫中的內建擴充功能，提升版本由 CI 強制執行（`extension-version-guard.yml`）：變更 `extensions/<id>/` 下檔案的 PR，也必須提升該擴充功能的 `extension.yml` 版本，並保持 `extensions/catalog.json` 同步。
+
+### 安全性
+
+- **絕不提交機密**：使用環境變數
+- **驗證輸入**：清理使用者參數
+- **記錄權限**：會存取哪些檔案／API
+
+### 相容性
+
+- **指定版本範圍**：不要要求精確版本
+- **以多個版本測試**：確保相容性
+- **優雅降級**：處理缺少的功能
+
+---
+
+## 擴充功能範例
+
+### 最小擴充功能
+
+最小可行的擴充功能：
 
 ```yaml
 # extension.yml
@@ -694,9 +664,9 @@ echo "Hello, $ARGUMENTS!"
 ```
 ````
 
-### Extension with Config
+### 附設定的擴充功能
 
-Extension using configuration:
+使用設定的擴充功能：
 
 ```yaml
 # extension.yml
@@ -726,9 +696,9 @@ echo "Using endpoint: $endpoint"
 ```
 ````
 
-### Extension with Hooks
+### 附 Hook 的擴充功能
 
-Extension that runs automatically:
+自動執行的擴充功能：
 
 ```yaml
 # extension.yml
@@ -739,7 +709,7 @@ hooks:
     description: "Analyze tasks after generation"
 ```
 
-Multiple commands on one event, ordered by `priority` (lower runs first):
+一個事件多個命令，依 `priority` 排序（數字越小越先執行）：
 
 ```yaml
 # extension.yml
@@ -758,65 +728,63 @@ hooks:
 
 ---
 
-## Troubleshooting
+## 疑難排解
 
-### Extension won't install
+### 擴充功能無法安裝
 
-**Error**: `Invalid extension ID`
+**錯誤**：`Invalid extension ID`
 
-- **Fix**: Use lowercase, alphanumeric + hyphens only
+- **修正**：僅使用小寫、英數字元加連字號
 
-**Error**: `Extension requires spec-kit >=0.2.0`
+**錯誤**：`Extension requires spec-kit >=0.2.0`
 
-- **Fix**: Upgrade Spec Kit using the [Upgrade Guide](../upgrade.md). `uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git` remains available as a source-install fallback. If you installed from PyPI and want to stay on that route, follow the [PyPI upgrade guidance](../install/pypi.md#upgrade).
+- **修正**：使用[升級指南](../upgrade.md)升級 Spec Kit。`uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git` 仍可作為從原始碼安裝的備援方式。如果你是從 PyPI 安裝並希望沿用該路徑，請遵循 [PyPI 升級指南](../install/pypi.md#upgrade)。
 
-**Error**: `Command file not found`
+**錯誤**：`Command file not found`
 
-- **Fix**: Ensure command files exist at paths specified in manifest
+- **修正**：確保命令檔案存在於資訊清單指定的路徑
 
-### Skills not registered
+### Skills 未註冊
 
-**Symptom**: Skills don't appear in GitHub Copilot chat
+**症狀**：Skills 未出現在 GitHub Copilot 聊天中
 
-**Check**:
+**檢查**：
 
-1. The generated skill exists at `.github/skills/speckit-my-ext-hello/SKILL.md`
-2. Extension installed successfully
-3. Commands registered in registry:
+1. 產生的 skill 存在於 `.github/skills/speckit-my-ext-hello/SKILL.md`
+2. 擴充功能安裝成功
+3. 命令已在登錄中註冊：
 
    ```bash
    cat .specify/extensions/.registry
    ```
 
-**Fix**: Confirm Copilot is configured for the
-[skills layout](../integrations/copilot.md#default-skills-layout), then
-reinstall the extension to trigger registration.
+**修正**：確認 Copilot 已設定為 [skills 配置](../integrations/copilot.md#default-skills-layout)，然後重新安裝擴充功能以觸發註冊。
 
-### Config not loading
+### 設定未載入
 
-**Check**:
+**檢查**：
 
-1. Config file exists: `.specify/extensions/{ext-id}/{ext-id}-config.yml`
-2. YAML syntax is valid: `yq eval '.' config.yml`
-3. Environment variables set correctly
+1. 設定檔存在：`.specify/extensions/{ext-id}/{ext-id}-config.yml`
+2. YAML 語法有效：`yq eval '.' config.yml`
+3. 環境變數設定正確
 
 ---
 
-## Getting Help
+## 取得協助
 
-- **Issues**: Report bugs at GitHub repository
-- **Discussions**: Ask questions in GitHub Discussions
-- **Examples**: See `spec-kit-jira` for full-featured example (Phase B)
+- **Issue**：在 GitHub 儲存庫回報錯誤
+- **討論**：在 GitHub Discussions 提問
+- **範例**：參閱 `spec-kit-jira` 完整功能範例（Phase B）
 
 ---
 
-## Next Steps
+## 後續步驟
 
-1. **Create your extension** following this guide
-2. **Test locally** with `--dev` flag
-3. **Share with community** (GitHub, catalog)
-4. **Iterate** based on feedback
+1. 依本指南**建立你的擴充功能**
+2. 以 `--dev` 旗標**在本機測試**
+3. **與社群分享**（GitHub、目錄）
+4. 根據回饋**迭代**
 
-Happy extending! 🚀
+祝擴充愉快！🚀
 
-> Agent invocation examples on this page use GitHub Copilot's default skills syntax (`/speckit-*`). For other integrations and modes, see [Command invocation](../integrations/cli.md#command-invocation).
+> 本頁的代理呼叫範例使用 GitHub Copilot 的預設 skills 語法（`/speckit-*`）。其他整合與模式，請參閱[命令呼叫](../integrations/cli.md#command-invocation)。

@@ -1,39 +1,39 @@
 ---
-description: "Example command that demonstrates extension functionality"
-# CUSTOMIZE: List MCP tools this command uses
+description: "示範擴充功能運作方式的範例命令"
+# CUSTOMIZE: 列出此命令使用的 MCP 工具
 tools:
   - 'example-mcp-server/example_tool'
 ---
 
-# Example Command
+# 範例命令
 
-<!-- CUSTOMIZE: Replace this entire file with your command documentation -->
+<!-- CUSTOMIZE: 將整個檔案換成你的命令文件 -->
 
-This is an example command that demonstrates how to create commands for Spec Kit extensions.
+這是範例命令，示範如何為 Spec Kit 擴充功能建立命令。
 
-## Purpose
+## 用途
 
-Describe what this command does and when to use it.
+說明這個命令的功能，以及何時使用它。
 
-## Prerequisites
+## 前置條件
 
-List requirements before using this command:
+使用本命令前，先列出需求：
 
-1. Prerequisite 1 (e.g., "MCP server configured")
-2. Prerequisite 2 (e.g., "Configuration file exists")
-3. Prerequisite 3 (e.g., "Valid API credentials")
+1. 前置條件 1（例如「已設定 MCP 伺服器」）
+2. 前置條件 2（例如「設定檔已存在」）
+3. 前置條件 3（例如「有效的 API 憑證」）
 
-## User Input
+## 使用者輸入
 
 $ARGUMENTS
 
-## Steps
+## 步驟
 
-### Step 1: Load Configuration
+### 步驟 1：載入設定
 
-<!-- CUSTOMIZE: Replace with your actual steps -->
+<!-- CUSTOMIZE: 換成你的實際步驟 -->
 
-Load extension configuration from the project:
+從專案載入擴充功能設定：
 
 ``bash
 config_file=".specify/extensions/my-extension/my-extension-config.yml"
@@ -63,11 +63,11 @@ fi
 echo "📋 Configuration loaded: $setting_value"
 ``
 
-### Step 2: Perform Main Action
+### 步驟 2：執行主要動作
 
-<!-- CUSTOMIZE: Replace with your command logic -->
+<!-- CUSTOMIZE: 換成你的命令邏輯 -->
 
-Describe what this step does:
+說明這個步驟的內容：
 
 ``markdown
 Use MCP tools to perform the main action:
@@ -78,11 +78,11 @@ Use MCP tools to perform the main action:
 This calls the MCP server tool to execute the operation.
 ``
 
-### Step 3: Process Results
+### 步驟 3：處理結果
 
-<!-- CUSTOMIZE: Add more steps as needed -->
+<!-- CUSTOMIZE: 視需要增加更多步驟 -->
 
-Process the results and provide output:
+處理結果並提供輸出：
 
 `` bash
 echo ""
@@ -94,9 +94,9 @@ echo "  • Item 2: Value"
 echo ""
 ``
 
-### Step 4: Save Output (Optional)
+### 步驟 4：儲存輸出（選用）
 
-Save results to a file if needed:
+如有需要，將結果儲存到檔案：
 
 ``bash
 output_file=".specify/my-extension-output.json"
@@ -112,44 +112,44 @@ EOF
 echo "💾 Output saved to $output_file"
 ``
 
-## Configuration Reference
+## 設定參考
 
-<!-- CUSTOMIZE: Document configuration options -->
+<!-- CUSTOMIZE: 記錄設定選項 -->
 
-This command uses the following configuration from `my-extension-config.yml`:
+本命令使用 `my-extension-config.yml` 中的下列設定：
 
-- **settings.key**: Description of what this setting does
-  - Type: string
-  - Required: Yes
-  - Example: `"example-value"`
+- **settings.key**：說明這個設定的用途
+  - 類型：string
+  - 必填：是
+  - 範例：`"example-value"`
 
-- **settings.another_key**: Description of another setting
-  - Type: boolean
-  - Required: No
-  - Default: `false`
-  - Example: `true`
+- **settings.another_key**：說明另一個設定的用途
+  - 類型：boolean
+  - 必填：否
+  - 預設：`false`
+  - 範例：`true`
 
-## Environment Variables
+## 環境變數
 
-<!-- CUSTOMIZE: Document environment variable overrides -->
+<!-- CUSTOMIZE: 記錄環境變數覆寫方式 -->
 
-Configuration can be overridden with environment variables:
+設定可透過環境變數覆寫：
 
-- `SPECKIT_MY_EXTENSION_KEY` - Overrides `settings.key`
-- `SPECKIT_MY_EXTENSION_ANOTHER_KEY` - Overrides `settings.another_key`
+- `SPECKIT_MY_EXTENSION_KEY` - 覆寫 `settings.key`
+- `SPECKIT_MY_EXTENSION_ANOTHER_KEY` - 覆寫 `settings.another_key`
 
-Example:
+範例：
 ``bash
 export SPECKIT_MY_EXTENSION_KEY="override-value"
 ``
 
-## Troubleshooting
+## 疑難排解
 
-<!-- CUSTOMIZE: Add common issues and solutions -->
+<!-- CUSTOMIZE: 加入常見問題與解決方式 -->
 
 ### "Configuration not found"
 
-**Solution**: Install the extension and create configuration:
+**解決方式**：安裝擴充功能並建立設定：
 ``bash
 specify extension add my-extension
 cp .specify/extensions/my-extension/config-template.yml \
@@ -158,25 +158,25 @@ cp .specify/extensions/my-extension/config-template.yml \
 
 ### "MCP tool not available"
 
-**Solution**: Ensure MCP server is configured in your AI agent settings.
+**解決方式**：確認 MCP 伺服器已在你的 AI 代理設定中完成設定。
 
 ### "Permission denied"
 
-**Solution**: Check credentials and permissions in the external service.
+**解決方式**：檢查外部服務中的憑證與權限。
 
-## Notes
+## 備註
 
-<!-- CUSTOMIZE: Add helpful notes and tips -->
+<!-- CUSTOMIZE: 加入實用的備註與提示 -->
 
-- This command requires an active connection to the external service
-- Results are cached for performance
-- Re-run the command to refresh data
+- 本命令需要與外部服務保持連線
+- 結果會快取以提升效能
+- 重新執行命令即可重新整理資料
 
-## Examples
+## 範例
 
-<!-- CUSTOMIZE: Add usage examples -->
+<!-- CUSTOMIZE: 加入使用範例 -->
 
-### Example 1: Basic Usage
+### 範例 1：基本用法
 
 ``bash
 
@@ -185,7 +185,7 @@ cp .specify/extensions/my-extension/config-template.yml \
 > /speckit.my-extension.example
 ``
 
-### Example 2: With Environment Override
+### 範例 2：使用環境變數覆寫
 
 ``bash
 
@@ -195,7 +195,7 @@ export SPECKIT_MY_EXTENSION_KEY="custom-value"
 > /speckit.my-extension.example
 ``
 
-### Example 3: After Core Command
+### 範例 3：在核心命令之後使用
 
 ``bash
 
@@ -207,4 +207,4 @@ export SPECKIT_MY_EXTENSION_KEY="custom-value"
 
 ---
 
-*For more information, see the extension README or run `specify extension info my-extension`*
+*如需更多資訊，請參閱擴充功能的 README，或執行 `specify extension info my-extension`*

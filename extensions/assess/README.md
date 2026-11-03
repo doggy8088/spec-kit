@@ -1,25 +1,25 @@
-# Idea Assessment Pipeline Extension
+# 構想評估管線擴充功能
 
-A five-stage assessment pipeline for Spec Kit that turns **any idea** into a defensible **go / needs-clarification / kill** decision *before* it enters Spec-Driven Development. It is the missing **discovery track** that sits in front of the SDD **delivery track** (`specify → clarify → plan → tasks → analyze → implement`).
+這是 Spec Kit 的五階段評估管線，能在構想進入規格驅動開發之前，把**任何構想**轉化為站得住腳的 **go／needs-clarification／kill** 決策。它正是缺少的那條**探索軌道**，位於 SDD **交付軌道**（`specify → clarify → plan → tasks → analyze → implement`）之前。
 
-Discovery answers *"is this worth building?"* Delivery answers *"how do we build it?"* Only ideas that survive assessment hand off to `/speckit-specify`.
+探索回答的是*「這值得做嗎？」*，交付回答的是*「我們要怎麼做？」*。只有通過評估的構想才會交接給 `/speckit-specify`。
 
-## Overview
+## 總覽
 
-`assess` runs inside an initialized Spec Kit project (it writes assessments under `.specify/assessments/`), but that project can be **completely empty of source code** — a freshly initialized project with no code works just as well as an established codebase. The input is just an idea: pasted text, a URL, or a ticket need no existing code, while a codebase pointer lets you assess an idea for code that already exists. Neither starting point is more "correct" than the other.
+`assess` 在已初始化的 Spec Kit 專案中執行（它把評估寫入 `.specify/assessments/`），但該專案可以**完全沒有原始碼**——剛初始化、沒有任何程式碼的專案，和成熟的程式碼庫一樣適用。輸入只是一個構想：貼上的文字、URL 或工單都不需要既有程式碼；而程式碼庫指標則讓你能針對已存在的程式碼評估構想。兩種起點沒有哪一個比較「正確」。
 
-Each idea lives in its own directory under `.specify/assessments/<slug>/`, with one Markdown artifact per stage:
+每個構想都放在 `.specify/assessments/<slug>/` 下自己的目錄中，每個階段一份 Markdown 產出物：
 
 ```
 .specify/assessments/<slug>/
-├── intake.md      # /speckit-assess-intake   — capture the raw idea
-├── research.md    # /speckit-assess-research — gather (and challenge with) evidence
-├── problem.md     # /speckit-assess-define   — define the problem, goals, metrics
-├── concept.md     # /speckit-assess-shape    — shape solution options + appetite
-└── decision.md    # /speckit-assess-decide   — go / needs-clarification / kill → handoff
+├── intake.md      # /speckit-assess-intake   — 擷取原始構想
+├── research.md    # /speckit-assess-research — 蒐集證據（並用證據挑戰構想）
+├── problem.md     # /speckit-assess-define   — 定義問題、目標、指標
+├── concept.md     # /speckit-assess-shape    — 塑造解決方案選項與胃納量
+└── decision.md    # /speckit-assess-decide   — go / needs-clarification / kill → 交接
 ```
 
-The pipeline is a **funnel**: most ideas should be killed or parked before `shape`. Killing an idea with a documented reason is a successful outcome, not a failure.
+這條管線是一個**漏斗**：大多數構想應該在 `shape` 之前就被否決或擱置。以有記錄的理由否決一個構想，是成功的結果，而不是失敗。
 
 ```mermaid
 flowchart LR
@@ -30,76 +30,76 @@ flowchart LR
     F -.->|then revise decision.md| C
 ```
 
-## Commands
+## 命令
 
-Slash commands in this README use GitHub Copilot's default skills syntax.
-For another agent, use its
-[equivalent invocation syntax](https://github.github.io/spec-kit/integrations/cli.html#command-invocation).
+本 README 中的斜線命令使用 GitHub Copilot 的預設 skills 語法。
+若使用其他代理，請改用它的
+[等效呼叫語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
 
-| Command | Stage | Output |
+| Command | 階段 | 輸出 |
 |---------|-------|--------|
-| `/speckit-assess-intake` | Capture & normalize a raw idea (text, URL, ticket, or codebase pointer). | `intake.md` |
-| `/speckit-assess-research` | Gather users/market/prior-art/data evidence — and evidence *against* the idea. | `research.md` |
-| `/speckit-assess-define` | Define the problem: users, goals, non-goals, success metrics, cost of inaction. | `problem.md` |
-| `/speckit-assess-shape` | Shape 2–3 concept-level options with appetite and trade-offs; recommend one (or none). | `concept.md` |
-| `/speckit-assess-decide` | Score against criteria and render the verdict; hand `go` ideas to `/speckit-specify`. | `decision.md` |
+| `/speckit-assess-intake` | 擷取並正規化原始構想（文字、URL、工單或程式碼庫指標）。 | `intake.md` |
+| `/speckit-assess-research` | 蒐集使用者／市場／先行做法／資料方面的證據——以及*反對*該構想的證據。 | `research.md` |
+| `/speckit-assess-define` | 定義問題：使用者、目標、非目標、成功指標、不行動的代價。 | `problem.md` |
+| `/speckit-assess-shape` | 塑造 2～3 個概念層級的選項，附胃納量與取捨；推薦其中一個（或都不推薦）。 | `concept.md` |
+| `/speckit-assess-decide` | 依準則評分並做出判定；把 `go` 的構想交給 `/speckit-specify`。 | `decision.md` |
 
-Stages are meant to run in order but are not rigidly gated:
+各階段設計上依序執行，但並非嚴格設卡：
 
-- `define` is the minimum viable stage and can run directly on user input (intake/research optional).
-- `shape` requires `problem.md`.
-- `decide` requires `problem.md`; a `go` verdict expects `concept.md` (otherwise it is downgraded to `needs-clarification`).
+- `define` 是最小可行的階段，可直接以使用者輸入執行（intake／research 為選用）。
+- `shape` 需要 `problem.md`。
+- `decide` 需要 `problem.md`；`go` 判定預期要有 `concept.md`（否則會降級為 `needs-clarification`）。
 
-## Resolving clarifications
+## 解決釐清事項
 
-The normal process is sequential and each command usually runs **once**:
+正常流程是循序進行的，每個命令通常只執行**一次**：
 
 ```text
 intake → research → define → shape → decide
 ```
 
-Each stage writes a Markdown artifact under `.specify/assessments/<slug>/`. Those files stay editable. The commands keep their existing output templates: they do not rewrite an earlier artifact or perform that refinement themselves. `[NEEDS CLARIFICATION: …]` markers are gaps in the artifact, not a signal to regenerate the whole stage from scratch.
+每個階段都會在 `.specify/assessments/<slug>/` 下寫入一份 Markdown 產出物。這些檔案保持可編輯。命令會保留既有的輸出範本：它們不會重寫先前的產出物，也不會自己執行那種精煉。`[NEEDS CLARIFICATION: …]` 標記是產出物中的缺口，不是從頭重新產生整個階段的訊號。
 
-Resolve them by refining the existing file:
+請透過精煉既有檔案來解決它們：
 
-1. **Edit the Markdown directly** (fill in the missing metric, owner, constraint, and so on), or
-2. **Ask the agent in free-form chat** to incorporate the missing information into that artifact.
+1. **直接編輯 Markdown**（填入缺少的指標、負責人、限制條件等），或
+2. **在自由形式的聊天中請代理**把缺少的資訊納入該產出物。
 
-Then ask whether the new information clears the blocker and to update any downstream wording that depended on it. That includes `decision.md`: you can supply the missing facts and ask the agent to revise the scorecard, rationale, verdict, or handoff. That is artifact refinement, not command iteration.
+接著詢問新資訊是否已解除阻礙，並更新任何依賴它的下游文字。這也包括 `decision.md`：你可以提供缺少的事實，請代理修訂評分表、理由、判定或交接內容。這是產出物精煉，不是命令迭代。
 
-When you add evidence, keep the source and confidence tags the research stage already uses (`ASSUMPTION` vs cited claims). Do not invent citations.
+加入證據時，請保留 research 階段已在使用的來源與信心標籤（`ASSUMPTION` 與有引用的主張）。不要捏造引用。
 
-Rerunning an earlier assessment command is the exception (for example after a wrong slug or a discarded draft), not the default path for answering clarification markers.
+重新執行較早的評估命令屬於例外情況（例如 slug 錯誤或草稿已捨棄之後），不是回應釐清標記的預設路徑。
 
-## Slug Conventions
+## Slug 慣例
 
-A *slug* is the per-idea directory name under `.specify/assessments/`. It is the handle all five commands share.
+*slug* 是 `.specify/assessments/` 下每個構想的目錄名稱。它是五個命令共用的識別代號。
 
-- **User-provided**: normalized to lowercase kebab-case (e.g. `offline-mode`, `cut-onboarding-friction`). Preserved verbatim after normalization — no timestamps or numbers appended.
-- **Asked for**: in interactive use, `/speckit-assess-intake` asks for a slug when none is supplied, suggesting a kebab-case default derived from the idea.
-- **Automated**: when no human is available, the agent generates a unique slug and never overwrites an existing assessment directory (appending `-2`, `-3`, … or a short date as needed).
-- **Reuse from context**: later stages reuse the slug reported earlier in the same session, confirmed by the presence of the assessment directory.
+- **使用者提供**：正規化為小寫 kebab-case（例如 `offline-mode`、`cut-onboarding-friction`）。正規化後逐字保留——不附加時間戳記或編號。
+- **主動詢問**：在互動使用中，若未提供 slug，`/speckit-assess-intake` 會詢問，並建議一個由構想衍生的 kebab-case 預設值。
+- **自動產生**：當沒有人可詢問時，代理會產生唯一的 slug，且絕不覆寫既有的評估目錄（必要時附加 `-2`、`-3`、……或簡短日期）。
+- **從上下文重用**：後續階段重用同一工作階段稍早回報的 slug，並以評估目錄是否存在來確認。
 
-## Installation
+## 安裝
 
 ```bash
 specify extension add assess
 ```
 
-## Disabling
+## 停用
 
 ```bash
 specify extension disable assess
 specify extension enable assess
 ```
 
-## Typical Flow
+## 典型流程
 
-Run these skills in your agent's chat, not your terminal, one at a time,
-reviewing each result before continuing.
+在你的代理聊天中（而非終端機）執行這些 skills，一次一個，
+在繼續之前先檢視每個結果。
 
-This example uses GitHub Copilot's default skills syntax. For another agent,
-use its [equivalent invocation syntax](https://github.github.io/spec-kit/integrations/cli.html#command-invocation).
+本範例使用 GitHub Copilot 的預設 skills 語法。若使用其他代理，
+請改用它的[等效呼叫語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
 
 ```text
 # 1. Capture an idea (pasted text, a URL, or "assess this repo")
@@ -119,19 +119,19 @@ use its [equivalent invocation syntax](https://github.github.io/spec-kit/integra
 # → on "go", optionally pass the decision.md handoff summary to /speckit-specify
 ```
 
-## Handoff
+## 交接
 
-`assess` is a **standalone pipeline you enter deliberately** — it registers no lifecycle hooks and never inserts itself into `/speckit-specify`. The only coupling runs forward and by choice: a `go` verdict from `/speckit-assess-decide` hands its `decision.md` summary to `/speckit-specify`. Discovery and specification stay separate processes.
+`assess` 是一條**你刻意進入的獨立管線**——它不註冊任何生命週期 hook，也絕不會把自己插入 `/speckit-specify`。唯一的耦合是向前且出於選擇：`/speckit-assess-decide` 的 `go` 判定會把它的 `decision.md` 摘要交給 `/speckit-specify`。探索與規格制定維持為各自獨立的流程。
 
-## Guardrails
+## 防護措施
 
-- Only the five assessment commands write, and only inside `.specify/assessments/<slug>/`. **None of them modify source code** — solution design and implementation belong to the SDD lifecycle (`/speckit-specify` onward).
-- Web content fetched during `intake`/`research` is treated as untrusted data, governed by an explicit URL Trust Policy (allowlisted public sources fetched freely; unknown hosts prompted or skipped; loopback/RFC1918/metadata endpoints refused).
-- Evidence is never over-claimed: unsourced statements are tagged `ASSUMPTION`, and `research.md` always includes an *Evidence Against the Idea* section.
-- Verdicts are never over-claimed: a `go` requires a valid problem, `adequate`+ evidence (never weak/unknown), and a shaped concept; otherwise the honest verdict is `needs-clarification`.
-- Slugs are normalized to `[a-z0-9-]` and an empty result is rejected; before any read or write, each command also rejects symlinked path components and verifies the resolved path stays inside the project root — so an assessment can never escape `.specify/assessments/`, even in a crafted or cloned project.
-- No command overwrites an existing artifact without confirmation; in automated mode it refuses.
+- 只有五個評估命令會寫入，且只寫入 `.specify/assessments/<slug>/` 內。**它們都不會修改原始碼**——解決方案設計與實作屬於 SDD 生命週期（從 `/speckit-specify` 開始）。
+- 在 `intake`／`research` 期間擷取的網路內容會被視為不受信任的資料，並受明確的 URL Trust Policy 約束（允許清單中的公開來源可自由擷取；未知主機會提示或跳過；loopback／RFC1918／中繼資料端點一律拒絕）。
+- 證據絕不誇大：沒有出處的陳述會標記為 `ASSUMPTION`，且 `research.md` 一律包含 *Evidence Against the Idea* 區段。
+- 判定絕不誇大：`go` 需要有效的問題、`adequate` 以上的證據（絕不能是 weak／unknown），以及已塑造的概念；否則誠實的判定是 `needs-clarification`。
+- Slug 會正規化為 `[a-z0-9-]`，空結果會被拒絕；在任何讀取或寫入之前，每個命令也會拒絕符號連結的路徑組成部分，並驗證解析後的路徑仍位於專案根目錄內——因此即使在經刻意構造或複製的專案中，評估也絕不可能逃出 `.specify/assessments/`。
+- 任何命令都不會在未經確認的情況下覆寫既有產出物；在自動化模式下會直接拒絕。
 
-## Relationship to Other Extensions
+## 與其他擴充功能的關係
 
-`assess` is deliberately the **generic, role-neutral** discovery track — usable by a founder, PM, BA, engineer, or designer. Richer or more specialized pre-SDD flows in the community catalog (e.g. product-lifecycle orchestrators, technical-discovery, intake-normalization, brownfield onboarding) can layer on top of or feed into it; `assess` aims to be the minimal, opinionated funnel that ends cleanly at the `/speckit-specify` handoff.
+`assess` 刻意設計為**通用、角色中立**的探索軌道——創辦人、PM、BA、工程師或設計師都能使用。社群目錄中更豐富或更專門的 SDD 前置流程（例如 product-lifecycle orchestrators、technical-discovery、intake-normalization、brownfield onboarding）可以疊加在它之上，或把成果餵給它；`assess` 的目標是成為最小、最有主張的漏斗，乾淨地止於 `/speckit-specify` 交接點。

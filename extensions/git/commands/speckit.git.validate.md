@@ -1,49 +1,49 @@
 ---
-description: "Validate current branch follows feature branch naming conventions"
+description: "驗證目前分支是否符合功能分支命名慣例"
 ---
 
-# Validate Feature Branch
+# 驗證功能分支
 
-Validate that the current Git branch follows the expected feature branch naming conventions.
+驗證目前的 Git 分支是否符合預期的功能分支命名慣例。
 
-## Prerequisites
+## 前置條件
 
-- Check if Git is available by running `git rev-parse --is-inside-work-tree 2>/dev/null`
-- If Git is not available, output a warning and skip validation:
+- 執行 `git rev-parse --is-inside-work-tree 2>/dev/null`，檢查 Git 是否可用
+- 若 Git 不可用，輸出警告並略過驗證：
   ```
   [specify] Warning: Git repository not detected; skipped branch validation
   ```
 
-## Validation Rules
+## 驗證規則
 
-Get the current branch name:
+取得目前的分支名稱：
 
 ```bash
 git rev-parse --abbrev-ref HEAD
 ```
 
-The branch name's final path segment must start with one of these feature markers:
+分支名稱的最後一個路徑段必須以下列任一功能標記開頭：
 
-1. **Sequential**: `[0-9]{3,}-` (e.g., `001-feature-name`, `042-fix-bug`, `1000-big-feature`, `jdoe/web/008-guided-tour`)
-2. **Timestamp**: `[0-9]{8}-[0-9]{6}-` (e.g., `20260319-143022-feature-name`, `jdoe/web/20260319-143022-feature-name`)
+1. **循序**：`[0-9]{3,}-`（例如 `001-feature-name`、`042-fix-bug`、`1000-big-feature`、`jdoe/web/008-guided-tour`）
+2. **時間戳記**：`[0-9]{8}-[0-9]{6}-`（例如 `20260319-143022-feature-name`、`jdoe/web/20260319-143022-feature-name`）
 
-## Execution
+## 執行
 
-If on a feature branch (matches either pattern):
-- Output: `✓ On feature branch: <branch-name>`
-- Check if the corresponding spec directory exists under `specs/`:
-  - For sequential branches, look for `specs/<prefix>-*` where prefix matches the numeric portion, regardless of branch namespace prefixes
-  - For timestamp branches, look for `specs/<prefix>-*` where prefix matches the `YYYYMMDD-HHMMSS` portion, regardless of branch namespace prefixes
-- If spec directory exists: `✓ Spec directory found: <path>`
-- If spec directory missing: `⚠ No spec directory found for prefix <prefix>`
+若位於功能分支（符合任一模式）：
+- 輸出：`✓ On feature branch: <branch-name>`
+- 檢查 `specs/` 下是否存在對應的規格目錄：
+  - 循序分支：尋找 `specs/<prefix>-*`，其中 prefix 對應數字部分，不受分支命名空間前綴影響
+  - 時間戳記分支：尋找 `specs/<prefix>-*`，其中 prefix 對應 `YYYYMMDD-HHMMSS` 部分，不受分支命名空間前綴影響
+- 若規格目錄存在：`✓ Spec directory found: <path>`
+- 若規格目錄不存在：`⚠ No spec directory found for prefix <prefix>`
 
-If NOT on a feature branch:
-- Output: `✗ Not on a feature branch. Current branch: <branch-name>`
-- Output: `Feature branches should be named like: 001-feature-name, 20260319-143022-feature-name, or <namespace>/001-feature-name`
+若不在功能分支：
+- 輸出：`✗ Not on a feature branch. Current branch: <branch-name>`
+- 輸出：`Feature branches should be named like: 001-feature-name, 20260319-143022-feature-name, or <namespace>/001-feature-name`
 
-## Graceful Degradation
+## 優雅降級
 
-If Git is not installed or the directory is not a Git repository:
-- Check the `SPECIFY_FEATURE` environment variable as a fallback
-- If set, validate that value against the naming patterns
-- If not set, skip validation with a warning
+若 Git 未安裝，或目錄不是 Git 儲存庫：
+- 改檢查 `SPECIFY_FEATURE` 環境變數作為備援
+- 若已設定，以命名模式驗證該值
+- 若未設定，略過驗證並顯示警告

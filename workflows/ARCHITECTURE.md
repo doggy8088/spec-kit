@@ -1,12 +1,12 @@
-# Workflow System Architecture
+# 工作流程系統架構
 
-This document describes the internal architecture of the workflow engine — how definitions are parsed, steps are dispatched, state is persisted, and catalogs are resolved.
+本文件說明工作流程引擎的內部架構 — 定義如何被解析、步驟如何被分派、狀態如何被持久化，以及目錄如何被解析。
 
-For usage instructions, see [README.md](README.md).
+使用說明請參閱 [README.md](README.md)。
 
-## Execution Model
+## 執行模型
 
-When `specify workflow run` is invoked, the engine loads a YAML definition, resolves inputs, and dispatches steps sequentially through the step registry:
+當呼叫 `specify workflow run` 時，引擎會載入一份 YAML 定義、解析輸入，並透過步驟註冊表循序分派步驟：
 
 ```mermaid
 flowchart TD
@@ -47,17 +47,17 @@ flowchart TD
     style U fill:#4caf50,color:#fff
 ```
 
-### Sequential Execution
+### 循序執行
 
-Steps execute sequentially. Each step receives a `StepContext` containing resolved inputs, accumulated step results, and workflow-level defaults. After execution, the step's output is stored in `context.steps[step_id]` and made available to subsequent steps via expressions like `{{ steps.specify.output.file }}`.
+步驟循序執行。每個步驟都會收到一個 `StepContext`，其中包含已解析的輸入、累積的步驟結果，以及工作流程層級的預設值。執行後，步驟的輸出會儲存在 `context.steps[step_id]` 中，並透過如 `{{ steps.specify.output.file }}` 的運算式提供給後續步驟。
 
-### Nested Steps (Control Flow)
+### 巢狀步驟（控制流程）
 
-Steps like `if`, `switch`, `while`, and `do-while` return `next_steps` — inline step definitions that the engine executes recursively via `_execute_steps()`. Nested steps share the same `StepContext` and `RunState`, so their outputs are visible to later top-level steps.
+`if`、`switch`、`while` 與 `do-while` 等步驟會回傳 `next_steps` — 引擎透過 `_execute_steps()` 遞迴執行的內嵌步驟定義。巢狀步驟共用同一個 `StepContext` 與 `RunState`，因此它們的輸出對後續的頂層步驟可見。
 
-### State Persistence and Resume
+### 狀態持久化與續跑
 
-The engine saves `RunState` to disk after each step, enabling resume from the exact point of interruption:
+引擎會在每個步驟後將 `RunState` 儲存到磁碟，讓執行能從確切的中斷點續跑：
 
 ```mermaid
 flowchart LR
@@ -70,189 +70,187 @@ flowchart LR
     E -- "resume()" --> B
 ```
 
-When a `gate` step pauses execution, the engine persists `current_step_index`
-and all accumulated `step_results`. On `specify workflow resume <run_id>`, the
-same executor replays completed occurrences into their contexts without
-executing them, then continues at the unfinished occurrence.
+當 `gate` 步驟暫停執行時，引擎會持久化 `current_step_index`
+與所有累積的 `step_results`。在 `specify workflow resume <run_id>` 時，
+同一個執行器會將已完成的出現次數重播到它們的脈絡中，而不
+重新執行它們，然後在未完成的出現次數處繼續。
 
-New runs use a versioned execution tree. Each occurrence owns its result,
-selected child sequences, and optional workflow binding. A binding stores the
-target, frozen definition, private inputs, and `workflow_dir`; the called
-workflow remains a private scope in the same run. Fan-out items have separate
-contexts. Each occurrence, including a workflow call, is checkpointed as the
-active step before its start is logged and before it executes, so status
-reports it while it runs. Binding and selected expansions are
-checkpointed before child side effects, results before an occurrence is done,
-and logs after the checkpoint.
-Legacy runs enter through their top-level index once. Inputs and tree
-transitions share one atomic state checkpoint; the inputs file is a
-compatibility mirror. A checkpoint failure prevents further writes by that
-executor instance.
+新的執行使用有版本的執行樹。每個出現次數都擁有自己的結果、
+所選的子序列，以及選擇性的工作流程綁定。綁定會儲存
+目標、凍結的定義、私人輸入與 `workflow_dir`；被呼叫的
+工作流程在同一次執行中仍是一個私人範圍。扇出項目有各自獨立的
+脈絡。每個出現次數，包括工作流程呼叫，都會在記錄其開始之前、以及在它執行之前，被檢查點為
+作用中的步驟，因此狀態會在它執行時回報它。綁定與所選的展開會在
+子副作用之前被檢查點，結果會在出現次數完成之前，
+而日誌會在檢查點之後。
+舊有執行只會透過其頂層索引進入一次。輸入與樹的
+轉換共用一個原子狀態檢查點；輸入檔案是
+相容性鏡像。檢查點失敗會阻止該
+執行器實例進一步寫入。
 
-### Occurrence lifecycle
+### 出現次數生命週期
 
-`Execution.step()` is the common runner for registered steps and workflow calls.
-`execute_step()` and `workflow()` return a `StepResult`, a subtree outcome, or an
-unknown-implementation failure. The runner alone performs `begin`, `finish`,
-`settle`, and best-effort `leave` on exception unwinding; the phase and field
-allow-lists in `transition()` reject invalid operations. The public, stateless
-`StepBase.execute()` extension contract is unchanged.
+`Execution.step()` 是已註冊步驟與工作流程呼叫的共同執行器。
+`execute_step()` 與 `workflow()` 會回傳一個 `StepResult`、子樹結果，或
+未知的實作失敗。只有執行器會在例外展開時執行 `begin`、`finish`、
+`settle`，以及盡力而為的 `leave`；`transition()` 中的階段與欄位
+允許清單會拒絕無效的操作。公開、無狀態的
+`StepBase.execute()` 擴充契約維持不變。
 
-All occurrence mutations pass through `Execution.transition()`. It checks the
-allowed source phase and fields, derives the destination phase, validates the
-candidate with the same node rules used on load, projects results, and saves
-under the run lock. Callers cannot supply a destination phase.
+所有出現次數的變更都通過 `Execution.transition()`。它會檢查
+允許的來源階段與欄位、推導目標階段、以載入時使用的相同節點規則驗證
+候選者、投影結果，並在執行鎖下儲存。呼叫者不能提供目標階段。
 
-| Operation | Meaning |
+| 操作 | 意義 |
 |-----------|---------|
-| `begin` | Mark this occurrence active and checkpoint before `step_started` or its callback; a failed checkpoint leaves no start event. A blocked workflow call drops its previous attempt's result |
-| `expand` / `bind` | Freeze children and their source before child execution |
-| `rebind` / `iterate` | Persist updated binding or the next loop occurrence |
-| `outputs` | Children finished; declared workflow outputs remain to finalize |
-| `finish` / `settle` | Record an own-step result or subtree outcome; clear activity |
-| `leave` | Clear activity on exception unwinding; the run handler saves the failure/pause |
+| `begin` | 將這個出現次數標記為作用中，並在 `step_started` 或其回呼之前檢查點；檢查點失敗不會留下開始事件。被封鎖的工作流程呼叫會捨棄其前一次嘗試的結果 |
+| `expand` / `bind` | 在子執行之前凍結子項及其來源 |
+| `rebind` / `iterate` | 持久化更新後的綁定或下一個迴圈出現次數 |
+| `outputs` | 子項已完成；宣告的工作流程輸出仍待收尾 |
+| `finish` / `settle` | 記錄自身步驟的結果或子樹結果；清除活動 |
+| `leave` | 在例外展開時清除活動；執行處理常式會儲存失敗／暫停 |
 
-`phase` identifies the continuation point, `active` identifies entered occurrences
-(several may be active in a fan-out), and `outcome` identifies a subtree halt or
-completion. A container's own result may be completed while its children are
-paused. `current_step_id` is a compatibility status view updated as
-occurrences are entered, rather than a resume cursor. Completion does not
-reconcile this scalar; during parallel fan-out it may name an item that has
-already finished, while the tree's per-occurrence `active` flags remain
-authoritative.
-Status reporting uses a bound call's recorded result when available. If an
-interruption or exception leaves the active call unfinished without a result,
-its scope inherits the run's paused or failed status; completed calls keep
-their own recorded status.
-A call's recorded result summarizes its previous attempt, so `begin` on a
-blocked call drops `result`, `outcome`, and `error`: a bound call continues at
-`children`, and a call whose binding failed returns to `ready` and binds again.
-A leaf step's record describes that same step, such as a pending gate's prompt,
-and remains until `finish` replaces it.
+`phase` 標示接續點，`active` 標示已進入的出現次數
+（在扇出中可能同時有多個作用中），而 `outcome` 標示子樹的中止或
+完成。容器的自身結果可能已完成，而其子項
+仍處於暫停。`current_step_id` 是隨著
+出現次數被進入而更新的相容性狀態檢視，而不是續跑游標。完成不會
+對帳這個純量；在平行扇出期間，它可能指出一個
+已經完成的項目，而樹中每個出現次數的 `active` 旗標仍是
+權威依據。
+狀態回報會在可用時使用已綁定呼叫的已記錄結果。若
+中斷或例外使作用中的呼叫未完成且沒有結果，
+它的範圍會繼承該次執行的暫停或失敗狀態；已完成的呼叫會保留
+它們自己記錄的狀態。
+呼叫的已記錄結果彙總了它前一次的嘗試，因此對被封鎖的
+呼叫執行 `begin` 會捨棄 `result`、`outcome` 與 `error`：已綁定的呼叫會在
+`children` 處繼續，而綁定失敗的呼叫會回到 `ready` 並重新綁定。
+葉步驟的記錄描述的正是同一個步驟，例如待處理關卡的提示詞，
+並會保留到 `finish` 將它取代為止。
 
-`notify()` emits events and callbacks only after the corresponding checkpoint.
-Persistence is mandatory lifecycle behavior, not a listener. Existing container
-events describe completion of their own expansion; calls finish after their
-children and declared outputs. Completed replay emits neither events nor saves.
-Entering an unfinished container on resume checkpoints activity without repeating
-its expansion event.
+`notify()` 只會在對應的檢查點之後才發出事件與回呼。
+持久化是強制的生命週期行為，而不是監聽器。既有的容器
+事件描述的是它們自身展開的完成；呼叫會在其
+子項與宣告輸出之後才完成。已完成的重播既不發出事件，也不儲存。
+在續跑時進入未完成的容器，會在不重複
+其展開事件的情況下檢查點其活動。
 
-Execution schema version 2 stores fan-out templates as shared YAML sources on
-their parent occurrence. Raw `step_template` configuration is not published in
-persisted step outputs. Frozen expansion results and aggregated `fan_results`
-are separate: `result_view()` adds the aggregate for reporting and downstream
-steps, while items always receive the frozen expansion view. This also preserves
-YAML-native template scalars without putting them in JSON result records.
+執行結構描述第 2 版將扇出範本儲存為其父出現次數上的共用 YAML 來源。
+原始的 `step_template` 設定不會發佈在
+持久化的步驟輸出中。凍結的展開結果與彙總的 `fan_results`
+是分開的：`result_view()` 會加上彙總結果，供回報與下游
+步驟使用，而項目永遠收到的是凍結的展開檢視。這也保留了
+YAML 原生的範本純量，而不將它們放入 JSON 結果記錄中。
 
-Resume validates tree structure, root snapshot, and the legacy offset together,
-before any writes. The offset must be within the workflow and no later than the
-saved root index. Legacy checkpoints without a tree still adapt once;
-private, unreleased version-1 trees are rejected rather than silently interpreted
-as the new format.
+續跑會在任何寫入之前，一起驗證樹結構、根快照與舊有偏移。
+偏移必須在工作流程範圍內，且不得晚於
+已儲存的根索引。沒有樹的舊有檢查點仍可調整一次；
+私人的、未發行的第 1 版樹會被拒絕，而不是被默默解讀
+為新格式。
 
-## Step Types
+## 步驟類型
 
-The engine ships with 14 built-in step types, each in its own subpackage under `src/specify_cli/workflows/step/`:
+引擎隨附 14 種內建步驟類型，每種都位於 `src/specify_cli/workflows/step/` 下各自的子套件中：
 
-| Type Key | Class | Purpose | Returns `next_steps`? |
+| 類型鍵 | 類別 | 用途 | 是否回傳 `next_steps`？ |
 |----------|-------|---------|-----------------------|
-| `command` | `CommandStep` | Invoke an installed Spec Kit command via integration CLI | No |
-| `prompt` | `PromptStep` | Send an arbitrary inline prompt to integration CLI | No |
-| `shell` | `ShellStep` | Run a shell command, capture output | No |
-| `github` | `GitHubStep` | Add an explicit issue or pull-request label | No |
-| `init` | `InitStep` | Bootstrap a project (equivalent to `specify init`) | No |
-| `slot` | `SlotStep` | Named workflow slot; skipped when unfilled | No |
-| `gate` | `GateStep` | Interactive human review/approval | No (pauses in CI) |
-| `if` | `IfThenStep` | Conditional branching (then/else) | Yes |
-| `switch` | `SwitchStep` | Multi-branch dispatch on expression | Yes |
-| `while` | `WhileStep` | Loop while condition is truthy | Yes (if true) |
-| `do-while` | `DoWhileStep` | Loop, always runs body at least once | Yes (always) |
-| `fan-out` | `FanOutStep` | Dispatch per item over a collection | No (engine expands) |
-| `fan-in` | `FanInStep` | Aggregate results from fan-out | No |
-| `workflow` | `WorkflowStep` | Execute an installed workflow in a private scope | No (engine enters scope) |
+| `command` | `CommandStep` | 透過整合 CLI 呼叫已安裝的 Spec Kit 命令 | 否 |
+| `prompt` | `PromptStep` | 將任意內嵌提示詞傳送給整合 CLI | 否 |
+| `shell` | `ShellStep` | 執行 shell 命令，擷取輸出 | 否 |
+| `github` | `GitHubStep` | 加上明確的 issue 或 pull-request 標籤 | 否 |
+| `init` | `InitStep` | 引導專案（等同於 `specify init`） | 否 |
+| `slot` | `SlotStep` | 具名工作流程插槽；未填入時略過 | 否 |
+| `gate` | `GateStep` | 互動式人工審查／核准 | 否（在 CI 中暫停） |
+| `if` | `IfThenStep` | 條件分支（then/else） | 是 |
+| `switch` | `SwitchStep` | 依運算式進行多分支分派 | 是 |
+| `while` | `WhileStep` | 在條件為真時迴圈 | 是（若為真） |
+| `do-while` | `DoWhileStep` | 迴圈，主體至少執行一次 | 是（一律） |
+| `fan-out` | `FanOutStep` | 為集合中的每個項目分派 | 否（由引擎展開） |
+| `fan-in` | `FanInStep` | 彙總扇出的結果 | 否 |
+| `workflow` | `WorkflowStep` | 在私人範圍內執行已安裝的工作流程 | 否（由引擎進入範圍） |
 
-## Step Registry
+## 步驟註冊表
 
-All step types register into `STEP_REGISTRY` via `_register_builtin_steps()` in `src/specify_cli/workflows/__init__.py`. The registry maps `type_key` strings to step instances:
+所有步驟類型都透過 `src/specify_cli/workflows/__init__.py` 中的 `_register_builtin_steps()` 註冊到 `STEP_REGISTRY`。註冊表將 `type_key` 字串對應到步驟實例：
 
 ```python
 STEP_REGISTRY: dict[str, StepBase]  # e.g., {"command": CommandStep(), "gate": GateStep(), ...}
 ```
 
-Registration is explicit — each step class is imported and instantiated. New step types follow the same pattern: subclass `StepBase`, set `type_key`, implement `execute()` and optionally `validate()`.
+註冊是明確的 — 每個步驟類別都會被匯入並實例化。新的步驟類型遵循相同模式：繼承 `StepBase`、設定 `type_key`、實作 `execute()`，並可選擇性地實作 `validate()`。
 
-## Expression Engine
+## 運算式引擎
 
-Workflow definitions use Jinja2-like `{{ expression }}` syntax for dynamic values. The expression engine in `src/specify_cli/workflows/expressions/` supports:
+工作流程定義使用類似 Jinja2 的 `{{ expression }}` 語法來表示動態值。位於 `src/specify_cli/workflows/expressions/` 的運算式引擎支援：
 
-| Feature | Syntax | Example |
+| 功能 | 語法 | 範例 |
 |---------|--------|---------|
-| Variable access | `{{ inputs.name }}` | Dot-path traversal into context |
-| Step outputs | `{{ steps.plan.output.file }}` | Access previous step results |
-| Comparisons | `==`, `!=`, `>`, `<`, `>=`, `<=` | `{{ count > 5 }}` |
-| Boolean logic | `and`, `or`, `not` | `{{ items and status == 'ok' }}` |
-| Membership | `in`, `not in` | `{{ 'error' not in status }}` |
-| Literals | strings, numbers (`5`, `-5`, `+5`, `1_000`, `0.5`, `.5`, `5.`, `1.5e3`), booleans, `none`/`null`, lists | `{{ true }}`, `{{ [1, 2] }}` |
-| Filter: `default` | `{{ val \| default('fallback') }}` | Fallback for `None` or an empty string |
-| Filter: `join` | `{{ list \| join(', ') }}` | Join list elements |
-| Filter: `contains` | `{{ text \| contains('sub') }}` | Substring/membership check |
-| Filter: `map` | `{{ list \| map('attr') }}` | Extract attribute from each item |
-| Filter: `from_json` | `{{ steps.emit.output.stdout \| from_json }}` | Parse a JSON string into a typed value (raises on invalid JSON) |
-| Filter: `to_json` | `{{ obj \| to_json }}` | Serialize a value to a JSON string (inverse of `from_json`; mapping keys must be strings) |
-| Filter: `upper` | `{{ text \| upper }}` | Uppercase a string (strings only) |
-| Filter: `lower` | `{{ text \| lower }}` | Lowercase a string (strings only) |
-| Filter: `split` | `{{ csv \| split(',') }}` | Split a string on a separator into a list |
-| Filter: `length` | `{{ items \| length }}` | Length of a list or string (mappings rejected) |
+| 變數存取 | `{{ inputs.name }}` | 以點路徑走訪脈絡 |
+| 步驟輸出 | `{{ steps.plan.output.file }}` | 存取先前步驟的結果 |
+| 比較 | `==`、`!=`、`>`、`<`、`>=`、`<=` | `{{ count > 5 }}` |
+| 布林邏輯 | `and`、`or`、`not` | `{{ items and status == 'ok' }}` |
+| 成員關係 | `in`、`not in` | `{{ 'error' not in status }}` |
+| 字面值 | 字串、數字（`5`、`-5`、`+5`、`1_000`、`0.5`、`.5`、`5.`、`1.5e3`）、布林值、`none`/`null`、清單 | `{{ true }}`、`{{ [1, 2] }}` |
+| 過濾器：`default` | `{{ val \| default('fallback') }}` | `None` 或空字串時的後備值 |
+| 過濾器：`join` | `{{ list \| join(', ') }}` | 連接清單元素 |
+| 過濾器：`contains` | `{{ text \| contains('sub') }}` | 子字串／成員關係檢查 |
+| 過濾器：`map` | `{{ list \| map('attr') }}` | 從每個項目擷取屬性 |
+| 過濾器：`from_json` | `{{ steps.emit.output.stdout \| from_json }}` | 將 JSON 字串解析為有型別的值（JSON 無效時拋出錯誤） |
+| 過濾器：`to_json` | `{{ obj \| to_json }}` | 將值序列化為 JSON 字串（`from_json` 的反向操作；對應鍵必須是字串） |
+| 過濾器：`upper` | `{{ text \| upper }}` | 將字串轉為大寫（僅限字串） |
+| 過濾器：`lower` | `{{ text \| lower }}` | 將字串轉為小寫（僅限字串） |
+| 過濾器：`split` | `{{ csv \| split(',') }}` | 以分隔符將字串拆成清單 |
+| 過濾器：`length` | `{{ items \| length }}` | 清單或字串的長度（對應會被拒絕） |
 
-**Single expressions** (`{{ expr }}` only) return typed values. **Mixed templates** (`"text {{ expr }} more"`) return interpolated strings.
+**單一運算式**（只有 `{{ expr }}`）回傳有型別的值。**混合範本**（`"text {{ expr }} more"`）回傳插值後的字串。
 
-**Operator precedence.** From loosest to tightest: `or`, `and`, `not`, then the comparisons (`==`, `!=`, `>`, `<`, `>=`, `<=`, `in`, `not in`). All comparisons share **one** level and group left to right, so no comparison has priority over another: `{{ a == b > 0 }}` is `{{ (a == b) > 0 }}`, and `{{ 1 < 2 < 3 }}` is `{{ (1 < 2) < 3 }}`. The former hand-written engine gave comparisons accidental priorities through its operator scan order; parenthesize, or join comparisons with `and`/`or`, instead of relying on either reading. A `not` on the right of a comparison negates only its operand: `{{ a == not b }}`.
+**運算子優先級。**由最鬆到最緊：`or`、`and`、`not`，然後是比較（`==`、`!=`、`>`、`<`、`>=`、`<=`、`in`、`not in`）。所有比較共用**同一個**層級並由左至右分組，因此沒有任何比較比另一個比較優先：`{{ a == b > 0 }}` 是 `{{ (a == b) > 0 }}`，而 `{{ 1 < 2 < 3 }}` 是 `{{ (1 < 2) < 3 }}`。先前手寫的引擎因其運算子掃描順序，讓比較有了意外的優先級；請加上括號，或以 `and`／`or` 連接比較，不要仰賴任何一種解讀。比較右側的 `not` 只否定它的運算元：`{{ a == not b }}`。
 
-**Only expressions parse.** The body of every `{{ }}` block is parsed by a grammar, so text that is not an expression is a `ValueError` naming the offending token and column: prose such as `{{ some text }}`, path keys with characters outside letters, digits, `_` and `-` (`{{ inputs.weird:key }}`), arithmetic, or two adjacent operands. The former engine looked such text up as a path: an existing key such as `inputs.weird:key` could resolve successfully, while a miss rendered as an empty string or `None`. Validation of `if`/`while`/`do-while` conditions checks only the `{{ }}` delimiters and layout, not the expression inside: `{{ inputs.count + 1 }}` passes validation and fails with the `ValueError` when the step runs, as do all other fields.
+**只有運算式會被解析。**每個 `{{ }}` 區塊的主體都會由文法解析，因此不是運算式的文字會成為指明出錯符記與欄位的 `ValueError`：散文如 `{{ some text }}`、含有英文字母、數字、`_` 與 `-` 以外字元的路徑鍵（`{{ inputs.weird:key }}`）、算術，或兩個相鄰的運算元。先前的引擎會將這類文字當作路徑查詢：像 `inputs.weird:key` 這樣的既有鍵可能成功解析，而未命中時則渲染為空字串或 `None`。`if`／`while`／`do-while` 條件的驗證只檢查 `{{ }}` 定界符與佈局，不檢查裡面的運算式：`{{ inputs.count + 1 }}` 會通過驗證，並在步驟執行時以該 `ValueError` 失敗，其他所有欄位也是如此。
 
-**Filter argument strictness (new filters).** The five filters added in #4766 validate their supported inputs and raise `ValueError` naming the problem rather than leaking a Python `TypeError`/`AttributeError`: `upper`/`lower` accept only strings, `split` requires a string value and a non-empty string separator, `length` accepts only lists and strings, and `to_json` requires a JSON-serializable value whose mapping keys are strings, and additionally rejects non-finite floats (`NaN`, `Infinity`, `-Infinity`), which `json.dumps` would otherwise emit as bare tokens that are not valid JSON. Keys are checked before serialization because `json.dumps` would otherwise coerce `1` to `"1"` (colliding with an existing `"1"` key), while `sort_keys=True` raises an ordering `TypeError` on mixed key types — both surfacing as a generic "not JSON-serializable" that hides the authoring mistake. Coercion is deliberately rejected for these filters: a type mismatch almost always means the pipeline is wired to the wrong variable, and a coerced result (e.g. `"3"` for an int) would hide that. Arity is checked before the argument expression is evaluated, so a filter used with the wrong number of arguments — `| upper('x')`, `| split` with no separator, `| split(',', 1)`, `| join` bare — is reported as a known filter misused, distinct from an entirely unknown name.
+**過濾器參數嚴格性（新過濾器）。**在 #4766 中加入的五個過濾器會驗證它們支援的輸入，並拋出指明問題的 `ValueError`，而不是洩漏 Python 的 `TypeError`／`AttributeError`：`upper`／`lower` 只接受字串，`split` 需要字串值與非空的字串分隔符，`length` 只接受清單與字串，而 `to_json` 需要一個可 JSON 序列化的值，其對應鍵必須是字串，並且還會拒絕非有限浮點數（`NaN`、`Infinity`、`-Infinity`），因為 `json.dumps` 否則會將它們輸出為不是有效 JSON 的裸符記。鍵會在序列化之前檢查，因為 `json.dumps` 否則會將 `1` 強制轉換為 `"1"`（與既有的 `"1"` 鍵衝突），而 `sort_keys=True` 會在鍵類型混合時拋出排序的 `TypeError` — 兩者都會以通用的「不可 JSON 序列化」呈現，掩蓋了撰寫上的錯誤。這些過濾器刻意拒絕強制轉換：類型不符幾乎總是意味著管線接到了錯誤的變數，而強制轉換的結果（例如將 int 轉成 `"3"`）會把這一點藏起來。元數會在參數運算式被評估之前檢查，因此以錯誤參數數量使用的過濾器 — `| upper('x')`、沒有分隔符的 `| split`、`| split(',', 1)`、裸 `| join` — 會被回報為已知過濾器被誤用，與完全未知的名稱不同。
 
-The older filters are more permissive and are unchanged: `join` stringifies unsupported value shapes and elements, and `map`/`contains` return fallback values for unsupported inputs rather than raising.
+較舊的過濾器較為寬容且維持不變：`join` 會將不支援的值形狀與元素字串化，而 `map`／`contains` 對不支援的輸入會回傳後備值，而不是拋出錯誤。
 
-**`to_json` output is deterministic.** It pins `sort_keys=True` and `ensure_ascii=False`, so the same value always serializes to the same bytes regardless of dict insertion order or platform, and non-ASCII text is not `\uXXXX`-escaped. This buys reproducibility only — it does **not** make the result safe to pass through a shell, because expression interpolation adds no quoting or escaping. See [Interpolation and shell safety](../docs/reference/workflows.md#interpolation-and-shell-safety) before interpolating JSON into a `run` field.
+**`to_json` 的輸出是確定性的。**它釘選了 `sort_keys=True` 與 `ensure_ascii=False`，因此同一個值永遠會序列化為相同的位元組，不受字典插入順序或平台影響，且非 ASCII 文字不會被 `\uXXXX` 跳脫。這只帶來可重現性 — 它**不會**讓結果能安全地通過 shell，因為運算式插值不會加上任何引號或跳脫。在將 JSON 插值到 `run` 欄位之前，請參閱[插值與 shell 安全](../docs/reference/workflows.md#interpolation-and-shell-safety)。
 
-**Filters and comparisons.** A filter chain cannot be an operand of an operator, so an unparenthesized trailing comparison such as `{{ inputs.items | length > 0 }}` raises an "ambiguous filter precedence" `ValueError`, as does a filter on an operator's operand (`{{ count > limit | default(5) }}`); the message names the operator. Parenthesize the filtered operand to compare its result: `{{ (inputs.items | length) > 0 }}`, `{{ count > (limit | default(5)) }}`. For a threshold of at least two:
+**過濾器與比較。**過濾器鏈不能作為運算子的運算元，因此像 `{{ inputs.items | length > 0 }}` 這類未加括號的尾隨比較會拋出「ambiguous filter precedence」的 `ValueError`，在運算子的運算元上使用過濾器（`{{ count > limit | default(5) }}`）也是如此；訊息會指出該運算子。將過濾後的運算元加上括號來比較其結果：`{{ (inputs.items | length) > 0 }}`、`{{ count > (limit | default(5)) }}`。若門檻至少為二：
 
 ```yaml
 condition: "{{ (inputs.items | length) >= 2 }}"
 ```
 
-For an emptiness check, use the filtered count's truthiness directly:
+若要檢查是否為空，直接使用過濾後計數的真值：
 
 ```yaml
 condition: "{{ inputs.items | length }}"   # 0 -> False, any non-zero count -> True
 ```
 
-### Namespace
+### 命名空間
 
-The expression evaluator builds a namespace from the `StepContext`:
+運算式評估器會從 `StepContext` 建立一個命名空間：
 
-| Key | Source | Available when |
+| 鍵 | 來源 | 可用時機 |
 |-----|--------|----------------|
-| `inputs` | Resolved workflow inputs | Always |
-| `steps` | Accumulated step results | After first step |
-| `item` | Current iteration item | Inside fan-out |
-| `fan_in` | Aggregated results | Inside fan-in |
+| `inputs` | 已解析的工作流程輸入 | 一律 |
+| `steps` | 累積的步驟結果 | 第一個步驟之後 |
+| `item` | 目前的迭代項目 | 在扇出內部 |
+| `fan_in` | 彙總的結果 | 在扇入內部 |
 
-## Input Resolution
+## 輸入解析
 
-When a workflow is executed, `_resolve_inputs()` validates and coerces provided values against the `inputs:` schema:
+當工作流程被執行時，`_resolve_inputs()` 會依 `inputs:` 結構描述驗證並強制轉換所提供的值：
 
-| Declared Type | Coercion | Example |
+| 宣告類型 | 強制轉換 | 範例 |
 |---------------|----------|---------|
-| `string` | None (pass-through) | `"my-feature"` |
-| `number` | `float()` → `int()` if whole | `"42"` → `42` |
+| `string` | 無（直接傳遞） | `"my-feature"` |
+| `number` | `float()` → 若為整數則 `int()` | `"42"` → `42` |
 | `boolean` | `"true"/"1"/"yes"` → `True` | `"false"` → `False` |
-| `enum` | Validates against allowed values | `["full", "backend-only"]` |
+| `enum` | 依允許的值驗證 | `["full", "backend-only"]` |
 
-Missing required inputs raise `ValueError`. Inputs with `default` values use the default when not provided.
+缺少必填輸入會拋出 `ValueError`。帶有 `default` 值的輸入在未提供時會使用預設值。
 
-## Catalog System
+## 目錄系統
 
 ```mermaid
 flowchart TD
@@ -274,24 +272,24 @@ flowchart TD
     style K fill:#9e9e9e,color:#fff
 ```
 
-Catalogs are fetched with a 1-hour cache (per-URL, SHA256-hashed cache files in `.specify/workflows/.cache/`). Each catalog entry has a `priority` (for merge ordering) and `install_allowed` flag.
+目錄以 1 小時快取擷取（依 URL 區分、經 SHA256 雜湊的快取檔案，位於 `.specify/workflows/.cache/`）。每個目錄項目都有一個 `priority`（用於合併排序）與 `install_allowed` 旗標。
 
-When `specify workflow add <id>` installs from catalog, it downloads the workflow YAML from the catalog entry's `url` field into `.specify/workflows/<id>/workflow.yml`.
+當 `specify workflow add <id>` 從目錄安裝時，它會從目錄項目的 `url` 欄位下載工作流程 YAML 到 `.specify/workflows/<id>/workflow.yml`。
 
-## State and Configuration Locations
+## 狀態與設定位置
 
-| Component | Location | Format | Purpose |
+| 元件 | 位置 | 格式 | 用途 |
 |-----------|----------|--------|---------|
-| Workflow definitions | `.specify/workflows/{id}/workflow.yml` | YAML | Installed workflow definitions |
-| Workflow registry | `.specify/workflows/workflow-registry.json` | JSON | Installed workflows metadata |
-| Run state | `.specify/workflows/runs/{run_id}/state.json` | JSON | Persisted execution state |
-| Run inputs | `.specify/workflows/runs/{run_id}/inputs.json` | JSON | Resolved input values |
-| Run log | `.specify/workflows/runs/{run_id}/log.jsonl` | JSONL | Append-only event log |
-| Catalog cache | `.specify/workflows/.cache/*.json` | JSON | Cached catalog entries (1hr TTL) |
-| Project catalogs | `.specify/workflow-catalogs.yml` | YAML | Project-level catalog sources |
-| User catalogs | `~/.specify/workflow-catalogs.yml` | YAML | User-level catalog sources |
+| 工作流程定義 | `.specify/workflows/{id}/workflow.yml` | YAML | 已安裝的工作流程定義 |
+| 工作流程註冊表 | `.specify/workflows/workflow-registry.json` | JSON | 已安裝工作流程的中繼資料 |
+| 執行狀態 | `.specify/workflows/runs/{run_id}/state.json` | JSON | 持久化的執行狀態 |
+| 執行輸入 | `.specify/workflows/runs/{run_id}/inputs.json` | JSON | 已解析的輸入值 |
+| 執行日誌 | `.specify/workflows/runs/{run_id}/log.jsonl` | JSONL | 僅附加的事件日誌 |
+| 目錄快取 | `.specify/workflows/.cache/*.json` | JSON | 快取的目錄項目（1 小時 TTL） |
+| 專案目錄 | `.specify/workflow-catalogs.yml` | YAML | 專案層級的目錄來源 |
+| 使用者目錄 | `~/.specify/workflow-catalogs.yml` | YAML | 使用者層級的目錄來源 |
 
-## Module Structure
+## 模組結構
 
 ```text
 src/specify_cli/

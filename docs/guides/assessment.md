@@ -1,115 +1,83 @@
-# Idea Assessment Quickstart
+# 構想評估快速入門
 
-Use this process to decide whether an idea deserves investment before committing
-to a solution. It works for software ideas and non-software decisions alike.
-No existing source code is required.
+在投入解決方案之前，用這套流程判斷一個構想是否值得投資。它同樣適用於軟體構想與非軟體決策。不需要既有的原始碼。
 
-The bundled, opt-in **assess** extension provides five stages:
-**intake → research → define → shape → decide**. The result is an evidence-backed
-`go`, `needs-clarification`, or `kill` decision, not an implementation.
+隨附的選用 **assess** 擴充功能提供五個階段：**intake → research → define → shape → decide**。成果是一份有證據支持的 `go`、`needs-clarification` 或 `kill` 決策，而不是實作。
 
-## Set up
+## 安裝設定
 
-[Install Spec Kit and initialize a project](../installation.md). An empty project
-is enough, or you can use an
-[existing repository](existing-projects.md) when the idea relates to its code.
-In a terminal at the initialized project root, install the extension:
+[安裝 Spec Kit 並初始化專案](../installation.md)。一個空專案就足夠；或者當構想與某個儲存庫的程式碼相關時，也可以使用[既有儲存庫](existing-projects.md)。在已初始化專案根目錄的終端機中，安裝擴充功能：
 
 ```bash
 specify extension add assess
 ```
 
-Then launch your coding agent in that directory. The examples below use
-GitHub Copilot's default skills mode (`--integration copilot`). Other agents
-use their own
-[command invocation syntax](../integrations/cli.md#command-invocation).
-Invoke each `/speckit-assess-*` skill separately in your agent's chat, reviewing
-the artifact before moving on. These are agent skills, not terminal commands;
-the terminal command above only installs the extension.
+接著在該目錄中啟動你的程式代理。以下範例使用 GitHub Copilot 的預設 skills 模式（`--integration copilot`）。其他代理會使用各自的[命令呼叫語法](../integrations/cli.md#command-invocation)。請在代理的聊天中分別呼叫每個 `/speckit-assess-*` skill，在往下走之前先檢視產出物。這些是代理 skill，不是終端機命令；上面的終端機命令只是安裝擴充功能。
 
-## 1. Capture the idea
+## 1. 記錄構想
 
 ```text
 /speckit-assess-intake "Let users work offline and sync when they reconnect." slug=offline-mode
 ```
 
-You can also supply a URL, ticket, or codebase pointer. The agent captures the
-input in `.specify/assessments/offline-mode/intake.md`.
-The slug is the shared handle for all five stages.
+你也可以提供 URL、工單或程式碼庫指標。代理會把輸入記錄在 `.specify/assessments/offline-mode/intake.md`。slug 是五個階段共用的識別代號。
 
-## 2. Research the evidence
+## 2. 研究證據
 
 ```text
 /speckit-assess-research slug=offline-mode
 ```
 
-The agent gathers supporting and opposing evidence in `research.md`. Review
-sources and confidence levels: uncited assumptions are not established facts.
-This stage should challenge the idea, not just build a case for it.
+代理會在 `research.md` 中蒐集支持與反對的證據。請檢視來源與信心等級：沒有出處的假設不是既定事實。這個階段應該挑戰構想，而不只是為它找理由。
 
-## 3. Define the problem
+## 3. 定義問題
 
 ```text
 /speckit-assess-define slug=offline-mode
 ```
 
-The agent writes `problem.md`, describing the affected users, problem, goals,
-non-goals, success metrics, and cost of doing nothing.
+代理會寫出 `problem.md`，描述受影響的使用者、問題、目標、非目標、成功指標，以及什麼都不做的代價。
 
-## 4. Shape possible solutions
+## 4. 塑造可能的解決方案
 
 ```text
 /speckit-assess-shape slug=offline-mode
 ```
 
-The agent compares concept-level options, constraints, appetite, and trade-offs
-in `concept.md`. Detailed architecture, implementation tasks, and source changes
-are deliberately outside this process.
+代理會在 `concept.md` 中比較概念層級的選項、限制、胃納量與取捨。詳細架構、實作任務與原始碼變更刻意不在這套流程的範圍內。
 
-## 5. Make the decision
+## 5. 做出決策
 
 ```text
 /speckit-assess-decide slug=offline-mode
 ```
 
-The agent records the scorecard, rationale, and verdict in `decision.md`.
+代理會把評分表、理由與判定記錄在 `decision.md`。
 
-| Verdict | What it means | What to do |
+| 判定 | 意義 | 下一步 |
 | --- | --- | --- |
-| `go` | The problem and evidence are adequate and a concept is recommended | Decide whether to act; optionally hand a software idea to SDD |
-| `needs-clarification` | Specific unknowns still block a defensible decision | Refine the affected artifacts with the missing information |
-| `kill` | The idea is not worth pursuing now | Keep the recorded rationale; stopping is a successful outcome |
+| `go` | 問題與證據已足夠，且有推薦的概念 | 決定是否採取行動；可選擇把軟體構想交給 SDD |
+| `needs-clarification` | 特定的未知事項仍阻礙站得住腳的決策 | 用缺漏的資訊精煉受影響的產出物 |
+| `kill` | 這個構想目前不值得追求 | 保留記錄下來的理由；停下來本身就是成功的結果 |
 
-All five artifacts live under `.specify/assessments/offline-mode/`. None of the
-assessment commands modify source code.
+五份產出物都放在 `.specify/assessments/offline-mode/` 下。評估命令都不會修改原始碼。
 
-## Resolve unknowns by refining the artifacts
+## 透過精煉產出物來釐清未知事項
 
-The usual flow runs each command once. When an artifact contains
-`[NEEDS CLARIFICATION: ...]`, edit that Markdown file directly or ask the agent
-in free-form chat to incorporate the missing information:
+一般流程是每個命令各跑一次。當某份產出物含有 `[NEEDS CLARIFICATION: ...]` 時，直接編輯該 Markdown 檔案，或在自由形式的聊天中請代理納入缺漏的資訊：
 
 ```text
 Update .specify/assessments/offline-mode/problem.md with these confirmed success metrics: <your metrics>. Update any dependent wording and revise decision.md if this resolves the blocker. Preserve source and confidence tags.
 ```
 
-Do not automatically regenerate the entire stage. Ask the agent to review
-whether the new facts clear the blocker and revise the downstream scorecard,
-verdict, or handoff accordingly. Rerunning a command is an exception, such as
-replacing a discarded draft, and existing artifacts must not be overwritten
-without confirmation.
+不要自動重新產生整個階段。請代理檢視新事實是否已解除阻礙，並據此修訂下游的評分表、判定或交接內容。重新執行命令屬於例外情況，例如取代一份已捨棄的草稿，而且未經確認不得覆寫既有產出物。
 
-## Optional handoff to SDD
+## 選用的 SDD 交接
 
-Assessment is standalone: it does not automatically invoke SDD or insert itself
-into the specification process. If you choose to build a software idea with a
-`go` verdict, establish your project constitution if needed, then pass the
-decision's handoff summary to the specification command:
+評估是獨立的：它不會自動呼叫 SDD，也不會把自己插入規格流程。若你決定以 `go` 判定來打造一個軟體構想，請視需要先建立專案憲章，再把決策的交接摘要交給規格命令：
 
 ```text
 /speckit-specify Use the handoff summary in .specify/assessments/offline-mode/decision.md to specify the approved offline-mode concept.
 ```
 
-Continue with the [SDD quickstart](../quickstart.md). For stage prerequisites,
-slug rules, and evidence requirements, see the
-[idea assessment command reference](../reference/agentic-assessment.md).
+接著繼續 [SDD 快速入門](../quickstart.md)。關於各階段的前置條件、slug 規則與證據要求，請見[構想評估命令參考](../reference/agentic-assessment.md)。

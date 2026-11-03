@@ -1,10 +1,10 @@
-# Installing with pipx
+# 使用 pipx 安裝
 
-[pipx](https://pipx.pypa.io/) is a tool for installing Python CLI applications in isolated environments. It does not require [uv](https://docs.astral.sh/uv/).
+[pipx](https://pipx.pypa.io/) 是在隔離環境中安裝 Python CLI 應用程式的工具。它不需要 [uv](https://docs.astral.sh/uv/)。
 
-## Install Specify CLI
+## 安裝 Specify CLI
 
-Pin a specific release tag for stability (check [Releases](https://github.com/github/spec-kit/releases) for the latest):
+為了穩定，請釘選特定的發行標籤（最新版本請查 [Releases](https://github.com/github/spec-kit/releases)）：
 
 ```bash
 # Install a specific stable release (recommended — replace vX.Y.Z with the
@@ -15,24 +15,24 @@ pipx install git+https://github.com/github/spec-kit.git@vX.Y.Z
 pipx install git+https://github.com/github/spec-kit.git
 ```
 
-## Verify
+## 驗證
 
 ```bash
 specify version
 ```
 
-## Upgrade
+## 升級
 
 ```bash
 pipx install --force git+https://github.com/github/spec-kit.git@vX.Y.Z
 ```
 
-## Uninstall
+## 解除安裝
 
 ```bash
 pipx uninstall specify-cli
 ```
 
-## Next steps
+## 後續步驟
 
-Head to the [Quick Start](../quickstart.md) to initialize your first project.
+前往[快速入門](../quickstart.md)初始化你的第一個專案。

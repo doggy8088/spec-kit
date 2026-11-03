@@ -1,19 +1,19 @@
 ---
-description: Create a plan and store it in plan.md.
+description: 建立計畫並儲存到 plan.md。
 ---
 
-## User Input
+## 使用者輸入
 
 ```text
 $ARGUMENTS
 ```
 
-## Outline
+## 大綱
 
-1. Read `.specify/feature.json` to get the feature directory path.
+1. 讀取 `.specify/feature.json`，取得功能目錄路徑。
 
-2. **Load context**: `.specify/memory/constitution.md` and `<feature_directory>/spec.md`.
+2. **載入情境**：`.specify/memory/constitution.md` 與 `<feature_directory>/spec.md`。
 
-3. Create an implementation plan and store it in `<feature_directory>/plan.md`.
-   - Technical context: tech stack, dependencies, project structure
-   - Design decisions, architecture, file structure
+3. 建立實作計畫，並儲存到 `<feature_directory>/plan.md`。
+   - 技術情境：技術堆疊、相依性、專案結構
+   - 設計決策、架構、檔案結構

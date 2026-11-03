@@ -1,33 +1,26 @@
 ---
-description: Create or update the project constitution.
+description: 建立或更新專案憲章。
 ---
 
-## User Input
+## 使用者輸入
 
 ```text
 $ARGUMENTS
 ```
 
-## Scope Guard
+## 範圍守衛
 
-This command's own work is limited to creating or updating the project constitution and
-propagating constitution-driven changes to dependent Spec Kit artifacts.
+這個命令自身的工作僅限於建立或更新專案憲章，以及將憲章驅動的變更傳播到相依的 Spec Kit 產出物。
 
-- Classify every part of the user input as constitution content or a separate non-governance
-  intent. Feature implementation, code generation, refactoring, build, and deployment requests
-  are examples of non-governance intents.
-- You **MUST NOT** execute any non-governance intent. Defer each one to `Next Actions`.
-- You **MUST NOT** create, modify, or delete application source files or other artifacts
-  unrelated to the constitution workflow.
-- If an instruction could be either constitution content or a non-governance intent, ask for
-  clarification before making changes.
-- After updating the constitution, list each deferred intent in a `Next Actions` section with an
-  appropriate follow-up Spec Kit command, such as `__SPECKIT_COMMAND_SPECIFY__`, but do not
-  invoke it.
-- Omit `Next Actions` when there are no non-governance intents.
+- 將使用者輸入的每個部分分類為憲章內容或獨立的非治理意圖。功能實作、程式碼產生、重構、建置與部署要求都是非治理意圖的例子。
+- 你**絕對不得**執行任何非治理意圖。將每一項延後到 `Next Actions`。
+- 你**絕對不得**建立、修改或刪除與憲章工作流程無關的應用程式原始碼檔案或其他產出物。
+- 若某項指示既可能是憲章內容、也可能是非治理意圖，請在變更前先要求釐清。
+- 更新憲章後，在 `Next Actions` 區段中列出每一項延後的意圖，並附上合適的後續 Spec Kit 命令，例如 `__SPECKIT_COMMAND_SPECIFY__`，但不要呼叫它。
+- 當沒有非治理意圖時，省略 `Next Actions`。
 
-## Outline
+## 大綱
 
-1. Create or update the project constitution and store it in `.specify/memory/constitution.md`.
-   - Project name, guiding principles, non-negotiable rules
-   - Derive from user input and existing repo context (README, docs)
+1. 建立或更新專案憲章，並將其儲存在 `.specify/memory/constitution.md`。
+   - 專案名稱、指導原則、不可協商的規則
+   - 依使用者輸入與既有儲存庫脈絡（README、文件）推導

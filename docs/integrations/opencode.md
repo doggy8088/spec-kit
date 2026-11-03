@@ -1,39 +1,27 @@
 # opencode
 
-Install [opencode](https://opencode.ai/) before setup.
-The integration key is `opencode`.
+設定前請先安裝 [opencode](https://opencode.ai/)。整合鍵為 `opencode`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration opencode
 ```
 
-For an existing Spec Kit project, use `specify integration install opencode`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install opencode`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Commands
+## 已安裝的命令
 
-Markdown commands are installed under `.opencode/commands/`.
-Invoke them in the agent's chat using dotted notation, for example
-`/speckit.specify` or `/speckit.bug.assess` for the installed bug extension.
+Markdown 命令會安裝在 `.opencode/commands/` 之下。在代理的聊天中以點記法呼叫它們，例如 `/speckit.specify`，或已安裝 bug 擴充功能的 `/speckit.bug.assess`。
 
-Legacy `.opencode/command/` installations remain a registration fallback when
-the canonical directory does not exist.
+當正規目錄不存在時，舊版的 `.opencode/command/` 安裝仍作為註冊的備援途徑。
 
-## Runtime Events and Workflow Dispatch
+## 執行階段事件與工作流程分派
 
-Native events use `.opencode/plugin/speckit-events.ts` rather than a JSON hook
-map; Spec Kit merges its plugin reference into `opencode.json`.
-`--integration-options="--events false"` disables Spec Kit event handlers.
-See [runtime events](cli.md#runtime-events).
+原生事件使用 `.opencode/plugin/speckit-events.ts`，而不是 JSON hook 對應表；Spec Kit 會將其外掛程式參照合併到 `opencode.json` 中。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#runtime-events)。
 
-Workflow steps use `opencode run`. Slash-prefixed prompts become
-`--command <name>` with the remaining text as the message; other prompts are
-passed as message text. The adapter forwards a configured model with `-m` and
-requests `--format json` for structured output.
+工作流程步驟使用 `opencode run`。以斜線開頭的提示詞會變成 `--command <name>`，其餘文字作為訊息；其他提示詞則以訊息文字傳入。轉接器會以 `-m` 轉傳已設定的模型，並在要求結構化輸出時傳入 `--format json`。

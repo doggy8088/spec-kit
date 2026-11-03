@@ -1,147 +1,147 @@
-# Spec Kit - April 2026 Newsletter
+# Spec Kit－2026 年 4 月電子報
 
-This edition covers Spec Kit activity in April 2026. Seventeen releases shipped (v0.4.4 through v0.8.3), delivering a full integration plugin architecture, a workflow engine, preset composition strategies, an integration catalog, and comprehensive documentation. The community extension catalog tripled from 26 to 83 entries, community presets grew from 2 to 12, and Spec Kit appeared on the Thoughtworks Technology Radar. A summary is in the table below, followed by details.
+本期涵蓋 Spec Kit 在 2026 年 4 月的動態。本月發佈了十七個版本（v0.4.4 至 v0.8.3），交付完整的整合外掛架構、工作流程引擎、預設集組合策略、整合目錄與完整文件。社群擴充目錄從 26 個條目成長三倍至 83 個，社群預設集從 2 個成長至 12 個，Spec Kit 也登上了 Thoughtworks Technology Radar。下表為摘要，其後為詳細內容。
 
-| **Spec Kit Core (Apr 2026)** | **Community & Content** | **SDD Ecosystem & Next** |
+| **Spec Kit 核心（2026 年 4 月）** | **社群與內容** | **SDD 生態系與下一步** |
 | --- | --- | --- |
-| Seventeen releases shipped with major features: integration plugin architecture, workflow engine, preset composition, integration catalog, bundled lean preset, documentation site, and academic citation support. Three new agents added (Forgecode, Goose, Devin for Terminal). The repo grew from ~82k to **92,038 stars**. [\[github.com\]](https://github.com/github/spec-kit/releases) | Thoughtworks Technology Radar placed Spec Kit in the "Assess" ring. Community catalog grew from 26 to **83 extensions** and from 2 to **12 presets**. External coverage continued across developer blogs and industry press. XB Software documented a real legacy project. Fabián Silva shipped the Caramelo VS Code extension. | Matt Rickard argued for "smaller specs, harder checks." Will Torber's three-framework comparison recommended OpenSpec for most teams. The "Spec Layer" debate emerged: specs as constraint surfaces for AI agents. Spec Kit leads in breadth and portability; competitors differentiate on drift detection and orchestration depth. |
+| 發佈了十七個版本，帶來重大功能：整合外掛架構、工作流程引擎、預設集組合、整合目錄、內建精簡預設集、文件網站，以及學術引用支援。新增三個代理（Forgecode、Goose、Devin for Terminal）。儲存庫從約 82k 顆星成長至 **92,038 顆星**。 [\[github.com\]](https://github.com/github/spec-kit/releases) | Thoughtworks Technology Radar 將 Spec Kit 放入「Assess」圈。社群目錄從 26 個成長至 **83 個擴充功能**，並從 2 個成長至 **12 個預設集**。開發者部落格與產業媒體的外部報導持續出現。XB Software 記錄了一個真實的舊系統專案。Fabián Silva 發佈了 Caramelo VS Code 擴充功能。 | Matt Rickard 主張「更小的規格、更嚴的檢查」。Will Torber 的三框架比較推薦大多數團隊使用 OpenSpec。「Spec Layer」之爭浮現：規格是 AI 代理的約束面。Spec Kit 在廣度與可攜性上領先；競爭者則以漂移偵測與編排深度做出區隔。 |
 
 ***
 
-> **Important:** April's release pace outran external coverage. Most analyses published during the month (Rickard on April 1, Thoughtworks Radar on April 15, XB Software on April 17, Torber on April 23) were evaluating versions that predated the workflow engine (v0.7.0), integration catalog (v0.7.2), preset composition (v0.8.0), and catalog discovery CLI (v0.8.3). The ceremony and flexibility concerns they raised are precisely what these features address — the lean preset, pluggable workflows, composable presets, and community extensions like Conduct, MAQA, and Fleet Orchestrator already deliver alternative workflows beyond the default SDD process. We look forward to seeing how upcoming reviews account for these capabilities.
+> **重要：** 4 月的發佈節奏超越了外部報導的速度。本月發表的大多數分析（Rickard 於 4 月 1 日、Thoughtworks Radar 於 4 月 15 日、XB Software 於 4 月 17 日、Torber 於 4 月 23 日）所評估的版本，都早於工作流程引擎（v0.7.0）、整合目錄（v0.7.2）、預設集組合（v0.8.0）與目錄探索 CLI（v0.8.3）。他們提出的儀式感與彈性疑慮，正是這些功能所要解決的——精簡預設集、可插拔工作流程、可組合預設集，以及 Conduct、MAQA、Fleet Orchestrator 等社群擴充功能，都已在預設 SDD 流程之外提供替代工作流程。我們期待看到後續評測如何將這些能力納入考量。
 
-## Spec Kit Project Updates
+## Spec Kit 專案更新
 
-### Releases Overview
+### 版本總覽
 
-**v0.4.4** (April 1) delivered the first stage of the **integration plugin architecture** — base classes, a manifest system, and a registry that replaced the hard-coded agent scaffolding. It also added the Product Forge, Superpowers Bridge, MAQA suite (7 extensions), Spec Kit Onboard, and Plan Review Gate to the community catalog, fixed Claude Code CLI detection for npm-local installs, and added `--allow-existing-branch` to `create-new-feature`. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.4.4)
+**v0.4.4**（4 月 1 日）交付了**整合外掛架構**的第一階段——基礎類別、資訊清單系統，以及取代寫死代理鷹架的註冊表。它也將 Product Forge、Superpowers Bridge、MAQA 套件（7 個擴充功能）、Spec Kit Onboard 與 Plan Review Gate 加入社群目錄，修復了 npm 本機安裝的 Claude Code CLI 偵測，並為 `create-new-feature` 新增 `--allow-existing-branch`。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.4.4)
 
-**v0.4.5** (April 2) completed the integration migration in five stages: standard markdown integrations for 19 agents, TOML integrations (Gemini, Tabnine), skills and generic integrations, and removal of the legacy scaffold path. It also installed Claude Code as native skills, added a `--dry-run` flag for `create-new-feature`, support for 4+ digit feature branch numbers, the Fix Findings extension, and five lifecycle extensions to the community catalog. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.4.5)
+**v0.4.5**（4 月 2 日）以五個階段完成整合遷移：19 個代理的標準 Markdown 整合、TOML 整合（Gemini、Tabnine）、技能與通用整合，並移除舊鷹架路徑。它也將 Claude Code 安裝為原生技能，為 `create-new-feature` 新增 `--dry-run` 旗標，支援 4 位數以上的功能分支編號、Fix Findings 擴充功能，並將五個生命週期擴充功能加入社群目錄。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.4.5)
 
-**v0.5.0** (April 2) was a significant packaging change: **template zip bundles were removed from releases**, with the CLI itself now handling all scaffolding. This ensured CLI and templates stay in sync. It also introduced `DEVELOPMENT.md` for contributor onboarding. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.5.0)
+**v0.5.0**（4 月 2 日）是重大的封裝變更：**範本 zip 套件組從發佈中移除**，改由 CLI 本身處理所有鷹架建立。這確保了 CLI 與範本保持同步。它也推出了供貢獻者入門的 `DEVELOPMENT.md`。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.5.0)
 
-**v0.5.1** (April 8) was a large patch release. It added the **bundled Git extension** (stages 1 and 2) with hooks on all core commands and `GIT_BRANCH_NAME` override support, **Forgecode** agent support, and the `specify integration` subcommand for post-init integration management. Argument hints were added to Claude Code commands. Numerous community extensions joined the catalog (Confluence, Canon, Spec Diagram, Branch Convention, Spec Refine, FixIt, Optimize, Security Review) along with presets (explicit-task-dependencies, toc-navigation, VS Code Ask Questions). Bug fixes included pinning typer≥0.24.0/click≥8.2.1 to fix an import crash, BSD-portable sed escaping, Trae agent fix, TOML frontmatter stripping, and preventing ambiguous TOML closing quotes. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.5.1)
+**v0.5.1**（4 月 8 日）是一個大型修補版本。它新增了**內建 Git 擴充功能**（第 1 與第 2 階段），在所有核心命令上掛上 hook 並支援 `GIT_BRANCH_NAME` 覆寫；新增 **Forgecode** 代理支援；以及用於初始化後整合管理的 `specify integration` 子命令。Claude Code 命令新增了參數提示。許多社群擴充功能加入目錄（Confluence、Canon、Spec Diagram、Branch Convention、Spec Refine、FixIt、Optimize、Security Review），以及預設集（explicit-task-dependencies、toc-navigation、VS Code Ask Questions）。錯誤修復包括釘選 typer≥0.24.0／click≥8.2.1 以修復匯入當機、BSD 可攜的 sed 跳脫、Trae 代理修復、TOML frontmatter 剝除，以及避免含糊的 TOML 結尾引號。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.5.1)
 
-**v0.6.0** (April 9) rewrote **AGENTS.md for the new integration architecture**, added the SpecKit Companion to Community Friends, and brought Bugfix Workflow, Worktree Isolation, and MemoryLint to the community catalog. A new multi-repo-branching preset arrived. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.6.0)
+**v0.6.0**（4 月 9 日）為新的整合架構重寫了 **AGENTS.md**，將 SpecKit Companion 加入 Community Friends，並把 Bugfix Workflow、Worktree Isolation 與 MemoryLint 帶入社群目錄。新的 multi-repo-branching 預設集也隨之登場。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.6.0)
 
-**v0.6.1** (April 10) added the **bundled lean preset** with a minimal workflow command set — a lighter-weight alternative to the full SDD ceremony. It also migrated **Cursor** from `.cursor/commands` to `.cursor/skills` and added Brownfield Bootstrap, CI Guard, SpecTest, PR Bridge, TinySpec, and Status Report to the community catalog. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.6.1)
+**v0.6.1**（4 月 10 日）新增了**內建精簡預設集**，附一組最小工作流程命令——是完整 SDD 儀式之外較輕量的替代方案。它也將 **Cursor** 從 `.cursor/commands` 遷移至 `.cursor/skills`，並將 Brownfield Bootstrap、CI Guard、SpecTest、PR Bridge、TinySpec 與 Status Report 加入社群目錄。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.6.1)
 
-**v0.6.2** (April 13) added **Goose AI agent** support (YAML-based recipe format), the GitHub Issues Integration extension, and the What-if Analysis extension. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.6.2)
+**v0.6.2**（4 月 13 日）新增了 **Goose AI 代理**支援（YAML 式 recipe 格式）、GitHub Issues Integration 擴充功能，以及 What-if Analysis 擴充功能。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.6.2)
 
-**v0.7.0** (April 14) delivered the **workflow engine with catalog system**, enabling pluggable, multi-step workflow definitions. It added SFSpeckit (Salesforce SDD), the Worktrees extension, optional single-segment branch prefix for gitflow compatibility, and the claude-ask-questions and fiction-book-writing presets. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.0)
+**v0.7.0**（4 月 14 日）交付了**帶目錄系統的工作流程引擎**，實現可插拔的多步驟工作流程定義。它新增了 SFSpeckit（Salesforce SDD）、Worktrees 擴充功能、供 gitflow 相容性使用的選用單段分支前綴，以及 claude-ask-questions 與 fiction-book-writing 預設集。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.0)
 
-**v0.7.1** (April 15) deprecated the `--ai` flag in favor of `--integration` on `specify init`, added Windows to the CI test matrix, fixed Claude skill chaining for hook execution, merged TESTING.md into CONTRIBUTING.md, and added the Agent Assign and Architect Preview extensions. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.1)
+**v0.7.1**（4 月 15 日）在 `specify init` 上棄用了 `--ai` 旗標，改用 `--integration`；將 Windows 加入 CI 測試矩陣；修復了供 hook 執行的 Claude 技能串連；將 TESTING.md 合併至 CONTRIBUTING.md；並新增 Agent Assign 與 Architect Preview 擴充功能。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.1)
 
-**v0.7.2** (April 16) delivered the **integration catalog** for discovery, versioning, and community distribution of agent integrations. It also produced a major **documentation overhaul**: reference pages for core commands, extensions, presets, workflows, and integrations were added to `docs/reference/`, and the README CLI section was simplified. The Issues extension and Catalog CI extension joined the community catalog. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.2)
+**v0.7.2**（4 月 16 日）交付了**整合目錄**，用於代理整合的探索、版本管理與社群散佈。它也帶來了大規模的**文件翻修**：核心命令、擴充功能、預設集、工作流程與整合的參考頁面加入 `docs/reference/`，README 的 CLI 章節也予以簡化。Issues 擴充功能與 Catalog CI 擴充功能加入社群目錄。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.2)
 
-**v0.7.3** (April 17) replaced shell-based context updates with a **marker-based upsert** mechanism, eliminating accidental context file bloat. It added a **Community Friends page** to the docs site, the Spec Scope and Blueprint extensions, and a Claude Code/Copilot CLI plugin marketplace reference in the README. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.3)
+**v0.7.3**（4 月 17 日）以**標記式 upsert** 機制取代了以 shell 為基礎的上下文更新，消除了上下文檔案意外膨脹。它在文件網站新增了 **Community Friends 頁面**、Spec Scope 與 Blueprint 擴充功能，並在 README 中加入 Claude Code／Copilot CLI 外掛市集參考。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.3)
 
-**v0.7.4** (April 21) added **CITATION.cff and .zenodo.json** for academic citation support. It introduced Ripple (side-effect detection), Spec Validate, Version Guard, Spec Reference Loader, and Memory Loader extensions. A fix stripped UTF-8 BOM from agent context files, and the Antigravity (agy) agent layout was migrated to `.agents/` with `--skills` deprecated. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.4)
+**v0.7.4**（4 月 21 日）新增了用於學術引用支援的 **CITATION.cff 與 .zenodo.json**。它推出了 Ripple（副作用偵測）、Spec Validate、Version Guard、Spec Reference Loader 與 Memory Loader 擴充功能。一項修復從代理上下文檔案中剝除了 UTF-8 BOM，Antigravity（agy）代理版面也遷移至 `.agents/`，並棄用了 `--skills`。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.4)
 
-**v0.7.5** (April 22) added `specify self check` and `self upgrade` stubs, the **preset wrap strategy** (completing the composition trifecta alongside prepend and append), the Red Team adversarial review extension, the Wireframe extension, and a **directory traversal security fix** in command write paths. Skill placeholder resolution was expanded to all SKILL.md agents. Community content (walkthroughs and presets) was moved from the README to the docs site. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.5)
+**v0.7.5**（4 月 22 日）新增了 `specify self check` 與 `self upgrade` stub、**預設集 wrap 策略**（與 prepend、append 並列，完成組合三部曲）、Red Team 對抗式審查擴充功能、Wireframe 擴充功能，以及命令寫入路徑的**目錄遍歷安全性修復**。技能佔位符解析擴展至所有 SKILL.md 代理。社群內容（導覽與預設集）從 README 移至文件網站。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.7.5)
 
-**v0.8.0** (April 23) delivered **preset composition strategies** (prepend, append, wrap) for templates, commands, and scripts — enabling presets to layer content around existing artifacts. It also added Copilot `--integration-options="--skills"` for skills-based scaffolding, `pipx` as an alternative installation method, and the Memory MD extension. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.0)
+**v0.8.0**（4 月 23 日）為範本、命令與指令稿交付了**預設集組合策略**（prepend、append、wrap）——讓預設集能將內容層疊在既有產物周圍。它也為 Copilot 新增了供技能式鷹架使用的 `--integration-options="--skills"`、`pipx` 作為替代安裝方式，以及 Memory MD 擴充功能。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.0)
 
-**v0.8.1** (April 24) fixed `/speckit.plan` on custom git branches via `.specify/feature.json`, migrated the **Mistral Vibe** integration to SkillsIntegration, added the **Screenwriting** and **Jira** presets, and resolved command reference formats per integration type (dot vs. hyphen notation). [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.1)
+**v0.8.1**（4 月 24 日）透過 `.specify/feature.json` 修復了自訂 git 分支上的 `/speckit.plan`，將 **Mistral Vibe** 整合遷移至 SkillsIntegration，新增 **Screenwriting** 與 **Jira** 預設集，並依整合類型解析命令參考格式（點號與連字號寫法）。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.1)
 
-**v0.8.2** (April 28) introduced **GITHUB_TOKEN/GH_TOKEN authentication** for private catalog and extension downloads, deprecated the `--no-git` flag (removal gated at v0.10.0), replaced all deprecated `--ai` references with `--integration` in documentation, and added MarkItDown Document Converter, Microsoft 365 Integration, Spec Orchestrator, and the Fiction Book Writing v1.7 preset with RAG (Chroma DB) offline semantic search. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.2)
+**v0.8.2**（4 月 28 日）為私人目錄與擴充功能下載推出了 **GITHUB_TOKEN／GH_TOKEN 驗證**，棄用了 `--no-git` 旗標（預定於 v0.10.0 移除），將文件中所有已棄用的 `--ai` 參考換成 `--integration`，並新增 MarkItDown Document Converter、Microsoft 365 Integration、Spec Orchestrator，以及附 RAG（Chroma DB）離線語意搜尋的 Fiction Book Writing v1.7 預設集。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.2)
 
-**v0.8.3** (April 29) closed the month with **catalog discovery CLI commands** (search, info, catalog list/add/remove), support for **Devin for Terminal** as a skills-based integration, a fix for the opencode command dispatch, and the OWASP LLM Threat Model, iSAQB Architecture Governance, and Work IQ extensions. A fix was also added to the upgrade hint to prevent users from accidentally installing a PyPI squat package. [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.3)
+**v0.8.3**（4 月 29 日）以**目錄探索 CLI 命令**（search、info、catalog list／add／remove）為本月收尾，支援 **Devin for Terminal** 作為技能式整合，修復 opencode 命令派送，並加入 OWASP LLM Threat Model、iSAQB Architecture Governance 與 Work IQ 擴充功能。升級提示也新增一項修復，避免使用者意外安裝 PyPI 搶註套件。 [\[github.com\]](https://github.com/github/spec-kit/releases/tag/v0.8.3)
 
-### Architecture & Infrastructure Highlights
+### 架構與基礎設施亮點
 
-The most significant architectural change in April was the **integration plugin architecture** (v0.4.4–v0.4.5), which replaced hard-coded agent scaffolding with a registry of self-describing integration classes. Each agent is now a self-contained subpackage under `src/specify_cli/integrations/<key>/` with base classes for Markdown, TOML, YAML, and Skills formats. This six-stage migration touched all 28 supported agents and laid the groundwork for the integration catalog (v0.7.2) and community-distributed integrations.
+4 月最重大的架構變更是**整合外掛架構**（v0.4.4–v0.4.5），以自描述整合類別的註冊表取代寫死的代理鷹架。每個代理現在都是 `src/specify_cli/integrations/<key>/` 下的獨立子套件，具備 Markdown、TOML、YAML 與 Skills 格式的基礎類別。這次六階段遷移觸及全部 28 個受支援的代理，並為整合目錄（v0.7.2）與社群散佈的整合奠定基礎。
 
-The **workflow engine** (v0.7.0) introduced a catalog-based system for pluggable, multi-step workflow definitions — moving beyond the fixed seven-step SDD sequence.
+**工作流程引擎**（v0.7.0）推出了以目錄為基礎的系統，支援可插拔的多步驟工作流程定義——超越固定的七步驟 SDD 序列。
 
-**Preset composition strategies** (v0.7.5/v0.8.0) completed the preset system with prepend, append, and wrap modes. Presets can now layer content around existing templates, commands, and scripts rather than only replacing them.
+**預設集組合策略**（v0.7.5／v0.8.0）以 prepend、append 與 wrap 模式完成了預設集系統。預設集現在能將內容層疊在既有範本、命令與指令稿周圍，而不只是取代它們。
 
-The **marker-based context upsert** (v0.7.3) replaced fragile shell-based sed operations for updating agent context files, eliminating a class of bugs around context bloat and encoding issues.
+**標記式上下文 upsert**（v0.7.3）取代了脆弱的 shell 式 sed 操作來更新代理上下文檔案，消除了一整類與上下文膨脹及編碼問題相關的錯誤。
 
-**Template zip bundles were removed** (v0.5.0), coupling the CLI and templates into a single distributable artifact.
+**範本 zip 套件組被移除**（v0.5.0），將 CLI 與範本耦合成單一可散佈產物。
 
-### Bug Fixes and Security
+### 錯誤修復與安全性
 
-The most critical fix was **blocking directory traversal in command write paths** (#2229, v0.7.5), which prevented a potential path traversal vulnerability in the CommandRegistrar. Other security-adjacent fixes included hardening against a **PyPI squat package** in upgrade hints (v0.8.3) and adding **GITHUB_TOKEN authentication** for private catalog downloads (v0.8.2).
+最關鍵的修復是**阻擋命令寫入路徑中的目錄遍歷**（#2229，v0.7.5），避免了 CommandRegistrar 中潛在的路徑遍歷弱點。其他與安全相關的修復包括針對升級提示中 **PyPI 搶註套件**的防護（v0.8.3），以及為私人目錄下載新增 **GITHUB_TOKEN 驗證**（v0.8.2）。
 
-Notable bug fixes: typer/click import crash (v0.5.1), BSD-portable sed escaping (v0.5.1), UTF-8 BOM stripping from context files (v0.7.4), CRLF warning suppression in PowerShell auto-commit (v0.7.3), Claude skill chaining for hooks (v0.7.1), TOML ambiguous closing quotes (v0.5.1), and custom branch support for `/speckit.plan` (v0.8.1). [\[github.com\]](https://github.com/github/spec-kit/releases)
+值得注意的錯誤修復包括：typer／click 匯入當機（v0.5.1）、BSD 可攜的 sed 跳脫（v0.5.1）、從上下文檔案剝除 UTF-8 BOM（v0.7.4）、PowerShell 自動提交中的 CRLF 警告抑制（v0.7.3）、供 hook 使用的 Claude 技能串連（v0.7.1）、TOML 含糊結尾引號（v0.5.1），以及 `/speckit.plan` 的自訂分支支援（v0.8.1）。 [\[github.com\]](https://github.com/github/spec-kit/releases)
 
-### The Extension & Preset Ecosystem
+### 擴充功能與預設集生態系
 
-The community extension catalog **tripled** during April, growing from 26 to **83 entries**. 59 new extensions were added and 2 were removed (Cognitive Squad and Understanding, whose repositories were no longer available). Community presets grew from 2 to **12 entries**, with 10 new presets added.
+社群擴充目錄在 4 月**成長三倍**，從 26 個條目成長至 **83 個條目**。新增了 59 個擴充功能，移除了 2 個（Cognitive Squad 與 Understanding，其儲存庫已不再可用）。社群預設集從 2 個成長至 **12 個條目**，新增了 10 個預設集。
 
-Notable new extensions by category:
+依類別值得注意的新擴充功能：
 
-- **Project management**: GitHub Issues Integration (Fatima367, aaronrsun), Spec Orchestrator (Quratulain-bilal), Agent Assign (xuyang), Status Report (Open-Agent-Tools)
-- **Quality & security**: Red Team adversarial review (Ash Brener), Security Review (DyanGalih), Ripple side-effect detection (chordpli), Spec Validate (Ahmed Eltayeb), CI Guard (Quratulain-bilal), OWASP LLM Threat Model (NaviaSamal)
-- **Multi-agent & orchestration**: MAQA suite with 7 extensions covering multi-agent QA, Jira, Azure DevOps, GitHub Projects, Linear, and Trello integrations (GenieRobot), Product Forge (VaiYav)
-- **Spec lifecycle**: Spec Refine (Quratulain-bilal), Bugfix Workflow (Quratulain-bilal), Fix Findings (Quratulain-bilal), Brownfield Bootstrap (Quratulain-bilal), TinySpec (Quratulain-bilal)
-- **Developer experience**: Blueprint code review (chordpli), Confluence (aaronrsun), MarkItDown Document Converter (BenBtg), Microsoft 365 Integration (BenBtg), Memory MD (DyanGalih), Memory Loader (KevinBrown5280), MemoryLint (RbBtSn0w)
-- **Domain-specific**: SFSpeckit for Salesforce (Sumanth Yanamala), iSAQB Architecture Governance preset (Thorsten Hindermann), Canon baseline-driven workflows (Maxim Stupakov)
-- **Creative**: Fiction Book Writing preset v1.7 with RAG/Chroma DB support (Andreas Daumann), Screenwriting preset (Andreas Daumann)
+- **專案管理**：GitHub Issues Integration（Fatima367、aaronrsun）、Spec Orchestrator（Quratulain-bilal）、Agent Assign（xuyang）、Status Report（Open-Agent-Tools）
+- **品質與安全**：Red Team 對抗式審查（Ash Brener）、Security Review（DyanGalih）、Ripple 副作用偵測（chordpli）、Spec Validate（Ahmed Eltayeb）、CI Guard（Quratulain-bilal）、OWASP LLM Threat Model（NaviaSamal）
+- **多代理與編排**：MAQA 套件，7 個擴充功能涵蓋多代理 QA、Jira、Azure DevOps、GitHub Projects、Linear 與 Trello 整合（GenieRobot）、Product Forge（VaiYav）
+- **規格生命週期**：Spec Refine（Quratulain-bilal）、Bugfix Workflow（Quratulain-bilal）、Fix Findings（Quratulain-bilal）、Brownfield Bootstrap（Quratulain-bilal）、TinySpec（Quratulain-bilal）
+- **開發者體驗**：Blueprint 程式碼審查（chordpli）、Confluence（aaronrsun）、MarkItDown Document Converter（BenBtg）、Microsoft 365 Integration（BenBtg）、Memory MD（DyanGalih）、Memory Loader（KevinBrown5280）、MemoryLint（RbBtSn0w）
+- **領域專屬**：供 Salesforce 使用的 SFSpeckit（Sumanth Yanamala）、iSAQB Architecture Governance 預設集（Thorsten Hindermann）、Canon 以基線驅動的工作流程（Maxim Stupakov）
+- **創意**：附 RAG／Chroma DB 支援的 Fiction Book Writing 預設集 v1.7（Andreas Daumann）、Screenwriting 預設集（Andreas Daumann）
 
-Notable contributor **Quratulain-bilal** contributed 15 extensions during the month, spanning spec lifecycle, workflow management, and CI/CD integration. **GenieRobot** contributed the 7-extension MAQA suite. **BenBtg** contributed both MarkItDown and Microsoft 365 integrations. [\[github.com\]](https://github.com/github/spec-kit/releases)
+值得注意的貢獻者 **Quratulain-bilal** 在本月貢獻了 15 個擴充功能，橫跨規格生命週期、工作流程管理與 CI/CD 整合。**GenieRobot** 貢獻了 7 個擴充功能的 MAQA 套件。**BenBtg** 同時貢獻了 MarkItDown 與 Microsoft 365 整合。 [\[github.com\]](https://github.com/github/spec-kit/releases)
 
-### Documentation Overhaul
+### 文件翻修
 
-April saw a comprehensive documentation effort. Reference pages for **core commands, extensions, presets, workflows, and integrations** were created under `docs/reference/`. Community content — **walkthroughs, presets, and a Community Friends page** — was moved from the README to `docs/community/`, reducing README length while improving discoverability. The deprecated `--ai` flag references were replaced with `--integration` across all documentation. TESTING.md was merged into CONTRIBUTING.md, and `DEVELOPMENT.md` was introduced for contributor onboarding. [\[github.com\]](https://github.com/github/spec-kit/releases)
+4 月展開了全面的文件工作。**核心命令、擴充功能、預設集、工作流程與整合**的參考頁面在 `docs/reference/` 下建立。社群內容——**導覽、預設集與 Community Friends 頁面**——從 README 移至 `docs/community/`，在縮短 README 長度的同時提升可發現性。已棄用的 `--ai` 旗標參考在所有文件中換成 `--integration`。TESTING.md 合併至 CONTRIBUTING.md，並推出供貢獻者入門的 `DEVELOPMENT.md`。 [\[github.com\]](https://github.com/github/spec-kit/releases)
 
-## Community & Content
+## 社群與內容
 
 ### Thoughtworks Technology Radar
 
-On **April 15**, the **Thoughtworks Technology Radar Volume 34** placed GitHub Spec Kit in the **"Assess" ring** under Languages & Frameworks. The blip noted that teams report value in brownfield projects, that the constitution captures project scope and architecture, but flagged potential **instruction bloat, context rot, and verbose markdown output** as concerns to watch. This is the first appearance of any SDD-specific tool on the Radar. [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
+**4 月 15 日**，**Thoughtworks Technology Radar 第 34 卷**將 GitHub Spec Kit 放入 Languages & Frameworks 類別的**「Assess」圈**。該條目指出，團隊回報其在 brownfield 專案中有價值，憲章能掌握專案範圍與架構，但也標示了潛在的**指令膨脹、上下文腐蝕與冗長的 markdown 輸出**等需要留意的疑慮。這是任何 SDD 專屬工具首次登上 Radar。 [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
 
-### Developer Articles and Blog Posts
+### 開發者文章與部落格貼文
 
-April produced a steady stream of external articles.
+4 月出現了源源不絕的外部文章。
 
-**Matt Rickard** published *"The Spec Layer: Why Spec-Driven Development (SDD) Works"* on April 1. His thesis: specs reduce execution freedom for AI agents, functioning as constraint surfaces. He compared Spec Kit, Kiro, OpenSpec, Tessl, Intent, and Symphony, and advocated for **"smaller specs, harder checks, less guessing."** [\[blog.matt-rickard.com\]](https://blog.matt-rickard.com/p/the-spec-layer)
+**Matt Rickard** 於 4 月 1 日發表 *「The Spec Layer: Why Spec-Driven Development (SDD) Works」*。他的論點是：規格降低了 AI 代理的執行自由度，發揮約束面的作用。他比較了 Spec Kit、Kiro、OpenSpec、Tessl、Intent 與 Symphony，並倡導**「更小的規格、更嚴的檢查、更少的猜測」**。 [\[blog.matt-rickard.com\]](https://blog.matt-rickard.com/p/the-spec-layer)
 
-**Fabián Silva** published *"I Built a Visual Spec-Driven Development Extension for VS Code That Works With Any LLM"* on April 3 on DEV Community. His **Caramelo** VS Code extension adds a visual UI, approval gates, Jira integration, and multi-LLM support on top of Spec Kit's workflow, reading and writing the standard `specs/` directory. [\[dev.to\]](https://dev.to/fabian_silva_/i-built-a-visual-spec-driven-development-extension-for-vs-code-that-works-with-any-llm-36ok)
+**Fabián Silva** 於 4 月 3 日在 DEV Community 發表 *「I Built a Visual Spec-Driven Development Extension for VS Code That Works With Any LLM」*。他的 **Caramelo** VS Code 擴充功能在 Spec Kit 的工作流程之上加入視覺化 UI、核准關卡、Jira 整合與多 LLM 支援，並讀寫標準的 `specs/` 目錄。 [\[dev.to\]](https://dev.to/fabian_silva_/i-built-a-visual-spec-driven-development-extension-for-vs-code-that-works-with-any-llm-36ok)
 
-**James M** published *"GitHub Spec Kit in 2026: SDD Goes Mainstream"* on April 4, calling the transition "from framework to platform" and highlighting Claude Code native skills, multi-agent support, and the massive ecosystem growth. [\[jamesm.blog\]](https://jamesm.blog/ai/github-spec-kit-2026-update/)
+**James M** 於 4 月 4 日發表 *「GitHub Spec Kit in 2026: SDD Goes Mainstream」*，稱這次轉變是「從框架到平台」，並點出 Claude Code 原生技能、多代理支援與生態系的大幅成長。 [\[jamesm.blog\]](https://jamesm.blog/ai/github-spec-kit-2026-update/)
 
-**Peter Saktor** published a detailed tutorial on DEV Community on April 6: *"GitHub Spec-Kit: From Vibe Coding to Spec-Driven Development,"* walking through a full 7-step SDD workflow refactoring an Azure Container App with 33 tasks across 6 phases. [\[dev.to\]](https://dev.to/petersaktor/github-spec-kit-from-vibe-coding-to-spec-driven-development-1pgd)
+**Peter Saktor** 於 4 月 6 日在 DEV Community 發表詳細教學：*「GitHub Spec-Kit: From Vibe Coding to Spec-Driven Development」*，逐步走完完整的 7 步驟 SDD 工作流程，重構一個 Azure Container App，涵蓋 6 個階段、33 項任務。 [\[dev.to\]](https://dev.to/petersaktor/github-spec-kit-from-vibe-coding-to-spec-driven-development-1pgd)
 
-**Codexplorer** published *"Spec Kit: GitHub's Answer to 'The AI Built the Wrong Thing Again'"* on Medium (April 11), framing Spec Kit as flipping the spec-code relationship, with Go code examples covering the seven slash commands. [\[medium.com\]](https://codexplorer.medium.com/spec-kit-githubs-answer-to-the-ai-built-the-wrong-thing-again-22f122f142fb)
+**Codexplorer** 於 4 月 11 日在 Medium 發表 *「Spec Kit: GitHub's Answer to 'The AI Built the Wrong Thing Again'」*，將 Spec Kit 定位為翻轉了規格與程式碼的關係，並以 Go 程式碼範例涵蓋七個斜線命令。 [\[medium.com\]](https://codexplorer.medium.com/spec-kit-githubs-answer-to-the-ai-built-the-wrong-thing-again-22f122f142fb)
 
-**XB Software** published *"Spec Kit on a Real Project: Implementation Experience in Large Legacy Code"* on April 17 — a field report from applying SDD to legacy systems. A week-long task was completed in half the time. The AI surfaced hidden requirements gaps. They noted API integration weakness, that SDD is overkill for small tasks, and that an experienced reviewer is still essential. [\[xbsoftware.com\]](https://xbsoftware.com/blog/ai-in-legacy-systems-spec-driven-development/)
+**XB Software** 於 4 月 17 日發表 *「Spec Kit on a Real Project: Implementation Experience in Large Legacy Code」*——一份將 SDD 應用於舊系統的實地報告。一項為期一週的任務以一半的時間完成。AI 浮現了隱藏的需求缺口。他們指出 API 整合是弱點、SDD 對小任務來說過於繁重，而且資深審查者仍然不可或缺。 [\[xbsoftware.com\]](https://xbsoftware.com/blog/ai-in-legacy-systems-spec-driven-development/)
 
-**What IT Is** published *"Perspectives in Spec Driven Development"* on April 21, surveying the SDD landscape (Spec Kit, Kiro, Tessl) and calling Spec Kit "a good entry point." [\[theitsolutionist.com\]](https://theitsolutionist.com/2026/04/21/perspectives-in-spec-driven-development/)
+**What IT Is** 於 4 月 21 日發表 *「Perspectives in Spec Driven Development」*，綜覽 SDD 格局（Spec Kit、Kiro、Tessl），並稱 Spec Kit 是「很好的入門點」。 [\[theitsolutionist.com\]](https://theitsolutionist.com/2026/04/21/perspectives-in-spec-driven-development/)
 
-**Will Torber** published *"Spec Kit vs BMAD vs OpenSpec: Choosing an SDD Framework in 2026"* on DEV Community on April 23. He recommended Spec Kit for greenfield but flagged brownfield friction and the branch-per-spec limitation, ultimately **recommending OpenSpec for most teams**. [\[dev.to\]](https://dev.to/willtorber/spec-kit-vs-bmad-vs-openspec-choosing-an-sdd-framework-in-2026-d3j)
+**Will Torber** 於 4 月 23 日在 DEV Community 發表 *「Spec Kit vs BMAD vs OpenSpec: Choosing an SDD Framework in 2026」*。他推薦 Spec Kit 用於 greenfield，但標示了 brownfield 的摩擦與每分支一份規格的限制，最終**推薦大多數團隊使用 OpenSpec**。 [\[dev.to\]](https://dev.to/willtorber/spec-kit-vs-bmad-vs-openspec-choosing-an-sdd-framework-in-2026-d3j)
 
-**Truong Phung** published *"Spec Kit vs. Superpowers: A Comprehensive Comparison & Practical Guide to Combining Both"* on DEV Community on April 25 — an 11-section comparison proposing a hybrid workflow: "Spec Kit plans WHAT, Superpowers controls HOW," with a step-by-step playbook. [\[dev.to\]](https://dev.to/truongpx396/spec-kit-vs-superpowers-a-comprehensive-comparison-practical-guide-to-combining-both-52jj)
+**Truong Phung** 於 4 月 25 日在 DEV Community 發表 *「Spec Kit vs. Superpowers: A Comprehensive Comparison & Practical Guide to Combining Both」*——一篇 11 個章節的比較，提出混合作法：「Spec Kit 規劃 WHAT，Superpowers 控制 HOW」，並附逐步操作手冊。 [\[dev.to\]](https://dev.to/truongpx396/spec-kit-vs-superpowers-a-comprehensive-comparison-practical-guide-to-combining-both-52jj)
 
-**Markus Wondrak** published *"Re-evaluating GitHub's Spec Kit: Structured SDLC Automation"* on LinkedIn on April 26, examining Spec Kit as a structured SDLC automation approach requiring human review at phase boundaries. [\[linkedin.com\]](https://www.linkedin.com/pulse/re-evaluating-githubs-spec-kit-structured-sdlc-markus-wondrak-eewqf/)
+**Markus Wondrak** 於 4 月 26 日在 LinkedIn 發表 *「Re-evaluating GitHub's Spec Kit: Structured SDLC Automation」*，探討 Spec Kit 作為結構化 SDLC 自動化作法、需要在各階段邊界由人工審查的一面。 [\[linkedin.com\]](https://www.linkedin.com/pulse/re-evaluating-githubs-spec-kit-structured-sdlc-markus-wondrak-eewqf/)
 
-**FintechExtra** published a factual release-notes summary of v0.8.2 on April 28, highlighting authenticated catalog downloads, the UTF-8 manifest fix, and the Chroma DB semantic search in the fiction writing preset. [\[fintechextra.com\]](https://www.fintechextra.com/news/github-spec-kit-v082-expands-catalog-support-and-tightens-cli-behavior-331)
+**FintechExtra** 於 4 月 28 日發表了 v0.8.2 的事實性發佈說明摘要，點出已驗證的目錄下載、UTF-8 資訊清單修復，以及小說寫作預設集中的 Chroma DB 語意搜尋。 [\[fintechextra.com\]](https://www.fintechextra.com/news/github-spec-kit-v082-expands-catalog-support-and-tightens-cli-behavior-331)
 
-### Community Friends and Tools
+### Community Friends 與工具
 
-The **SpecKit Companion** VS Code extension was added to the Community Friends section (v0.6.0). A community-maintained plugin for **Claude Code and GitHub Copilot CLI** that installs Spec Kit skills via the plugin marketplace was referenced in the README (v0.7.3). Fabián Silva's **Caramelo** VS Code extension demonstrated a visual UI approach to SDD. [\[github.com\]](https://github.com/github/spec-kit)
+**SpecKit Companion** VS Code 擴充功能加入了 Community Friends 章節（v0.6.0）。一個由社群維護、供 **Claude Code 與 GitHub Copilot CLI** 使用、透過外掛市集安裝 Spec Kit 技能的外掛，在 README 中被引用（v0.7.3）。Fabián Silva 的 **Caramelo** VS Code 擴充功能展示了 SDD 的視覺化 UI 作法。 [\[github.com\]](https://github.com/github/spec-kit)
 
-## SDD Ecosystem & Industry Trends
+## SDD 生態系與產業趨勢
 
-### The "Spec Layer" Debate
+### 「Spec Layer」之爭
 
-Matt Rickard's "The Spec Layer" essay established a new framing for SDD: specifications as **constraint surfaces** that reduce execution freedom for AI agents. His comparison of six SDD tools argued for smaller, more focused specs with harder verification checks — a departure from comprehensive specification documents. This framing resonated across the community, with the Thoughtworks Radar entry and multiple comparison articles echoing the tension between spec depth and practical overhead.
+Matt Rickard 的「The Spec Layer」一文為 SDD 建立了新的框架：規格是降低 AI 代理執行自由度的**約束面**。他對六種 SDD 工具的比較主張更小、更聚焦的規格，搭配更嚴格的驗證檢查——有別於面面俱到的規格文件。這套框架在社群中引起共鳴，Thoughtworks Radar 條目與多篇比較文章都呼應了規格深度與實務開銷之間的張力。
 
-### Competitive Landscape
+### 競爭格局
 
-**Will Torber's** three-framework comparison (Spec Kit, BMAD, OpenSpec) recommended **OpenSpec for most teams**, citing lower ceremony and better brownfield support. **Truong Phung** proposed combining Spec Kit with **Superpowers** (Jesse Vincent) for a "plan WHAT + control HOW" hybrid. These comparisons reflected a maturing market where practitioners combine tools rather than picking one.
+**Will Torber** 的三框架比較（Spec Kit、BMAD、OpenSpec）**推薦大多數團隊使用 OpenSpec**，理由是儀式感較低且 brownfield 支援較好。**Truong Phung** 提議將 Spec Kit 與 **Superpowers**（Jesse Vincent）結合，形成「規劃 WHAT＋控制 HOW」的混合作法。這些比較反映了一個日趨成熟的市場：實務者會組合工具，而非只挑一種。
 
-The **Thoughtworks Radar** placement validated SDD as a category worth tracking but flagged instruction bloat and context rot as open concerns — the same issues the Augment Code comparison raised in March. XB Software's field report confirmed these in practice: SDD adds value for complex legacy work but creates unnecessary overhead for small tasks.
+**Thoughtworks Radar** 的收錄肯定了 SDD 是值得追蹤的類別，但也標示了指令膨脹與上下文腐蝕等未解疑慮——與 Augment Code 在 3 月比較中提出的問題相同。XB Software 的實地報告在實務中證實了這一點：SDD 對複雜的舊系統工作有價值，但對小任務會帶來不必要的開銷。
 
-Spec Kit continued to lead in **GitHub popularity** (92k stars) and **agent breadth** (29 integrations). The market continued to differentiate along several axes: Spec Kit on portability and ecosystem breadth, Intent on living specs and drift detection, BMAD-METHOD on multi-agent orchestration, and OpenSpec on simplicity. [\[dev.to\]](https://dev.to/willtorber/spec-kit-vs-bmad-vs-openspec-choosing-an-sdd-framework-in-2026-d3j) [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
+Spec Kit 持續在 **GitHub 人氣**（92k 顆星）與**代理廣度**（29 個整合）上領先。市場持續沿幾條軸線分化：Spec Kit 以可攜性與生態系廣度取勝，Intent 以活規格與漂移偵測取勝，BMAD-METHOD 以多代理編排取勝，OpenSpec 則以簡單取勝。 [\[dev.to\]](https://dev.to/willtorber/spec-kit-vs-bmad-vs-openspec-choosing-an-sdd-framework-in-2026-d3j) [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
 
-## Roadmap
+## 藍圖
 
-Areas under discussion or in progress for future development:
+未來開發中正在討論或進行中的領域：
 
-- **Spec lifecycle management** — context rot and spec drift remained the most cited concern across articles (Thoughtworks Radar, XB Software, Will Torber). The marker-based upsert (v0.7.3) addressed context file drift; spec-level drift detection remains an open area. The Reconcile and Archive extensions are community steps toward this. [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
-- **Workflow customization** — the workflow engine (v0.7.0) and preset composition strategies (v0.8.0) provide the foundation. Community presets for fiction writing, screenwriting, Jira tracking, and architecture governance demonstrate the breadth of possible workflows beyond standard SDD. [\[github.com\]](https://github.com/github/spec-kit/releases)
-- **Catalog discovery and distribution** — the integration catalog (v0.7.2) and catalog discovery CLI (v0.8.3) bring `specify` closer to a package-manager experience for extensions, presets, and integrations. Private catalog authentication (v0.8.2) supports enterprise distribution. [\[github.com\]](https://github.com/github/spec-kit/releases)
-- **Experience simplification** — the bundled lean preset (v0.6.1), `specify self check` (v0.7.5), and the deprecation of `--ai` in favor of `--integration` (v0.7.1) reflect ongoing work to reduce ceremony and improve the onboarding experience. Multiple external articles (Torber, XB Software) noted SDD overhead as a barrier. [\[dev.to\]](https://dev.to/willtorber/spec-kit-vs-bmad-vs-openspec-choosing-an-sdd-framework-in-2026-d3j)
-- **Cross-platform and enterprise** — Windows CI (v0.7.1), GITHUB_TOKEN authentication (v0.8.2), Salesforce-specific extensions, and the iSAQB architecture governance preset indicate growing enterprise adoption. [\[github.com\]](https://github.com/github/spec-kit)
+- **規格生命週期管理**——上下文腐蝕與規格漂移仍是各篇文章中最常被提及的疑慮（Thoughtworks Radar、XB Software、Will Torber）。標記式 upsert（v0.7.3）處理了上下文檔案漂移；規格層級的漂移偵測仍是未解領域。Reconcile 與 Archive 擴充功能是社群朝這個方向邁出的步伐。 [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
+- **工作流程自訂**——工作流程引擎（v0.7.0）與預設集組合策略（v0.8.0）提供了基礎。用於小說寫作、編劇、Jira 追蹤與架構治理的社群預設集，展示了標準 SDD 之外可能工作流程的廣度。 [\[github.com\]](https://github.com/github/spec-kit/releases)
+- **目錄探索與散佈**——整合目錄（v0.7.2）與目錄探索 CLI（v0.8.3）讓 `specify` 更接近擴充功能、預設集與整合的套件管理員體驗。私人目錄驗證（v0.8.2）支援企業散佈。 [\[github.com\]](https://github.com/github/spec-kit/releases)
+- **體驗簡化**——內建精簡預設集（v0.6.1）、`specify self check`（v0.7.5），以及棄用 `--ai` 改用 `--integration`（v0.7.1），反映了持續減少儀式感、改善入門體驗的工作。多篇外部文章（Torber、XB Software）指出 SDD 的開銷是一道門檻。 [\[dev.to\]](https://dev.to/willtorber/spec-kit-vs-bmad-vs-openspec-choosing-an-sdd-framework-in-2026-d3j)
+- **跨平台與企業**——Windows CI（v0.7.1）、GITHUB_TOKEN 驗證（v0.8.2）、Salesforce 專屬擴充功能，以及 iSAQB 架構治理預設集，都顯示企業採用正在成長。 [\[github.com\]](https://github.com/github/spec-kit)

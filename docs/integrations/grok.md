@@ -1,31 +1,23 @@
 # Grok Build
 
-Install [Grok Build](https://docs.x.ai/build/overview) before setup.
-The integration key is `grok`.
+設定前請先安裝 [Grok Build](https://docs.x.ai/build/overview)。整合鍵為 `grok`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration grok
 ```
 
-For an existing Spec Kit project, use `specify integration install grok`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install grok`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Skills are installed as `.grok/skills/speckit-<command>/SKILL.md`.
-Invoke them in the agent's chat, for example `/speckit-specify` or
-`/speckit-bug-assess` for the installed bug extension.
+技能會安裝為 `.grok/skills/speckit-<command>/SKILL.md`。在代理的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。
 
-## Workflow Permissions
+## 工作流程權限
 
-Workflow steps use `grok -p <prompt> --always-approve`, which automatically
-approves tool executions. Run workflows only where that permission is intended.
-A configured `--model` and requested `--output-format json` are forwarded.
-There are no integration-specific setup options.
+工作流程步驟使用 `grok -p <prompt> --always-approve`，會自動核准工具執行。請只在你打算授予該權限的環境中執行工作流程。已設定的 `--model` 與要求的 `--output-format json` 都會被轉傳。沒有整合專屬的設定選項。

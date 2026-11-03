@@ -1,22 +1,22 @@
-# Implementation Plan (Self-Test Preset)
+# 實作計畫（Self-Test 預設集）
 
 <!-- preset:self-test -->
 
-> This template is provided by the self-test preset.
+> 這個範本由 self-test 預設集提供。
 
-## Approach
+## 方法
 
-Describe the implementation approach.
+描述實作方法。
 
-## Steps
+## 步驟
 
-1. Step 1
-2. Step 2
+1. 步驟 1
+2. 步驟 2
 
-## Dependencies
+## 相依項目
 
-- Dependency 1
+- 相依項目 1
 
-## Risks
+## 風險
 
-- Risk 1
+- 風險 1

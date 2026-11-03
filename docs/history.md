@@ -1,186 +1,111 @@
-# History
+# 歷史
 
-Spec Kit began as a toolkit for making specifications the starting point of
-AI-assisted development. From its
-[first full check-in](https://github.com/github/spec-kit/commit/28fdfaa86973d4402eecd89ba6c87d31e1edae03),
-it described three ways to apply Spec-Driven Development:
+Spec Kit 起初是一套讓規格成為 AI 輔助開發起點的工具組。從其
+[首次完整簽入](https://github.com/github/spec-kit/commit/28fdfaa86973d4402eecd89ba6c87d31e1edae03)
+起，它就描述了三種應用規格驅動開發的方式：
 
-- **0-to-1 Development ("Greenfield")** generates a new system from
-  requirements.
-- **Creative Exploration** compares parallel implementations, technology
-  choices, and experience designs.
-- **Iterative Enhancement ("Brownfield")** adds features to and modernizes
-  existing systems.
+- **0 到 1 開發（「Greenfield」）**從需求產生新系統。
+- **創意探索**比較平行實作、技術選擇與體驗設計。
+- **迭代增強（「Brownfield」）**為既有系統加入功能並使其現代化。
 
-All three moved from durable planning artifacts into implementation:
+這三條路徑都從持久的規劃產出物走向實作：
 
 **Specify → Plan → Tasks → Implement**
 
-Those development paths and that core sequence remain, but the project has
-grown into an extensible harness for coding agents, software delivery
-processes, and other structured work.
+這些開發路徑與核心序列至今仍在，但專案已成長為可擴充的框架，服務程式代理、軟體交付流程與其他結構化工作。
 
-## Project stewardship
+## 專案掌舵
 
-Spec Kit's history includes two distinct stewardship periods. Recording them
-here preserves the contemporary account of the project's leadership without
-reducing the work to any one person.
+Spec Kit 的歷史包含兩個截然不同的掌舵時期。在此記錄，是為了保留專案領導的當代記述，而不是將成果歸於任何單一個人。
 
-### Founding stewardship: August 2025–January 2026
+### 創立掌舵期：2025 年 8 月至 2026 年 1 月
 
-[Den Delimarsky](https://github.com/localden) and
-[John Lam](https://github.com/jflam) conceived Spec Kit and gave the project its
-first shape. Den authored the
-[initial commit](https://github.com/github/spec-kit/commit/fa2736371e077f55c4fe145fea186bab2561386d) on
-August 21, 2025 and led the repository through its first months.
+[Den Delimarsky](https://github.com/localden) 與
+[John Lam](https://github.com/jflam) 構想了 Spec Kit，並賦予專案最初的形態。Den 於
+2025 年 8 月 21 日撰寫了
+[初始提交](https://github.com/github/spec-kit/commit/fa2736371e077f55c4fe145fea186bab2561386d)，
+並帶領儲存庫走過最初的幾個月。
 
-That founding period established the shape users still recognize: the Specify
-CLI, coding-agent-specific scaffolding, project constitutions, and the
-specification → plan → tasks → implementation process. It also framed SDD as
-useful for greenfield development, parallel exploration, and brownfield
-enhancement rather than tying the method to a single agent or development
-scenario.
+創立時期確立了使用者至今仍熟悉的形態：Specify CLI、程式代理專屬的鷹架、專案憲章，以及規格 → 計畫 → 任務 → 實作流程。這個時期也將 SDD 定位為適用於全新開發、平行探索與既有系統增強的方法，而不是將方法綁定於單一代理或開發情境。
 
-### Community stewardship: January 2026–present
+### 社群掌舵期：2026 年 1 月至今
 
-[Manfred Riem](https://github.com/mnriem) took over as lead maintainer on
-January 22, 2026. The transition became publicly visible when the repository's
-global [`CODEOWNERS` entry](https://github.com/github/spec-kit/commit/3040d33c31d8a26d50f91aec5d62d1cecac3298c)
-changed to `@mnriem` on February 23.
+[Manfred Riem](https://github.com/mnriem) 於 2026 年 1 月 22 日接任首席維護者。這次交接在 2 月 23 日儲存庫全域 [`CODEOWNERS` 條目](https://github.com/github/spec-kit/commit/3040d33c31d8a26d50f91aec5d62d1cecac3298c) 變更為 `@mnriem` 時，正式對外可見。
 
-During this stewardship, the maintainer team's focus moved from building a
-composable model to using it to ship complete first-party processes. That shift
-was not sequential for the community: the modular extension system began as a
-community contribution, and contributors adopted and extended each primitive
-as it arrived.
+在此掌舵期間，維護團隊的焦點從打造可組合模型，轉向運用該模型交付完整的第一方流程。對社群而言，這個轉變並非循序發生：模組化擴充功能系統始於社群貢獻，貢獻者隨著每個基本元件的到來，陸續採用並擴展它們。
 
-These dates and roles are also documented in the lead maintainer's
-[six-month retrospective](https://www.manorrock.com/blog/2026/07/22/six_months_leading_spec_kit.html)
-and
-[first-anniversary account](https://www.manorrock.com/blog/2026/08/21/spec_kit_turns_one.html),
-and are consistent with the repository's commit and ownership history.
+這些日期與角色也記錄於首席維護者的
+[六個月回顧](https://www.manorrock.com/blog/2026/07/22/six_months_leading_spec_kit.html)
+與
+[一週年記述](https://www.manorrock.com/blog/2026/08/21/spec_kit_turns_one.html)，
+並與儲存庫的提交與所有權歷史一致。
 
-## Milestones
+## 里程碑
 
-### August 2025: The foundation
+### 2025 年 8 月：基礎
 
-The repository history begins on August 21, 2025. The first releases established
-the Specify CLI, reusable templates, and the core Spec-Driven Development
-paths. Support for multiple coding agents through centrally configured,
-agent-specific scaffolding was part of the project from the start, keeping the
-process independent of any one model or tool.
+儲存庫歷史始於 2025 年 8 月 21 日。最早的 release 確立了 Specify CLI、可重複使用的範本，以及核心的規格驅動開發路徑。從一開始，專案就透過集中設定、代理專屬的鷹架支援多種程式代理，讓流程獨立於任何單一模型或工具。
 
-### February–April 2026: Building the primitives
+### 2026 年 2 月至 4 月：打造基本元件
 
-The modular extension system arrived in February as a community contribution
-from Michal Bachorik, allowing capabilities to be added without expanding the
-core process. March brought pluggable presets, which made templates and
-commands replaceable or composable while preserving the same CLI experience.
+模組化擴充功能系統於 2 月到來，源自 Michal Bachorik 的社群貢獻，讓能力能在不擴大核心流程的情況下加入。3 月帶來可插拔的預設集，讓範本與命令可被取代或組合，同時保留相同的 CLI 體驗。
 
-The founding-era agent scaffolding was rewritten as a registry-backed
-integration architecture. Core assets were also embedded in the Python package,
-enabling reliable offline and air-gapped initialization.
+創立時期的代理鷹架被改寫為以登錄為後盾的整合架構。核心資產也內嵌至 Python 套件中，讓離線與氣隙環境的初始化更可靠。
 
-The workflow engine introduced catalog-distributed automation and built-in
-workflow step types in April. Workflows could coordinate reusable steps rather
-than requiring users to invoke every command manually. An integration catalog
-followed, making coding-agent support discoverable and independently
-distributable.
+工作流程引擎於 4 月引入目錄散佈的自動化與內建工作流程步驟類型。工作流程可協調可重複使用的步驟，而不是要求使用者手動呼叫每個命令。隨後而來的整合目錄，讓程式代理支援可被探索且可獨立散佈。
 
-The composable model came to be described through five primitives:
+可組合模型逐漸以五個基本元件來描述：
 
-- **Integrations** connect Spec Kit to coding agents.
-- **Extensions** add capabilities, commands, templates, scripts, and hooks.
-- **Presets** customize or replace behavior.
-- **Workflows** automate multi-step processes.
-- **Workflow steps** provide reusable units of workflow behavior.
+- **整合**將 Spec Kit 連結至程式代理。
+- **擴充功能**加入能力、命令、範本、指令碼與掛鉤。
+- **預設集**自訂或取代行為。
+- **工作流程**自動化多步驟流程。
+- **工作流程步驟**提供可重複使用的工作流程行為單位。
 
-The emphasis during these first months was on creating reusable machinery:
-making the process configurable, distributable, and automatable before adding
-more first-party processes. Community contributors did not wait for the full
-model to be complete; they quickly used the new extension and preset surfaces
-to publish their own capabilities and process variations.
+這最初幾個月的重點在於建立可重複使用的機制：在加入更多第一方流程之前，先讓流程可設定、可散佈、可自動化。社群貢獻者並未等到完整模型完成；他們很快就運用新的擴充功能與預設集介面，發佈自己的能力與流程變化。
 
-### June–July 2026: Composing and applying the primitives
+### 2026 年 6 月至 7 月：組合與應用基本元件
 
-For the core team, June marked the turn from mainly building primitives to using
-them. A workflow step catalog made custom step types community-installable,
-extending a primitive that had shipped with the workflow engine in April.
-Bundles then made it possible to package extensions, presets, workflows, and
-steps as a coherent setup for a role or team, optionally targeting a specific
-integration.
+對核心團隊而言，6 月標誌著從主要打造基本元件，轉向運用它們的轉折。工作流程步驟目錄讓自訂步驟類型可由社群安裝，擴展了 4 月隨工作流程引擎一同交付的基本元件。套件組接著讓擴充功能、預設集、工作流程與步驟能打包為角色或團隊的一致設定，並可選擇性地以特定整合為目標。
 
-Catalogs became the bridge between the primitives and the community. Community
-authors built extensions, presets, integrations, workflows, step types, and
-bundles; the maintainer team checked submission metadata and listed accepted
-entries in community catalogs so users could discover and install them. A
-catalog listing made a component visible, but did not mean its code had been
-audited or endorsed.
+目錄成為基本元件與社群之間的橋梁。社群作者打造了擴充功能、預設集、整合、工作流程、步驟類型與套件組；維護團隊檢查提交中繼資料，並將經接受的項目列入社群目錄，讓使用者能探索並安裝它們。目錄收錄讓元件可見，但不代表其程式碼已受稽核或背書。
 
-At the same time, core maintainers began using the model to add two first-party
-processes alongside feature delivery:
+同時，核心維護者開始運用該模型，在功能交付之外加入兩個第一方流程：
 
-- On June 5, version 0.9.5 introduced the bundled, opt-in
-  [`bug` extension](https://github.com/github/spec-kit/commit/60302fefec541a68fcac6f0428a95ba35f2acadf).
-  Its assess → fix → test process keeps bug diagnosis, remediation, and
-  verification separate and documented.
-- On July 17, version 0.13.0 introduced the bundled, opt-in
-  [`assess` extension](https://github.com/github/spec-kit/commit/208d38695fc88d8eaec7855c96e5098a852927cf).
-  Its intake → research → define → shape → decide process evaluates an idea
-  before it enters SDD.
+- 6 月 5 日，版本 0.9.5 引入隨附的選擇性
+  [`bug` 擴充功能](https://github.com/github/spec-kit/commit/60302fefec541a68fcac6f0428a95ba35f2acadf)。
+  其 assess → fix → test 流程讓錯誤診斷、修復與驗證彼此分離且有文件記錄。
+- 7 月 17 日，版本 0.13.0 引入隨附的選擇性
+  [`assess` 擴充功能](https://github.com/github/spec-kit/commit/208d38695fc88d8eaec7855c96e5098a852927cf)。
+  其 intake → research → define → shape → decide 流程在構想進入 SDD 之前先行評估。
 
-Distribution broadened too: the release pipeline added PyPI publishing, and
-Python joined Bash and PowerShell as a supported project script type. These
-changes made installation and cross-platform use simpler while preserving
-support for offline and enterprise environments.
+散佈也更加廣泛：release 管線加入 PyPI 發佈，Python 也與 Bash、PowerShell 一同成為受支援的專案指令碼類型。這些變更讓安裝與跨平台使用更簡單，同時保留對離線與企業環境的支援。
 
-### August 2026: First anniversary
+### 2026 年 8 月：一週年
 
-Spec Kit turned one and released version 1.0.0 on August 21, 2026. By then, its
-five primitives — integrations, extensions, presets, workflows, and workflow
-steps — already formed a coherent model. Bundles composed extensions, presets,
-workflows, and steps around a selected integration. A README refresh made the
-existing SDD, bug-fixing, and idea-assessment processes easier to discover
-through separate quickstarts.
+Spec Kit 於 2026 年 8 月 21 日滿一週年，並發佈版本 1.0.0。屆時，其五個基本元件，也就是整合、擴充功能、預設集、工作流程與工作流程步驟，已形成一致的模型。套件組圍繞選定的整合，組合擴充功能、預設集、工作流程與步驟。README 的更新讓既有的 SDD、錯誤修正與構想評估流程，能透過各自的快速入門更容易被探索。
 
-Version 1.0.0 did not create or freeze that model; it gave the project's
-evolving state a round number. The documentation then reported 38 coding-agent
-integrations, 157 community extensions, 33 presets, and 270+ contributors. Spec
-Kit continues to favor adaptability: processes, integrations, and conventions
-can evolve while agents help projects apply those changes.
+版本 1.0.0 並未創造或凍結該模型；它只是為專案不斷演進的狀態賦予一個整數。當時的文件記錄了 38 個程式代理整合、157 個社群擴充功能、33 個預設集與 270 多位貢獻者。Spec Kit 持續重視適應性：流程、整合與慣例可以演進，代理則協助專案套用這些變更。
 
-The [1.0.0 release](https://github.com/github/spec-kit/releases/tag/v1.0.0)
-marked a year of work rather than a promise that the project was finished or its
-shape frozen. In the lead maintainer's personal anniversary post,
-[*Spec Kit Turns One — and Ships 1.0.0*](https://www.manorrock.com/blog/2026/08/21/spec_kit_turns_one.html),
-1.0.0 is **now just a number**: as agents make adapting to change less expensive,
-the value moves from stability to adaptability.
+[1.0.0 release](https://github.com/github/spec-kit/releases/tag/v1.0.0)
+標誌著一年的工作，而不是承諾專案已完成或其形態已凍結。在首席維護者的個人週年文章
+[*Spec Kit Turns One — and Ships 1.0.0*](https://www.manorrock.com/blog/2026/08/21/spec_kit_turns_one.html)
+中，1.0.0 **如今只是一個數字**：當代理讓適應變化的成本降低，價值便從穩定性轉向適應性。
 
-The anniversary also recognized everyone who used Spec Kit, challenged its
-assumptions, reported problems, contributed code or documentation, created
-extensions or presets, shared ideas, or helped someone get started. The milestone
-belongs to the community that carried the project through its first year and
-continues to shape it.
+週年也表彰了每一位使用 Spec Kit、挑戰其假設、回報問題、貢獻程式碼或文件、建立擴充功能或預設集、分享構想，或協助他人入門的人。這個里程碑屬於陪伴專案走過第一年，並持續塑造它的社群。
 
-## Enduring themes
+## 歷久不變的主題
 
-Several themes connect the project's stewardship periods and technical
-evolution:
+有幾個主題貫穿專案的掌舵時期與技術演進：
 
-- **Intent comes before implementation.** Specifications capture what should be
-  built before technical decisions dominate the work.
-- **Artifacts should be durable.** Specs, plans, and tasks remain useful beyond
-  a single prompt or agent session.
-- **The process should be agent-independent.** Teams can change coding agents
-  without abandoning their development method.
-- **The method should adapt to the work.** The original development paths grew
-  into a formally composable model that teams can modify, automate, or replace.
-- **The community shapes the kit.** Community contributions have influenced
-  both the project's infrastructure and the ecosystem built on it.
+- **意圖先於實作。** 規格在技術決策主導工作之前，先捕捉應該打造什麼。
+- **產出物應持久。** 規格、計畫與任務在單一提示詞或代理工作階段之外仍具價值。
+- **流程應與代理無關。** 團隊可更換程式代理，而不放棄其開發方法。
+- **方法應適應工作。** 原始的開發路徑成長為形式上可組合的模型，團隊可修改、自動化或取代它。
+- **社群塑造工具組。** 社群貢獻同時影響了專案的基礎設施與建構其上的生態系。
 
-## Release history
+## Release 歷史
 
-This page records the project's broad evolution, not every feature or breaking
-change. For release-level detail, see the
-[changelog](https://github.com/github/spec-kit/blob/main/CHANGELOG.md) and
-[GitHub Releases](https://github.com/github/spec-kit/releases).
+本頁記錄專案的整體演進，而不是每個功能或破壞性變更。release 層級的詳細資訊，請參閱
+[changelog](https://github.com/github/spec-kit/blob/main/CHANGELOG.md) 與
+[GitHub Releases](https://github.com/github/spec-kit/releases)。

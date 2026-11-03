@@ -1,46 +1,29 @@
-# Adopting Spec Kit in an Existing Project
+# 在既有專案中採用 Spec Kit
 
-You do not need to recreate an existing system from specifications before using
-Spec Kit. Initialize the repository in place, capture the rules that matter,
-and use the workflow for the next bounded change.
+你不必先從規格重建既有系統，才能使用 Spec Kit。直接在原地初始化儲存庫，記錄重要的規則，並把工作流程用在下一項有邊界的變更上。
 
-## 1. Start from a Reviewable Baseline
+## 1. 從可審查的基線開始
 
-Before initialization, commit or stash existing work and create a branch for the
-adoption. This makes every generated file visible in a normal code review.
+初始化之前，先提交或暫存既有工作，並為這次採用建立分支。這樣每個產生的檔案都能在一般的程式碼審查中看見。
 
-Choose the [integration key](../integrations/index.md) for the coding agent
-you use. Then run the command from the repository root:
+為你使用的程式代理選擇[整合鍵](../integrations/index.md)。接著從儲存庫根目錄執行命令：
 
 ```bash
 specify init --here --force --integration <key>
 ```
 
-`--here` targets the current directory. `--force` allows initialization in a
-non-empty directory and may replace files at conflicting managed paths, so use
-it only after creating a reviewable baseline. It does not delete the rest of
-your application.
+`--here` 以目前目錄為目標。`--force` 允許在非空目錄中初始化，並可能取代受管理路徑上衝突的檔案，所以請只在建立可審查的基線之後使用。它不會刪除應用程式的其餘部分。
 
-Review the resulting diff before continuing. Initialization adds the shared
-`.specify/` project files and the command or skill files required by your
-selected integration. It does not rewrite your application or infer
-specifications for existing behavior.
+繼續之前，先檢視產生的差異。初始化會加入共用的 `.specify/` 專案檔案，以及你所選整合所需的命令或 skill 檔案。它不會改寫你的應用程式，也不會為既有行為推斷規格。
 
 > [!NOTE]
-> Git initialization and feature branches are optional and are managed by the
-> **git** extension. Add it with `specify extension add git` if you want that
-> workflow.
+> Git 初始化與功能分支是選用的，由 **git** 擴充功能管理。若你想要那套工作流程，用 `specify extension add git` 加入它。
 
-## 2. Capture Project Guardrails
+## 2. 記錄專案護欄
 
-The remaining steps illustrate adopting **SDD** for a bounded feature. If your
-first task is a repair, you can instead follow the
-[bug-fixing quickstart](bugfix.md) after initialization; to evaluate a proposal,
-use the [idea assessment quickstart](assessment.md). Neither process requires
-completing the SDD steps below first.
+後續步驟示範為一項有邊界的功能採用 **SDD**。若你的第一項任務是修復，初始化後可以改依[錯誤修復快速入門](bugfix.md)；若要評估一項提議，則使用[構想評估快速入門](assessment.md)。這兩套流程都不需要先完成下面的 SDD 步驟。
 
-Run `/speckit.constitution` with principles that are already true for the
-repository or that the team has explicitly agreed to adopt:
+用對儲存庫而言已經成立、或團隊已明確同意採用的原則，執行 `/speckit.constitution`：
 
 ```text
 /speckit.constitution Preserve public API compatibility. Follow the existing
@@ -48,19 +31,13 @@ service boundaries. Every database migration must include a rollback plan.
 Run the repository's established unit and integration test suites.
 ```
 
-Use the repository's README, architecture decisions, contribution guide, and
-CI configuration as evidence. Do not invent standards merely to fill the
-constitution template. The constitution governs later planning and analysis,
-so unrealistic rules create noise instead of useful constraints.
+以儲存庫的 README、架構決策、貢獻指南與 CI 設定作為證據。不要只為了填滿憲章範本就編造標準。憲章會治理後續的計畫與分析，不切實際的規則只會製造雜訊，而不是有用的限制。
 
-## 3. Choose a Bounded First Change
+## 3. 選擇一項有邊界的第一項變更
 
-Start with a feature or modernization slice that can be reviewed
-independently. Do not make "document the entire existing system" your first
-feature unless that inventory is itself the intended deliverable.
+從一項可獨立審查的功能或現代化切片開始。不要把「記錄整個既有系統」當成第一項功能，除非那份盤點本身就是預期的交付物。
 
-Describe both the requested outcome and the compatibility boundaries that must
-remain intact:
+同時描述要求的成果，以及必須保持完整的相容性邊界：
 
 ```text
 /speckit.specify Add CSV export to the existing orders page. Preserve current
@@ -68,45 +45,30 @@ filters and authorization behavior. Export only the rows visible to the signed-i
 user, and do not change the existing JSON API response.
 ```
 
-The codebase remains implementation context. The new `spec.md` defines the
-change you intend to make, not a retroactive specification of every existing
-behavior.
+程式碼庫仍是實作脈絡。新的 `spec.md` 定義的是你打算做的變更，而不是對每一項既有行為的事後規格。
 
-## 4. Plan Against the Repository
+## 4. 對照儲存庫進行計畫
 
-Continue through the normal workflow:
+繼續走一般的工作流程：
 
-1. Run `/speckit.clarify` to resolve uncertain behavior and compatibility
-   requirements.
-2. Run `/speckit.plan` and verify that the proposed design reuses the existing
-   architecture, dependencies, and test conventions.
-3. Run `/speckit.tasks`, then `/speckit.analyze` to check consistency before
-   implementation.
-4. Run `/speckit.implement` and review code and artifact changes together.
-5. Run `/speckit.converge` to find remaining gaps. If it adds tasks, repeat
-   implementation and convergence until the feature is complete.
+1. 執行 `/speckit.clarify`，釐清不確定的行為與相容性要求。
+2. 執行 `/speckit.plan`，並驗證建議的設計有重複使用既有架構、相依性與測試慣例。
+3. 執行 `/speckit.tasks`，再執行 `/speckit.analyze`，在實作前檢查一致性。
+4. 執行 `/speckit.implement`，並一起檢視程式碼與產出物的變更。
+5. 執行 `/speckit.converge`，找出剩餘缺口。若它加入了任務，就重複實作與收斂，直到功能完成。
 
-For command details and optional quality gates, see the
-[Quick Start Guide](../quickstart.md) and
-[Agentic SDD reference](../reference/agentic-sdd.md).
+命令詳情與選用的品質關卡，請見[快速入門指南](../quickstart.md)與[代理式 SDD 參考](../reference/agentic-sdd.md)。
 
-## 5. Decide How Specs Will Age
+## 5. 決定規格如何演進
 
-After the first change, agree on how the team will maintain completed feature
-artifacts:
+第一項變更之後，商定團隊將如何維護已完成的功能產出物：
 
-- Keep each feature directory as an immutable historical record.
-- Maintain `spec.md` as a living contract and regenerate downstream artifacts.
-- Allow discoveries to flow back from code, tasks, or plans, then reconcile the
-  full artifact set.
+- 把每個功能目錄保留為不可變的歷史紀錄。
+- 把 `spec.md` 維護為活的契約，並重新產生下游產出物。
+- 允許發現從程式碼、任務或計畫回流，再對帳整套產出物。
 
-The [Spec Persistence Models](../concepts/spec-persistence.md) page compares
-these choices. The [Evolving Specs guide](evolving-specs.md) provides the
-maintenance loop for each model.
+[規格持久化模型](../concepts/spec-persistence.md)頁面比較了這些選擇。[演進規格指南](evolving-specs.md)提供每個模型的維護循環。
 
-## Existing-Project Examples
+## 既有專案範例
 
-The [community walkthroughs](../community/walkthroughs.md) include brownfield
-examples across .NET, Java, and Go/React codebases. Community extensions for
-architecture discovery and brownfield bootstrapping are listed in the
-[extension catalog](../community/extensions.md).
+[社群導覽](../community/walkthroughs.md)包含跨 .NET、Java 與 Go／React 程式碼庫的棕地範例。用於架構探索與棕地初始化的社群擴充功能，列在[擴充功能目錄](../community/extensions.md)。

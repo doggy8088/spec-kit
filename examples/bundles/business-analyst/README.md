@@ -1,20 +1,20 @@
-# Business Analyst bundle
+# Business Analyst 套件組
 
-A role bundle for business analysts working in a Spec-Driven Development flow:
-requirements elicitation, traceability, and acceptance criteria.
+給在規格驅動開發流程中工作的業務分析師使用的角色套件組：
+需求訪談、可追溯性與驗收標準。
 
-## What it installs
+## 安裝內容
 
-- **Extension** `agent-context` — keeps the agent context file in sync.
-- **Preset** `requirements-elicitation` (priority 10, append) — elicitation and
-  analysis command set.
-- **Steps** `capture-requirements`, `trace-acceptance-criteria`.
-- **Workflow** `requirements-to-spec` — turns captured requirements into a spec.
+- **擴充功能** `agent-context`——讓代理上下文檔案保持同步。
+- **預設集** `requirements-elicitation`（優先順序 10，append）——訪談與
+  分析命令集。
+- **步驟** `capture-requirements`、`trace-acceptance-criteria`。
+- **工作流程** `requirements-to-spec`——把擷取到的需求轉成規格。
 
-This bundle is **integration-agnostic**: it inherits the project's active
-integration.
+這個套件組**與整合無關**：它會沿用專案目前啟用的
+整合。
 
-## Usage
+## 用法
 
 ```bash
 specify bundle validate --path examples/bundles/business-analyst

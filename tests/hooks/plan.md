@@ -1,3 +1,3 @@
-# Test Setup for Hooks
+# 掛鉤的測試設定
 
-This feature is designed to test if LLMs correctly invoke Spec Kit extensions hooks when generating tasks and implementing code.
+這個功能旨在測試 LLM 在產生任務與實作程式碼時，是否能正確叫用 Spec Kit 擴充功能的掛鉤。

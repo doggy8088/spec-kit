@@ -1,18 +1,12 @@
-# Catalogs
+# 目錄
 
-Catalogs are indexes that let Specify discover integrations, extensions,
-presets, workflows, workflow step types, and bundles. Spec Kit includes
-built-in catalogs, including community catalogs where available, and lets a
-project or user add private catalog sources.
+目錄是讓 Specify 探索整合、擴充功能、預設集、工作流程、工作流程步驟類型與套件組的索引。Spec Kit 內建目錄，包括可用的社群目錄，也讓專案或使用者新增私人目錄來源。
 
-A catalog is not one shared registry for every component type. Each component
-type has its own catalog schema, command group, configuration, and resolution
-stack. An organization that curates several component types normally publishes
-one catalog file for each type.
+目錄不是所有元件類型共用的單一登錄。每種元件類型都有自己的目錄結構描述、命令群組、設定與解析堆疊。彙整多種元件類型的組織，通常會為每種類型各發佈一個目錄檔案。
 
-## Discover components
+## 探索元件
 
-Search uses all active catalogs for that component type:
+搜尋會使用該元件類型的所有啟用中目錄：
 
 ```bash
 specify integration search <query>
@@ -23,7 +17,7 @@ specify workflow step search <query>
 specify bundle search <query>
 ```
 
-Use the corresponding version view to inspect advertised releases:
+使用對應的版本檢視來檢查公告的版本：
 
 ```bash
 specify integration info <id> --versions
@@ -34,118 +28,78 @@ specify workflow step info <id> --versions
 specify bundle info <id> --versions
 ```
 
-Plain `info` output and the details shown by `--versions` vary by component
-type. The version view lists current and historical catalog releases and, where
-supported, labels the winning source as installable or discovery-only. A
-discovery-only release remains non-installable by ID even when it appears in
-the version list. Use the component's `catalog list` command to confirm the
-active source and install policy instead of relying on plain `info` output.
+純 `info` 輸出與 `--versions` 顯示的詳細資訊因元件類型而異。版本檢視列出目前與歷史的目錄版本，並在支援時標示勝出來源為可安裝或僅供探索。僅供探索的版本即使出現在版本清單中，仍無法依 ID 安裝。請使用元件的 `catalog list` 命令確認啟用中的來源與安裝原則，不要只依賴純 `info` 輸出。
 
-You can also browse the maintained community lists for
-[extensions](../community/extensions.md),
-[presets](../community/presets.md), [bundles](../community/bundles.md), and
-[workflow step types](../community/workflow-steps.md).
+你也可以瀏覽維護中的社群清單，包括[擴充功能](../community/extensions.md)、[預設集](../community/presets.md)、[套件組](../community/bundles.md) 與[工作流程步驟類型](../community/workflow-steps.md)。
 
-## Inspect and manage catalog sources
+## 檢查與管理目錄來源
 
-List the active catalog stack before installing components from an unfamiliar
-project:
+在從不熟悉的專案安裝元件前，先列出啟用中的目錄堆疊：
 
-| Component type | List active catalogs | Detailed reference |
+| 元件類型 | 列出啟用中的目錄 | 詳細參考 |
 | --- | --- | --- |
-| Integrations | `specify integration catalog list` | [Integrations](../integrations/cli.md#catalog-management) |
-| Extensions | `specify extension catalog list` | [Extensions](extensions.md#catalog-management) |
-| Presets | `specify preset catalog list` | [Presets](presets.md#catalog-management) |
-| Workflows | `specify workflow catalog list` | [Workflows](workflows.md#catalog-management) |
-| Workflow steps | `specify workflow step catalog list` | [Workflows](workflows.md#catalog-management) |
-| Bundles | `specify bundle catalog list` | [Bundles](bundles.md#manage-catalog-sources) |
+| 整合 | `specify integration catalog list` | [整合](../integrations/cli.md#catalog-management) |
+| 擴充功能 | `specify extension catalog list` | [擴充功能](extensions.md#catalog-management) |
+| 預設集 | `specify preset catalog list` | [預設集](presets.md#catalog-management) |
+| 工作流程 | `specify workflow catalog list` | [工作流程](workflows.md#catalog-management) |
+| 工作流程步驟 | `specify workflow step catalog list` | [工作流程](workflows.md#catalog-management) |
+| 套件組 | `specify bundle catalog list` | [套件組](bundles.md#manage-catalog-sources) |
 
-Each command group also provides `catalog add` and `catalog remove`. Options,
-identifiers, install policies, and configuration filenames differ by component
-type, so use the linked reference before changing a catalog stack.
+每個命令群組也提供 `catalog add` 與 `catalog remove`。選項、識別碼、安裝原則與設定檔名因元件類型而異，因此變更目錄堆疊前請先查閱連結的參考文件。
 
-Catalog scope and precedence use two models:
+目錄範圍與優先順序使用兩種模型：
 
-- **Integrations, extensions, presets, workflows, and workflow steps** select
-  one configuration layer. An environment-variable override replaces
-  everything; otherwise a project catalog file replaces the user and built-in
-  layers, a user file replaces the built-in layer, and built-in catalogs are
-  used only when no higher layer is configured. Within the selected layer,
-  entries are ordered by numeric priority. Adding the first project catalog
-  therefore removes the built-in sources from the active stack unless you also
-  list those sources in the project file.
-- **Bundles** merge built-in, user, and project sources by source ID. A
-  higher-scope definition replaces a lower-scope source with the same ID, then
-  all remaining sources are sorted by numeric priority. A project source does
-  not automatically outrank a differently named built-in source.
+- **整合、擴充功能、預設集、工作流程與工作流程步驟**選擇單一設定層。環境變數覆寫會取代一切；否則專案目錄檔案會取代使用者與內建層，使用者檔案會取代內建層，內建目錄只在未設定更高層時使用。在所選層內，項目依數字優先順序排列。因此，新增第一個專案目錄會將內建來源從啟用堆疊中移除，除非你也在專案檔案中列出那些來源。
+- **套件組**依來源 ID 合併內建、使用者與專案來源。較高範圍的定義會取代同 ID 的較低範圍來源，然後所有其餘來源依數字優先順序排序。專案來源不會自動凌駕於名稱不同的內建來源。
 
-Among catalogs that load successfully, the higher-priority entry providing an
-identifier wins. Some component readers skip ordinary fetch failures and
-continue with the remaining sources, so an unreachable higher-priority source
-can allow a lower-priority source to resolve the same identifier. Do not treat
-source priority as a fail-closed security control.
+在成功載入的目錄中，提供某識別碼的較高優先順序項目勝出。部分元件讀取器會跳過一般的取得失敗，繼續處理其餘來源，因此無法連線的較高優先順序來源，可能讓較低優先順序來源解析同一個識別碼。不要將來源優先順序視為失效即關閉的安全控制。
 
-## Discovery and trust
+## 探索與信任
 
-A catalog listing is not an audit or endorsement. Catalogs can be:
+目錄清單不是稽核或背書。目錄可以是：
 
-- **Install-allowed**: a source you trust for installation by component ID.
-- **Discovery-only**: searchable for evaluation, but blocked from installation
-  by ID through that catalog.
+- **允許安裝**：你信任可依元件 ID 安裝的來源。
+- **僅供探索**：可搜尋以供評估，但透過該目錄依 ID 安裝會被阻擋。
 
-Discovery-only policy does not block a separately requested direct-source
-installation such as a supported `--from` URL or `--dev` path. Review that
-source independently before using the direct-install route.
+僅供探索原則不會阻擋另行要求的直接來源安裝，例如受支援的 `--from` URL 或 `--dev` 路徑。使用直接安裝途徑前，請獨立檢視該來源。
 
-Community catalogs are discovery surfaces and should remain discovery-only.
-Review a component's source and release artifact before using it. To make
-reviewed components reusable across a team, copy their vetted entries into a
-catalog your organization controls rather than changing an unvetted public
-catalog to install-allowed.
+社群目錄是探索介面，應保持僅供探索。使用元件前，請檢視其來源與發行成品。若要讓已檢視的元件可在團隊間重用，請將其經審查的項目複製到你的組織所控制的目錄中，而非將未經審查的公開目錄改為允許安裝。
 
-Project catalog configuration is also untrusted input. A repository can add or
-prioritize catalog sources under `.specify/`, but the presence of that
-configuration does not mean its sources or components were approved. Run the
-relevant `catalog list` command and inspect every install-allowed source before
-installing or running components from an unfamiliar project.
+專案目錄設定也是不受信任的輸入。儲存庫可以在 `.specify/` 下新增或排定目錄來源的優先順序，但該設定的存在不代表其來源或元件已獲核准。在從不熟悉的專案安裝或執行元件前，請執行對應的 `catalog list` 命令，並檢查每個允許安裝的來源。
 
-## Host a private catalog
+## 代管私人目錄
 
-1. Review and approve the entries and release artifacts before registering an
-   install-allowed source.
-2. Choose the component type and follow its catalog schema or publishing guide.
-3. Publish the catalog JSON at an HTTPS URL reachable by the intended users.
-4. Add that URL with the component's `catalog add` command.
-5. Confirm the resulting source, precedence, and install policy with
-   `catalog list`.
+1. 在註冊允許安裝的來源前，先檢視並核准項目與發行成品。
+2. 選擇元件類型，並遵循其目錄結構描述或發佈指南。
+3. 將目錄 JSON 發佈在目標使用者可連線的 HTTPS URL。
+4. 使用元件的 `catalog add` 命令新增該 URL。
+5. 以 `catalog list` 確認產生的來源、優先順序與安裝原則。
 
-The `catalog add` trust default differs by component type:
+`catalog add` 的信任預設值因元件類型而異：
 
-| Component type | Default when added |
+| 元件類型 | 新增時的預設值 |
 | --- | --- |
-| Integrations | Install-allowed |
-| Extensions | Discovery-only; requires `--install-allowed` to enable installation |
-| Presets | Discovery-only; requires `--install-allowed` to enable installation |
-| Workflows | Install-allowed |
-| Workflow steps | Install-allowed |
-| Bundles | Install-allowed; use `--policy discovery-only` to restrict it |
+| 整合 | 允許安裝 |
+| 擴充功能 | 僅供探索；需要 `--install-allowed` 才能啟用安裝 |
+| 預設集 | 僅供探索；需要 `--install-allowed` 才能啟用安裝 |
+| 工作流程 | 允許安裝 |
+| 工作流程步驟 | 允許安裝 |
+| 套件組 | 允許安裝；使用 `--policy discovery-only` 加以限制 |
 
-Because integration, workflow, workflow-step, and bundle additions can permit
-installation immediately, do not register an unreviewed source and plan to
-approve it later.
+由於整合、工作流程、工作流程步驟與套件組的新增可能立即允許安裝，不要註冊未經檢視的來源並打算稍後再核准。
 
-Use the component-specific publishing guidance when authoring catalog entries:
+撰寫目錄項目時，請使用元件專屬的發佈指引：
 
-| Component type | Publishing guidance |
+| 元件類型 | 發佈指引 |
 | --- | --- |
-| Integrations | [Integration catalog contributions](../integrations/contributing.md) |
-| Extensions | [Extension Publishing Guide](../extensions/publishing.md) |
-| Presets | [Preset Publishing Guide](https://github.com/github/spec-kit/blob/main/presets/PUBLISHING.md) |
-| Workflows | [Workflow Publishing Guide](https://github.com/github/spec-kit/blob/main/workflows/PUBLISHING.md) |
-| Workflow steps | [Community workflow step types](../community/workflow-steps.md) |
-| Bundles | [Community bundles](../community/bundles.md) |
+| 整合 | [整合目錄貢獻](../integrations/contributing.md) |
+| 擴充功能 | [擴充功能發佈指南](../extensions/publishing.md) |
+| 預設集 | [預設集發佈指南](https://github.com/github/spec-kit/blob/main/presets/PUBLISHING.md) |
+| 工作流程 | [工作流程發佈指南](https://github.com/github/spec-kit/blob/main/workflows/PUBLISHING.md) |
+| 工作流程步驟 | [社群工作流程步驟類型](../community/workflow-steps.md) |
+| 套件組 | [社群套件組](../community/bundles.md) |
 
-For example, a reviewed extension catalog can be registered with:
+例如，已檢視的擴充功能目錄可以這樣註冊：
 
 ```bash
 specify extension catalog add https://catalog.example.com/extensions.json \
@@ -154,28 +108,14 @@ specify extension catalog add https://catalog.example.com/extensions.json \
   --install-allowed
 ```
 
-Use separate catalog files and commands for presets, integrations, workflows,
-workflow steps, and bundles. Their detailed references document the supported
-options and expected entry formats.
+預設集、整合、工作流程、工作流程步驟與套件組請使用各自獨立的目錄檔案與命令。它們的詳細參考文件記載了受支援的選項與預期的項目格式。
 
-## Private and offline environments
+## 私人與離線環境
 
-If a catalog or its component downloads require credentials, configure
-[catalog and download authentication](authentication.md). Authentication is
-opt-in and scoped to explicitly configured hosts.
+若目錄或其元件下載需要憑證，請設定[目錄與下載驗證](authentication.md)。驗證是主動啟用的，且範圍限於明確設定的主機。
 
-Behind a firewall, host catalogs and artifacts on approved internal HTTPS
-endpoints and add those endpoints to the appropriate catalog stacks. In a
-fully disconnected environment, transfer the CLI and reviewed component
-artifacts through your approved process; built-in assets remain available
-without network access. See [Enterprise / Air-Gapped Installation](../install/air-gapped.md)
-for installing the CLI offline.
+在防火牆後方，請將目錄與成品代管在核准的內部 HTTPS 端點，並將那些端點新增到適當的目錄堆疊。在完全斷線的環境中，透過核准的流程傳輸 CLI 與已檢視的元件成品；內建資產在無網路存取時仍可使用。離線安裝 CLI 請參見[企業／氣隙安裝](../install/air-gapped.md)。
 
-External integration adapters have no direct or local installation route.
-Installing one requires both an install-allowed integration catalog and its
-referenced archive to remain reachable. See
-[Catalog-installed external adapters](../integrations/cli.md#catalog-installed-external-adapters).
+外部整合轉接器沒有直接或本機安裝途徑。安裝這類轉接器，需要允許安裝的整合目錄與其參照的封存檔都保持可連線。請參見[透過目錄安裝的外部轉接器](../integrations/cli.md#catalog-installed-external-adapters)。
 
-Catalog metadata alone is not enough for offline installation: every selected
-release artifact and any bundle-provided dependency must also be reachable or
-transferred into the environment.
+僅有目錄中繼資料不足以離線安裝：每個所選的發行成品與任何套件組提供的相依項目，也必須可連線或已傳輸到該環境中。

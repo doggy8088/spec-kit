@@ -1,13 +1,13 @@
 ---
-description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
+description: 依據可用的設計產物，為功能產生一份可執行、依相依順序排列的 tasks.md。
 handoffs:
-  - label: Analyze For Consistency
+  - label: 分析一致性
     agent: speckit.analyze
-    prompt: Run a project analysis for consistency
+    prompt: 執行專案一致性分析
     send: true
-  - label: Implement Project
+  - label: 實作專案
     agent: speckit.implement
-    prompt: Start the implementation in phases
+    prompt: 分階段開始實作
     send: true
 scripts:
   sh: scripts/bash/setup-tasks.sh --json
@@ -15,26 +15,26 @@ scripts:
   py: scripts/python/setup_tasks.py --json
 ---
 
-## User Input
+## 使用者輸入
 
 ```text
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+在繼續之前，你**必須**考慮使用者輸入（若非空白）。
 
-## Pre-Execution Checks
+## 執行前檢查
 
-**Check for extension hooks (before tasks generation)**:
-- Check if `.specify/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_tasks` key
-- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**檢查擴充功能 hooks（任務產生之前）**：
+- 檢查專案根目錄是否存在 `.specify/extensions.yml`。
+- 若存在，讀取它並尋找 `hooks.before_tasks` 鍵底下的項目
+- 若 YAML 無法解析或無效，不要默默跳過：告訴使用者 `.specify/extensions.yml` 無法讀取（附上解析器錯誤），且沒有檢查任何 hooks，包括在那裡註冊的任何強制（`optional: false`）hooks，然後照常繼續
+- 濾掉 `enabled` 明確為 `false` 的 hooks。沒有 `enabled` 欄位的 hooks 預設視為啟用。
+- 對每個剩下的 hook，**不要**嘗試解讀或評估 hook 的 `condition` 運算式：
+  - 若 hook 沒有 `condition` 欄位，或其為 null／空白，將該 hook 視為可執行
+  - 若 hook 定義了非空白的 `condition`，跳過該 hook，讓 HookExecutor 實作去評估條件
+- 對每個可執行的 hook，依其 `optional` 旗標輸出以下內容：
+  - **選擇性 hook**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -45,7 +45,7 @@ You **MUST** consider the user input before proceeding (if not empty).
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **強制 hook**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -55,57 +55,57 @@ You **MUST** consider the user input before proceeding (if not empty).
 
     Wait for the result of the hook command before proceeding to the Outline.
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
+    輸出上方區塊之後，你必須真的呼叫該 hook 並等它完成，才能繼續。用你在這個代理／工作階段中執行該命令的相同方式執行它（呼叫方式可能與上方顯示的字面 `{command}` 識別字不同，例如 skills 模式的代理會以 `/skill:speckit-...` 或 `$speckit-...` 執行）。只輸出區塊並不會執行 hook。
+- 若沒有註冊任何 hooks，或 `.specify/extensions.yml` 不存在，默默跳過
 
-## Outline
+## 大綱
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse FEATURE_DIR, TASKS_TEMPLATE_CONTENT, TASKS_TEMPLATE, and AVAILABLE_DOCS list. `FEATURE_DIR` and `TASKS_TEMPLATE` must be absolute paths when provided. `AVAILABLE_DOCS` is a list of document names/relative paths available under `FEATURE_DIR` (for example `research.md` or `contracts/`). For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **設定**：從儲存庫根目錄執行 `{SCRIPT}`，並解析 FEATURE_DIR、TASKS_TEMPLATE_CONTENT、TASKS_TEMPLATE 與 AVAILABLE_DOCS 清單。`FEATURE_DIR` 與 `TASKS_TEMPLATE` 若有提供，必須是絕對路徑。`AVAILABLE_DOCS` 是 `FEATURE_DIR` 底下可用的文件名稱／相對路徑清單（例如 `research.md` 或 `contracts/`）。若引數中含單引號，例如 "I'm Groot"，使用跳脫語法：例如 'I'\''m Groot'（或盡可能改用雙引號："I'm Groot"）。
 
-2. **Load design documents**: Read from FEATURE_DIR:
-   - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities)
-   - **Optional**: data-model.md (entities), contracts/ (interface contracts), research.md (decisions), quickstart.md (test scenarios)
-   - **IF EXISTS**: Load `/memory/constitution.md` for project principles and governance constraints
-   - Note: Not all projects have all documents. Generate tasks based on what's available.
+2. **載入設計文件**：從 FEATURE_DIR 讀取：
+   - **必要**：plan.md（技術堆疊、函式庫、結構）、spec.md（附優先順序的使用者故事）
+   - **選擇性**：data-model.md（實體）、contracts/（介面契約）、research.md（決策）、quickstart.md（測試情境）
+   - **若存在**：載入 `/memory/constitution.md`，取得專案原則與治理限制
+   - 注意：不是所有專案都有全部文件。依可用的文件產生任務。
 
-3. **Execute task generation workflow**:
-   - Load plan.md and extract tech stack, libraries, project structure
-   - Load spec.md and extract user stories with their priorities (P1, P2, P3, etc.)
-   - If data-model.md exists: Extract entities and map to user stories
-   - If contracts/ exists: Map interface contracts to user stories
-   - If research.md exists: Extract decisions for setup tasks
-   - Generate tasks organized by user story (see Task Generation Rules below)
-   - Generate dependency graph showing user story completion order
-   - Create parallel execution examples per user story
-   - Validate task completeness (each user story has all needed tasks, independently testable)
+3. **執行任務產生工作流程**：
+   - 載入 plan.md，擷取技術堆疊、函式庫、專案結構
+   - 載入 spec.md，擷取使用者故事及其優先順序（P1、P2、P3 等）
+   - 若 data-model.md 存在：擷取實體並對應到使用者故事
+   - 若 contracts/ 存在：將介面契約對應到使用者故事
+   - 若 research.md 存在：擷取決策，作為設定任務的依據
+   - 產生依使用者故事組織的任務（見下方的任務產生規則）
+   - 產生相依關係圖，顯示使用者故事的完成順序
+   - 為每個使用者故事建立平行執行範例
+   - 驗證任務完整性（每個使用者故事都有需要的全部任務，且可獨立測試）
 
-4. **Generate tasks.md**: Use TASKS_TEMPLATE_CONTENT (from the JSON output above) as the structure. For compatibility with older setup scripts that omit TASKS_TEMPLATE_CONTENT, read TASKS_TEMPLATE instead. Fill with:
-   - Correct feature name from plan.md
-   - Phase 1: Setup tasks (project initialization)
-   - Phase 2: Foundational tasks (blocking prerequisites for all user stories)
-   - Phase 3+: One phase per user story (in priority order from spec.md)
-   - Each phase includes: story goal, independent test criteria, tests (if requested), implementation tasks
-   - Final Phase: Polish & cross-cutting concerns
-   - All tasks must follow the strict checklist format (see Task Generation Rules below)
-   - Clear file paths for each task
-   - Dependencies section showing story completion order
-   - Parallel execution examples per story
-   - Implementation strategy section (MVP first, incremental delivery)
+4. **產生 tasks.md**：以上方 JSON 輸出的 TASKS_TEMPLATE_CONTENT 作為結構。為相容於省略 TASKS_TEMPLATE_CONTENT 的舊版設定指令碼，改讀 TASKS_TEMPLATE。填入：
+   - 從 plan.md 取得的正確功能名稱
+   - Phase 1：設定任務（專案初始化）
+   - Phase 2：基礎任務（所有使用者故事的阻擋前置條件）
+   - Phase 3 起：每個使用者故事一個階段（依 spec.md 的優先順序）
+   - 每個階段包含：故事目標、獨立測試準則、測試（若有要求）、實作任務
+   - 最後階段：潤飾與跨領域事項
+   - 所有任務都必須遵循嚴格的檢核清單格式（見下方的任務產生規則）
+   - 每個任務都有清楚的檔案路徑
+   - 相依關係一節，顯示故事的完成順序
+   - 每個故事的平行執行範例
+   - 實作策略一節（MVP 優先、增量交付）
 
-## Mandatory Post-Execution Hooks
+## 強制執行後 Hooks
 
-**You MUST complete this section before reporting completion to the user.**
+**在向使用者回報完成之前，你必須先完成這一節。**
 
-Check if `.specify/extensions.yml` exists in the project root.
-- If it does not exist, or no hooks are registered under `hooks.after_tasks`, skip to the Completion Report.
-- If it exists, read it and look for entries under the `hooks.after_tasks` key.
-- If the YAML cannot be parsed or is invalid, do not skip silently: tell the user that `.specify/extensions.yml` could not be read (include the parser error) and that no hooks were checked, including any mandatory (`optional: false`) hooks registered there, then continue to the Completion Report.
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- For each executable hook, output the following based on its `optional` flag:
-  - **Mandatory hook** (`optional: false`) — **You MUST emit `EXECUTE_COMMAND:` for each mandatory hook**:
+檢查專案根目錄是否存在 `.specify/extensions.yml`。
+- 若它不存在，或 `hooks.after_tasks` 底下沒有註冊任何 hooks，跳到完成報告。
+- 若存在，讀取它並尋找 `hooks.after_tasks` 鍵底下的項目。
+- 若 YAML 無法解析或無效，不要默默跳過：告訴使用者 `.specify/extensions.yml` 無法讀取（附上解析器錯誤），且沒有檢查任何 hooks，包括在那裡註冊的任何強制（`optional: false`）hooks，然後繼續到完成報告。
+- 濾掉 `enabled` 明確為 `false` 的 hooks。沒有 `enabled` 欄位的 hooks 預設視為啟用。
+- 對每個剩下的 hook，**不要**嘗試解讀或評估 hook 的 `condition` 運算式：
+  - 若 hook 沒有 `condition` 欄位，或其為 null／空白，將該 hook 視為可執行
+  - 若 hook 定義了非空白的 `condition`，跳過該 hook，讓 HookExecutor 實作去評估條件
+- 對每個可執行的 hook，依其 `optional` 旗標輸出以下內容：
+  - **強制 hook**（`optional: false`）——**你必須為每個強制 hook 輸出 `EXECUTE_COMMAND:`**：
     ```
     ## Extension Hooks
 
@@ -113,8 +113,8 @@ Check if `.specify/extensions.yml` exists in the project root.
     Executing: `/{command}`
     EXECUTE_COMMAND: {command}
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
-  - **Optional hook** (`optional: true`):
+    輸出上方區塊之後，你必須真的呼叫該 hook 並等它完成，才能繼續。用你在這個代理／工作階段中執行該命令的相同方式執行它（呼叫方式可能與上方顯示的字面 `{command}` 識別字不同，例如 skills 模式的代理會以 `/skill:speckit-...` 或 `$speckit-...` 執行）。只輸出區塊並不會執行 hook。
+  - **選擇性 hook**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -126,48 +126,48 @@ Check if `.specify/extensions.yml` exists in the project root.
     To execute: `/{command}`
     ```
 
-## Completion Report
+## 完成報告
 
-Output path to generated tasks.md and summary:
-- Total task count
-- Task count per user story
-- Parallel opportunities identified
-- Independent test criteria for each story
-- Suggested MVP scope (typically just User Story 1)
-- Format validation: Confirm ALL tasks follow the checklist format (checkbox, ID, labels, file paths)
+輸出產生的 tasks.md 路徑與摘要：
+- 任務總數
+- 每個使用者故事的任務數
+- 找出的平行機會
+- 每個故事的獨立測試準則
+- 建議的 MVP 範圍（通常就是 User Story 1）
+- 格式驗證：確認所有任務都遵循檢核清單格式（勾選框、ID、標籤、檔案路徑）
 
-Context for task generation: {ARGS}
+任務產生的背景：{ARGS}
 
-The tasks.md should be immediately executable - each task must be specific enough that an LLM can complete it without additional context.
+tasks.md 應可立即執行——每個任務都必須具體到讓 LLM 不需要額外背景就能完成。
 
-## Task Generation Rules
+## 任務產生規則
 
-**CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
+**關鍵**：任務必須依使用者故事組織，才能獨立實作與測試。
 
-**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
+**測試為選擇性**：只有在功能規格中明確要求，或使用者要求 TDD 做法時，才產生測試任務。
 
-### Checklist Format (REQUIRED)
+### 檢核清單格式（必要）
 
-Every task MUST strictly follow this format:
+每個任務都必須嚴格遵循這個格式：
 
 ```text
 - [ ] [TaskID] [P?] [Story?] Description with file path
 ```
 
-**Format Components**:
+**格式組成**：
 
-1. **Checkbox**: ALWAYS start with `- [ ]` (markdown checkbox)
-2. **Task ID**: Sequential number (T001, T002, T003...) in execution order
-3. **[P] marker**: Include ONLY if task is parallelizable (different files, no dependencies on incomplete tasks)
-4. **[Story] label**: REQUIRED for user story phase tasks only
-   - Format: [US1], [US2], [US3], etc. (maps to user stories from spec.md)
-   - Setup phase: NO story label
-   - Foundational phase: NO story label
-   - User Story phases: MUST have story label
-   - Polish phase: NO story label
-5. **Description**: Clear action with exact file path
+1. **勾選框**：一律以 `- [ ]` 開頭（Markdown 勾選框）
+2. **任務 ID**：依執行順序的流水號（T001、T002、T003……）
+3. **[P] 標記**：只有在任務可平行執行時才加入（不同檔案、不相依於未完成的任務）
+4. **[Story] 標籤**：只有使用者故事階段的任務才需要
+   - 格式：[US1]、[US2]、[US3] 等（對應 spec.md 的使用者故事）
+   - 設定階段：沒有故事標籤
+   - 基礎階段：沒有故事標籤
+   - 使用者故事階段：必須有故事標籤
+   - 潤飾階段：沒有故事標籤
+5. **說明**：清楚的行動，附確切的檔案路徑
 
-**Examples**:
+**範例**：
 
 - ✅ CORRECT: `- [ ] T001 Create project structure per implementation plan`
 - ✅ CORRECT: `- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
@@ -178,43 +178,43 @@ Every task MUST strictly follow this format:
 - ❌ WRONG: `- [ ] [US1] Create User model` (missing Task ID)
 - ❌ WRONG: `- [ ] T001 [US1] Create model` (missing file path)
 
-### Task Organization
+### 任務組織
 
-1. **From User Stories (spec.md)** - PRIMARY ORGANIZATION:
-   - Each user story (P1, P2, P3...) gets its own phase
-   - Map all related components to their story:
-     - Models needed for that story
-     - Services needed for that story
-     - Interfaces/UI needed for that story
-     - If tests requested: Tests specific to that story
-   - Mark story dependencies (most stories should be independent)
+1. **來自使用者故事（spec.md）**——主要組織方式：
+   - 每個使用者故事（P1、P2、P3……）都有自己的階段
+   - 將所有相關元件對應到它們的故事：
+     - 該故事需要的模型
+     - 該故事需要的服務
+     - 該故事需要的介面／UI
+     - 若有要求測試：該故事專屬的測試
+   - 標記故事相依關係（多數故事應彼此獨立）
 
-2. **From Contracts**:
-   - Map each interface contract → to the user story it serves
-   - If tests requested: Each interface contract → contract test task [P] before implementation in that story's phase
+2. **來自契約**：
+   - 將每個介面契約對應到它服務的使用者故事
+   - 若有要求測試：每個介面契約 → 在該故事階段的實作之前，先有一個契約測試任務 [P]
 
-3. **From Data Model**:
-   - Map each entity to the user story(ies) that need it
-   - If entity serves multiple stories: Put in earliest story or Setup phase
-   - Relationships → service layer tasks in appropriate story phase
-   - For each field with constraints in data-model.md (max length, nullable/required, enum values, validation rules), quote the constraint verbatim in the task description so it is not left to implementation-time discretion
+3. **來自資料模型**：
+   - 將每個實體對應到需要它的使用者故事
+   - 若實體服務多個故事：放在最早的故事或設定階段
+   - 關係 → 適當故事階段中的服務層任務
+   - 對於 data-model.md 中有條件限制的每個欄位（最大長度、可為空／必填、列舉值、驗證規則），在任務說明中逐字引用該限制，不要留到實作時自行裁量
 
-4. **From Setup/Infrastructure**:
-   - Shared infrastructure → Setup phase (Phase 1)
-   - Foundational/blocking tasks → Foundational phase (Phase 2)
-   - Story-specific setup → within that story's phase
+4. **來自設定／基礎設施**：
+   - 共用基礎設施 → 設定階段（Phase 1）
+   - 基礎／阻擋任務 → 基礎階段（Phase 2）
+   - 故事專屬的設定 → 放在該故事的階段內
 
-### Phase Structure
+### 階段結構
 
-- **Phase 1**: Setup (project initialization)
-- **Phase 2**: Foundational (blocking prerequisites - MUST complete before user stories)
-- **Phase 3+**: User Stories in priority order (P1, P2, P3...)
-  - Within each story: Tests (if requested) → Models → Services → Endpoints → Integration
-  - Each phase should be a complete, independently testable increment
-- **Final Phase**: Polish & Cross-Cutting Concerns
+- **Phase 1**：設定（專案初始化）
+- **Phase 2**：基礎（阻擋前置條件——必須在使用者故事之前完成）
+- **Phase 3 起**：依優先順序排列的使用者故事（P1、P2、P3……）
+  - 每個故事內部：測試（若有要求）→ 模型 → 服務 → 端點 → 整合
+  - 每個階段都應是一個完整、可獨立測試的增量
+- **最後階段**：潤飾與跨領域事項
 
-## Done When
+## 完成條件
 
-- [ ] tasks.md generated with all phases, task IDs, and file paths
-- [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above
-- [ ] Completion reported to user with task count, story breakdown, and MVP scope
+- [ ] tasks.md 已產生，包含所有階段、任務 ID 與檔案路徑
+- [ ] 擴充功能 hooks 已依上方強制執行後 Hooks 的規則派送或跳過
+- [ ] 已向使用者回報完成，附任務數、故事明細與 MVP 範圍

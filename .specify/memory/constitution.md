@@ -1,214 +1,212 @@
 <!--
-SYNC IMPACT REPORT
+同步影響報告
 ==================
-Version change: (template/unratified) → 1.0.0
-Bump rationale: Initial ratification of a concrete constitution for the brownfield
-  Spec Kit / specify-cli codebase, derived from an exhaustive multi-pass analysis of
-  the source tree, test suite, CI pipelines, and project conventions (AGENTS.md,
-  CONTRIBUTING.md, DEVELOPMENT.md). MAJOR baseline because it establishes binding
-  governance where none previously existed.
+版本變更：（範本／未通過）→ 1.0.0
+版本提升理由：為既有的
+  Spec Kit / specify-cli 程式碼庫首次通過一部具體的憲章，內容源自對
+  原始碼樹、測試套件、CI 管線與專案慣例（AGENTS.md、
+  CONTRIBUTING.md、DEVELOPMENT.md）的多輪詳盡分析。定為 MAJOR 基線，因為它在先前不存在治理之處
+  建立了具約束力的治理。
 
-Principles defined:
-  I.   Code Quality & Architectural Discipline
-  II.  Test-Backed Change (NON-NEGOTIABLE)
-  III. CLI & User-Experience Consistency
-  IV.  Offline-First Performance & Resource Discipline
-  V.   Minimal Dependencies & Safe, Idempotent File Operations
+定義的原則：
+  I.   程式碼品質與架構紀律
+  II.  以測試為後盾的變更（不可協商）
+  III. CLI 與使用者體驗一致性
+  IV.  離線優先的效能與資源紀律
+  V.   最小相依性與安全、具冪等性的檔案操作
 
-Added sections:
-  - Security & Cross-Platform Constraints
-  - Development Workflow & Quality Gates
-  - Governance
+新增的區段：
+  - 安全性與跨平台限制
+  - 開發工作流程與品質關卡
+  - 治理
 
-Templates reviewed for alignment:
-  ✅ .specify/templates/plan-template.md — generic "Constitution Check" gate (line 39)
-       remains valid; gates are now concretely populated by Principles I–V at plan time.
-  ✅ .specify/templates/spec-template.md — no constitution-specific tokens; no change needed.
-  ✅ .specify/templates/tasks-template.md — task categories (setup/foundational/story/polish)
-       already accommodate testing + performance + UX tasks mandated here; no change needed.
-  ✅ .github/agents/speckit.*.agent.md — command guidance is agent-agnostic; no change needed.
+已審查對齊的範本：
+  ✅ .specify/templates/plan-template.md — 通用的「Constitution Check」關卡（第 39 行）
+       仍然有效；這些關卡現在會在計畫階段由原則 I–V 具體填入。
+  ✅ .specify/templates/spec-template.md — 無憲章專屬標記；無需變更。
+  ✅ .specify/templates/tasks-template.md — 任務類別（setup/foundational/story/polish）
+       已能容納此處要求的測試 + 效能 + UX 任務；無需變更。
+  ✅ .github/agents/speckit.*.agent.md — 命令指引與代理無關；無需變更。
 
-Follow-up TODOs: none. RATIFICATION_DATE set to first adoption date below.
+後續 TODO：無。RATIFICATION_DATE 設定為下方的首次採用日期。
 -->
 
-# Spec Kit Constitution
+# Spec Kit 憲章
 
-Spec Kit (the `specify-cli` package and its bundled assets) is a local, offline-capable
-developer CLI that bootstraps and operates Spec-Driven Development workflows for AI coding
-agents. These principles are derived from the patterns the codebase already enforces. They
-are binding on all changes — including the `specify bundle` subcommand and any future
-command group, integration, extension, preset, or workflow.
+Spec Kit（`specify-cli` 套件及其隨附資產）是一個可在本機、離線運作的
+開發者 CLI，用來啟動並操作供 AI 程式代理使用的規格驅動開發工作流程。
+這些原則源自程式碼庫本身已經在執行的模式。它們
+對所有變更都具約束力——包括 `specify bundle` 子命令，以及任何未來的
+命令群組、整合、擴充功能、預設集或工作流程。
 
-## Core Principles
+## 核心原則
 
-### I. Code Quality & Architectural Discipline
+### I. 程式碼品質與架構紀律
 
-The codebase follows a strict, registry-driven, layered architecture, and all changes MUST
-preserve it.
+程式碼庫遵循嚴格、以註冊表驅動的分層架構，所有變更都必須
+維護這個架構。
 
-- **Separate the CLI surface from importable logic.** User-facing commands live in Typer
-  sub-apps (e.g. `commands/`, `*/_commands.py`); business logic lives in plain, importable
-  modules with no `@app.command()` decorators. New features MUST keep orchestration logic
-  testable independently of Typer.
-- **Use the established extension pattern.** New agents/integrations MUST subclass one of the
-  standard base classes (`MarkdownIntegration`, `TomlIntegration`, `YamlIntegration`,
-  `SkillsIntegration`) and declare the required class attributes (`key`, `config`,
-  `registrar_config`, and `context_file` where applicable). Extending `IntegrationBase`
-  directly is permitted only when no base class fits, and the deviation MUST be justified.
-- **Honor the single source of truth.** Built-ins are wired through the relevant registry
-  (e.g. `INTEGRATION_REGISTRY` via `_register_builtins()`), with imports and registrations
-  kept in alphabetical order. Duplicate keys MUST fail loudly rather than silently override.
-- **Naming and typing are not optional.** Private modules/functions are `_`-prefixed and MUST
-  NOT be imported across package boundaries. Every new module begins with
-  `from __future__ import annotations` and uses modern type syntax (`dict[str, Any]`,
-  `str | None`); legacy `Dict`/`List`/`Optional` forms are rejected.
-- **Package directories use underscores; keys keep their canonical (often hyphenated) form**
-  (e.g. package `kiro_cli/`, `key = "kiro-cli"`). For CLI-backed integrations the `key` MUST
-  match the executable name so `shutil.which(key)` resolves.
+- **把 CLI 介面與可匯入的邏輯分開。** 面向使用者的命令放在 Typer
+  子應用程式中（例如 `commands/`、`*/_commands.py`）；業務邏輯放在純粹、可匯入
+  的模組中，不帶 `@app.command()` 裝飾器。新功能必須讓編排邏輯
+  能獨立於 Typer 之外進行測試。
+- **使用既定的擴充模式。** 新的代理／整合必須繼承某一個
+  標準基底類別（`MarkdownIntegration`、`TomlIntegration`、`YamlIntegration`、
+  `SkillsIntegration`），並宣告必要的類別屬性（`key`、`config`、
+  `registrar_config`，以及適用時的 `context_file`）。只有在沒有基底類別合用時，才允許直接
+  擴充 `IntegrationBase`，且該偏離必須提出理由。
+- **尊重單一事實來源。** 內建項目透過相應的註冊表接線
+  （例如透過 `_register_builtins()` 的 `INTEGRATION_REGISTRY`），匯入與註冊
+  保持字母順序。重複的鍵必須大聲失敗，而不是靜默覆寫。
+- **命名與型別不是可有可無的。** 私有模組／函式以 `_` 為前綴，且不得
+  跨越套件邊界被匯入。每個新模組都以
+  `from __future__ import annotations` 開頭，並使用現代型別語法（`dict[str, Any]`、
+  `str | None`）；舊式的 `Dict`/`List`/`Optional` 形式會被拒絕。
+- **套件目錄使用底線；鍵保留其正規（通常帶連字號）形式**
+  （例如套件 `kiro_cli/`、`key = "kiro-cli"`）。對於以 CLI 為後端的整合，`key` 必須
+  與可執行檔名稱一致，讓 `shutil.which(key)` 能正確解析。
 
-**Rationale:** A registry-plus-base-class architecture is what lets dozens of integrations,
-extensions, and workflows coexist with minimal coupling. Drift here multiplies maintenance
-cost and breaks the "add one subclass, register once, ship a test" contract.
+**理由：** 「註冊表加基底類別」的架構，正是讓數十種整合、
+擴充功能與工作流程能以最小耦合共存的原因。此處的漂移會倍增維護
+成本，並打破「新增一個子類別、註冊一次、附上一個測試」的約定。
 
-### II. Test-Backed Change (NON-NEGOTIABLE)
+### II. 以測試為後盾的變更（不可協商）
 
-Every behavioral change MUST be accompanied by automated tests, and the suite is a hard gate.
+每一項行為變更都必須附帶自動化測試，測試套件是一道硬性關卡。
 
-- **Tests gate merges.** CI runs `pytest` across a matrix of ubuntu + windows × Python 3.11,
-  3.12, and 3.13. Changes MUST pass on every cell of that matrix.
-- **Parity invariants MUST hold.** Every integration MUST be present in the registry, have a
-  `CommandRegistrar` config entry where required, and ship a dedicated
-  `tests/integrations/test_integration_<key>.py` (hyphens in the key become underscores in the
-  filename). These are enforced by parametrized tests (e.g. `test_registry.py`) and MUST NOT
-  be weakened.
-- **Follow pytest conventions.** Test modules/classes/functions use the `test_*` / `Test*`
-  naming the project configures, run under `--strict-markers`, and isolate state with
-  `tmp_path`, `monkeypatch`, and the autouse auth-isolation fixture. Platform-specific tests
-  MUST be guarded (e.g. `@requires_bash`) rather than left to fail.
-- **Security and idempotency tests are mandatory categories.** Path-traversal rejection,
-  manifest hash integrity/symlink safety, and no-overwrite idempotency are covered by existing
-  suites; changes touching file writes, path handling, or setup scripts MUST extend (never
-  reduce) that coverage.
-- **Network is mocked.** No test may make a real outbound network call; HTTP MUST be stubbed
-  so the suite is deterministic and offline-runnable.
+- **測試是合併的關卡。** CI 在 ubuntu + windows × Python 3.11、
+  3.12 與 3.13 的矩陣上執行 `pytest`。變更必須在該矩陣的每一格都通過。
+- **一致性不變量必須成立。** 每個整合都必須出現在註冊表中、在需要時有
+  `CommandRegistrar` 設定項目，並附帶專屬的
+  `tests/integrations/test_integration_<key>.py`（鍵中的連字號在
+  檔名中改為底線）。這些由參數化測試（例如 `test_registry.py`）強制執行，不得
+  被弱化。
+- **遵循 pytest 慣例。** 測試模組／類別／函式使用專案設定的 `test_*` / `Test*`
+  命名，在 `--strict-markers` 下執行，並以
+  `tmp_path`、`monkeypatch` 以及 autouse 的驗證隔離 fixture 隔離狀態。平台專屬的測試
+  必須加上守衛（例如 `@requires_bash`），而不是任其失敗。
+- **安全性與冪等性測試是必備類別。** 路徑遍歷拒絕、
+  清單雜湊完整性／符號連結安全性，以及不覆寫的冪等性，都已由既有
+  套件涵蓋；凡是觸及檔案寫入、路徑處理或設定指令碼的變更，都必須擴充（絕不
+  減少）這類涵蓋範圍。
+- **網路一律模擬。** 任何測試都不得發出真實的對外網路呼叫；HTTP 必須被 stub，
+  讓測試套件具確定性且可離線執行。
 
-**Rationale:** The breadth of supported agents and the offline/air-gapped guarantees can only
-be sustained by exhaustive, parametrized tests. The parity and security suites are what stop a
-single new integration from regressing the whole matrix.
+**理由：** 支援的代理範圍之廣，以及離線／氣隙環境的保證，只能
+靠詳盡的參數化測試來維持。一致性與安全性套件正是阻止
+單一新整合讓整個矩陣迴歸出錯的關鍵。
 
-### III. CLI & User-Experience Consistency
+### III. CLI 與使用者體驗一致性
 
-The CLI presents one coherent surface; every command group MUST feel like the others.
+CLI 呈現單一連貫的介面；每個命令群組都必須讓人感覺與其他群組如出一轍。
 
-- **Reuse the shared verb vocabulary.** Consumer-facing groups use the established verbs —
-  `list`, `add`/`install`, `remove`, `search`, `info`, `update`, plus `enable`/`disable` and
-  `set-priority` where relevant. New verbs MUST NOT be invented when an existing one fits, and
-  any genuinely new verb MUST be justified.
-- **Mirror the catalog-stack model.** Catalog-backed groups MUST expose
-  `<group> catalog list|add|remove`, back it with a priority-ordered source stack (lower number
-  = higher precedence) plus per-source install policy (`install-allowed` vs `discovery-only`),
-  and fall back to a built-in default stack when no project config is present.
-- **Register sub-apps the standard way.** Command groups are `typer.Typer(...)` instances
-  attached via `app.add_typer(child, name="...")`, preferably through a modular
-  `register(app)` function imported in `__init__.py`. Nesting MUST stay within ~2–3 levels.
-- **Output is consistent and machine-friendly.** Human output uses the shared Rich
-  conventions (e.g. `[green]✓[/green]` success, `[red]Error:[/red]` + non-zero exit on
-  failure, actionable remediation in messages). Where a `--json` flag is offered, valid JSON
-  goes to stdout and all other logging is redirected to stderr.
-- **Interactions are safe and idempotent.** Destructive actions show what will change before
-  confirming; "already installed / already present" outcomes succeed (exit 0) rather than
-  error. User-facing command groups MUST be documented under `docs/reference/`.
+- **重用共用的動詞詞彙。** 面向使用者的群組使用既定的動詞——
+  `list`、`add`/`install`、`remove`、`search`、`info`、`update`，再加上相關時的 `enable`/`disable` 與
+  `set-priority`。當既有動詞合用時，不得發明新動詞，
+  任何真正全新的動詞都必須提出理由。
+- **對齊目錄堆疊模型。** 以目錄為後端的群組必須提供
+  `<group> catalog list|add|remove`，以依優先順序排序的來源堆疊作為後盾（數字越小
+  ＝優先權越高），再加上每個來源的安裝政策（`install-allowed` 與 `discovery-only`），
+  並在沒有專案設定時退回內建的預設堆疊。
+- **以標準方式註冊子應用程式。** 命令群組是 `typer.Typer(...)` 實例，
+  透過 `app.add_typer(child, name="...")` 掛載，最好是透過在 `__init__.py` 中匯入的模組化
+  `register(app)` 函式。巢狀層級必須維持在大約 2–3 層以內。
+- **輸出一致且對機器友善。** 給人看的輸出使用共用的 Rich
+  慣例（例如成功時 `[green]✓[/green]`、失敗時 `[red]Error:[/red]` 加上非零結束碼
+  ，訊息中附上可行的修復方法）。在提供 `--json` 旗標之處，有效的 JSON
+  會送到 stdout，其他所有記錄則重新導向到 stderr。
+- **互動安全且具冪等性。** 破壞性操作會在確認前先顯示將變更的內容；
+  「已安裝／已存在」的結果視為成功（結束碼 0），而不是
+  錯誤。面向使用者的命令群組必須記錄在 `docs/reference/` 之下。
 
-**Rationale:** Predictability is the product. Users learn one set of verbs, one catalog model,
-and one output grammar, then apply them to every group — including `specify bundle`.
+**理由：** 可預測性就是產品本身。使用者學會一組動詞、一個目錄模型，
+和一套輸出文法，然後把它們套用到每個群組——包括 `specify bundle`。
 
-### IV. Offline-First Performance & Resource Discipline
+### IV. 離線優先的效能與資源紀律
 
-Spec Kit is a local CLI; responsiveness, offline operability, and graceful degradation are the
-performance contract.
+Spec Kit 是一個本機 CLI；回應速度、離線可操作性與優雅降級，就是
+它的效能約定。
 
-- **`specify init` and core scaffolding MUST work fully offline** using bundled `core_pack`
-  assets. Asset resolution MUST prefer bundled assets, then a source checkout, before ever
-  reaching the network.
-- **Network use is lazy, bounded, and degradable.** Network calls happen only on explicit
-  user commands, MUST set timeouts, MUST cache catalog results (1-hour TTL) and fall back to
-  stale cache on failure, and MUST surface offline/rate-limit conditions as clear messages
-  without crashing.
-- **Keep startup cheap.** Avoid adding heavyweight work to import time. New optional
-  subsystems SHOULD prefer lazy loading over unconditional eager imports so that unrelated
-  commands (including `--help`) stay fast.
-- **Filesystem writes are minimal and idempotent.** Installs MUST track files (SHA-256
-  manifests), avoid clobbering user-modified content, only uninstall files whose hash still
-  matches, and never follow symlinks out of the project root.
+- **`specify init` 與核心鷹架必須能完全離線運作**，使用隨附的 `core_pack`
+  資產。資產解析必須優先使用隨附資產，其次是原始碼簽出，最後才
+  接觸網路。
+- **網路使用要延遲、有界且可降級。** 網路呼叫只在使用者明確
+  下達命令時發生，必須設定逾時，必須快取目錄結果（1 小時 TTL），並在失敗時退回
+  過期的快取，且必須把離線／速率限制的情況呈現為清楚的訊息
+  而不當機。
+- **讓啟動保持輕量。** 避免在匯入時期加入繁重的工作。新的選用
+  子系統應優先採用延遲載入，而不是無條件的即時匯入，讓不相關的
+  命令（包括 `--help`）保持快速。
+- **檔案系統寫入最小化且具冪等性。** 安裝必須追蹤檔案（SHA-256
+  清單），避免覆寫使用者修改過的內容，只解除安裝雜湊仍
+  相符的檔案，且絕不沿著符號連結走出專案根目錄。
 
-**Rationale:** Developers run this tool in air-gapped, enterprise, and flaky-network
-environments. Offline-first behavior and idempotent, hash-tracked file operations are what
-make it safe and fast to run repeatedly.
+**理由：** 開發人員會在氣隙、企業與網路不穩定的
+環境中執行這個工具。離線優先的行為，加上具冪等性、以雜湊追蹤的檔案操作，正是
+讓它能安全且快速地反覆執行的原因。
 
-### V. Minimal Dependencies & Safe, Idempotent File Operations
+### V. 最小相依性與安全、具冪等性的檔案操作
 
-The project guards its dependency surface and its on-disk footprint deliberately.
+本專案刻意守護它的相依性介面與磁碟足跡。
 
-- **Zero new runtime dependencies by default.** The runtime dependency set is intentionally
-  small and pinned to a minimum major version. Adding a dependency requires maintainer
-  agreement and a justification that existing deps (typer, click, rich, pyyaml, packaging,
-  platformdirs, pathspec, json5, readchar) cannot serve the need. New subsystems SHOULD reuse
-  existing primitive machinery in-process rather than re-implementing or re-shipping it.
-- **All paths are validated.** Any project-relative path derived from user/manifest/catalog
-  input MUST be confined to the project root (`Path.relative_to` checks) and reject traversal
-  payloads; symlink escapes MUST be refused.
-- **Errors are explicit and chained.** Validate inputs up front, raise with actionable context
-  (offending field/value plus a hint), and use `raise ... from exc` to preserve causes. I/O
-  that can legitimately fail MUST degrade gracefully rather than emit a raw traceback.
-- **Versioning follows SemVer.** User-visible and packaged behavior changes follow
-  MAJOR.MINOR.PATCH semantics; backward-incompatible changes MUST be called out and justified.
+- **預設零新增執行期相依性。** 執行期相依性集合刻意
+  保持精簡，並釘選最低主版本號。新增相依性需要維護者
+  同意，並提出理由，說明既有相依性（typer、click、rich、pyyaml、packaging、
+  platformdirs、pathspec、json5、readchar）為何無法滿足需求。新的子系統應重用
+  既有的原語機制，在同一行程內運作，而不是重新實作或重新隨附。
+- **所有路徑都經過驗證。** 任何源自使用者／清單／目錄輸入的專案相對路徑，
+  都必須限制在專案根目錄內（`Path.relative_to` 檢查）並拒絕遍歷
+  載荷；符號連結逃逸必須被拒絕。
+- **錯誤明確且有鏈結。** 預先驗證輸入，以可行的上下文資訊 raise
+  （出問題的欄位／值加上一則提示），並使用 `raise ... from exc` 保留成因。可以
+  合理失敗的 I/O 必須優雅降級，而不是吐出原始的追蹤堆疊。
+- **版本遵循 SemVer。** 使用者可見與封裝行為的變更遵循
+  MAJOR.MINOR.PATCH 語意；不向後相容的變更必須被點名並提出理由。
 
-**Rationale:** A lean, pinned dependency set and hardened, idempotent file handling are what
-keep the tool trustworthy in enterprise and air-gapped contexts and cheap to maintain.
+**理由：** 精簡且釘選的相依性集合，加上硬化、具冪等性的檔案處理，正是
+讓這個工具在企業與氣隙情境中值得信賴、且維護成本低廉的關鍵。
 
-## Security & Cross-Platform Constraints
+## 安全性與跨平台限制
 
-- **Cross-platform parity is required.** Code MUST run on Linux, macOS, and Windows and on
-  Python 3.11–3.13. Windows specifics (UTF-8 stream reconfiguration, bash-dependent tests
-  auto-skipping) MUST be respected; do not introduce POSIX-only assumptions without a guarded
-  fallback.
-- **Security tooling is a gate.** CodeQL and the project's security test suites
-  (path-traversal, manifest/symlink hardening) MUST remain green. Network access MUST default
-  to off in tests and be opt-in, timeout-bounded, and credential-isolated at runtime.
-- **Formatting is enforced.** `.editorconfig` rules (LF endings, final newline, no trailing
-  whitespace, 4-space Python / 2-space YAML-JSON-Markdown), `ruff check src/`, and
-  `markdownlint-cli2` MUST pass.
+- **跨平台一致性是必需的。** 程式碼必須能在 Linux、macOS 與 Windows 上，以及
+  Python 3.11–3.13 上執行。Windows 的特殊事項（UTF-8 串流重新設定、相依 bash 的測試
+  自動跳過）必須被尊重；不要在沒有受守衛的後備方案下引入僅限 POSIX 的假設。
+- **安全工具是一道關卡。** CodeQL 與本專案的安全測試套件
+  （路徑遍歷、清單／符號連結硬化）必須保持綠燈。網路存取在測試中必須預設
+  關閉，在執行期則必須是自願啟用、有逾時界限且憑證隔離的。
+- **格式會被強制執行。** `.editorconfig` 規則（LF 行尾、檔案末尾換行、無行尾
+  空白、Python 4 空格／YAML-JSON-Markdown 2 空格）、`ruff check src/`，以及
+  `markdownlint-cli2` 都必須通過。
 
-## Development Workflow & Quality Gates
+## 開發工作流程與品質關卡
 
-- **Branch naming** follows `<type>/<number>-<short-slug>` (or `<type>/<short-slug>` with no
-  issue), with `<type>` ∈ {feat, fix, docs, community, chore}.
-- **PRs are focused** and MUST: pass `ruff`, `pytest` (full matrix), markdown lint, and CodeQL;
-  add/extend tests for new behavior; update user-facing docs (`README.md`, `docs/`,
-  `spec-driven.md`) when behavior changes; and disclose any AI assistance used.
-- **Slash-command-affecting changes** MUST be manually exercised through a coding agent and the
-  results reported in the PR, per CONTRIBUTING.md.
-- **Large or cross-cutting changes** (new templates, arguments, command groups) MUST be agreed
-  with maintainers before implementation.
+- **分支命名** 遵循 `<type>/<number>-<short-slug>`（或沒有議題時的 `<type>/<short-slug>`），
+  其中 `<type>` ∈ {feat, fix, docs, community, chore}。
+- **PR 要聚焦**，且必須：通過 `ruff`、`pytest`（完整矩陣）、Markdown lint 與 CodeQL；
+  為新行為新增／擴充測試；在行為變更時更新面向使用者的文件（`README.md`、`docs/`、
+  `spec-driven.md`）；並揭露所使用的任何 AI 協助。
+- **影響斜線命令的變更**，必須依 CONTRIBUTING.md 的規定，透過程式代理手動實際操作，
+  並把結果回報在 PR 中。
+- **大型或橫切性的變更**（新範本、參數、命令群組）必須在實作前
+  先與維護者商定。
 
-## Governance
+## 治理
 
-This constitution supersedes ad-hoc convention where they conflict; the existing codebase
-patterns it codifies remain authoritative references.
+本憲章在與臨時慣例衝突時取代之；它所彙編的既有程式碼庫
+模式仍是具權威性的參考。
 
-- **Authority.** Principles I–V are binding gates. The `## Constitution Check` section of the
-  plan template MUST be evaluated against these principles, and `/speckit.analyze` treats
-  conflicts with a MUST as CRITICAL. Violations are resolved by changing the spec, plan, or
-  tasks — not by diluting a principle.
-- **Amendments.** Changes to this document require a PR with rationale, maintainer approval,
-  and a version bump per the policy below. Any amendment MUST propagate to dependent templates
-  and command guidance in the same change, recorded in the Sync Impact Report at the top of
-  this file.
-- **Versioning policy (SemVer for governance).** MAJOR = backward-incompatible governance or
-  principle removal/redefinition; MINOR = a new principle/section or materially expanded
-  guidance; PATCH = clarifications and non-semantic refinements.
-- **Compliance review.** Every PR and review MUST verify compliance with these principles.
-  Added complexity or any deviation MUST be justified in-PR (and, for plans, in the plan's
-  Complexity Tracking section). Unjustified violations block merge.
+- **權威。** 原則 I–V 是具約束力的關卡。計畫範本的
+  `## Constitution Check` 區段必須對照這些原則評估，而 `/speckit.analyze` 會把
+  與 MUST 的衝突視為 CRITICAL。違規的解決方式是變更規格、計畫或
+  任務——而不是稀釋原則。
+- **修訂。** 本文件的變更需要附理由的 PR、維護者核准，
+  以及依下列政策提升版本。任何修訂都必須在同一次變更中傳播到相依的範本
+  與命令指引，並記錄在本檔案頂部的同步影響報告中。
+- **版本政策（治理版 SemVer）。** MAJOR＝不向後相容的治理變更，或
+  原則的移除／重新定義；MINOR＝新增原則／區段，或指引的實質擴充
+  ；PATCH＝釐清與非語意的微調。
+- **合規審查。** 每個 PR 與審查都必須驗證對這些原則的合規性。
+  新增的複雜度或任何偏離，都必須在 PR 中提出理由（對於計畫，還要在計畫的
+  Complexity Tracking 區段中說明）。無理由的違規會阻擋合併。
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-19 | **Last Amended**: 2026-06-19
+**版本**：1.0.0 | **通過日期**：2026-06-19 | **最後修訂**：2026-06-19

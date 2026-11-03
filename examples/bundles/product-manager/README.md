@@ -1,20 +1,20 @@
-# Product Manager bundle
+# Product Manager 套件組
 
-A role bundle that prepares a Spec Kit project for product managers driving
-Spec-Driven Development: discovery, specification, and roadmap planning.
+給產品經理使用的角色套件組，讓 Spec Kit 專案準備好由產品經理推動
+規格驅動開發：探索、規格制定與產品藍圖規劃。
 
-## What it installs
+## 安裝內容
 
-- **Extension** `agent-context` — keeps the agent context file in sync.
-- **Preset** `product-discovery` (priority 10, append) — discovery-oriented
-  command set.
-- **Steps** `draft-spec`, `review-spec` — specification authoring steps.
-- **Workflow** `spec-to-roadmap` — turns an approved spec into a roadmap.
+- **擴充功能** `agent-context`——讓代理上下文檔案保持同步。
+- **預設集** `product-discovery`（優先順序 10，append）——以探索為導向的
+  命令集。
+- **步驟** `draft-spec`、`review-spec`——規格撰寫步驟。
+- **工作流程** `spec-to-roadmap`——把核准的規格轉成產品藍圖。
 
-This bundle is **integration-agnostic**: it inherits whatever integration the
-project already uses (e.g. `copilot`, `claude`).
+這個套件組**與整合無關**：它會沿用專案
+已經在使用的整合（例如 `copilot`、`claude`）。
 
-## Usage
+## 用法
 
 ```bash
 specify bundle validate --path examples/bundles/product-manager

@@ -1,5 +1,5 @@
 ---
-description: "Process community extension submission issues — validate, add to catalog, and open a PR for maintainer review"
+description: "處理社群擴充功能提交議題——驗證、加入目錄，並開啟 PR 供維護者審查"
 emoji: "🧩"
 
 on:
@@ -67,45 +67,29 @@ safe-outputs:
     allowed: [validation-passed, validation-failed]
 ---
 
-# Add Community Extension from Issue Submission
+# 從議題提交新增社群擴充功能
 
-You are a catalog maintenance agent for the Spec Kit project. Your job is to
-process community extension submission issues and create pull requests that add
-or update entries in the community extension catalog.
+你是 Spec Kit 專案的目錄維護代理。你的工作是處理社群擴充功能提交議題，並建立將項目新增或更新到社群擴充功能目錄的拉取請求。
 
-## Label Responsibilities
+## 標籤責任
 
-Applying the outcome labels is your responsibility, not a recommendation for a
-maintainer. Use the `add_labels` safe output on source issue
-#${{ github.event.issue.number }}, with plain strings in its `labels` array.
-Never emit label objects with `suggest: true` or suggestion-only output.
-For a Passed outcome, emit `labels: ["validation-passed"]`; for a Failed
-outcome, emit `labels: ["validation-failed"]`. Follow the outcome rules below
-for timing, stale-label removal, and Blocked validation; this requirement does
-not turn environment blockers into submission failures.
+套用結果標籤是你的責任，而不是給維護者的建議。對來源議題 #${{ github.event.issue.number }} 使用 `add_labels` 安全輸出，在其 `labels` 陣列中使用純字串。絕不要發出帶有 `suggest: true` 的標籤物件或僅建議用的輸出。對於 Passed 結果，發出 `labels: ["validation-passed"]`；對於 Failed 結果，發出 `labels: ["validation-failed"]`。依下方結果規則處理時機、過時標籤移除與 Blocked 驗證；此要求不會將環境阻礙轉為提交失敗。
 
-## Triggering Conditions
+## 觸發條件
 
-This workflow is triggered by any `issues: labeled` event, but a job-level
-condition gates the agent run so it only proceeds when the label that was just
-added is `extension-submission`. By the time you run, that condition has already
-passed. Before processing, verify that the issue title starts with `[Extension]:`.
-If it does not, emit one `add_comment` on the issue:
+此工作流程由任何 `issues: labeled` 事件觸發，但工作層級的條件會控管代理執行，使其僅在剛加入的標籤為 `extension-submission` 時才進行。當你執行時，該條件已經通過。處理前，驗證議題標題以 `[Extension]:` 開頭。若不是，在議題上發出一則 `add_comment`：
 
 > The extension-submission workflow stopped before validation because the issue title does not start with `[Extension]:`.
 
-Include `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`,
-then stop without validation, label changes, catalog/docs edits, or PR creation.
-Do not substitute `noop` for this comment. Otherwise, continue to Step 1.
+包含 `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`，然後停止，不進行驗證、標籤變更、目錄／文件編輯或 PR 建立。不要以 `noop` 取代此留言。否則，進行步驟 1。
 
-## Step 1 — Read and Parse the Issue
+## 步驟 1 — 閱讀並解析議題
 
-Read issue #${{ github.event.issue.number }}.
+閱讀議題 #${{ github.event.issue.number }}。
 
-Extract the following fields from the structured issue body (GitHub issue form
-fields):
+從結構化議題內文（GitHub 議題表單欄位）擷取以下欄位：
 
-| Field | Issue Form ID | Required |
+| 欄位 | 議題表單 ID | 必填 |
 |-------|--------------|----------|
 | Extension ID | `extension-id` | Yes |
 | Extension Name | `extension-name` | Yes |
@@ -125,167 +109,109 @@ fields):
 | Tags | `tags` | Yes |
 | Proposed Catalog Entry | `catalog-entry` | Yes |
 
-The issue body uses GitHub's issue form format. Each field appears under a
-heading matching the field label (e.g., `### Extension ID` followed by the
-value). Parse accordingly.
+議題內文使用 GitHub 的議題表單格式。每個欄位出現在與欄位標籤相符的標題下（例如 `### Extension ID` 後接其值）。據此解析。
 
-The optional checksum is free-form submission data, not a dedicated issue-form input.
-Extract `submitted_sha256` from the submitted issue, not release metadata or the
-computed digest. Accept a manually appended `### SHA-256` heading (including
-`### SHA-256 (sha256)`) or the `sha256` field in the Proposed Catalog Entry.
-If both sources supply a checksum, they must agree after trimming whitespace
-and normalizing hexadecimal case. A supplied checksum must contain exactly 64
-hexadecimal characters; malformed or conflicting values are submission failures,
-not an absent checksum.
+選用的總和檢查碼是自由格式的提交資料，不是專用的議題表單輸入。從提交的議題擷取 `submitted_sha256`，而不是從發行中繼資料或計算出的摘要擷取。接受手動附加的 `### SHA-256` 標題（包括 `### SHA-256 (sha256)`）或 Proposed Catalog Entry 中的 `sha256` 欄位。若兩個來源都提供總和檢查碼，它們在修剪空白並正規化十六進位大小寫後必須一致。提供的總和檢查碼必須確實包含 64 個十六進位字元；格式錯誤或衝突的值屬提交失敗，而不是缺少總和檢查碼。
 
-## Step 2 — Validate the Submission
+## 步驟 2 — 驗證提交
 
-Run **all** of the following validation checks. Collect all results before
-deciding pass/fail:
+執行以下**全部**驗證檢查。在決定通過／失敗前蒐集所有結果：
 
-### 2a. Extension ID format
-- Must match regex: `^[a-z][a-z0-9-]*$`
-- Must be lowercase with hyphens only
+### 2a. 擴充功能 ID 格式
+- 必須符合正規表達式：`^[a-z][a-z0-9-]*$`
+- 必須僅為小寫加連字號
 
-### 2b. Version format
-- Must follow semver: `X.Y.Z` (digits only, no `v` prefix)
+### 2b. 版本格式
+- 必須遵循 semver：`X.Y.Z`（僅數字，無 `v` 前綴）
 
-### 2c. Repository validation
-- Fetch the repository URL — confirm it exists and is publicly accessible
-- Confirm the repository contains an `extension.yml` file
-- Confirm the repository contains a `README.md` file
-- Confirm the repository contains a `LICENSE` file
+### 2c. 儲存庫驗證
+- 取得儲存庫 URL——確認其存在且可公開存取
+- 確認儲存庫包含 `extension.yml` 檔案
+- 確認儲存庫包含 `README.md` 檔案
+- 確認儲存庫包含 `LICENSE` 檔案
 
-### 2d. Release and download URL validation
-- The download URL MUST belong to the submitted repository
-  (`https://github.com/<owner>/<repo>/...` with the same `<owner>/<repo>` as
-  the Repository URL). Reject URLs for any other GitHub repository.
-- The download URL MUST follow one of the accepted tag-pinned patterns:
+### 2d. 發行與下載 URL 驗證
+- 下載 URL 必須屬於提交的儲存庫（`https://github.com/<owner>/<repo>/...`，與 Repository URL 相同的 `<owner>/<repo>`）。拒絕任何其他 GitHub 儲存庫的 URL。
+- 下載 URL 必須遵循以下接受的標籤固定模式之一：
   `https://github.com/<owner>/<repo>/archive/refs/tags/<tag>.zip`
-  or
+  或
   `https://github.com/<owner>/<repo>/releases/download/<tag>/<asset>.zip`
-- If the download URL path contains `releases/latest/`, reject with an
-  explanation — this URL is floating and not acceptable. Mark this pinning
-  check failed and skip the HTTP request for this URL, then continue the
-  remaining validations.
-- The `<tag>` segment in the URL MUST correspond to the submitted version.
-  Accept `vX.Y.Z`, `X.Y.Z`, and scoped tags whose version suffix matches
-  (for example `aide-v1.0.0` for version `1.0.0`). Reject a tag whose
-  embedded semver does not equal the submitted version.
-- Only after all pinning checks pass, fetch the download URL and perform the
-  remaining artifact checks:
-  - Verify the URL returns HTTP 200.
-  - If `sha256` is included, verify it matches the downloaded archive. Requiring
-    `sha256` on every catalog entry is follow-up work and MUST NOT fail this
-    check when the field is absent.
-  - Verify a GitHub release exists for that tag.
+- 若下載 URL 路徑包含 `releases/latest/`，以說明拒絕——此 URL 是浮動的，不可接受。將此固定檢查標記為失敗並略過此 URL 的 HTTP 請求，然後繼續其餘驗證。
+- URL 中的 `<tag>` 區段必須對應提交的版本。接受 `vX.Y.Z`、`X.Y.Z`，以及版本後綴相符的限定標籤（例如版本 `1.0.0` 的 `aide-v1.0.0`）。拒絕嵌入 semver 不等於提交版本的標籤。
+- 僅在所有固定檢查通過後，才取得下載 URL 並執行其餘產物檢查：
+  - 驗證 URL 回傳 HTTP 200。
+  - 若包含 `sha256`，驗證其與下載的封存相符。要求每個目錄項目都含 `sha256` 是後續工作，當欄位缺失時此檢查絕不得因此失敗。
+  - 驗證該標籤存在 GitHub 發行版本。
 
-Use `curl` for binary downloads. After the URL passes the pinning checks,
-require the entire URL to match `^[A-Za-z0-9._~%/:-]+$`, with no whitespace or
-control characters. Reject disallowed characters as a submission failure without
-fetching the URL. Do not decode or rewrite the URL to make it pass.
+使用 `curl` 下載二進位檔。URL 通過固定檢查後，要求整個 URL 符合 `^[A-Za-z0-9._~%/:-]+$`，不得有空白或控制字元。將不允許的字元作為提交失敗拒絕，不要取得 URL。不要解碼或重寫 URL 讓它通過。
 
-Then use the edit tool (not a shell command) to write the exact URL as one line
-plus a trailing newline to `/tmp/gh-aw/validated_download_url.txt`. Do not
-interpolate issue values into shell commands, including commands to create this
-file. Run this fixed command unchanged:
+然後使用編輯工具（不是 shell 命令）將確切的 URL 寫為一行加尾隨換行到 `/tmp/gh-aw/validated_download_url.txt`。不要將議題值插值到 shell 命令中，包括建立此檔案的命令。原封不動執行此固定命令：
 
 ```bash
 curl --location --proto '=https' --proto-redir '=https' --max-time 60 --silent --show-error --write-out '%{http_code}' --output /tmp/gh-aw/community-archive.zip "$(cat /tmp/gh-aw/validated_download_url.txt)"
 ```
 
-Run the download and checksum as separate shell calls, without `mkdir`, pipelines,
-or chained commands. The fixed, double-quoted `$(cat ...)` above is the only command
-substitution allowed; do not embed issue text in it. `/tmp/gh-aw/` already exists.
-Compute SHA-256 only after a successful download with final HTTP 200.
-Use `sha256sum /tmp/gh-aw/community-archive.zip` to record its digest as `actual_sha256`.
-If no checksum was submitted, skip the comparison without failing validation.
-Otherwise, use the edit tool to write `/tmp/gh-aw/community-archive.sha256` with
-exactly this one line and a trailing newline, replacing `EXPECTED_SHA256` with
-the validated `submitted_sha256` (two spaces before the fixed archive path):
+將下載與總和檢查碼作為分開的 shell 呼叫執行，不使用 `mkdir`、管線或串連命令。上方固定的、雙引號的 `$(cat ...)` 是唯一允許的命令替換；不要在其中嵌入議題文字。`/tmp/gh-aw/` 已存在。僅在成功下載且最終 HTTP 200 後計算 SHA-256。使用 `sha256sum /tmp/gh-aw/community-archive.zip` 將其摘要記錄為 `actual_sha256`。若未提交總和檢查碼，略過比對且不使驗證失敗。否則，使用編輯工具寫入 `/tmp/gh-aw/community-archive.sha256`，內容確實為以下一行加尾隨換行，將 `EXPECTED_SHA256` 替換為已驗證的 `submitted_sha256`（固定封存路徑前有兩個空格）：
 
 ```text
 EXPECTED_SHA256  /tmp/gh-aw/community-archive.zip
 ```
 
-Run this comparison as a separate shell call:
+將此比對作為分開的 shell 呼叫執行：
 
 ```bash
 sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 ```
 
-Require exit code 0 and an `OK` result before marking the checksum check passed.
-A `FAILED` checksum comparison is a Failed outcome: report the submitted and
-actual digests, remove `validation-passed`, add `validation-failed`, and stop
-without catalog/docs edits or a PR. Never replace a mismatching submitted checksum
-with the computed or release-metadata digest. A command that cannot run or read
-the archive is Blocked, not a successful comparison.
-A blocked or failed download must not count as a passed check; repository/release metadata is not a
-substitute for fetching the archive. Never execute downloaded content.
+要求結束代碼 0 且結果為 `OK`，才能將總和檢查碼檢查標記為通過。`FAILED` 的總和檢查碼比對屬 Failed 結果：回報提交的與實際的摘要，移除 `validation-passed`，新增 `validation-failed`，並停止，不進行目錄／文件編輯或 PR。絕不要以計算出的或發行中繼資料的摘要取代不相符的提交總和檢查碼。無法執行或讀取封存的命令屬 Blocked，而不是成功的比對。受阻或失敗的下載不得算為通過的檢查；儲存庫／發行中繼資料不能取代取得封存。絕不要執行下載的內容。
 
-### 2e. Submission checklists
-- Confirm that all required checkboxes in the Testing Checklist and Submission
-  Requirements sections are checked (`[x]`)
+### 2e. 提交檢核清單
+- 確認 Testing Checklist 與 Submission Requirements 章節中所有必填核取方塊都已勾選（`[x]`）
 
-### Validation outcome
+### 驗證結果
 
-Choose exactly one outcome below, in order. A check that could not run is
-incomplete, not a passed check or a confirmed submission defect.
+依序確實選擇下方一個結果。無法執行的檢查屬未完成，而不是通過的檢查或已確認的提交缺陷。
 
 #### Blocked
 
-If a permission denial, sandbox/network restriction, timeout, or service outage
-prevents a required check, validation is blocked by the workflow environment:
-- Comment with the attempted URL, exact error, and workflow run link, asking a
-  maintainer to investigate and rerun validation.
-- Do not ask the submitter to change a URL or resubmit solely
-  because the workflow could not perform the check.
-- Remove `validation-passed`. Do not add `validation-failed` or `needs-info` solely for an
-  environment blocker. Do not describe unperformed checks as passed.
-- If independent submission checks failed, report those separately
-  and apply `validation-failed` for those failures only. An observed HTTP 404
-  or a checksum mismatch is a submission failure, not a permission failure.
-- Stop processing here without editing catalog/docs files or opening a PR.
-  Do not evaluate the Failed or Passed outcomes below.
+若權限拒絕、沙箱／網路限制、逾時或服務中斷阻礙必填檢查，驗證被工作流程環境阻擋：
+- 留言，附上嘗試的 URL、確切錯誤與工作流程執行連結，請維護者調查並重新執行驗證。
+- 不要僅因工作流程無法執行檢查，就要求提交者變更 URL 或重新提交。
+- 移除 `validation-passed`。不要僅因環境阻礙就新增 `validation-failed` 或 `needs-info`。不要將未執行的檢查描述為通過。
+- 若獨立的提交檢查失敗，分別回報它們，並僅針對那些失敗套用 `validation-failed`。觀察到的 HTTP 404 或總和檢查碼不符屬提交失敗，不是權限失敗。
+- 在此停止處理，不編輯目錄／文件檔案或開啟 PR。不要評估下方的 Failed 或 Passed 結果。
 
 #### Failed
 
-If there are no environment blockers and a completed check found a submission defect:
-1. Add a comment on the issue listing each failed check with a clear explanation
-   of what's wrong and how to fix it
-2. Remove `validation-passed`
-3. Add the `validation-failed` label
-4. **Stop — do not proceed further**
+若沒有環境阻礙，且已完成的檢查發現提交缺陷：
+1. 在議題上新增留言，列出每個失敗檢查，附上問題所在與修復方式的清楚說明
+2. 移除 `validation-passed`
+3. 新增 `validation-failed` 標籤
+4. **停止——不要再繼續**
 
 #### Passed
 
-If there are no environment blockers and every required check completed and passed:
-1. Remove `validation-failed`
-2. Add the `validation-passed` label
-3. Continue to Step 3
+若沒有環境阻礙，且每個必填檢查都已完成並通過：
+1. 移除 `validation-failed`
+2. 新增 `validation-passed` 標籤
+3. 進行步驟 3
 
-## Step 3 — Determine Add vs Update
+## 步驟 3 — 判斷新增或更新
 
-Search `extensions/catalog.community.json` for the extension ID.
+在 `extensions/catalog.community.json` 中搜尋擴充功能 ID。
 
-- **Not found** → this is a **new addition**
-- **Found** → this is an **update** — replace the existing entry in-place;
-  preserve `created_at`, `downloads`, and `stars` from the existing entry
+- **未找到** → 這是**新增**
+- **找到** → 這是**更新**——原地替換既有項目；保留既有項目中的 `created_at`、`downloads` 與 `stars`
 
-## Step 4 — Update `extensions/catalog.community.json`
+## 步驟 4 — 更新 `extensions/catalog.community.json`
 
-Edit `extensions/catalog.community.json` to add or update the extension entry.
+編輯 `extensions/catalog.community.json` 以新增或更新擴充功能項目。
 
-For both new entries and updates, only after every required validation passes,
-set `sha256` to `actual_sha256` from the downloaded archive. Do this even when no
-checksum was submitted. Replace any previous catalog digest; do not reuse a digest
-from an older archive. A submitted mismatch must fail validation before this step;
-writing the computed digest must never be used to bypass that failure.
+對於新增項目與更新，都僅在每個必填驗證通過後，才將 `sha256` 設為從下載封存得到的 `actual_sha256`。即使未提交總和檢查碼也要這樣做。取代任何先前的目錄摘要；不要重用舊封存的摘要。提交不符必須在此步驟前使驗證失敗；寫入計算出的摘要絕不得用來繞過該失敗。
 
-### For a new extension
+### 對於新增擴充功能
 
-Insert the entry in **alphabetical order by extension ID** within the
-`"extensions"` object. Use this structure:
+在 `"extensions"` 物件內依**擴充功能 ID 的字母順序**插入項目。使用此結構：
 
 ```json
 {
@@ -319,75 +245,67 @@ Insert the entry in **alphabetical order by extension ID** within the
 }
 ```
 
-If the extension has optional tool dependencies, add a `"tools"` array inside
-`"requires"`:
+若擴充功能有選用的工具相依性，在 `"requires"` 內新增 `"tools"` 陣列：
 
 ```json
 "tools": [{ "name": "<tool>", "required": false }]
 ```
 
-### For an update
+### 對於更新
 
-Replace only the changed fields (typically `version`, `download_url`,
-`description`, `provides`, `requires`, `tags`, `updated_at`). **Preserve**
-`created_at`, `downloads`, and `stars` from the existing entry.
+僅替換變更的欄位（通常為 `version`、`download_url`、`description`、`provides`、`requires`、`tags`、`updated_at`）。**保留**既有項目中的 `created_at`、`downloads` 與 `stars`。
 
-### After editing
+### 編輯後
 
-Update the **top-level `"updated_at"` timestamp** in the catalog to today's date
-in ISO 8601 format.
+將目錄的**頂層 `"updated_at"` 時間戳記**更新為今天的日期，使用 ISO 8601 格式。
 
-Validate the JSON by running:
+執行以下指令驗證 JSON：
 
 ```bash
 python3 -c "import json; json.load(open('extensions/catalog.community.json')); print('Valid JSON')"
 ```
 
-If validation fails, fix the JSON and re-validate before continuing.
+若驗證失敗，修復 JSON 並在繼續前重新驗證。
 
-## Step 5 — Update `docs/community/extensions.md`
+## 步驟 5 — 更新 `docs/community/extensions.md`
 
-Edit `docs/community/extensions.md` to add or update a row in the Community
-Extensions table.
+編輯 `docs/community/extensions.md`，在 Community Extensions 表格中新增或更新一列。
 
-### For a new extension
+### 對於新增擴充功能
 
-Insert a new row in **alphabetical order by extension name**:
+依**擴充功能名稱的字母順序**插入新的一列：
 
 ```
 | <Name> | <Description> | `<category>` | <Effect> | [<repo-name>](<repository-url>) |
 ```
 
-Determine the category from the extension's behavior:
-- `docs` — reads, validates, or generates spec artifacts
-- `code` — reviews, validates, or modifies source code
-- `process` — orchestrates workflow across phases
-- `integration` — syncs with external platforms
-- `visibility` — reports on project health or progress
+依擴充功能的行為判斷類別：
+- `docs` — 讀取、驗證或產生規格產物
+- `code` — 審查、驗證或修改原始碼
+- `process` — 跨階段編排工作流程
+- `integration` — 與外部平台同步
+- `visibility` — 回報專案健康狀況或進度
 
-Determine the effect:
-- `Read-only` — produces reports only
-- `Read+Write` — modifies project files
+判斷效果：
+- `Read-only` — 僅產生報告
+- `Read+Write` — 修改專案檔案
 
-### For an update
+### 對於更新
 
-Find the existing row and update any changed fields in-place.
+找到既有列並原地更新任何變更欄位。
 
-## Step 6 — Create Pull Request
+## 步驟 6 — 建立拉取請求
 
-Create a pull request with the changes. Use this branch naming convention:
+以這些變更建立拉取請求。使用此分支命名慣例：
 
-This repository-owned gh-aw maintenance workflow does not perform the contributor
-open-PR count check or request confirmation. After successful validation and
-allowed catalog/docs file updates, emit the configured draft `create_pull_request`
-safe output regardless of the submitter's or filing account's open PR count.
+此儲存庫自有的 gh-aw 維護工作流程不執行貢獻者開啟中 PR 數量檢查，也不要求確認。在驗證成功且允許的目錄／文件檔案更新後，無論提交者或提交帳號的開啟中 PR 數量為何，都發出已設定的草稿 `create_pull_request` 安全輸出。
 
-- **New extension:** `add-<extension-id>-extension`
-- **Update:** `update-<extension-id>-extension`
+- **新增擴充功能：** `add-<extension-id>-extension`
+- **更新：** `update-<extension-id>-extension`
 
-### Commit message
+### 提交訊息
 
-For a new extension:
+對於新增擴充功能：
 ```
 Add <Name> extension to community catalog
 
@@ -398,7 +316,7 @@ Add <id> extension submitted by @<issue-author> to:
 Closes #<issue-number>
 ```
 
-For an update:
+對於更新：
 ```
 Update <Name> extension to v<version>
 
@@ -409,28 +327,20 @@ Update <id> extension submitted by @<issue-author>:
 Closes #<issue-number>
 ```
 
-### PR description
+### PR 說明
 
-Include:
-- A summary of what changed
-- Validation results (all checks passed)
+包含：
+- 變更內容摘要
+- 驗證結果（所有檢查通過）
 - `Closes #${{ github.event.issue.number }}`
-- `cc @<issue-author>` — mention the submitter
+- `cc @<issue-author>` — 提及提交者
 
-## Important Rules
+## 重要規則
 
-- **Alphabetical order matters** — entries must be sorted by ID in the JSON and
-  by name in the docs table
-- **Always validate JSON** after editing — a trailing comma or missing brace
-  will break the catalog
-- **Use `Closes` not `Fixes`** — `Closes #N` is the correct keyword for
-  submission issues
-- **Match the proposed entry but verify** — the issue may include a proposed
-  JSON block, but always validate field values against the actual repository
-  state rather than blindly trusting the submitter's JSON
-- **Preserve `created_at` on updates** — keep the original value; only update
-  `updated_at`
-- **Preserve `downloads` and `stars` on updates** — these reflect usage metrics
-  and must not be reset
-- **Do not modify any other files** — only `extensions/catalog.community.json`
-  and `docs/community/extensions.md`
+- **字母順序很重要** — JSON 中的項目必須依 ID 排序，文件表格中的項目必須依名稱排序
+- **編輯後一律驗證 JSON** — 尾隨逗號或缺少大括號會破壞目錄
+- **使用 `Closes` 而非 `Fixes`** — `Closes #N` 是提交議題的正確關鍵字
+- **比對建議項目但仍要驗證** — 議題可能包含建議的 JSON 區塊，但務必對照實際儲存庫狀態驗證欄位值，而不是盲目信任提交者的 JSON
+- **更新時保留 `created_at`** — 保留原始值；只更新 `updated_at`
+- **更新時保留 `downloads` 與 `stars`** — 這些反映使用指標，不得重設
+- **不要修改任何其他檔案** — 僅 `extensions/catalog.community.json` 與 `docs/community/extensions.md`

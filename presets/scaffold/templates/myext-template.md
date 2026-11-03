@@ -1,21 +1,21 @@
-# MyExt Report
+# MyExt 報告
 
-> This template overrides the one provided by the "myext" extension.
-> Customize it to match your needs.
+> 這個範本覆寫了「myext」擴充功能所提供的範本。
+> 依你的需求加以修改。
 
-## Summary
+## 摘要
 
-Brief summary of the report.
+報告的簡短摘要。
 
-## Details
+## 詳細內容
 
-- Detail 1
-- Detail 2
+- 詳細內容 1
+- 詳細內容 2
 
-## Actions
+## 動作
 
-- [ ] Action 1
-- [ ] Action 2
+- [ ] 動作 1
+- [ ] 動作 2
 
 <!--
   CUSTOMIZE: This template takes priority over the myext extension's

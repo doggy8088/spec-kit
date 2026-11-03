@@ -1,35 +1,35 @@
-# Community Bundles
+# 社群套件組
 
 > [!NOTE]
-> Community bundles are independently created and maintained by their respective authors. Maintainers only verify that submission metadata is complete and correctly formatted — they do **not review, audit, endorse, or support the bundle code or the components it installs**. Review bundle manifests, component catalogs, and source repositories before installation and use at your own discretion.
+> 社群套件組由各自作者獨立建立與維護。維護者僅確認提交中繼資料完整且格式正確，不審查、稽核、背書或支援套件組程式碼或其安裝的元件。安裝前請先檢視套件組資訊清單、元件目錄與原始儲存庫，並自行斟酌使用。
 
-Bundles compose existing Spec Kit components — extensions, presets, workflows, and steps — into a single role or team stack. They are useful when a user should be able to install a tested set of components together instead of following several separate install commands.
+套件組將既有的 Spec Kit 元件，也就是擴充功能、預設集、工作流程與步驟，組合成單一的角色或團隊組合。當使用者應該能一同安裝一組經過測試的元件，而不是分別執行多個安裝命令時，套件組特別實用。
 
-Accepted community bundle entries are published in [`bundles/catalog.community.json`](https://github.com/github/spec-kit/blob/main/bundles/catalog.community.json) and listed below. The built-in community source is discovery-only: `specify bundle search` and `specify bundle info` can inspect entries, but installing by ID requires explicitly adding an install-allowed catalog. Explicit catalogs use a higher default precedence than the built-in community source. To submit a bundle for review, file a [Bundle Submission](https://github.com/github/spec-kit/issues/new?template=bundle_submission.yml) issue.
+經接受的社群套件組項目發佈於 [`bundles/catalog.community.json`](https://github.com/github/spec-kit/blob/main/bundles/catalog.community.json)，並列於下方。內建的社群來源僅供探索：`specify bundle search` 與 `specify bundle info` 可檢視項目，但依 ID 安裝時，必須明確加入允許安裝的目錄。明確指定的目錄預設優先順序高於內建社群來源。若要提交套件組供審查，請提出 [Bundle Submission](https://github.com/github/spec-kit/issues/new?template=bundle_submission.yml) issue。
 
-| Bundle | Purpose | Role or team | Provides | Required catalogs | URL |
+| 套件組 | 用途 | 角色或團隊 | 提供內容 | 所需目錄 | URL |
 |--------|---------|--------------|----------|-------------------|-----|
-| Agentstandards Multi-Vendor Architecture | Installs a Codex-orchestrated, multi-vendor architecture council, its hard task gate, and the supporting Spec Kit workflow. | `architecture-governance` | 1 extension, 1 preset, 1 workflow | Documented | [agentstandards](https://github.com/bbjwz/agentstandards) |
-| SicarioSpec Security & Governance Bundle | Secure-by-default governance bundle for GitHub Spec Kit. Enforces data classification, threat modeling, and code-owned verification gates. | `security-engineer` | 1 extension, 11 presets | Documented | [sicario-spec](https://github.com/dfirs1car1o/sicario-spec) |
-| SpecAssay | Durable-ID promotion for stock Spec Kit: templates, Gate 2 refusal, and trace-manifest emission. | `developer` | 1 extension, 1 preset | Documented | [specassay](https://github.com/rdryfoos/specassay) |
+| Agentstandards Multi-Vendor Architecture | 安裝由 Codex 協調的多廠商架構委員會、其硬性任務關卡，以及支援的 Spec Kit 工作流程。 | `architecture-governance` | 1 個擴充功能、1 個預設集、1 個工作流程 | 已記錄 | [agentstandards](https://github.com/bbjwz/agentstandards) |
+| SicarioSpec Security & Governance Bundle | GitHub Spec Kit 的安全預設治理套件組。強制執行資料分類、威脅建模與由程式碼持有的驗證關卡。 | `security-engineer` | 1 個擴充功能、11 個預設集 | 已記錄 | [sicario-spec](https://github.com/dfirs1car1o/sicario-spec) |
+| SpecAssay | 為原廠 Spec Kit 提供持久 ID 提升：範本、Gate 2 拒絕與追蹤資訊清單產出。 | `developer` | 1 個擴充功能、1 個預設集 | 已記錄 | [specassay](https://github.com/rdryfoos/specassay) |
 
-## What to Submit
+## 提交內容
 
-A bundle submission should include:
+套件組提交應包含：
 
-- A public repository with a valid `bundle.yml` manifest.
-- A versioned GitHub release with a bundle artifact created by `specify bundle build`.
-- Documentation that explains the intended role, installed components, required catalogs, and expected workflow.
-- A proposed catalog entry with bundle metadata and component counts.
-- Test evidence from a clean Spec Kit project.
+- 具有有效 `bundle.yml` 資訊清單的公開儲存庫。
+- 具版本編號的 GitHub release，其中包含由 `specify bundle build` 建立的套件組產出物。
+- 說明預期角色、安裝元件、所需目錄與預期工作流程的文件。
+- 包含套件組中繼資料與元件數量的建議目錄項目。
+- 來自乾淨 Spec Kit 專案的測試證據。
 
-## Component Resolution
+## 元件解析
 
-A bundle catalog entry describes where to download the bundle artifact, but the bundle's component references still need to resolve when a user installs it. References can resolve from bundled components, already installed components, or active extension, preset, workflow, and step catalogs.
+套件組目錄項目描述套件組產出物的下載位置，但使用者安裝時，套件組的元件參照仍需能成功解析。參照可從隨附元件、已安裝元件，或作用中的擴充功能、預設集、工作流程與步驟目錄解析。
 
-If your bundle depends on components that are not available from the default Spec Kit catalogs, include the required catalog URLs in the submission and in your README. Test the full install path from a clean project with those catalogs added before submitting.
+若套件組依賴的元件無法從預設的 Spec Kit 目錄取得，請在提交內容與 README 中包含所需的目錄 URL。提交前，請在加入這些目錄的乾淨專案中測試完整的安裝路徑。
 
-For example:
+例如：
 
 ```bash
 specify preset catalog add https://example.com/presets.json --name example-bundle --install-allowed
@@ -42,18 +42,18 @@ specify bundle catalog add https://example.com/bundles.json --id example-bundle-
 specify bundle install example-bundle
 ```
 
-## Review Scope
+## 審查範圍
 
-Maintainers check that:
+維護者會檢查：
 
-- The submission fields are complete and correctly formatted.
-- The release artifact and documentation URLs are reachable.
-- The repository contains a `bundle.yml` manifest.
-- The submission clearly identifies any required component catalogs.
-- The proposed catalog entry uses the expected bundle catalog entry shape.
+- 提交欄位完整且格式正確。
+- release 產出物與文件 URL 可連通。
+- 儲存庫包含 `bundle.yml` 資訊清單。
+- 提交內容清楚標示任何所需的元件目錄。
+- 建議的目錄項目使用預期的套件組目錄項目格式。
 
-Maintainers do not audit the behavior of installed extensions, presets, workflows, steps, or scripts. Users should review those components before installing a community bundle.
+維護者不會稽核已安裝的擴充功能、預設集、工作流程、步驟或指令碼的行為。使用者在安裝社群套件組前，應先檢視這些元件。
 
-## Updating a Bundle
+## 更新套件組
 
-To update a submitted bundle, file another [Bundle Submission](https://github.com/github/spec-kit/issues/new?template=bundle_submission.yml) issue with the new version, download URL, changed component list, and updated test evidence. Mention that the issue updates an existing bundle entry.
+若要更新已提交的套件組，請再提出一個 [Bundle Submission](https://github.com/github/spec-kit/issues/new?template=bundle_submission.yml) issue，附上新版本、下載 URL、變更的元件清單與更新的測試證據，並註明此 issue 是更新既有的套件組項目。

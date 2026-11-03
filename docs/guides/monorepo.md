@@ -1,21 +1,12 @@
-# Using Spec Kit in a Monorepo
+# 在 Monorepo 中使用 Spec Kit
 
-A Spec Kit project is **directory-scoped**: the project is whichever directory
-contains `.specify/`. A monorepo can hold several independent Spec Kit projects
-under one repository root, each with its own `.specify/`, `specs/`, constitution,
-and feature numbering.
+Spec Kit 專案是**以目錄為範圍**的：專案就是包含 `.specify/` 的那個目錄。一個 monorepo 可以在單一儲存庫根目錄下放多個獨立的 Spec Kit 專案，每個專案都有自己的 `.specify/`、`specs/`、憲章與功能編號。
 
-Root resolution already prefers the **nearest** `.specify/` over the Git
-toplevel, so commands run from inside a member project resolve to that project,
-not the repo root.
+根目錄解析本來就優先採用**最近的** `.specify/`，而不是 Git 頂層目錄，所以從成員專案內部執行的命令會解析到該專案，而不是儲存庫根目錄。
 
-Repository layout is separate from interface design. When projects interact,
-use [Contract-Driven Development](contract-driven-development.md) to define
-the agreement between them, with one authoritative owner per contract. Projects
-in the same repository can reference that contract directly; projects in
-separate repositories can consume a versioned artifact or synchronized copy.
+儲存庫版面與介面設計是兩回事。當專案彼此互動時，使用[契約驅動開發](contract-driven-development.md)來定義它們之間的協議，每份契約由單一權威擁有者負責。同一儲存庫中的專案可以直接參照該契約；不同儲存庫中的專案則可以使用有版本的產出物或同步副本。
 
-## Layout
+## 版面
 
 ```text
 my-monorepo/
@@ -32,42 +23,34 @@ my-monorepo/
         └── .specify/         # Spec Kit project "ui"
 ```
 
-Initialize each member project independently:
+獨立初始化每個成員專案：
 
 ```bash
 specify init apps/web --integration claude
 specify init apps/api --integration claude
 ```
 
-Each project keeps its own `specs/` directory and numbers features
-independently (`apps/web/specs/001-…`, `apps/api/specs/001-…`).
+每個專案都保留自己的 `specs/` 目錄，並獨立編號功能（`apps/web/specs/001-…`、`apps/api/specs/001-…`）。
 
-## Working inside a member project
+## 在成員專案內部工作
 
-The default workflow is unchanged: change into the project directory and run the
-slash commands. Root resolution finds the nearest `.specify/`.
+預設工作流程不變：切換到專案目錄，再執行 slash 命令。根目錄解析會找到最近的 `.specify/`。
 
 ```bash
 cd apps/web
 # then run /speckit.specify, /speckit.plan, … in your agent
 ```
 
-## Targeting a member project from the repo root
+## 從儲存庫根目錄指定成員專案
 
-For non-interactive or CI runs where you do not want to `cd`, set
-**`SPECIFY_INIT_DIR`** to the member project root (the directory *containing*
-`.specify/`). Relative paths resolve against the current directory.
+對於不想 `cd` 的非互動或 CI 執行，把 **`SPECIFY_INIT_DIR`** 設定為成員專案根目錄（即*包含* `.specify/` 的目錄）。相對路徑會以目前目錄為基準解析。
 
 ```bash
 # operate on apps/web from the monorepo root (no cd required)
 export SPECIFY_INIT_DIR=apps/web
 ```
 
-The path must exist and contain `.specify/`. If it does not, the command
-**errors and does not fall back** to the current directory or the Git toplevel.
-This is deliberate: a typo never writes specs into the wrong project. A
-nonexistent path is reported as you typed it; a path that exists but is not a
-Spec Kit project is reported as its resolved absolute path:
+該路徑必須存在且包含 `.specify/`。若不符合，命令**會出錯，且不會回退**到目前目錄或 Git 頂層目錄。這是刻意的：打錯字永遠不會把規格寫進錯誤的專案。不存在的路徑會照你輸入的樣子回報；存在但不是 Spec Kit 專案的路徑，則會以其解析後的絕對路徑回報：
 
 ```text
 # SPECIFY_INIT_DIR=apps/wbe  (typo: no such directory)
@@ -77,20 +60,9 @@ ERROR: SPECIFY_INIT_DIR does not point to an existing directory: apps/wbe
 ERROR: SPECIFY_INIT_DIR is not a Spec Kit project (no .specify/ directory): /home/you/my-monorepo/apps
 ```
 
-`SPECIFY_INIT_DIR` selects the **project**; `SPECIFY_FEATURE_DIRECTORY` selects
-the **feature**. A relative feature path is joined to that project root
-without a containment check, so a value like `../shared-feature` still
-resolves outside it; an absolute path is used as-is and may likewise point
-outside the project root. Either way, the selected feature directory is not
-required to live inside it — the project root identifies the Spec Kit project
-and its command/configuration context, not a containment boundary for feature
-documents. They compose: set both to pick a project and a feature
-non-interactively. See the
-[`SPECIFY_INIT_DIR` reference](../reference/core.md#environment-variables) for
-the full contract and the two-axes model.
+`SPECIFY_INIT_DIR` 選的是**專案**；`SPECIFY_FEATURE_DIRECTORY` 選的是**功能**。相對的功能路徑會接到該專案根目錄上，不做包含檢查，所以像 `../shared-feature` 這樣的值仍會解析到專案之外；絕對路徑則照原樣使用，同樣可能指向專案根目錄之外。無論哪種情況，所選的功能目錄都不必位於專案之內——專案根目錄識別的是 Spec Kit 專案及其命令／設定脈絡，而不是功能文件的包含邊界。兩者可以組合：同時設定兩者，就能以非互動方式選定專案與功能。完整的契約與雙軸模型，請見 [`SPECIFY_INIT_DIR` 參考](../reference/core.md#environment-variables)。
 
-The `specify` CLI's project-scoped subcommands honor the same variable, so they
-target a member project from the root without `cd` too:
+`specify` CLI 的專案範圍子命令也遵循同一個變數，所以它們同樣能從根目錄指定成員專案，不需要 `cd`：
 
 ```bash
 export SPECIFY_INIT_DIR=apps/web
@@ -98,38 +70,20 @@ specify workflow list          # lists apps/web's workflows
 specify integration status     # reports apps/web's integration
 ```
 
-The validation rules are the same: the path must exist and contain `.specify/`,
-with no fallback to the current directory.
+驗證規則相同：路徑必須存在且包含 `.specify/`，且不會回退到目前目錄。
 
-## How `SPECIFY_INIT_DIR` reaches your agent
+## `SPECIFY_INIT_DIR` 如何傳到你的代理
 
-`SPECIFY_INIT_DIR` is read by the shell scripts that the slash commands invoke
-(`get_repo_root` in Bash, `Get-RepoRoot` in PowerShell). It takes effect only
-when it is present in the environment of the shell that runs those scripts.
+`SPECIFY_INIT_DIR` 由 slash 命令呼叫的 shell script 讀取（Bash 中的 `get_repo_root`、PowerShell 中的 `Get-RepoRoot`）。只有當它出現在執行那些 script 的 shell 環境中時才生效。
 
-- **Scripted / CI runs:** export it in the same shell that drives the commands;
-  it is reliable there.
-- **Interactive agents:** whether an exported variable reaches the shell tool an
-  agent uses is agent-specific. Export `SPECIFY_INIT_DIR` *before* launching the
-  agent, and verify once (e.g. run `/speckit.specify` and confirm the new feature
-  landed under the intended project's `specs/`).
+- **Script 化／CI 執行：**在驅動命令的同一個 shell 中匯出它；在那裡它是可靠的。
+- **互動式代理：**匯出的變數是否能傳到代理使用的 shell 工具，取決於代理。請在啟動代理*之前*匯出 `SPECIFY_INIT_DIR`，並驗證一次（例如執行 `/speckit.specify`，確認新功能落在預期專案的 `specs/` 下）。
 
-## Git in a monorepo
+## Monorepo 中的 Git
 
 > [!NOTE]
-> Spec Kit project files are scoped to the **resolved project root**, but Git
-> operations still run in the containing Git work tree. In a monorepo with a
-> single Git repository at the root and projects in subdirectories, feature
-> branch creation creates or switches branches in the shared root repository.
-> Spec directories still live under the selected member project, while the Git
-> branch namespace is shared by the whole monorepo. Manage branches and commits
-> at the repository root, or initialize Git per member project if you want
-> isolated per-project branch namespaces.
+> Spec Kit 專案檔案以**解析後的專案根目錄**為範圍，但 Git 操作仍在包含它的 Git 工作樹中執行。在根目錄只有單一 Git 儲存庫、專案位於子目錄的 monorepo 中，建立功能分支會在共用的根儲存庫中建立或切換分支。規格目錄仍位於所選的成員專案下，而 Git 分支命名空間則由整個 monorepo 共用。請在儲存庫根目錄管理分支與提交，或為每個成員專案各自初始化 Git，以取得隔離的專案專屬分支命名空間。
 
-## Constitutions
+## 憲章
 
-Each member project has its own `.specify/memory/constitution.md` and
-`/speckit.constitution` edits the local project's file. Spec Kit does not provide
-a built-in base/inheritance mechanism; if you want one constitution to reference
-shared rules elsewhere in the monorepo, you need to maintain that wiring yourself.
-Otherwise, duplicate or sync shared engineering rules per project.
+每個成員專案都有自己的 `.specify/memory/constitution.md`，而 `/speckit.constitution` 編輯的是本地專案的檔案。Spec Kit 沒有內建的基礎／繼承機制；若你想讓一份憲章參照 monorepo 其他位置的共用規則，需要自行維護那套接線。否則，就為每個專案複製或同步共用的工程規則。

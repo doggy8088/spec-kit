@@ -1,57 +1,50 @@
-# What is Spec-Driven Development?
+# 什麼是規格驅動開發？
 
-Spec-Driven Development **flips the script** on traditional software development. For decades, code has been king — specifications were just scaffolding we built and discarded once the "real work" of coding began. Spec-Driven Development changes this: **specifications become executable**, directly generating working implementations rather than just guiding them.
+規格驅動開發**顛覆**了傳統軟體開發的作法。數十年來，程式碼一直是主角——規格只是我們搭建後便丟棄的鷹架，等到真正開始寫程式時就不再需要。規格驅動開發改變了這一點：**規格變得可執行**，能直接產出可運作的實作，而不只是提供指引。
 
-## Core Philosophy
+## 核心理念
 
-Spec-Driven Development is a structured process that emphasizes:
+規格驅動開發是一套結構化的流程，強調：
 
-- **Intent-driven development** where specifications define the "*what*" before the "*how*"
-- **Rich specification creation** using guardrails and organizational principles
-- **Multi-step refinement** rather than one-shot code generation from prompts
-- **Heavy reliance** on advanced AI model capabilities for specification interpretation
+- **意圖驅動的開發**：規格先定義「做什麼」，再定義「怎麼做」
+- **豐富的規格撰寫**：運用防護原則與組織原則
+- **多步驟精煉**：而非從提示詞一次性產生程式碼
+- **高度仰賴**先進 AI 模型解讀規格的能力
 
-Spec Kit does not prescribe how teams preserve or mutate `spec.md`, `plan.md`,
-and `tasks.md` after requirements change. See
-[Spec Persistence Models](spec-persistence.md) for the concepts and
-[Evolving Specs in Existing Projects](../guides/evolving-specs.md) for the
-existing-project evolution workflows.
+Spec Kit 不規定團隊在需求變更後如何保存或修改 `spec.md`、`plan.md` 與 `tasks.md`。相關概念請參閱[規格保存模型](spec-persistence.md)，既有專案的演進工作流程請參閱[在既有專案中演進規格](../guides/evolving-specs.md)。
 
-When components expose interfaces to external consumers, use
-[Contract-Driven Development](../guides/contract-driven-development.md) to
-agree on their observable obligations before implementing each side. This
-applies regardless of architecture or repository layout.
+當元件對外部使用者公開介面時，請使用[合約驅動開發](../guides/contract-driven-development.md)，在實作各方之前先就可觀察的義務達成共識。此原則適用於任何架構或儲存庫配置。
 
-## Development Phases
+## 開發階段
 
-| Phase | Focus | Key Activities |
+| 階段 | 焦點 | 關鍵活動 |
 |-------|-------|----------------|
-| **0-to-1 Development** ("Greenfield") | Generate from scratch | <ul><li>Start with high-level requirements</li><li>Generate specifications</li><li>Plan implementation steps</li><li>Build production-ready applications</li></ul> |
-| **Creative Exploration** | Parallel implementations | <ul><li>Explore diverse solutions</li><li>Support multiple technology stacks & architectures</li><li>Experiment with UX patterns</li></ul> |
-| **Iterative Enhancement** ("Brownfield") | Brownfield modernization | <ul><li>Add features iteratively</li><li>Modernize legacy systems</li><li>Adapt processes</li></ul> |
+| **從 0 到 1 開發**（「Greenfield」） | 從零開始產生 | <ul><li>從高層次需求開始</li><li>產生規格</li><li>規劃實作步驟</li><li>打造可投入生產的應用程式</li></ul> |
+| **創意探索** | 平行實作 | <ul><li>探索多元解法</li><li>支援多種技術堆疊與架構</li><li>實驗 UX 模式</li></ul> |
+| **迭代增強**（「Brownfield」） | Brownfield 現代化 | <ul><li>迭代新增功能</li><li>將舊系統現代化</li><li>調整流程</li></ul> |
 
-## Experimental Goals
+## 實驗目標
 
-Our research and experimentation focus on:
+我們的研究與實驗聚焦於：
 
-### Technology Independence
+### 技術獨立性
 
-- Create applications using diverse technology stacks
-- Validate the hypothesis that Spec-Driven Development is a process not tied to specific technologies, programming languages, or frameworks
+- 使用多元技術堆疊建立應用程式
+- 驗證「規格驅動開發是一套流程，不綁定特定技術、程式語言或框架」的假設
 
-### Enterprise Constraints
+### 企業限制
 
-- Demonstrate mission-critical application development
-- Incorporate organizational constraints (cloud providers, tech stacks, engineering practices)
-- Support enterprise design systems and compliance requirements
+- 展示關鍵任務應用程式的開發
+- 納入組織限制（雲端供應商、技術堆疊、工程實務）
+- 支援企業設計系統與合規要求
 
-### User-Centric Development
+### 以使用者為中心的開發
 
-- Build applications for different user cohorts and preferences
-- Support various development approaches (from vibe-coding to AI-native development)
+- 為不同的使用者群體與偏好打造應用程式
+- 支援各種開發方式（從 vibe-coding 到 AI 原生開發）
 
-### Creative & Iterative Processes
+### 創意與迭代流程
 
-- Validate the concept of parallel implementation exploration
-- Provide robust iterative feature development workflows
-- Extend processes to handle upgrades and modernization tasks
+- 驗證平行實作探索的概念
+- 提供穩健的迭代功能開發工作流程
+- 擴展流程以處理升級與現代化任務

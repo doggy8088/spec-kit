@@ -1,14 +1,13 @@
-# Workflows
+# 工作流程
 
-Workflows are multi-step, resumable automation pipelines defined in YAML. They orchestrate Spec Kit commands across integrations, evaluate control flow, and pause at human review gates — enabling end-to-end Spec-Driven Development cycles without manual step-by-step invocation.
+工作流程是以 YAML 定義的多步驟、可續跑的自動化管線。它們能跨整合調度 Spec Kit 命令、評估控制流程，並在人工審查關卡暫停 — 讓端到端的規格驅動開發循環無需逐步手動呼叫即可完成。
 
-## How It Works
+## 運作方式
 
-A workflow definition declares a sequence of steps. The engine executes them in
-order, dispatching commands to AI integrations, running shell commands,
-evaluating conditions for branching, and pausing at gates for human review.
-Persisted execution transitions let workflows resume after interruption without
-re-running completed work.
+工作流程定義宣告一連串步驟。引擎會依序執行它們，將命令分派給 AI 整合、
+執行 shell 命令、評估分支條件，並在關卡暫停等待人工審查。
+持久化的執行轉換讓工作流程能在中斷後續跑，無需
+重新執行已完成的工作。
 
 ```yaml
 steps:
@@ -27,9 +26,9 @@ steps:
     command: speckit.plan
 ```
 
-For detailed architecture and internals, see [ARCHITECTURE.md](ARCHITECTURE.md).
+如需詳細的架構與內部運作，請參閱 [ARCHITECTURE.md](ARCHITECTURE.md)。
 
-## Quick Start
+## 快速入門
 
 ```bash
 # Search available workflows
@@ -57,26 +56,26 @@ specify workflow info speckit
 specify workflow remove speckit
 ```
 
-## Running Workflows
+## 執行工作流程
 
-### From an Installed Workflow
+### 從已安裝的工作流程執行
 
 ```bash
 specify workflow add speckit
 specify workflow run speckit --input spec="Build a user authentication system with OAuth support"
 ```
 
-### From a Local YAML File
+### 從本機 YAML 檔案執行
 
 ```bash
 specify workflow run ./my-workflow.yml --input spec="Build a user authentication system with OAuth support"
 ```
 
-### Multiple Inputs
+### 多個輸入
 
-When a workflow declares more than one input, pass each with a separate
-`--input` flag. For example, a custom workflow that gates steps on a
-`scope` selector:
+當工作流程宣告多個輸入時，每個輸入各用一個
+`--input` 旗標傳入。例如，一個自訂工作流程以
+`scope` 選擇器作為步驟的關卡條件：
 
 ```bash
 specify workflow run ./my-workflow.yml \
@@ -84,19 +83,19 @@ specify workflow run ./my-workflow.yml \
   --input scope="backend-only"
 ```
 
-The bundled `speckit` workflow only declares `spec` (and optional
-`integration`); it does not take a `scope` input.
+內建的 `speckit` 工作流程只宣告 `spec`（以及選擇性的
+`integration`）；它不接受 `scope` 輸入。
 
-## Step Types
+## 步驟類型
 
-Workflows support 14 built-in step types, including `workflow` for calling an
-installed workflow with private inputs and declared outputs. See
-[workflow composition and resume](../docs/reference/workflows.md#workflow-composition)
-for the scope and execution identity contracts.
+工作流程支援 14 種內建步驟類型，包括用來以私人輸入與宣告輸出呼叫
+已安裝工作流程的 `workflow`。請參閱
+[工作流程組成與續跑](../docs/reference/workflows.md#workflow-composition)，
+了解範圍與執行身分契約。
 
-### Command Steps (default)
+### 命令步驟（預設）
 
-Invoke an installed Spec Kit command by name via the integration CLI:
+透過整合 CLI 以名稱呼叫已安裝的 Spec Kit 命令：
 
 ```yaml
 - id: specify
@@ -107,10 +106,9 @@ Invoke an installed Spec Kit command by name via the integration CLI:
   model: "claude-sonnet-4-20250514"   # Optional: override model
 ```
 
-CLI integrations can expose per-step positional arguments and named runtime
-options. For example, Docker Agent accepts an agent reference plus validated
-`agent` and `safety` options. Use the command step's top-level `model` field for
-model selection:
+CLI 整合可以公開逐步的位置參數與具名執行期
+選項。例如，Docker Agent 接受一個代理參照，以及經驗證的
+`agent` 與 `safety` 選項。模型選擇請使用命令步驟的頂層 `model` 欄位：
 
 ```yaml
 - id: specify-with-docker-agent
@@ -126,23 +124,23 @@ model selection:
     args: "{{ inputs.spec }}"
 ```
 
-`integration_args` must be an ordered list of strings. Expressions are resolved
-one element at a time. `integration_options` must be a mapping with string keys;
-its values are likewise expression-resolved and validated by the selected
-integration. Non-empty runtime configuration is rejected when an integration
-does not support it. Resolved values are stored in workflow run state for audit
-and recovery. On resume, the complete dispatch configuration (`integration`,
-`model`, `integration_args`, and `integration_options`) is re-resolved from the
-current workflow inputs; without updated inputs this reproduces the prior values.
+`integration_args` 必須是字串的有序清單。運算式會逐一
+解析每個元素。`integration_options` 必須是鍵為字串的對應；
+其值同樣會經運算式解析，並由所選
+整合驗證。當整合不支援時，非空的執行期設定會被拒絕。
+解析出的值會儲存在工作流程執行狀態中，供稽核
+與復原使用。續跑時，完整的分派設定（`integration`、
+`model`、`integration_args` 與 `integration_options`）會從
+目前的工作流程輸入重新解析；若沒有更新的輸入，就會重現先前的值。
 
-When Docker Agent `integration_args` supplies an agent reference for a command
-step, it takes precedence over `SPECKIT_INTEGRATION_DOCKER_AGENT_EXTRA_ARGS`;
-the entire legacy environment value is ignored for that step. Without a per-step
-agent reference, the legacy environment behavior is unchanged.
+當 Docker Agent 的 `integration_args` 為命令
+步驟提供了代理參照時，它的優先級高於 `SPECKIT_INTEGRATION_DOCKER_AGENT_EXTRA_ARGS`；
+該步驟會忽略整個舊有的環境值。若沒有逐步的
+代理參照，舊有的環境行為維持不變。
 
-### Prompt Steps
+### 提示詞步驟
 
-Send an arbitrary inline prompt to an integration CLI (no command file needed):
+將任意的內嵌提示詞傳送給整合 CLI（不需要命令檔案）：
 
 ```yaml
 - id: security-review
@@ -151,11 +149,11 @@ Send an arbitrary inline prompt to an integration CLI (no command file needed):
   integration: claude
 ```
 
-### Capturing Command and Prompt Output
+### 擷取命令與提示詞輸出
 
-Command and prompt steps stream the CLI's output to the terminal, so their
-`output.stdout` and `output.stderr` are empty. Set `capture: true` to retain the
-output for later steps instead:
+命令與提示詞步驟會將 CLI 的輸出串流到終端機，因此它們的
+`output.stdout` 與 `output.stderr` 是空的。設定 `capture: true` 可保留
+輸出供後續步驟使用：
 
 ```yaml
 - id: verdict
@@ -166,20 +164,20 @@ output for later steps instead:
   timeout: 120              # Optional: seconds before the CLI is killed
 ```
 
-A captured step prints nothing while it runs. Output past the limit is
-discarded and reported in `output.stdout_truncated` / `output.stderr_truncated`;
-a timeout or interruption fails the step, sets `output.timed_out` or
-`output.interrupted`, and keeps the partial output. Check those fields before
-parsing the text.
+被擷取的步驟在執行時不會印出任何內容。超過上限的輸出會被
+丟棄，並回報在 `output.stdout_truncated`／`output.stderr_truncated` 中；
+逾時或中斷會使步驟失敗，設定 `output.timed_out` 或
+`output.interrupted`，並保留部分輸出。在
+解析文字之前，請先檢查這些欄位。
 
-> ⚠️ Captured output is stored unredacted in the run's `state.json`, and it is
-> untrusted agent text. See
-> [Capturing Command and Prompt Output](../docs/reference/workflows.md#capturing-command-and-prompt-output)
-> for the full contract.
+> ⚠️ 擷取的輸出會未經遮蔽地儲存在該次執行的 `state.json` 中，而且它是
+> 不受信任的代理文字。請參閱
+> [擷取命令與提示詞輸出](../docs/reference/workflows.md#capturing-command-and-prompt-output)，
+> 了解完整契約。
 
-### Shell Steps
+### Shell 步驟
 
-Run a shell command and capture output:
+執行 shell 命令並擷取輸出：
 
 ```yaml
 - id: run-tests
@@ -189,50 +187,49 @@ Run a shell command and capture output:
   timeout: 1800   # Optional: max seconds before the command is killed (default 300)
 ```
 
-For dynamic values, prefer `strict: true` and a per-step `env` mapping such as
-`env: {RESULT: "{{ steps.plan.output.stdout }}"}`. Values must resolve to strings
-and are passed as environment data, not inserted into `run`. Read them inside
-the called program; on POSIX, quoted variable expansion in a fixed script is
-also suitable. Strict mode is not a sandbox: do not reinterpret values with
-`eval` or a nested shell. Omitting `strict`, or setting it to `false`, preserves
-existing raw interpolation and its risks.
+對於動態值，優先使用 `strict: true` 並搭配逐步的 `env` 對應，例如
+`env: {RESULT: "{{ steps.plan.output.stdout }}"}`。值必須解析為字串，
+並以環境資料的形式傳遞，而不是插入 `run`。請在
+被呼叫的程式內部讀取它們；在 POSIX 上，於固定指令碼中使用引號包住的變數展開
+也同樣合適。嚴格模式不是沙箱：不要以
+`eval` 或巢狀 shell 重新解讀值。省略 `strict`，或將它設為 `false`，會保留
+既有的原始插值及其風險。
 
-Before installing or running an unfamiliar workflow, review both `run` and
-`env`, including overlay changes and referenced code. Even with `strict: true`,
-settings such as `PATH` and `PYTHONPATH` can select different executables or modules.
-String validation and catalog or bundle installation do not establish trust.
+在安裝或執行不熟悉的工作流程之前，請審查 `run` 與
+`env`，包括覆蓋變更與被參照的程式碼。即使使用 `strict: true`，
+`PATH` 與 `PYTHONPATH` 等設定仍可能選到不同的可執行檔或模組。
+字串驗證與目錄或套件組安裝都不能建立信任。
 
-> ⚠️ **Constrain interpolated values in `run` fields.** A `run` field is executed
-> by the system shell, and `{{ ... }}` expressions are substituted as raw text
-> with no automatic quoting or escaping. An `inputs.*` value or prior-step output
-> (including AI-generated `prompt` output) is parsed as shell syntax and can
-> change the command that runs. The only reliable control is to restrict such a
-> value at the source with an `enum`/allowlist, or to keep values you cannot
-> constrain out of `run` entirely. Quoting a substitution helps a trusted value
-> survive word-splitting but is **not** a security boundary — there is no
-> shell-escaping filter, and a value containing the matching quote can still
-> break out. See
-> [Interpolation and shell safety](../docs/reference/workflows.md#interpolation-and-shell-safety).
+> ⚠️ **限制 `run` 欄位中的插值。**`run` 欄位是由
+> 系統 shell 執行的，而 `{{ ... }}` 運算式會以原始文字被替換，
+> 沒有自動加上引號或跳脫。`inputs.*` 的值或前一個步驟的輸出
+> （包括 AI 產生的 `prompt` 輸出）會被解析為 shell 語法，並可能
+> 改變實際執行的命令。唯一可靠的控制方式是在來源處以 `enum`／允許清單限制這類
+> 值，或將你無法限制的值完全排除在 `run` 之外。為替換加上引號有助於受信任的值
+> 在分詞後存活，但它**不是**安全邊界 — 沒有
+> shell 跳脫過濾器，而含有相符引號的值仍可能
+> 突破出來。請參閱
+> [插值與 shell 安全](../docs/reference/workflows.md#interpolation-and-shell-safety)。
 
-`timeout` is the maximum time in seconds the command may run before it is
-killed and the step fails; it must be a positive number and defaults to
-`300` (five minutes) when omitted. Raise it for long-running gates such as
-full builds, linter aggregators, or integration-test targets.
+`timeout` 是命令在被中止且步驟失敗之前，最多可執行的秒數；它必須是正數，未
+指定時預設為
+`300`（五分鐘）。對於長時間的關卡，例如
+完整建置、linter 聚合器或整合測試目標，請提高它。
 
-### GitHub Steps
+### GitHub 步驟
 
-The built-in `github` step adds an explicitly configured issue or pull-request
-label when a workflow uses `type: github`. It does not install or invoke the
-opt-in GitHub agent-command extension. See the
-[GitHub step reference](../docs/reference/workflows.md#github-step) for
-configuration, credentials, and retry behavior.
+內建的 `github` 步驟會在工作流程使用 `type: github` 時，為明確設定的 issue 或 pull request
+加上標籤。它不會安裝或呼叫
+選擇加入的 GitHub 代理命令擴充功能。請參閱
+[GitHub 步驟參考](../docs/reference/workflows.md#github-step)，了解
+設定、憑證與重試行為。
 
-### Init Steps
+### Init 步驟
 
-Bootstrap a project the same way `specify init` does — scaffolding
-templates, scripts, shared infrastructure, and the selected coding agent
-integration. Runs non-interactively (defaults to `--ignore-agent-tools`)
-and resolves the integration from the step config or the workflow default:
+以與 `specify init` 相同的方式引導專案 — 建立骨架
+範本、指令碼、共用基礎設施，以及所選的程式代理
+整合。以非互動方式執行（預設為 `--ignore-agent-tools`），
+並從步驟設定或工作流程預設值解析整合：
 
 ```yaml
 - id: bootstrap
@@ -245,11 +242,11 @@ and resolves the integration from the step config or the workflow default:
   preset: healthcare-compliance   # Optional preset ID
 ```
 
-### Workflow Slots
+### 工作流程插槽
 
-Declare a named workflow slot that downstream projects can fill with a
-workflow overlay. The slot is skipped when unfilled; its `id` is the overlay
-anchor and `name` is a required human-readable label:
+宣告一個具名的工作流程插槽，讓下游專案可以用
+工作流程覆蓋層來填入。未填入時插槽會被略過；它的 `id` 是覆蓋層
+錨點，`name` 是必填的易讀標籤：
 
 ```yaml
 - id: post-implement
@@ -257,15 +254,15 @@ anchor and `name` is a required human-readable label:
   name: "Post-implementation checks"
 ```
 
-Use an overlay `replace` edit anchored on `post-implement` to fill the slot.
-Keep the same `id` when downstream expressions or fan-in steps reference it,
-and preserve any output keys they consume. Slot steps are invalid inside
-`fan-out.step` templates because those runtime-multiplied templates cannot be
-targeted by overlays.
+使用以 `post-implement` 為錨點的覆蓋層 `replace` 編輯來填入插槽。
+當下游運算式或匯入步驟參照它時，請保持相同的 `id`，
+並保留它們所取用的任何輸出鍵。插槽步驟在
+`fan-out.step` 範本內無效，因為那些在執行期倍增的範本無法被
+覆蓋層鎖定。
 
-### Gate Steps
+### 關卡步驟
 
-Pause for human review. The workflow resumes when `specify workflow resume` is called:
+暫停等待人工審查。當呼叫 `specify workflow resume` 時，工作流程會續跑：
 
 ```yaml
 - id: review-spec
@@ -275,9 +272,9 @@ Pause for human review. The workflow resumes when `specify workflow resume` is c
   on_reject: abort
 ```
 
-### If/Then/Else Steps
+### If／Then／Else 步驟
 
-Conditional branching based on an expression:
+依運算式進行條件分支：
 
 ```yaml
 - id: check-scope
@@ -293,9 +290,9 @@ Conditional branching based on an expression:
         quick: true
 ```
 
-### Switch Steps
+### Switch 步驟
 
-Multi-branch dispatch on an expression value:
+依運算式的值進行多分支分派：
 
 ```yaml
 - id: route
@@ -315,9 +312,9 @@ Multi-branch dispatch on an expression value:
       message: "Unexpected choice"
 ```
 
-### While Loop Steps
+### While 迴圈步驟
 
-Repeat steps while a condition is truthy:
+在條件為真時重複步驟：
 
 ```yaml
 - id: retry
@@ -329,9 +326,9 @@ Repeat steps while a condition is truthy:
       command: speckit.implement
 ```
 
-### Do-While Loop Steps
+### Do-While 迴圈步驟
 
-Execute steps at least once, then repeat while condition holds:
+至少執行步驟一次，然後在條件成立時重複：
 
 ```yaml
 - id: refine
@@ -343,9 +340,9 @@ Execute steps at least once, then repeat while condition holds:
       command: speckit.specify
 ```
 
-### Fan-Out Steps
+### 扇出步驟
 
-Dispatch a step template for each item in a collection (sequential):
+為集合中的每個項目分派一個步驟範本（循序執行）：
 
 ```yaml
 - id: parallel-impl
@@ -357,9 +354,9 @@ Dispatch a step template for each item in a collection (sequential):
     command: speckit.implement
 ```
 
-### Fan-In Steps
+### 扇入步驟
 
-Aggregate results from fan-out steps:
+彙總扇出步驟的結果：
 
 ```yaml
 - id: collect
@@ -368,21 +365,21 @@ Aggregate results from fan-out steps:
   output: {}
 ```
 
-`wait_for` references declared step IDs. For a fan-out, use the fan-out step's
-own `id` (`parallel-impl` above); its ordered item results are available as
-`steps.<fan-out-id>.output.results`. Generated item aliases such as
-`fan:template:0` are reporting-only and are not valid `wait_for` targets.
+`wait_for` 參照已宣告的步驟 ID。對於扇出，請使用扇出步驟
+自身的 `id`（上例的 `parallel-impl`）；其依序排列的項目結果可透過
+`steps.<fan-out-id>.output.results` 取得。產生的項目別名，例如
+`fan:template:0`，僅供回報使用，不是有效的 `wait_for` 目標。
 
-## Error Handling
+## 錯誤處理
 
-By default, any step that returns `StepResult(status=StepStatus.FAILED, ...)`
-at runtime halts the entire run — most commonly a `shell` or
-`command` step exiting non-zero. Set `continue_on_error: true` on
-a step to record its result and continue to the next sibling step
-instead. When the failure was a non-zero exit, the exit code
-remains available on `steps.<id>.output.exit_code` so a downstream
-`if` or `switch` can branch on it (or a `gate` can surface it to
-the operator via `{{ }}` interpolation in `message`):
+預設情況下，任何在執行期回傳 `StepResult(status=StepStatus.FAILED, ...)`
+的步驟都會中止整個執行 — 最常見的是 `shell` 或
+`command` 步驟以非零狀態結束。在
+步驟上設定 `continue_on_error: true`，可記錄其結果並繼續到下一個同層步驟
+，而不是中止。當失敗是來自非零結束時，結束代碼
+仍可透過 `steps.<id>.output.exit_code` 取得，讓下游的
+`if` 或 `switch` 能依此分支（或讓 `gate` 透過 `message` 中的 `{{ }}` 插值將它呈現給
+操作者）：
 
 ```yaml
 - id: heavy-thing
@@ -410,49 +407,47 @@ the operator via `{{ }}` interpolation in `message`):
       command: speckit.next-thing
 ```
 
-A few things worth knowing about that example:
+關於這個例子，有幾點值得了解：
 
-- Both gate options (`approve`, `reject`) return `StepStatus.COMPLETED`;
-  `on_reject: skip` controls only whether the engine aborts on reject
-  (it doesn't, with `skip`) — it does **not** auto-skip subsequent
-  sibling steps in the `then:` list. Downstream branching is the
-  workflow author's responsibility: read
-  `{{ steps.<gate-id>.output.choice }}` in a follow-up `if`, `switch`,
-  or expression, as the `recover` step above does.
-- `on_reject` has three values: `abort` (default — reject → `StepStatus.FAILED`
-  with `output.aborted = True`, halts the run), `skip` (reject →
-  `StepStatus.COMPLETED`, author handles branching as shown), and `retry`
-  (reject → `StepStatus.PAUSED` so the next `specify workflow resume` re-runs
-  the gate).
-- Gates do not automatically re-run the failed step. To express a
-  retry path, either define custom gate options and branch on the
-  choice downstream, or wrap the failing step in your own loop.
+- 兩個關卡選項（`approve`、`reject`）都回傳 `StepStatus.COMPLETED`；
+  `on_reject: skip` 只控制引擎是否在拒絕時中止
+  （使用 `skip` 時不會中止）— 它**不會**自動略過 `then:` 清單中後續的
+  同層步驟。下游分支是
+  工作流程作者的責任：在後續的 `if`、`switch`
+  或運算式中讀取 `{{ steps.<gate-id>.output.choice }}`，如上例的 `recover` 步驟所示。
+- `on_reject` 有三個值：`abort`（預設 — 拒絕 → `StepStatus.FAILED`
+  並帶有 `output.aborted = True`，中止執行）、`skip`（拒絕 →
+  `StepStatus.COMPLETED`，由作者如上所示處理分支），以及 `retry`
+  （拒絕 → `StepStatus.PAUSED`，讓下一次 `specify workflow resume` 重新執行
+  該關卡）。
+- 關卡不會自動重新執行失敗的步驟。要表達
+  重試路徑，可以定義自訂關卡選項並在下游依
+  選擇分支，或將失敗的步驟包在你自己的迴圈中。
 
-**Notes:**
+**注意事項：**
 
-- The field must be a literal boolean (`true` / `false`); coerced
-  strings like `"true"` are rejected at validation time.
-- **Scope: returned failures only.** The flag applies to step results
-  with `status=StepStatus.FAILED`. Unhandled exceptions raised out of a step's
-  `execute()` method are caught one level up by `WorkflowEngine.execute()`,
-  logged as `workflow_failed`, and abort the run regardless of
-  `continue_on_error`. If a step author wants the flag to cover an
-  exceptional path, the step must catch the exception internally and
-  return `StepResult(status=StepStatus.FAILED, ...)` with the failure encoded in
-  `output` (e.g. `exit_code`, `stderr`, or a custom field).
-- Gate aborts (`on_reject: abort` chosen by the operator) always halt
-  the run — `continue_on_error` does not override them. The flag is
-  for transient/expected step failures, not for overriding deliberate
-  operator decisions.
-- Structural validation runs up-front: `specify workflow run` rejects
-  invalid workflow definitions before the run is created, so
-  validation failures never reach this code path.
-- When the flag is omitted, behaviour is byte-equivalent to before
-  this feature.
+- 這個欄位必須是字面布林值（`true`／`false`）；強制轉換的
+  字串如 `"true"` 會在驗證時被拒絕。
+- **範圍：僅限回傳的失敗。**這個旗標適用於
+  `status=StepStatus.FAILED` 的步驟結果。從步驟的
+  `execute()` 方法未處理而拋出的例外，會由上一層的 `WorkflowEngine.execute()` 捕捉，
+  記錄為 `workflow_failed`，並且不論
+  `continue_on_error` 為何都會中止執行。若步驟作者希望這個旗標涵蓋
+  例外路徑，該步驟必須在內部捕捉例外，並
+  回傳 `StepResult(status=StepStatus.FAILED, ...)`，將失敗編碼在
+  `output` 中（例如 `exit_code`、`stderr` 或自訂欄位）。
+- 關卡中止（操作者選擇了 `on_reject: abort`）永遠會中止
+  執行 — `continue_on_error` 不會覆寫它們。這個旗標是
+  用於暫時性／預期中的步驟失敗，而不是用來覆寫操作者深思熟慮的
+  決定。
+- 結構驗證會預先執行：`specify workflow run` 會在建立執行之前就拒絕
+  無效的工作流程定義，因此
+  驗證失敗永遠不會走到這條程式路徑。
+- 當省略這個旗標時，行為與這個功能出現之前逐位元組相同。
 
-## Expressions
+## 運算式
 
-Workflow definitions use `{{ expression }}` syntax for dynamic values:
+工作流程定義使用 `{{ expression }}` 語法來表示動態值：
 
 ```yaml
 # Access inputs
@@ -469,33 +464,31 @@ message: "{{ status | default('pending') }}"
 ids: "{{ rows | split(',') | length }}"
 ```
 
-Supported filters: `default`, `join`, `contains`, `map`, `from_json`, `to_json`, `upper`, `lower`, `split`, `length`.
+支援的過濾器：`default`、`join`、`contains`、`map`、`from_json`、`to_json`、`upper`、`lower`、`split`、`length`。
 
-The new filters validate their input types and raise a `ValueError` naming
-the problem instead of coercing — so `upper`/`lower` take strings only, `split`
-takes a string value and a non-empty string separator, `length` accepts
-lists and strings but rejects mappings, and `to_json` rejects what it cannot
-serialize: non-finite floats (`NaN`, `Infinity`, `-Infinity`), which would
-otherwise serialize to tokens that are not valid JSON, and mapping keys that
-are not strings, which JSON objects cannot carry. A filter used with the wrong
-number of
-arguments
-(`| upper('x')`, `| split(',', 1)`, bare `| split`) is reported as a known
-filter misused, which is
-distinct from an entirely unknown filter name. The older filters are more
-permissive and unchanged: `join` stringifies unsupported values, and
-`map`/`contains` return fallbacks rather than raising. See
-[ARCHITECTURE.md](ARCHITECTURE.md#expression-evaluation) for the full table.
+新的過濾器會驗證其輸入類型，並拋出指明
+問題的 `ValueError`，而不是強制轉換 — 因此 `upper`／`lower` 只接受字串，`split`
+接受一個字串值與一個非空的字串分隔符，`length` 接受
+清單與字串但拒絕對應，而 `to_json` 會拒絕它無法
+序列化的內容：非有限浮點數（`NaN`、`Infinity`、`-Infinity`），這些值
+否則會被序列化為不是有效 JSON 的符記；以及不是字串的對應鍵，
+因為 JSON 物件無法承載這類鍵。以錯誤數量
+的參數使用過濾器
+（`| upper('x')`、`| split(',', 1)`、裸 `| split`）會被回報為已知
+過濾器被誤用，這與
+完全未知的過濾器名稱不同。較舊的過濾器較為
+寬容且維持不變：`join` 會將不支援的值字串化，而
+`map`／`contains` 會回傳後備值而不是拋出錯誤。請參閱
+[ARCHITECTURE.md](ARCHITECTURE.md#expression-evaluation)，了解完整表格。
 
-### Runtime Context
+### 執行期脈絡
 
-`{{ context.* }}` exposes engine-managed runtime metadata for the
-current run:
+`{{ context.* }}` 公開了引擎為目前執行所管理的執行期中繼資料：
 
-| Variable | Description |
+| 變數 | 說明 |
 |----------|-------------|
-| `context.run_id` | The current workflow run id (the same value Spec Kit prints as `Run ID:` at the end of `workflow run`). Auto-generated runs are 8-character hex from `uuid4`; operator-supplied ids may be any alphanumeric string with hyphens or underscores. Empty string outside a run context. |
-| `context.workflow_dir` | The resolved absolute path to the directory containing the workflow source file. For file-loaded workflows this is the parent directory of the YAML file; for installed-by-ID workflows it is the absolute path to the installation directory (e.g. `<project>/.specify/workflows/<id>/`); for string-loaded workflows it is an empty string. On resume the original source directory is preserved from the first execution. |
+| `context.run_id` | 目前的工作流程執行 ID（與 Spec Kit 在 `workflow run` 結束時印出的 `Run ID:` 相同的值）。自動產生的執行是來自 `uuid4` 的 8 字元十六進位值；操作者提供的 ID 可以是任何由英數字、連字號或底線組成的字串。在執行脈絡之外為空字串。 |
+| `context.workflow_dir` | 包含工作流程來源檔案之目錄的已解析絕對路徑。對於從檔案載入的工作流程，這是 YAML 檔案的父目錄；對於依 ID 安裝的工作流程，這是安裝目錄的絕對路徑（例如 `<project>/.specify/workflows/<id>/`）；對於從字串載入的工作流程，這是空字串。續跑時，原始來源目錄會從第一次執行保留下來。 |
 
 ```yaml
 # Stamp telemetry events with the run id for cross-system join.
@@ -520,9 +513,9 @@ current run:
   run: 'cp "{{ context.workflow_dir }}/defaults.yml" ./config.yml'
 ```
 
-## Input Types
+## 輸入類型
 
-Workflow inputs are type-checked and coerced from CLI string values:
+工作流程輸入會進行類型檢查，並從 CLI 字串值強制轉換：
 
 ```yaml
 inputs:
@@ -542,15 +535,15 @@ inputs:
     enum: ["full", "backend-only", "frontend-only"]
 ```
 
-| Type | Accepts | Example |
+| 類型 | 接受 | 範例 |
 |------|---------|---------|
-| `string` | Any string | `"user-auth"` |
-| `number` | Numeric strings → int/float | `"42"` → `42` |
-| `boolean` | `true`/`1`/`yes` → `True`, `false`/`0`/`no` → `False` | `"true"` → `True` |
+| `string` | 任何字串 | `"user-auth"` |
+| `number` | 數字字串 → int/float | `"42"` → `42` |
+| `boolean` | `true`/`1`/`yes` → `True`，`false`/`0`/`no` → `False` | `"true"` → `True` |
 
-## State and Resume
+## 狀態與續跑
 
-Every workflow run persists state to `.specify/workflows/runs/<run_id>/`:
+每次工作流程執行都會將狀態持久化到 `.specify/workflows/runs/<run_id>/`：
 
 ```bash
 # List all runs with status
@@ -566,14 +559,14 @@ specify workflow resume <run_id>
 specify workflow resume <run_id>
 ```
 
-Run states: `created` → `running` → `completed` | `paused` | `failed` | `aborted`
+執行狀態：`created` → `running` → `completed` | `paused` | `failed` | `aborted`
 
-## Catalog Management
+## 目錄管理
 
-Workflows are discovered through catalogs. By default, Spec Kit uses the official and community catalogs:
+工作流程是透過目錄被發現的。預設情況下，Spec Kit 使用官方與社群目錄：
 
 > [!NOTE]
-> Community workflows are independently created and maintained by their respective authors. GitHub and the Spec Kit maintainers may review pull requests that add entries to the community catalog for formatting and structure, but they do **not review, audit, endorse, or support the workflow definitions themselves**. Review workflow source before installation and use at your own discretion.
+> 社群工作流程由其各自的作者獨立建立與維護。GitHub 與 Spec Kit 維護者可能會審查將項目加入社群目錄的 pull request，檢查格式與結構，但他們**不會審查、稽核、背書或支援工作流程定義本身**。安裝前請先審查工作流程來源，並自行斟酌使用。
 
 ```bash
 # List active catalogs
@@ -586,30 +579,30 @@ specify workflow catalog add https://example.com/catalog.json --name my-org
 specify workflow catalog remove <index>
 ```
 
-Environment-provided sources cannot be removed this way; unset `SPECKIT_WORKFLOW_CATALOG_URL` to manage project sources.
+無法以這種方式移除由環境提供的來源；請取消設定 `SPECKIT_WORKFLOW_CATALOG_URL` 來管理專案來源。
 
-## Creating a Workflow
+## 建立工作流程
 
-1. Create a `workflow.yml` following the schema above
-2. Test locally with `specify workflow run ./workflow.yml --input key=value`
-3. Verify with `specify workflow info ./workflow.yml`
-4. See [PUBLISHING.md](PUBLISHING.md) to submit to the catalog
+1. 依上方的結構描述建立一個 `workflow.yml`
+2. 以 `specify workflow run ./workflow.yml --input key=value` 在本機測試
+3. 以 `specify workflow info ./workflow.yml` 驗證
+4. 參閱 [PUBLISHING.md](PUBLISHING.md)，將它提交至目錄
 
-## Environment Variables
+## 環境變數
 
-| Variable | Description |
+| 變數 | 說明 |
 |----------|-------------|
-| `SPECKIT_WORKFLOW_CATALOG_URL` | Override the catalog URL (replaces all defaults) |
-| `SPECKIT_WORKFLOW_DIR` | Set automatically for shell steps; contains the resolved absolute path to the workflow source directory (same value as `{{ context.workflow_dir }}`). Not set when the workflow has no source path (string-loaded workflows). |
+| `SPECKIT_WORKFLOW_CATALOG_URL` | 覆寫目錄 URL（取代所有預設值） |
+| `SPECKIT_WORKFLOW_DIR` | 為 shell 步驟自動設定；包含工作流程來源目錄的已解析絕對路徑（與 `{{ context.workflow_dir }}` 相同的值）。當工作流程沒有來源路徑時（從字串載入的工作流程）不會設定。 |
 
-## Configuration Files
+## 設定檔
 
-| File | Scope | Description |
+| 檔案 | 範圍 | 說明 |
 |------|-------|-------------|
-| `.specify/workflow-catalogs.yml` | Project | Custom catalog stack for this project |
-| `~/.specify/workflow-catalogs.yml` | User | Custom catalog stack for all projects |
+| `.specify/workflow-catalogs.yml` | 專案 | 這個專案的自訂目錄堆疊 |
+| `~/.specify/workflow-catalogs.yml` | 使用者 | 所有專案的自訂目錄堆疊 |
 
-## Repository Layout
+## 儲存庫佈局
 
 ```text
 workflows/

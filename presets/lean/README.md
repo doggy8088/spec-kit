@@ -1,45 +1,45 @@
-# Lean Workflow
+# 精簡工作流程
 
-A minimal preset that strips the Spec Kit workflow down to its essentials — just the prompt, just the artifact.
+一個最小化的預設集，將 Spec Kit 工作流程精簡到只剩核心要素 — 只有提示詞，只有產出物。
 
-## When to Use
+## 適用時機
 
-Use Lean when you want the structured specify → plan → tasks → implement pipeline without the ceremony of the full templates. Each command produces a single focused Markdown file with no boilerplate sections to fill in.
+當你想要結構化的 specify → plan → tasks → implement 流程、但不需要完整範本的繁文縟節時，就使用 Lean。每個命令都會產生一份聚焦的 Markdown 檔案，不必填寫樣板區段。
 
-## Commands Included
+## 包含的命令
 
-| Command | Output | Description |
+| 命令 | 產出 | 說明 |
 |---------|--------|-------------|
-| `speckit.specify` | `spec.md` | Create a specification from a feature description |
-| `speckit.plan` | `plan.md` | Create an implementation plan from the spec |
-| `speckit.tasks` | `tasks.md` | Create dependency-ordered tasks from spec and plan |
-| `speckit.implement` | *(code)* | Execute all tasks in order, marking progress |
-| `speckit.constitution` | `constitution.md` | Create or update the project constitution |
+| `speckit.specify` | `spec.md` | 依功能描述建立規格 |
+| `speckit.plan` | `plan.md` | 依規格建立實作計畫 |
+| `speckit.tasks` | `tasks.md` | 依規格與計畫建立依相依性排序的任務 |
+| `speckit.implement` | *（程式碼）* | 依序執行所有任務並標記進度 |
+| `speckit.constitution` | `constitution.md` | 建立或更新專案憲章 |
 
-## What It Replaces
+## 它取代了什麼
 
-Lean overrides the five core workflow commands with self-contained prompts that produce each artifact directly — no separate template files involved. The result is a shorter, more direct workflow.
+Lean 以自包含的提示詞覆寫五個核心工作流程命令，直接產生各項產出物 — 不涉及額外的範本檔案。成果是一個更短、更直接的工作流程。
 
-## Installation
+## 安裝
 
 ```bash
-# Lean is a bundled preset — no download needed
+# Lean 是內建預設集 — 無需下載
 specify preset add lean
 ```
 
-## Development
+## 開發
 
 ```bash
-# Test from local directory
+# 從本機目錄測試
 specify preset add --dev ./presets/lean
 
-# Verify commands resolve
+# 驗證命令解析結果
 specify preset resolve speckit.specify
 
-# Remove when done
+# 完成後移除
 specify preset remove lean
 ```
 
-## License
+## 授權
 
 MIT

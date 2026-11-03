@@ -1,14 +1,14 @@
 ---
 name: code-review
-description: Reviews Spec Kit code changes for consistency with applicable design documents, positive and negative test coverage, regression evidence for bug fixes, and consistent repository terminology. Use when reviewing a diff or pull request. Do not use for implementing changes or posting GitHub review actions.
-argument-hint: 'Diff or pull request to review'
+description: 審查 Spec Kit 程式碼變更，確認其與適用的設計文件一致、具備正向與負向測試涵蓋、錯誤修復具備迴歸證據，以及儲存庫用語一致。審查差異或拉取請求時使用。不要用於實作變更或發布 GitHub 審查動作。
+argument-hint: '要審查的差異或拉取請求'
 ---
 
-# Code Review
+# 程式碼審查
 
-1. Ensure each code change has test cases that verify what the code should do and what it should prevent.
-2. Ensure bug-fix pull requests include a regression test that demonstrates the bug was reproducible before the change and is fixed afterward; if the reviewer cannot run the comparison, use available evidence and state that limitation.
-3. Ensure wording changes use repository-consistent terms; exclude community-authored catalog content and its generated documentation from this check.
-4. Identify the affected domains and read the applicable documents in `design/` before evaluating architectural consistency. For CLI command changes, use `design/cli.md`; for agent integrations, use `design/integration.md`; for workflow step types, use `design/workflow-step.md`. Read other design documents when relevant, not every document for every PR.
-5. Check the changes against the applicable design requirements, including implementation boundaries, ownership, lifecycle, and delivery requirements. Reference the documents rather than duplicating their rules in this skill. Cite the document and section for each reported mismatch.
-6. Distinguish an unexplained design violation from an intentional design change. Evaluate the rationale and evidence for an intentional change; updating the design document alone does not establish that the implementation is justified.
+1. 確保每項程式碼變更都有驗證程式碼應有行為以及應防止之行為的測試案例。
+2. 確保錯誤修復的拉取請求包含迴歸測試，能證明錯誤在變更前可重現、變更後已修復；若審查者無法執行比對，請使用可用證據並說明此限制。
+3. 確保用詞變更使用與儲存庫一致的術語；社群撰寫的目錄內容及其產生的文件不在此檢查範圍內。
+4. 識別受影響的領域，並在評估架構一致性之前閱讀 `design/` 中適用的文件。CLI 命令變更使用 `design/cli.md`；代理整合使用 `design/integration.md`；工作流程步驟類型使用 `design/workflow-step.md`。視相關性閱讀其他設計文件，不必為每個 PR 閱讀全部文件。
+5. 對照適用的設計要求檢查變更，包括實作邊界、所有權、生命週期與交付要求。引用文件而不要在本技能中重複其規則。每項回報的不一致之處都要引用文件與章節。
+6. 區分未說明的設計違規與有意的設計變更。評估有意變更的理由與證據；僅更新設計文件本身不足以證明實作的正當性。

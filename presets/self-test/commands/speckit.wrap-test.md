@@ -1,14 +1,14 @@
 ---
-description: "Self-test wrap command — pre/post around core"
+description: "自測 wrap 命令 — 在核心前後執行"
 strategy: wrap
 ---
 
-## Preset Pre-Logic
+## 預設集前置邏輯
 
 preset:self-test wrap-pre
 
 {CORE_TEMPLATE}
 
-## Preset Post-Logic
+## 預設集後置邏輯
 
 preset:self-test wrap-post

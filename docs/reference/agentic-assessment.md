@@ -1,34 +1,28 @@
-# Agentic Idea Assessment
+# Agentic 想法評估
 
-The bundled, opt-in **assess** extension evaluates an idea through
-**intake → research → define → shape → decide**. It is a standalone process:
-it can run in an initialized project with no source code, produces only
-assessment artifacts, and does not automatically start SDD. For a guided example,
-see the [Idea Assessment Quickstart](../guides/assessment.md).
+隨附、需主動啟用的 **assess** 擴充功能，透過**受理 → 研究 → 定義 → 塑形 → 決策**來評估想法。這是獨立流程：它可以在已初始化、沒有原始碼的專案中執行，只產生評估成品，不會自動啟動 SDD。如需引導式範例，請參見[想法評估快速入門](../guides/assessment.md)。
 
-Install it from an initialized project's root:
+從已初始化專案的根目錄安裝：
 
 ```bash
 specify extension add assess
 ```
 
-Commands below use `/speckit.assess.*` notation. GitHub Copilot's default skills
-mode uses `/speckit-assess-*`; other integrations may use a different prefix.
-See [Command invocation](../integrations/cli.md#command-invocation).
+以下命令使用 `/speckit.assess.*` 記法。GitHub Copilot 的預設 skills 模式使用 `/speckit-assess-*`；其他整合可能使用不同的前綴。請參見[命令呼叫方式](../integrations/cli.md#command-invocation)。
 
-## Commands and artifacts
+## 命令與成品
 
-Every artifact is written under `.specify/assessments/<slug>/`.
+每個成品都寫入 `.specify/assessments/<slug>/` 之下。
 
-| Command | Purpose | Output |
+| 命令 | 用途 | 輸出 |
 | --- | --- | --- |
-| `/speckit.assess.intake` | Capture an idea from text, a URL, a ticket, or a codebase pointer | `intake.md` |
-| `/speckit.assess.research` | Gather evidence for and against the idea, with sources and confidence | `research.md` |
-| `/speckit.assess.define` | Define users, the problem, goals, non-goals, metrics, and cost of inaction | `problem.md` |
-| `/speckit.assess.shape` | Compare concept-level options, appetite, and trade-offs | `concept.md` |
-| `/speckit.assess.decide` | Record a scorecard, verdict, rationale, and optional SDD handoff | `decision.md` |
+| `/speckit.assess.intake` | 從文字、URL、工單或程式碼庫指標擷取想法 | `intake.md` |
+| `/speckit.assess.research` | 蒐集支持與反對想法的證據，附來源與信心程度 | `research.md` |
+| `/speckit.assess.define` | 定義使用者、問題、目標、非目標、指標與不行動的成本 | `problem.md` |
+| `/speckit.assess.shape` | 比較概念層級的選項、意願與取捨 | `concept.md` |
+| `/speckit.assess.decide` | 記錄計分卡、判定、理由與選用的 SDD 交接 | `decision.md` |
 
-Pass the initial idea and a slug to intake, then reuse the slug:
+將初始想法與 slug 傳給 intake，然後重用該 slug：
 
 ```text
 /speckit.assess.intake "Let users work offline and sync when they reconnect." slug=offline-mode
@@ -38,65 +32,40 @@ Pass the initial idea and a slug to intake, then reuse the slug:
 /speckit.assess.decide slug=offline-mode
 ```
 
-## Prerequisites and scope
+## 前置條件與範圍
 
-The five-stage sequence is the normal path, but not every stage is mandatory:
+五個階段的序列是正常路徑，但並非每個階段都是強制性的：
 
-- `define` can work directly from user input; intake and research are optional
-  for producing a problem definition.
-- `shape` requires `problem.md` and stays at concept level. Architecture,
-  data models, APIs, tasks, and implementation belong to delivery, not assessment.
-- `decide` requires `problem.md` and reads every available assessment artifact.
-  A `go` verdict additionally requires a shaped concept and adequate evidence;
-  skipping research does not waive the evidence requirement.
+- `define` 可以直接從使用者輸入著手；intake 與 research 對於產生問題定義而言是選用的。
+- `shape` 需要 `problem.md`，且停留在概念層級。架構、資料模型、API、任務與實作屬於交付範疇，不屬於評估。
+- `decide` 需要 `problem.md`，並讀取所有可用的評估成品。`go` 判定還需要已塑形的概念與充分的證據；跳過 research 不會免除證據要求。
 
-## Slugs and existing artifacts
+## Slug 與既有成品
 
-The slug identifies one idea's directory. User-provided slugs are normalized to
-lowercase kebab-case and retained without appended timestamps or numbers.
-If no slug is supplied, intake asks for one interactively; automated runs
-generate a unique slug. Later stages can reuse the slug from context when its
-directory exists.
+Slug 標識單一想法的目錄。使用者提供的 slug 會正規化為小寫 kebab-case，並保留，不附加時間戳記或編號。若未提供 slug，intake 會以互動方式要求提供；自動化執行則會產生唯一 slug。後續階段在目錄存在時，可以從上下文重用 slug。
 
-Existing artifacts are not overwritten without confirmation. In automated mode,
-commands refuse to overwrite them. For routine clarification, refine the existing
-artifact rather than rerunning the command.
+既有成品不會在未經確認的情況下被覆寫。在自動化模式下，命令會拒絕覆寫它們。對於例行釐清，請精修既有成品，而非重新執行命令。
 
-## Decisions and evidence
+## 決策與證據
 
-The decision scorecard rates criteria as `strong`, `adequate`, `weak`, or
-`unknown`, with justifications drawn from the artifacts.
+決策計分卡將各項標準評為 `strong`、`adequate`、`weak` 或 `unknown`，並附上取自成品的理由。
 
-| Verdict | Requirement or meaning |
+| 判定 | 要求或意義 |
 | --- | --- |
-| `go` | Problem validity and evidence strength are at least `adequate`, and a concept option is recommended |
-| `needs-clarification` | Named unknowns block the decision; weak or unknown evidence, or a missing concept, cannot justify `go` |
-| `kill` | The idea is not worth pursuing now; the decisive reason is recorded explicitly |
+| `go` | 問題有效性與證據強度至少為 `adequate`，且有推薦的概念選項 |
+| `needs-clarification` | 已命名的未知事項阻礙決策；薄弱或未知的證據，或缺少概念，都無法證明 `go` 是合理的 |
+| `kill` | 此想法目前不值得追求；決定性的理由會明確記錄 |
 
-Research must include evidence against the idea. Unsourced claims remain marked
-as `ASSUMPTION`; do not invent citations or present uncertain evidence as fact.
-A documented decision to stop is a useful result.
+研究必須包含反對想法的證據。無來源的主張會保持標記為 `ASSUMPTION`；不要捏造引用，也不要將不確定的證據呈現為事實。有記錄的停止決策是有用的結果。
 
-## Refining an assessment
+## 精修評估
 
-Run each stage once in the usual flow. To resolve clarification markers or a
-`needs-clarification` verdict, edit the affected Markdown directly or ask the
-agent in free-form chat to incorporate the missing facts. Preserve sources and
-confidence tags, then review dependent artifacts and revise `decision.md` as
-needed. This is artifact refinement, not repeated command execution.
+在通常的流程中，每個階段執行一次。若要解決釐清標記或 `needs-clarification` 判定，請直接編輯受影響的 Markdown，或在自由形式的對話中請代理納入缺少的事實。保留來源與信心標籤，然後檢視相依的成品，並視需要修訂 `decision.md`。這是成品精修，不是重複執行命令。
 
-Rerunning an earlier command is reserved for exceptions such as a wrong slug or
-discarded draft. See the
-[guided clarification example](../guides/assessment.md#resolve-unknowns-by-refining-the-artifacts).
+重新執行較早的命令只保留給例外情況，例如 slug 錯誤或草稿被捨棄。請參見[引導式釐清範例](../guides/assessment.md#resolve-unknowns-by-refining-the-artifacts)。
 
-## Handoff and guardrails
+## 交接與防護措施
 
-A `go` decision includes a handoff summary you can choose to pass to
-`/speckit.specify`. No lifecycle hooks install assessment as a prerequisite of
-SDD, and non-software ideas need not enter SDD at all.
+`go` 決策包含一份交接摘要，你可以選擇將它傳給 `/speckit.specify`。沒有任何生命週期 hook 會將評估安裝為 SDD 的前置條件，非軟體想法也完全不需要進入 SDD。
 
-Assessment commands write only within `.specify/assessments/<slug>/`; they do not
-edit source code. The extension checks slugs and paths, treats fetched content
-as untrusted data, and applies its URL trust policy. Consult the
-[extension documentation](https://github.com/github/spec-kit/blob/main/extensions/assess/README.md)
-for the complete guardrails and relationships to other extensions.
+評估命令只在 `.specify/assessments/<slug>/` 內寫入；它們不編輯原始碼。此擴充功能會檢查 slug 與路徑，將取得的內容視為不受信任的資料，並套用其 URL 信任原則。完整的防護措施以及與其他擴充功能的關係，請參閱[擴充功能文件](https://github.com/github/spec-kit/blob/main/extensions/assess/README.md)。

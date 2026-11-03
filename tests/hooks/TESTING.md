@@ -1,30 +1,30 @@
-# Testing Extension Hooks
+# 測試擴充功能掛鉤
 
-This directory contains a mock project to verify that LLM agents correctly identify and execute hook commands defined in `.specify/extensions.yml`.
+這個目錄包含一個模擬專案，用來驗證 LLM 代理能正確辨識並執行 `.specify/extensions.yml` 中定義的掛鉤命令。
 
-## Test 1: Testing `before_tasks` and `after_tasks`
+## 測試 1：測試 `before_tasks` 與 `after_tasks`
 
-1. Open a chat with an LLM (like GitHub Copilot) in this project.
-2. Ask it to generate tasks for the current directory:
+1. 在這個專案中與 LLM（例如 GitHub Copilot）開啟對話。
+2. 請它為目前目錄產生任務：
    > "Please follow `/speckit.tasks` for the `./tests/hooks` directory."
-3. **Expected Behavior**:
-   - Before doing any generation, the LLM should notice the `AUTOMATIC Pre-Hook` in `.specify/extensions.yml` under `before_tasks`.
-   - It should state it is executing `EXECUTE_COMMAND: pre_tasks_test`.
-   - It should then proceed to read the `.md` docs and produce a `tasks.md`.
-   - After generation, it should output the optional `after_tasks` hook (`post_tasks_test`) block, asking if you want to run it.
+3. **預期行為**：
+   - 在進行任何產生動作之前，LLM 應該注意到 `.specify/extensions.yml` 中 `before_tasks` 下的 `AUTOMATIC Pre-Hook`。
+   - 它應該表明自己正在執行 `EXECUTE_COMMAND: pre_tasks_test`。
+   - 接著它應該繼續讀取 `.md` 文件並產出 `tasks.md`。
+   - 產生完成後，它應該輸出選用的 `after_tasks` 掛鉤（`post_tasks_test`）區塊，詢問您是否要執行它。
 
-## Test 2: Testing `before_implement` and `after_implement`
+## 測試 2：測試 `before_implement` 與 `after_implement`
 
-*(Requires `tasks.md` from Test 1 to exist)*
+*（需要測試 1 的 `tasks.md` 已存在）*
 
-1. In the same (or new) chat, ask the LLM to implement the tasks:
+1. 在同一個（或新的）對話中，請 LLM 實作這些任務：
    > "Please follow `/speckit.implement` for the `./tests/hooks` directory."
-2. **Expected Behavior**:
-   - The LLM should first check for `before_implement` hooks.
-   - It should state it is executing `EXECUTE_COMMAND: pre_implement_test` BEFORE doing any actual task execution.
-   - It should evaluate the checklists and execute the code writing tasks.
-   - Upon completion, it should output the optional `after_implement` hook (`post_implement_test`) block.
+2. **預期行為**：
+   - LLM 應該先檢查 `before_implement` 掛鉤。
+   - 它應該在進行任何實際任務執行之前，表明自己正在執行 `EXECUTE_COMMAND: pre_implement_test`。
+   - 它應該評估檢核清單並執行撰寫程式碼的任務。
+   - 完成後，它應該輸出選用的 `after_implement` 掛鉤（`post_implement_test`）區塊。
 
-## How it works
+## 運作方式
 
-The templates for these commands in `templates/commands/tasks.md` and `templates/commands/implement.md` contains strict ordered lists. The new `before_*` hooks are explicitly formulated in a **Pre-Execution Checks** section prior to the outline to ensure they're evaluated first without breaking template step numbers.
+`templates/commands/tasks.md` 與 `templates/commands/implement.md` 中這些命令的範本包含嚴格排序的清單。新的 `before_*` 掛鉤在綱要之前的 **Pre-Execution Checks** 區段中明確表述，以確保它們會先被評估，同時不打亂範本的步驟編號。

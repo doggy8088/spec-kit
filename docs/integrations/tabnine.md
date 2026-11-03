@@ -1,34 +1,25 @@
 # Tabnine CLI
 
-Install [Tabnine CLI](https://docs.tabnine.com/main/getting-started/tabnine-cli) before setup.
-The integration key is `tabnine`.
+設定前請先安裝 [Tabnine CLI](https://docs.tabnine.com/main/getting-started/tabnine-cli)。整合鍵為 `tabnine`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration tabnine
 ```
 
-For an existing Spec Kit project, use `specify integration install tabnine`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install tabnine`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Commands
+## 已安裝的命令
 
-TOML commands are installed as `.tabnine/agent/commands/speckit.<command>.toml`.
-Invoke them in the agent's chat using dotted notation, for example
-`/speckit.specify` or `/speckit.bug.assess` for the installed bug extension.
+TOML 命令會安裝為 `.tabnine/agent/commands/speckit.<command>.toml`。在代理的聊天中以點記法呼叫它們，例如 `/speckit.specify`，或已安裝 bug 擴充功能的 `/speckit.bug.assess`。
 
-## Runtime Events and Workflow Dispatch
+## 執行階段事件與工作流程分派
 
-Native events use `.tabnine/agent/settings.json`, mapping prompt-submit and stop
-events to `BeforeAgent` and `AfterAgent`. Hook timeouts are converted to
-milliseconds. `--integration-options="--events false"` disables Spec Kit event
-handlers. See [runtime events](cli.md#runtime-events).
+原生事件使用 `.tabnine/agent/settings.json`，會將提示詞提交與停止事件對應到 `BeforeAgent` 與 `AfterAgent`。Hook 逾時會轉換為毫秒。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#runtime-events)。
 
-Workflow steps use `tabnine -p <prompt>`, with `-m` when a model is configured
-and `--output-format json` when structured output is requested.
+工作流程步驟使用 `tabnine -p <prompt>`，並在已設定模型時傳入 `-m`、在要求結構化輸出時傳入 `--output-format json`。

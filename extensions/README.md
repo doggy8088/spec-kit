@@ -1,112 +1,112 @@
-# Spec Kit Extensions
+# Spec Kit 擴充功能
 
-Extension system for [Spec Kit](https://github.com/github/spec-kit) - add new functionality without bloating the core framework.
+[Spec Kit](https://github.com/github/spec-kit) 的擴充功能系統——在不讓核心框架臃腫的前提下加入新功能。
 
-## Extension Catalogs
+## 擴充功能目錄
 
-Spec Kit provides two catalog files with different purposes:
+Spec Kit 提供兩個用途不同的目錄檔案：
 
-### Your Catalog (`catalog.json`)
+### 你的目錄（`catalog.json`）
 
-- **Purpose**: Default upstream catalog of extensions used by the Spec Kit CLI
-- **Default State**: Empty by design in the upstream project - you or your organization populate a fork/copy with extensions you trust
-- **Location (upstream)**: `extensions/catalog.json` in the GitHub-hosted spec-kit repo
-- **CLI Default**: The `specify extension` commands use the upstream catalog URL by default, unless overridden
-- **Org Catalog**: Point `SPECKIT_CATALOG_URL` at your organization's fork or hosted catalog JSON to use it instead of the upstream default
-- **Customization**: Copy entries from the community catalog into your org catalog, or add your own extensions directly
+- **用途**：Spec Kit CLI 使用的預設上游擴充功能目錄
+- **預設狀態**：上游專案刻意保持空白——由你或你的組織在 fork／副本中填入你信任的擴充功能
+- **位置（上游）**：GitHub 託管的 spec-kit 儲存庫中的 `extensions/catalog.json`
+- **CLI 預設值**：`specify extension` 命令預設使用上游目錄 URL，除非被覆寫
+- **組織目錄**：將 `SPECKIT_CATALOG_URL` 指向你組織的 fork 或託管的目錄 JSON，即可改用它而非上游預設值
+- **自訂**：把社群目錄中的條目複製到你的組織目錄，或直接加入你自己的擴充功能
 
-**Example override:**
+**覆寫範例：**
 ```bash
 # Override the default upstream catalog with your organization's catalog
 export SPECKIT_CATALOG_URL="https://your-org.com/spec-kit/catalog.json"
 specify extension search  # Now uses your organization's catalog instead of the upstream default
 ```
 
-### Community Reference Catalog (`catalog.community.json`)
+### 社群參考目錄（`catalog.community.json`）
 
 > [!NOTE]
-> Community extensions are independently created and maintained by their respective authors. Maintainers only verify that catalog entries are complete and correctly formatted — they do **not review, audit, endorse, or support the extension code itself**. Review extension source code before installation and use at your own discretion.
+> 社群擴充功能由各自的作者獨立建立與維護。維護者只驗證目錄條目是否完整、格式是否正確——他們**不會審查、稽核、背書或支援擴充功能的程式碼本身**。安裝前請先審查擴充功能的原始碼，並自行判斷是否使用。
 
-- **Purpose**: Browse available community-contributed extensions
-- **Status**: Active - contains extensions submitted by the community
-- **Location**: `extensions/catalog.community.json`
-- **Usage**: Reference catalog for discovering available extensions
-- **Submission**: Open to community contributions via [issue template](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml)
+- **用途**：瀏覽可用的社群貢獻擴充功能
+- **狀態**：使用中——包含社群提交的擴充功能
+- **位置**：`extensions/catalog.community.json`
+- **用法**：用於探索可用擴充功能的參考目錄
+- **提交**：透過 [issue 範本](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml)開放社群貢獻
 
-**How It Works:**
+**運作方式：**
 
-## Making Extensions Available
+## 讓擴充功能可供使用
 
-You control which extensions your team can discover and install:
+你可以控制團隊能探索與安裝哪些擴充功能：
 
-### Option 1: Curated Catalog (Recommended for Organizations)
+### 選項 1：精選目錄（組織推薦）
 
-Populate your `catalog.json` with approved extensions:
+在你的 `catalog.json` 中填入已核准的擴充功能：
 
-1. **Discover** extensions from various sources:
-   - Browse `catalog.community.json` for community extensions
-   - Find private/internal extensions in your organization's repos
-   - Discover extensions from trusted third parties
-2. **Review** extensions and choose which ones you want to make available
-3. **Add** those extension entries to your own `catalog.json`
-4. **Team members** can now discover and install them:
-   - `specify extension search` shows your curated catalog
-   - `specify extension add <name>` installs from your catalog
+1. **探索**來自各種來源的擴充功能：
+   - 瀏覽 `catalog.community.json` 中的社群擴充功能
+   - 在你組織的儲存庫中尋找私有／內部擴充功能
+   - 從信任的第三方探索擴充功能
+2. **審查**擴充功能，挑選你想開放使用的項目
+3. **加入**：把這些擴充功能條目加入你自己的 `catalog.json`
+4. **團隊成員**現在就能探索並安裝它們：
+   - `specify extension search` 會顯示你精選的目錄
+   - `specify extension add <name>` 會從你的目錄安裝
 
-**Benefits**: Full control over available extensions, team consistency, organizational approval workflow
+**好處**：完全掌控可用的擴充功能、團隊一致性、組織核准工作流程
 
-**Example**: Copy an entry from `catalog.community.json` to your `catalog.json`, then your team can discover and install it by name.
+**範例**：把 `catalog.community.json` 中的一個條目複製到你的 `catalog.json`，你的團隊就能依名稱探索並安裝它。
 
-### Option 2: Direct URLs (For Ad-hoc Use)
+### 選項 2：直接 URL（臨時使用）
 
-Skip catalog curation - team members install directly using URLs:
+跳過目錄精選——團隊成員直接用 URL 安裝：
 
 ```bash
 specify extension add <extension-name> --from https://github.com/org/spec-kit-ext/archive/refs/tags/v1.0.0.zip
 ```
 
-**Benefits**: Quick for one-off testing or private extensions
+**好處**：適合一次性測試或私有擴充功能，快速方便
 
-**Tradeoff**: Extensions installed this way won't appear in `specify extension search` for other team members unless you also add them to your `catalog.json`.
+**取捨**：以這種方式安裝的擴充功能，不會出現在其他團隊成員的 `specify extension search` 結果中，除非你也把它們加入你的 `catalog.json`。
 
-## Available Community Extensions
+## 可用的社群擴充功能
 
 > [!NOTE]
-> Community extensions are independently created and maintained by their respective authors. Maintainers only verify that catalog entries are complete and correctly formatted — they do **not review, audit, endorse, or support the extension code itself**. The Community Extensions website is also a third-party resource. Review extension source code before installation and use at your own discretion.
+> 社群擴充功能由各自的作者獨立建立與維護。維護者只驗證目錄條目是否完整、格式是否正確——他們**不會審查、稽核、背書或支援擴充功能的程式碼本身**。社群擴充功能網站也是第三方資源。安裝前請先審查擴充功能的原始碼，並自行判斷是否使用。
 
-🔍 **Browse and search community extensions on the [Community Extensions website](https://speckit-community.github.io/extensions/).**
+🔍 **在 [Community Extensions 網站](https://speckit-community.github.io/extensions/)瀏覽與搜尋社群擴充功能。**
 
-See the [Community Extensions](https://github.github.io/spec-kit/community/extensions.html) page for the full list of available community-contributed extensions.
+完整的社群貢獻擴充功能清單，請見 [Community Extensions](https://github.github.io/spec-kit/community/extensions.html) 頁面。
 
-For the raw catalog data, see [`catalog.community.json`](catalog.community.json).
+原始目錄資料請見 [`catalog.community.json`](catalog.community.json)。
 
 
-## Adding Your Extension
+## 加入你的擴充功能
 
-### Submission Process
+### 提交流程
 
-To add your extension to the community catalog:
+若要把你的擴充功能加入社群目錄：
 
-1. **Prepare your extension** following the [Extension Development Guide](https://github.github.io/spec-kit/extensions/developing.html)
-2. **Create a GitHub release** for your extension
-3. **File an issue** using the [Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml) template with all required metadata
-4. **Wait for review** — a maintainer will review the submission, update the catalog, and close the issue
+1. **準備你的擴充功能**，遵循 [Extension Development Guide](https://github.github.io/spec-kit/extensions/developing.html)
+2. **為你的擴充功能建立 GitHub release**
+3. **提出 issue**：使用 [Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml) 範本，附上所有必填的中繼資料
+4. **等待審查**——維護者會審查提交內容、更新目錄並關閉該 issue
 
-See the [Extension Publishing Guide](https://github.github.com/spec-kit/extensions/publishing.html) for detailed step-by-step instructions.
+詳細的逐步說明，請見 [Extension Publishing Guide](https://github.github.com/spec-kit/extensions/publishing.html)。
 
-### Submission Checklist
+### 提交檢核清單
 
-Before submitting, ensure:
+提交前，請確認：
 
-- ✅ Valid `extension.yml` manifest
-- ✅ Complete README with installation and usage instructions
-- ✅ LICENSE file included
-- ✅ GitHub release created with semantic version (e.g., v1.0.0)
-- ✅ Extension tested on a real project
-- ✅ All commands working as documented
+- ✅ 有效的 `extension.yml` 清單檔案
+- ✅ 完整的 README，含安裝與使用說明
+- ✅ 附有 LICENSE 檔案
+- ✅ 已建立 GitHub release，並使用語意化版本（例如 v1.0.0）
+- ✅ 擴充功能已在真實專案上測試
+- ✅ 所有命令都如文件所述運作
 
-## Installing Extensions
-Once extensions are available (either in your catalog or via direct URL), install them:
+## 安裝擴充功能
+擴充功能可供使用後（無論是在你的目錄中，或透過直接 URL），即可安裝：
 
 ```bash
 # From your curated catalog (by name)
@@ -120,4 +120,4 @@ specify extension add <extension-name> --from https://github.com/<org>/<repo>/ar
 specify extension list
 ```
 
-For more information, see the [Extension User Guide](../docs/extensions/overview.md).
+更多資訊，請見 [Extension User Guide](../docs/extensions/overview.md)。

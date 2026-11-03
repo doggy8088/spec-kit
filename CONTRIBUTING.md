@@ -1,321 +1,317 @@
-# Contributing to Spec Kit
+# 為 Spec Kit 做出貢獻
 
-Hi there! We're thrilled that you'd like to contribute to Spec Kit. Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
+你好！我們很高興你想為 Spec Kit 做出貢獻。對這個專案的貢獻會依[專案的開源授權](LICENSE)[釋出](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license)給公眾。
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+請注意，本專案釋出時附有[貢獻者行為準則](CODE_OF_CONDUCT.md)。參與本專案，即表示你同意遵守其條款。
 
-## Prerequisites for running and testing code
+## 執行與測試程式碼的先決條件
 
-These are one time installations required to be able to test your changes locally as part of the pull request (PR) submission process.
+以下是一次性的安裝需求，讓你能在提交拉取請求（PR）的過程中，在本機測試你的變更。
 
-1. Install [Python 3.11+](https://www.python.org/downloads/)
-1. Install [uv](https://docs.astral.sh/uv/) for package management
-1. Install [Git](https://git-scm.com/downloads)
-1. Have an [AI coding agent available](https://github.github.io/spec-kit/integrations/index.html)
+1. 安裝 [Python 3.11+](https://www.python.org/downloads/)
+1. 安裝 [uv](https://docs.astral.sh/uv/) 進行套件管理
+1. 安裝 [Git](https://git-scm.com/downloads)
+1. 準備一個可用的 [AI 程式代理](https://github.github.io/spec-kit/integrations/index.html)
 
 <details>
-<summary><b>💡 Hint if you are using <code>VSCode</code> or <code>GitHub Codespaces</code> as your IDE</b></summary>
+<summary><b>💡 如果你使用 <code>VSCode</code> 或 <code>GitHub Codespaces</code> 作為 IDE 的小提示</b></summary>
 
 <br>
 
-Provided you have [Docker](https://docker.com) installed on your machine, you can leverage [Dev Containers](https://containers.dev) through this [VSCode extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), to easily set up your development environment, with aforementioned tools already installed and configured, thanks to the `.devcontainer/devcontainer.json` file (located at the root of the project).
+只要你的機器上安裝了 [Docker](https://docker.com)，你就能透過這個 [VSCode 擴充功能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)運用 [Dev Containers](https://containers.dev)，輕鬆設定好你的開發環境，上述工具都已預先安裝並設定完成，這要歸功於位於專案根目錄的 `.devcontainer/devcontainer.json` 檔案。
 
-To do so, simply:
+做法很簡單：
 
-- Checkout the repo
-- Open it with VSCode
-- Open the [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) and select "Dev Containers: Open Folder in Container..."
+- 簽出這個儲存庫
+- 用 VSCode 開啟它
+- 開啟[命令面板](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette)，選擇 "Dev Containers: Open Folder in Container..."
 
-On [GitHub Codespaces](https://github.com/features/codespaces) it's even simpler, as it leverages the `.devcontainer/devcontainer.json` automatically upon opening the codespace.
+在 [GitHub Codespaces](https://github.com/features/codespaces) 上甚至更簡單，因為它在開啟 codespace 時會自動運用 `.devcontainer/devcontainer.json`。
 
 </details>
 
-## Submitting a pull request
+## 提交拉取請求
 
 > [!NOTE]
-> If your pull request introduces a large change that materially impacts the work of the CLI or the rest of the repository (e.g., you're introducing new templates, arguments, or otherwise major changes), make sure that it was **discussed and agreed upon** by the project maintainers. Pull requests with large changes that did not have a prior conversation and agreement will be closed.
+> 如果你的拉取請求引入了對 CLI 或儲存庫其餘部分的工作有實質影響的大型變更（例如你引入了新的範本、參數或其他重大變更），請確保它已事先經過專案維護者的**討論並達成共識**。未經事先對話與同意的大型變更拉取請求將被關閉。
 
-1. Fork and clone the repository
-1. Configure and install the dependencies: `uv sync --extra test`
-1. Make sure the CLI works on your machine: `uv run specify --help`
-1. Create a new branch (see [Branch naming](#branch-naming) below)
-1. Make your change, add tests, and make sure everything still works
-1. Test the CLI functionality with a sample project if relevant
-1. Push to your fork and submit a pull request
-1. Wait for your pull request to be reviewed and merged.
+1. Fork 並複製這個儲存庫
+1. 設定並安裝相依性：`uv sync --extra test`
+1. 確認 CLI 在你的機器上能運作：`uv run specify --help`
+1. 建立一個新分支（見下方的[分支命名](#branch-naming)）
+1. 進行你的變更、新增測試，並確保一切仍然運作
+1. 如有相關，用一個範例專案測試 CLI 功能
+1. 推送到你的 fork 並提交拉取請求
+1. 等待你的拉取請求被審查並合併。
 
-Activate the project virtual environment (see [Testing setup](#testing-setup) below), then install the CLI from your working tree (`uv pip install -e .` after `uv sync --extra test`) or otherwise ensure the shell uses the local `specify` binary before running the manual slash-command tests described below.
+啟用專案的虛擬環境（見下方的[測試設定](#testing-setup)），然後從你的工作樹安裝 CLI（在 `uv sync --extra test` 之後執行 `uv pip install -e .`），或以其他方式確保 shell 使用本機的 `specify` 執行檔，再執行下方所述的手動斜線命令測試。
 
-Here are a few things you can do that will increase the likelihood of your pull request being accepted:
+以下幾件事能提高你的拉取請求被接受的可能性：
 
-- Follow the project's coding conventions.
-- Write tests for new functionality.
-- Update documentation (`README.md`, `spec-driven.md`) if your changes affect user-facing features.
-- Keep your change as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
-- Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
-- Test your changes with the Spec-Driven Development workflow to ensure compatibility.
+- 遵循專案的程式碼慣例。
+- 為新功能撰寫測試。
+- 如果你的變更影響面向使用者的功能，更新文件（`README.md`、`spec-driven.md`）。
+- 讓你的變更盡可能聚焦。如果有多項你想進行、但彼此不相依的變更，考慮把它們拆成各自獨立的拉取請求。
+- 撰寫一則[好的提交訊息](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)。
+- 用規格驅動開發工作流程測試你的變更，確保相容性。
 
-Accounts with three open pull requests may continue submitting changes, but additional submissions may be placed behind contributions from other authors in the review queue. Coding agents must follow the [agent-authored PR rules](#agent-authored-git-and-review-activity) before opening another pull request.
+擁有三個開啟中拉取請求的帳號仍可繼續提交變更，但額外的提交在審查佇列中，可能會被排在其他作者的貢獻之後。程式代理在開啟另一個拉取請求之前，必須遵循[由代理撰寫的 PR 規則](#agent-authored-git-and-review-activity)。
 
-### Integration pull requests
+### 整合的拉取請求
 
-Follow the [integration delivery boundary](design/integration.md#integration-delivery-boundary)
-when adding or updating an integration. Keep integration-specific behavior in
-its package; registry wiring, catalog metadata, integration-specific tests,
-documentation, and agent-specific devcontainer tooling may accompany it in the
-same PR, even though those files live outside the integration package.
+新增或更新整合時，請遵循[整合交付邊界](design/integration.md#integration-delivery-boundary)。
+把整合專屬的行為保留在
+它自己的套件中；註冊表接線、目錄中繼資料、整合專屬的測試、
+文件，以及代理專屬的 devcontainer 工具，都可以在同一個
+PR 中隨它一起提交，即使這些檔案位於整合套件之外。
 
-If the integration requires changes to shared runtime behavior, integration
-base classes, rendering, lifecycle management, CLI behavior, or core templates
-or scripts, submit **at least two PRs**: one for the prerequisite shared behavior
-and one for the integration. The prerequisite PR must justify the shared change
-independently under the [evidence gate](#evidence-gate) and follow
-[Testing deterministic behavior](#testing-deterministic-behavior), including
-regression evidence for bug fixes. It must work and be testable without the new
-integration; moving an agent-specific workaround into core does not justify it.
+如果整合需要變更共用的執行期行為、整合
+基底類別、渲染、生命週期管理、CLI 行為，或核心範本
+或指令碼，請提交**至少兩個 PR**：一個給前置的共用行為，
+一個給整合本身。前置 PR 必須在[證據關卡](#evidence-gate)之下獨立為該共用變更提出理由，並遵循
+[測試確定性行為](#testing-deterministic-behavior)，包括
+錯誤修正的迴歸證據。它必須在沒有新整合的情況下也能運作並可測試
+；把代理專屬的變通做法搬進核心，並不能為它提供理由。
 
-Identify the prerequisite PRs in the integration PR and merge them before
-merging the integration PR. Changes outside the integration package that only
-wire up or document the integration do not, by themselves, require a split.
+在整合 PR 中指出前置 PR，並在合併
+整合 PR 之前先合併它們。整合套件之外、僅用於
+接線或記錄該整合的變更，本身並不要求拆分。
 
-### Evidence gate
+### 證據關卡
 
-A contribution is evaluated on the evidence it carries, not on how plausible its reasoning sounds. The same bar applies to everyone — human and AI-assisted contributions are judged identically.
+一份貢獻的評價取決於它所攜帶的證據，而不是它的推理聽起來多有道理。同一套標準適用於所有人——人類與 AI 協助的貢獻受到完全相同的評判。
 
-A valid, in-scope change that arrives without evidence is not rejected outright. It may be labeled [`triage-can-wait`](#triage-and-author-labels) and held behind proven work until evidence is added, at which point it can be reprioritized.
+一個有效且在範圍內的變更，即使沒有證據也不會被直接拒絕。它可能被標記為 [`triage-can-wait`](#triage-and-author-labels)，並排在已證明的工作之後，直到證據補齊為止，屆時它可以被重新排定優先順序。
 
-What counts as evidence:
+什麼算作證據：
 
-- **A reproduction or a linked real-world report** — a failing case, a stack trace, or a link to an issue where the problem actually occurred. "This could theoretically fail" reasoning on its own does not clear the gate.
-- **A regression test that fails on `main` and passes with your change** — this proves both that the problem is real and that your change fixes it.
-- **Scope discipline** — one concern per pull request. Split unrelated changes into separate PRs (see the [focused-change guidance](#submitting-a-pull-request) above); sprawling batch diffs are hard to review and slow to land.
-- **Disclosed AI assistance** — if any AI tooling was involved, disclose it and its extent per [AI contributions in Spec Kit](#ai-contributions-in-spec-kit).
+- **一份重現步驟或連結的真實世界回報**——一個失敗案例、一段堆疊追蹤，或一個問題實際發生過的議題連結。僅憑「理論上這可能會失敗」的推理，無法通過這道關卡。
+- **一個在 `main` 上失敗、套用你的變更後通過的迴歸測試**——這同時證明了問題是真的，以及你的變更修好了它。
+- **範圍紀律**——每個拉取請求只處理一個關注點。把不相關的變更拆成各自獨立的 PR（見上方[聚焦變更的指引](#submitting-a-pull-request)）；龐雜蔓延的批次差異難以審查，也很慢才能落地。
+- **揭露 AI 協助**——如果有任何 AI 工具參與，依 [Spec Kit 中的 AI 貢獻](#ai-contributions-in-spec-kit)揭露它與其參與程度。
 
-Speculative hardening is welcome, but it sits behind proven, evidence-backed work. If you can attach a reproduction and a failing test, your change moves to the front; if you can't yet, say so, and it will be queued rather than closed.
+臆測性的強化很受歡迎，但它排在已證明、有證據支持的工作之後。如果你能附上一份重現步驟和一個失敗的測試，你的變更會移到最前面；如果還不行，就明說，它會被排入佇列而不是被關閉。
 
-### Review rubric
+### 審查評分標準
 
-Triaged items are weighed across seven dimensions, each scored `0`–`2` (`0` absent, `1` partial, `2` clearly demonstrated), for a maximum of 14. The score guides **prioritization** — it is not a hard pass/fail gate. The one firm rule is the [evidence gate](#evidence-gate) above: theoretical-only changes with no evidence are deprioritized.
+經過分類的項目會在七個維度上衡量，每個維度計 `0`–`2` 分（`0` 缺席、`1` 部分、`2` 明顯展示），最高分為 14 分。這個分數引導**優先順序**——它不是一道硬性的通過／不通過關卡。唯一堅定的規則是上方的[證據關卡](#evidence-gate)：只有理論、沒有證據的變更會被降低優先順序。
 
-| Dimension | What it measures |
+| 維度 | 它衡量的內容 |
 |---|---|
-| D1 — Real-world evidence | A reproduction or linked report, versus theory alone |
-| D2 — Reachability / severity | Whether the issue can actually be hit, and how bad it is |
-| D3 — Scope discipline | One focused concern per PR, no unrelated changes |
-| D4 — Test evidence | A regression test that fails on `main` and passes with the change |
-| D5 — Disclosure / understanding | AI use disclosed, and the author understands the change |
-| D6 — Cost vs. benefit | Value delivered against added complexity and maintenance cost |
-| D7 — Roadmap alignment | Fit with Spec Kit's goals and direction |
+| D1 — 真實世界證據 | 一份重現步驟或連結的回報，與只有理論的對比 |
+| D2 — 可達性／嚴重程度 | 問題是否真的會被碰到，以及它有多嚴重 |
+| D3 — 範圍紀律 | 每個 PR 一個聚焦的關注點，沒有不相關的變更 |
+| D4 — 測試證據 | 一個在 `main` 上失敗、套用變更後通過的迴歸測試 |
+| D5 — 揭露／理解 | 揭露 AI 的使用，且作者理解這項變更 |
+| D6 — 成本與效益 | 交付的價值，相對於增加的複雜度與維護成本 |
+| D7 — 與產品藍圖的對齊 | 與 Spec Kit 的目標與方向的契合程度 |
 
-### Triage and author labels
+### 分類與作者標籤
 
-Every triaged item receives one **verdict** label recording where it stands. **Author** labels signal the specific action needed to move an item forward.
+每個經過分類的項目都會得到一個**裁決**標籤，記錄它目前的狀態。**作者**標籤則指出讓項目向前推進所需採取的具體行動。
 
-Verdict (one per item):
+裁決（每個項目一個）：
 
-| Label | Meaning |
+| 標籤 | 意義 |
 |---|---|
-| `triage-must-have` | Verdict: high-value, important work for Spec Kit — do first |
-| `triage-nice-to-have` | Verdict: evidence-backed fix or greenlit feature — land after review |
-| `triage-can-wait` | Verdict: valid and in-scope but deprioritized; held behind the evidence gate |
-| `triage-out-of-scope` | Verdict: won't land in core — invalid, duplicate, off-mission, or redirected to an extension |
+| `triage-must-have` | 裁決：對 Spec Kit 而言是高價值、重要的工作——優先處理 |
+| `triage-nice-to-have` | 裁決：有證據支持的修正，或已獲准的功能——審查後落地 |
+| `triage-can-wait` | 裁決：有效且在範圍內，但優先順序較低；被擋在證據關卡之後 |
+| `triage-out-of-scope` | 裁決：不會進入核心——無效、重複、偏離使命，或改由擴充功能承接 |
 
-Author actions:
+作者行動：
 
-| Label | Meaning |
+| 標籤 | 意義 |
 |---|---|
-| `author-needs-proof` | The problem isn't demonstrated yet — supply a reproduction or a test that fails on `main` and passes with the change |
-| `author-needs-tests` | Real change but missing a regression test — add one that fails before / passes after |
-| `author-needs-rescope` | Sprawling or batched diff — split into one focused, single-concern PR |
-| `author-needs-disclosure` | AI assistance not disclosed — disclose AI use per CONTRIBUTING |
-| `author-needs-info` | Missing detail needed to assess — supply requested info |
-| `author-needs-rebase` | Branch conflicts with `main` — rebase and resolve before it can be merged |
-| `author-over-cap` | Over the 3-open-PR cap or repetitive batch submissions — please consolidate |
-| `author-awaiting` | Waiting on author response (handed off to the existing stale workflow) |
+| `author-needs-proof` | 問題尚未被展示——提供一份重現步驟，或一個在 `main` 上失敗、套用變更後通過的測試 |
+| `author-needs-tests` | 變更本身是真的，但缺少迴歸測試——補上一個修正前失敗／修正後通過的測試 |
+| `author-needs-rescope` | 差異過於龐雜蔓延或混雜多件事——拆成一個聚焦、單一關注點的 PR |
+| `author-needs-disclosure` | AI 協助未被揭露——依 CONTRIBUTING 揭露 AI 的使用 |
+| `author-needs-info` | 缺少評估所需的細節——提供所要求的資訊 |
+| `author-needs-rebase` | 分支與 `main` 衝突——rebase 並解決衝突後才能合併 |
+| `author-over-cap` | 超過 3 個開啟中 PR 的上限，或重複的批次提交——請整合 |
+| `author-awaiting` | 正在等待作者回應（交由既有的 stale 工作流程處理） |
 
-Some pull requests are closed as `triage-out-of-scope` rather than merged — most commonly
-when the same change is already in `main`, when a request is better served as a community
-extension, when an existing feature already covers it, or when a catalog change came in as
-a direct edit instead of a submission issue. A close always comes with a comment explaining
-why and, where relevant, where to go instead.
+有些拉取請求會以 `triage-out-of-scope` 被關閉，而不是被合併——最常見的情況是
+同一項變更已經在 `main` 裡了、某個請求更適合作為社群
+擴充功能、既有功能已經涵蓋了它，或目錄變更是以直接編輯的方式送進來、
+而不是透過提交議題。關閉時總是會附上一則說明原因的留言，
+並在相關時指出應該改往何處。
 
-For further reading on the thinking behind this gate, see [one maintainer's perspective on AI-sourced contributions](https://blog.manorrock.com/blog/2026/09/08/spec_kit_ai_source.html). That piece is a personal viewpoint, not project policy — the policy is what's documented here.
+關於這道關卡背後思維的進一步閱讀，請參閱[一位維護者對 AI 來源貢獻的看法](https://blog.manorrock.com/blog/2026/09/08/spec_kit_ai_source.html)。那篇文章是個人觀點，不是專案政策——政策就是此處所記錄的內容。
 
-### Community catalog submissions
+### 社群目錄提交
 
-To add or update a community extension, preset, bundle, or workflow step in the catalog, **open an
-`[Extension]` / `[Preset]` / `[Bundle]` / `[Workflow Step]` submission issue** — do not edit
-`extensions/catalog.community.json` (or the preset/bundle/step catalogs) directly in a pull
-request. Opening the form applies the `triage-must-have` intake verdict but does
-not start validation. During triage, a maintainer applies the component's submission
-label (`workflow-step-submission` for workflow steps) to start the automated workflow.
-It validates release metadata, pinned download URLs, and digests; successful
-validation proposes a draft catalog PR for maintainer review.
-A hand-edited catalog PR bypasses that validation and will be closed with a pointer back
-to the issue flow.
+若要新增或更新目錄中的社群擴充功能、預設集、套件組或工作流程步驟，請**開啟一個
+`[Extension]` / `[Preset]` / `[Bundle]` / `[Workflow Step]` 提交議題**——不要在拉取
+請求中直接編輯 `extensions/catalog.community.json`（或預設集／套件組／步驟目錄）。
+開啟表單會套用 `triage-must-have` 的收件裁決，但
+不會啟動驗證。在分類期間，維護者會套用該元件的提交
+標籤（工作流程步驟為 `workflow-step-submission`），以啟動自動化工作流程。
+它會驗證版本中繼資料、釘選的下載 URL 與摘要；驗證
+成功後會提出一份草稿目錄 PR，供維護者審查。
+手動編輯的目錄 PR 會繞過這套驗證，並將被關閉，同時附上指回
+議題流程的說明。
 
-This applies to **new entries, version updates, and repairs alike** — a version bump or a
-fix to a broken entry is still an update and needs the same validation. Always pin
-`download_url` to a release tag (e.g. `.../releases/download/<tag>/...` or
-`.../archive/refs/tags/<tag>.zip`); never use `releases/latest/`.
-Workflow-step submissions still require a pinned archive `download_url` as release
-provenance and evidence for the author's direct-archive installation test. Catalog
-installation uses separate tag-pinned individual file URLs and per-file digests;
-see [Community Workflow Step Types](docs/community/workflow-steps.md).
+這同樣適用於**新項目、版本更新與修復**——版本提升或
+修復損壞的項目仍然是一次更新，需要相同的驗證。永遠要把
+`download_url` 釘選到一個版本標籤（例如 `.../releases/download/<tag>/...` 或
+`.../archive/refs/tags/<tag>.zip`）；絕不要使用 `releases/latest/`。
+工作流程步驟的提交仍需要一個釘選的封存 `download_url`，作為版本
+出處，以及作者直接以封存安裝測試的證據。目錄
+安裝使用的是另外的、依標籤釘選的個別檔案 URL 與逐檔摘要；
+請參閱 [Community Workflow Step Types](docs/community/workflow-steps.md)。
 
-### External agent adapters
+### 外部代理轉接器
 
-External integrations adapt the host's commands and extension/preset
-contributions; they do not redistribute a core command inventory. Publish a
-standalone package with root `integration.yml` and `__init__.py`, then advertise
-its pinned archive URL and preferably its SHA-256 in a catalog. Registering a
-catalog only enables discovery/download; importing executable adapter code
-requires the user's trust decision and an install-enabled source. Follow the
-[integration API and lifecycle design](design/integration.md#external-adapter-package-contract)
-and [integration catalog contribution guide](docs/integrations/contributing.md).
-Add public-path positive and negative tests rather than injecting test classes
-directly into the registry; include fresh-process loading and rollback evidence.
+外部整合轉接宿主的命令與擴充功能／預設集
+貢獻；它們不重新散布核心的命令清單。請發佈一個
+帶有根目錄 `integration.yml` 與 `__init__.py` 的獨立套件，然後在目錄中宣傳
+它釘選的封存 URL，最好再附上它的 SHA-256。註冊一個
+目錄只會啟用探索／下載；匯入可執行的轉接器程式碼
+需要使用者的信任決定，以及一個啟用安裝的來源。請遵循
+[整合 API 與生命週期設計](design/integration.md#external-adapter-package-contract)
+與[整合目錄貢獻指南](docs/integrations/contributing.md)。
+加上走公開路徑的正向與負向測試，而不是把測試類別直接注入
+註冊表；並附上新行程載入與回滾的證據。
 
-### Branch naming
+### 分支命名
 
-When an issue exists, name the branch `<type>/<issue-number>-<short-slug>`.
-For PR-only changes without an issue, use `<type>/<short-slug>` instead.
-Choose the prefix from:
+當議題存在時，把分支命名為 `<type>/<issue-number>-<short-slug>`。
+對於沒有議題、僅有 PR 的變更，改用 `<type>/<short-slug>`。
+從以下選項中選擇前綴：
 
-| Prefix | When to use | Example |
+| 前綴 | 使用時機 | 範例 |
 |---|---|---|
-| `feat/` | New features | `feat/2342-workflow-cli-alignment` |
-| `fix/` | Bug fixes | `fix/2653-paths-only-validation` |
-| `docs/` | Documentation changes | `docs/2677-branch-naming-convention` |
-| `community/` | Community catalog additions | `community/2492-add-mde-extension` |
-| `chore/` | Maintenance, tooling, CI | `chore/2366-editorconfig` |
+| `feat/` | 新功能 | `feat/2342-workflow-cli-alignment` |
+| `fix/` | 錯誤修正 | `fix/2653-paths-only-validation` |
+| `docs/` | 文件變更 | `docs/2677-branch-naming-convention` |
+| `community/` | 社群目錄新增 | `community/2492-add-mde-extension` |
+| `chore/` | 維護、工具、CI | `chore/2366-editorconfig` |
 
-Put an existing issue number immediately after the prefix to make the branch
-traceable; do not add a PR number later for PR-only changes. Keep the slug
-short, descriptive, and kebab-case.
+把既有議題的編號緊放在前綴之後，讓分支
+可被追溯；對於僅有 PR 的變更，不要事後再加上 PR 編號。短 slug 要保持
+簡短、具描述性，並使用 kebab-case。
 
-## Development workflow
+## 開發工作流程
 
-### Does Spec Kit use Spec Kit?
+### Spec Kit 有使用 Spec Kit 嗎？
 
-Yes — we dogfood Spec Kit while developing Spec Kit, especially for substantial
-features and changes to the development workflow. Contributors are asked to test
-relevant changes through the Spec-Driven Development commands. The
-[feature assessment workflow](https://github.com/github/spec-kit/blob/main/.github/workflows/feature-assess.md)
-is currently the automated dogfooding path: its setup uses the CLI from the
-current checkout to initialize Copilot and install the `assess` extension, after
-which Copilot follows the generated assessment skills against feature requests.
-The other agentic workflows currently operate independently of the Specify CLI.
+有——我們在開發 Spec Kit 的同時也親自使用 Spec Kit（dogfood），尤其是用於實質的
+功能以及開發工作流程的變更。貢獻者被要求透過規格驅動開發命令測試
+相關的變更。目前的
+[功能評估工作流程](https://github.com/github/spec-kit/blob/main/.github/workflows/feature-assess.md)
+是自動化的 dogfooding 路徑：它的設定使用目前簽出版本的 CLI 來初始化 Copilot 並安裝 `assess` 擴充功能，之後
+Copilot 會依產生的評估技能，針對功能請求進行評估。
+其他代理工作流程目前獨立於 Specify CLI 之外運作。
 
-This does not mean every change goes through the full workflow. Small fixes can
-use the normal issue, pull request, review, and test process. Dogfooding
-scaffolding and artifacts under `.github/agents/`, `.github/prompts/`,
-`.github/copilot-instructions.md`, `.grok/`, `.specify/`, and `specs/` are
-intentionally gitignored. The automated assessment workflow is ephemeral and
-neither commits nor pushes its generated Copilot skills, so its output does not
-enter repository history.
+這不意味著每個變更都要走完完整的工作流程。小型的修正可以
+使用一般的議題、拉取請求、審查與測試流程。Dogfooding 的
+鷹架與產出物，位於 `.github/agents/`、`.github/prompts/`、
+`.github/copilot-instructions.md`、`.grok/`、`.specify/` 與 `specs/` 之下，
+是刻意被 gitignore 的。自動化評估工作流程是暫時性的，
+既不提交也不推送它產生的 Copilot 技能，因此它的輸出不會
+進入儲存庫的歷史紀錄。
 
-### Workflow expectations
+### 工作流程期望
 
-When working on spec-kit:
+在 spec-kit 上工作時：
 
-1. Test changes with the `specify` CLI commands (`/speckit.specify`, `/speckit.plan`, `/speckit.tasks`) in your coding agent of choice
-2. Verify templates are working correctly in `templates/` directory
-3. Test script functionality in the `scripts/` directory
-4. Ensure memory files (`memory/constitution.md`) are updated if major process changes are made
+1. 在你選擇的程式代理中，用 `specify` CLI 命令（`/speckit.specify`、`/speckit.plan`、`/speckit.tasks`）測試變更
+2. 驗證 `templates/` 目錄中的範本運作正確
+3. 測試 `scripts/` 目錄中的指令碼功能
+4. 如果有重大的流程變更，確保記憶檔案（`memory/constitution.md`）有被更新
 
-### Testing deterministic behavior
+### 測試確定性行為
 
-Behavioral changes to repository-maintained code or configuration that runs or
-controls execution without an LLM require tests for both intended behavior
-(positive cases) and relevant invalid inputs, failures, or prevented behavior
-(negative cases). This includes Python, shell, and PowerShell code in the CLI,
-core scripts, extensions, presets, and tooling; workflow step types; and
-execution wiring such as script selection, workflow shell steps, and CI `run:`
-steps. Existing tests count when they cover the changed behavior.
+對於儲存庫維護的程式碼或設定的行為變更——也就是那些不經 LLM 就能執行或
+控制執行的部分——需要同時為預期行為
+（正向案例）與相關的無效輸入、失敗或被阻止的行為
+（負向案例）撰寫測試。這包括 CLI 中的 Python、shell 與 PowerShell 程式碼、
+核心指令碼、擴充功能、預設集與工具；工作流程步驟類型；以及
+執行接線，例如指令碼的選擇、工作流程的 shell 步驟與 CI 的 `run:`
+步驟。當既有測試已涵蓋變更的行為時，它們也算數。
 
-Behavioral changes to repository-maintained or generated PowerShell
-functionality must include evidence from Windows PowerShell 5.1 or reproducible
-evidence that demonstrates 5.1 compatibility. All PowerShell scripts in the
-repository and all generated PowerShell functionality MUST target Windows
-PowerShell 5.1. Check syntax, cmdlet and parameter availability, .NET Framework
-APIs, encoding, and process/runtime behavior against that target.
+對於儲存庫維護或產生的 PowerShell
+功能的行為變更，必須附上來自 Windows PowerShell 5.1 的證據，或可重現的
+能展示 5.1 相容性的證據。儲存庫中的所有 PowerShell 指令碼
+以及所有產生的 PowerShell 功能，都必須以 Windows
+PowerShell 5.1 為目標。請對照該目標檢查語法、cmdlet 與參數的可用性、.NET Framework
+API、編碼，以及行程／執行期行為。
 
-Bug fixes also need a regression test that fails before the fix and passes
-afterward. If a baseline or an execution path cannot be tested automatically,
-explain the limitation and provide reproducible evidence for the affected
-success and failure paths. Prompt-only and other non-behavioral edits do not
-require invented tests.
+錯誤修正還需要一個迴歸測試，在修正前失敗、修正後通過
+。如果某個基線或執行路徑無法自動測試，
+請說明這個限制，並為受影響的成功與失敗路徑提供可重現的證據
+。僅涉及提示詞的編輯，以及其他非行為性的編輯，不需要
+硬湊出測試。
 
-### Recommended validation flow
+### 建議的驗證流程
 
-For the smoothest review experience, validate changes in this order:
+為了獲得最順暢的審查體驗，請依這個順序驗證變更：
 
-1. **Run focused automated checks first** — use the quick verification commands [below](#automated-checks) to catch scaffolding and configuration regressions early.
-2. **Run manual workflow tests second** — if your change affects slash commands or the developer workflow, follow the [manual testing](#manual-testing) section to choose the right commands, run them in an agent, and capture results for your PR.
+1. **先執行聚焦的自動化檢查**——使用[下方](#automated-checks)的快速驗證命令，及早捕捉鷹架與設定的迴歸。
+2. **再執行手動工作流程測試**——如果你的變更影響斜線命令或開發者工作流程，依[手動測試](#manual-testing)區段選擇正確的命令，在代理中執行它們，並把結果擷取下來放進你的 PR。
 
-### Automated checks
+### 自動化檢查
 
-#### Agent configuration and wiring consistency
+#### 代理設定與接線一致性
 
 ```bash
 uv run python -m pytest tests/test_agent_config_consistency.py -q
 ```
 
-Run this when you change agent metadata, context update scripts, or integration wiring.
+當你變更代理中繼資料、上下文更新指令碼或整合接線時，執行這個檢查。
 
-#### Running the full test suite
+#### 執行完整的測試套件
 
-Install the test dependencies into the project's own virtual environment and run
-`pytest` through that interpreter:
+把測試相依性安裝到專案自己的虛擬環境中，並
+透過那個解譯器執行 `pytest`：
 
 ```bash
 uv pip install -e ".[test]"
 .venv/bin/python -m pytest tests -q   # Windows: .venv\Scripts\python -m pytest tests -q
 ```
 
-> **Note:** prefer `.venv/bin/python -m pytest` over a bare `uv run pytest`.
-> If another Spec Kit checkout has an editable (`-e`) install registered in a
-> shared/global environment, `uv run pytest` can resolve `specify_cli` to that
-> *other* worktree, turning it into a partial namespace package that fails to
-> import newly added subpackages. Running through the project `.venv` resolves
-> `specify_cli` to this checkout's `src/`. This matches the gotcha documented in
-> `AGENTS.md` (Common Pitfalls).
+> **注意：** 請優先使用 `.venv/bin/python -m pytest`，而不是直接執行 `uv run pytest`。
+> 如果另一個 Spec Kit 簽出版本在共用／全域環境中註冊了一個可編輯（`-e`）安裝，
+> `uv run pytest` 可能會把 `specify_cli` 解析到那個
+> *另一個*工作樹，讓它變成一個不完整的命名空間套件，無法
+> 匯入新加入的子套件。透過專案的 `.venv` 執行，會把
+> `specify_cli` 解析到這個簽出版本的 `src/`。這與 `AGENTS.md`（常見陷阱）中記錄的注意事項一致。
 
-#### Security checks
+#### 安全性檢查
 
 ```bash
 uvx --from pip-audit==2.10.0 pip-audit --disable-pip --require-hashes -r .github/security-audit-requirements.txt --progress-spinner off
 ```
 
-This command audits the committed hashed requirements snapshot. Pull request,
-push, and manual CI runs use the same snapshot so their results stay
-deterministic. If dependency metadata changes, refresh and commit the snapshot
-before auditing it:
+這個命令稽核已提交的、帶雜湊的需求快照。拉取請求、
+推送與手動 CI 執行都使用同一份快照，讓它們的結果保持
+確定性。如果相依性中繼資料變更，請先重新整理並提交快照，
+再進行稽核：
 
 ```bash
 uv pip compile pyproject.toml --extra test --universal --upgrade --generate-hashes --quiet --no-header --output-file .github/security-audit-requirements.txt
 ```
 
-The scheduled CI audit resolves the runtime and `test` extra dependency set
-across the supported Python and OS matrix to catch newly published advisories.
-Upstream package releases drift over time, so even an unrelated PR touching
-`pyproject.toml` can fail the `dependency-audit` check until the committed file
-is regenerated with the command above and re-committed.
+排程中的 CI 稽核會在受支援的 Python 與作業系統矩陣上，解析執行期與 `test` 額外相依性集合，以捕捉新發布的資安公告。
+上游套件的版本會隨時間漂移，因此即使是一個不相關、但觸及
+`pyproject.toml` 的 PR，也可能讓 `dependency-audit` 檢查失敗，直到已提交的檔案
+用上方命令重新產生並重新提交為止。
 
-#### Shell scripts
+#### Shell 指令碼
 
 ```bash
 git ls-files -z -- '*.sh' | xargs -0 shellcheck --severity=error
 ```
 
-The CI `lint.yml` `shellcheck` job currently reports and blocks only
-error-severity findings. Warnings such as SC2155 are intentionally outside this
-job until a follow-up cleanup tightens the threshold.
+CI 的 `lint.yml` 中的 `shellcheck` 工作目前只回報並阻擋
+error 嚴重程度的發現。像 SC2155 這類的警告刻意不在
+這個工作的範圍內，直到後續的清理工作把門檻收緊為止。
 
-### Manual testing
+### 手動測試
 
-#### Testing setup
+#### 測試設定
 
 ```bash
 # Install the project and test dependencies from your local branch
@@ -332,19 +328,19 @@ cd <temp-dir>/speckit-test
 # Open in your agent
 ```
 
-#### Manual testing process
+#### 手動測試流程
 
-Any change that affects a slash command's behavior requires manually testing that command through a coding agent and submitting results with the PR.
+任何影響斜線命令行為的變更，都需要透過程式代理手動測試該命令，並隨 PR 一起提交結果。
 
-1. **Identify affected commands** — use the [prompt below](#determining-which-tests-to-run) to have your agent analyze your changed files and determine which commands need testing.
-2. **Set up a test project** — scaffold from your local branch (see [Testing setup](#testing-setup)).
-3. **Run each affected command** — invoke it in your agent, verify it completes successfully, and confirm it produces the expected output (files created, scripts executed, artifacts populated).
-4. **Run prerequisites first** — commands that depend on earlier commands (e.g., `/speckit.tasks` requires `/speckit.plan` which requires `/speckit.specify`) must be run in order.
-5. **Report results** — paste the [reporting template](#reporting-results) into your PR with pass/fail for each command tested.
+1. **找出受影響的命令**——使用[下方的提示詞](#determining-which-tests-to-run)，讓你的代理分析你變更的檔案，判斷哪些命令需要測試。
+2. **設定一個測試專案**——從你的本機分支建立鷹架（見[測試設定](#testing-setup)）。
+3. **執行每個受影響的命令**——在你的代理中叫用它，驗證它成功完成，並確認它產生預期的輸出（建立的檔案、執行的指令碼、填入的產出物）。
+4. **先執行先決條件**——相依於更早命令的命令（例如 `/speckit.tasks` 需要 `/speckit.plan`，而 `/speckit.plan` 需要 `/speckit.specify`）必須依序執行。
+5. **回報結果**——把[回報範本](#reporting-results)貼進你的 PR，為每個測試過的命令填上通過／失敗。
 
-#### Reporting results
+#### 回報結果
 
-Paste this into your PR:
+把這段貼進你的 PR：
 
 ```markdown
 ## Manual test results
@@ -356,9 +352,9 @@ Paste this into your PR:
 | `/speckit.command` | |
 ```
 
-#### Determining which tests to run
+#### 判斷要執行哪些測試
 
-Copy this prompt into your agent. Include the agent's response (selected tests plus a brief explanation of the mapping) in your PR.
+把這段提示詞複製到你的代理中。把代理的回應（選定的測試，加上對應關係的簡要說明）包含在你的 PR 裡。
 
 ```text
 Read CONTRIBUTING.md, then run `git diff --name-only main` to get my changed files.
@@ -394,109 +390,106 @@ Number each test sequentially (T1, T2, ...). List prerequisite tests first.
 - T2: /speckit.command — (reason)
 ```
 
-## AI contributions in Spec Kit
+## Spec Kit 中的 AI 貢獻
 
 > [!IMPORTANT]
 >
-> If you are using **any kind of AI assistance** to contribute to Spec Kit,
-> it must be disclosed in the pull request or issue.
+> 如果你正在使用**任何形式的 AI 協助**為 Spec Kit 做出貢獻，
+> 這必須在拉取請求或議題中揭露。
 
-We welcome and encourage the use of AI tools to help improve Spec Kit! Many valuable contributions have been enhanced with AI assistance for code generation, issue detection, and feature definition.
+我們歡迎並鼓勵使用 AI 工具來協助改進 Spec Kit！許多有價值的貢獻都在 AI 的協助下獲得了強化，用於程式碼生成、議題偵測與功能定義。
 
-That being said, if you are using any kind of AI assistance (e.g., agents, ChatGPT) while contributing to Spec Kit,
-**this must be disclosed in the pull request or issue**. When AI assistance was used, the disclosure must name:
+話雖如此，如果你在為 Spec Kit 做出貢獻時使用了任何形式的 AI 協助（例如代理、ChatGPT），
+**這必須在拉取請求或議題中揭露**。當 AI 協助被使用時，揭露內容必須指明：
 
-- **The agent/tool** — e.g., GitHub Copilot, Claude Code, ChatGPT.
-- **The model(s)** — e.g., Claude Opus 4.x, GPT-5.
-- **The settings/mode** — e.g., reasoning effort, and whether it ran autonomously or under human supervision.
-- **The extent** — e.g., documentation comments vs. code generation.
+- **代理／工具**——例如 GitHub Copilot、Claude Code、ChatGPT。
+- **模型**——例如 Claude Opus 4.x、GPT-5。
+- **設定／模式**——例如推理努力程度，以及它是在自主模式下還是人類監督下執行。
+- **參與程度**——例如文件註解與程式碼生成的差別。
 
-If your PR responses or comments are being generated by an AI, disclose that as well, naming the same agent, model(s), settings/mode, and extent.
+如果你的 PR 回應或留言是由 AI 產生的，也請揭露這一點，並指明相同的代理、模型、設定／模式與參與程度。
 
-As an exception, trivial spacing or typo fixes don't need to be disclosed, so long as the changes are limited to small parts of the code or short phrases. The catalog-submission issue forms (extension, preset, and bundle submissions) feed content-neutral validation automation rather than code review, so they carry no disclosure field and are exempt from this requirement. Spec Kit's own bundled agentic workflows (the automated bug-fix and community-catalog prompts under `.github/workflows/`) are likewise exempt: they run as a fixed, known agent and open draft PRs for maintainer review, so their agent identity is inherent to the workflow rather than self-declared per contribution.
-The trivial-fix exception does not waive the disclosures below for agents acting
-on behalf of a contributor; the bundled workflows retain their exception.
+作為例外，瑣碎的間距或錯字修正不需要揭露，前提是變更僅限於程式碼的小部分或簡短的詞句。目錄提交議題表單（擴充功能、預設集與套件組的提交）餵給的是內容中立的驗證自動化，而不是程式碼審查，因此它們沒有揭露欄位，也豁免於這項要求。Spec Kit 自家隨附的代理工作流程（`.github/workflows/` 下的自動化錯誤修正與社群目錄提示詞）同樣豁免：它們以固定、已知的代理身分執行，並開啟草稿 PR 供維護者審查，因此它們的代理身分是工作流程本身固有的，而不是由每次貢獻自行申報的。
+瑣碎修正的例外，並不免除下方針對代表貢獻者行事的代理的揭露要求；隨附的工作流程則保留其豁免。
 
-An example disclosure:
+一則揭露的範例：
 
-> Implemented with GitHub Copilot using Claude Opus 4.x in agent/autonomous mode; code generation.
+> 以 GitHub Copilot 使用 Claude Opus 4.x，在代理／自主模式下實作；程式碼生成。
 
-Or a more detailed disclosure:
+或一則更詳細的揭露：
 
-> I consulted ChatGPT (GPT-5, default settings, human-supervised) to understand the codebase, but the solution
-> was fully authored manually by myself.
+> 我諮詢了 ChatGPT（GPT-5、預設設定、由人類監督）來理解程式碼庫，但解決方案
+> 完全由我本人手動撰寫。
 
-Failure to disclose this is first and foremost rude to the human operators on the other end of the pull request.
+未能揭露這一點，首先是對拉取請求另一端的人類操作者非常無禮的行為。
 
-To be clear, this disclosure does not change the level of scrutiny a contribution receives — the same evidence bar applies to
-everyone, human and AI-assisted alike. It simply gives maintainers visibility into which models and settings are being used and to
-what extent, which in turn helps us judge whether our [`AGENTS.md`](./AGENTS.md) guidance needs refinement over time.
+要說清楚的是，這份揭露不會改變一份貢獻所受到的審查程度——同一套證據標準適用於
+所有人，無論是人類還是 AI 協助的貢獻皆然。它只是讓維護者能看見哪些模型與設定正在被使用，以及
+使用到什麼程度，進而協助我們判斷，隨著時間過去，我們的 [`AGENTS.md`](./AGENTS.md) 指引是否需要精煉。
 
-In a perfect world, AI assistance would produce equal or higher quality work than any human. That isn't the world we live in today, and in most cases
-where human supervision or expertise is not in the loop, it's generating code that cannot be reasonably maintained or evolved.
+在一個完美的世界裡，AI 協助產出的工作品質會等於或高於任何人類。但那不是我們今天所生活的世界，而且在大多數
+缺乏人類監督或專業知識參與的情況下，它產生的程式碼無法被合理地維護或演進。
 
-### Agent-authored Git and review activity
+### 由代理撰寫的 Git 與審查活動
 
-For an agent acting on behalf of a contributor, disclosure is continuous: the
-PR body, each agent-authored commit, and each AI-generated PR comment or reply
-must independently identify the agent's involvement. A PR-body disclosure does
-not cover later commits or review rounds.
+對於代表貢獻者行事的代理而言，揭露是持續性的：
+PR 內文、每一個由代理撰寫的提交，以及每一則 AI 產生的 PR 留言或回覆，
+都必須各自獨立指出代理的參與。PR 內文的揭露
+並不涵蓋後續的提交或審查回合。
 
-- **Before opening a PR:** Check whether the filing account already has three
-  open PRs in this repository. If so, explain that another submission may
-  receive lower review priority and obtain the filer's explicit permission.
-  Without it, including during autonomous operation, leave the work on a branch
-  and report that confirmation is required. Repository-owned `gh-aw` maintenance
-  workflows are exempt from this count check.
-- **For every agent-authored commit:** Include an `Assisted-by:` trailer naming
-  the actual agent and model and whether it acted `autonomous` or `supervised`,
-  for example, `Assisted-by: GitHub Copilot (model: Claude Opus 4.8, autonomous)`.
-  Use `model: unknown` only if the model genuinely cannot be determined. Use
-  `supervised` only if a human authored or line-by-line reviewed the change
-  before commit. Do not hide agent authorship behind the operator's git
-  identity or remove tool-generated `Co-authored-by:` trailers.
-- **For each AI-generated PR comment:** Identify the contributor on whose
-  behalf it is posted, the agent, model, settings/mode, and extent of AI
-  involvement. Restate this in every review-round summary, not just the PR
-  body. Post one top-level summary per round with the changes and commit SHA;
-  reply inline only for disagreement, deferral, or a non-obvious fix, and keep
-  those replies brief. Do not resolve conversations on a reviewer's behalf.
-  Avoid emoji, celebratory framing, checklist mirroring, and restating the
-  reviewer's comments. Re-request review once, after all feedback is addressed.
+- **在開啟 PR 之前：** 檢查提交帳號是否已經在這個儲存庫中有三個
+  開啟中的 PR。如果有，請說明另一份提交可能會
+  獲得較低的審查優先順序，並取得提交者的明確許可。
+  若未取得許可，包括在自主運作期間，請把工作留在分支上，
+  並回報需要確認。儲存庫自有的 `gh-aw` 維護
+  工作流程豁免於這項數量檢查。
+- **對於每一個由代理撰寫的提交：** 附上一行 `Assisted-by:` 結尾標記，指明
+  實際的代理與模型，以及它是以 `autonomous` 還是 `supervised` 方式行事，
+  例如 `Assisted-by: GitHub Copilot (model: Claude Opus 4.8, autonomous)`。
+  只有在真的無法確定模型時，才使用 `model: unknown`。只有在人類於提交前撰寫了這項變更、或逐行審查過它時，
+  才使用 `supervised`。不要把代理的作者身分藏在操作者的 git
+  身分背後，也不要移除工具產生的 `Co-authored-by:` 結尾標記。
+- **對於每一則 AI 產生的 PR 留言：** 指出它所代表的貢獻者、
+  代理、模型、設定／模式，以及 AI 參與的程度。在每一回合的審查摘要中重述這一點，而不只是
+  在 PR 內文中。每回合發表一篇頂層摘要，包含變更與提交 SHA；
+  只有在表達不同意見、延後處理，或進行不明顯的修正時，才使用行內回覆，並讓
+  那些回覆保持簡短。不要代表審查者解決對話。
+  避免使用表情符號、慶祝式的措辭、檢核清單式的鏡像重述，以及重述
+  審查者的留言。在所有回饋都處理完畢後，重新請求審查一次。
 
-Fast responses do not replace disclosure: do not post an unexplained "Done" or
-push an undisclosed fix moments after review. Do not claim personal human review
-or testing for an automated change; describe the automation truthfully.
+快速的回應不能取代揭露：不要在審查後沒幾分鐘就發表一則未說明的「Done」，或
+推送一個未揭露的修正。不要為一項自動化變更聲稱是由人類親自審查
+或測試的；請如實描述這項自動化。
 
-### What we're looking for
+### 我們所看重的
 
-When submitting AI-assisted contributions, please ensure they include:
+提交 AI 協助的貢獻時，請確保它們包含：
 
-- **Clear disclosure of AI use** - You are transparent about AI use, naming the agent/tool, model(s), settings/mode, and the degree to which you're using it for the contribution
-- **Human understanding and testing** - You've personally tested the changes and understand what they do
-- **Clear rationale** - You can explain why the change is needed and how it fits within Spec Kit's goals
-- **Concrete evidence** - Include test cases, scenarios, or examples that demonstrate the improvement
-- **Your own analysis** - Share your thoughts on the end-to-end developer experience
+- **清楚揭露 AI 的使用**——你對 AI 的使用保持透明，指明代理／工具、模型、設定／模式，以及你為這份貢獻使用它的程度
+- **人類的理解與測試**——你已親自測試過這些變更，並理解它們的作用
+- **清楚的理由**——你能解釋為什麼需要這項變更，以及它如何契合 Spec Kit 的目標
+- **具體的證據**——附上展示改進成果的測試案例、情境或範例
+- **你自己的分析**——分享你對端到端開發者體驗的想法
 
-### What we'll close
+### 我們會關閉的貢獻
 
-We reserve the right to close contributions that appear to be:
+我們保留關閉看似屬於以下情況的貢獻的權利：
 
-- Untested changes submitted without verification
-- Generic suggestions that don't address specific Spec Kit needs
-- Bulk submissions that show no human review or understanding
+- 未經驗證就提交的未測試變更
+- 未針對 Spec Kit 具體需求的泛泛建議
+- 看不出有人類審查或理解的大量提交
 
-### Guidelines for success
+### 成功的指引
 
-The key is demonstrating that you understand and have validated your proposed changes. If a maintainer can easily tell that a contribution was generated entirely by AI without human input or testing, it likely needs more work before submission.
+關鍵在於展示你理解並驗證了你提出的變更。如果維護者能輕易看出某份貢獻完全是由 AI 產生、缺乏人類的投入或測試，那它在提交之前很可能還需要更多工作。
 
-Contributors who consistently submit low-effort AI-generated changes may be restricted from further contributions at the maintainers' discretion.
+持續提交低投入、由 AI 產生的變更的貢獻者，可能會被維護者酌情限制進一步的貢獻。
 
-Please be respectful to maintainers and disclose AI assistance.
+請尊重維護者，並揭露 AI 協助。
 
-## Resources
+## 資源
 
-- [Spec-Driven Development Methodology](./spec-driven.md)
-- [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
-- [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://help.github.com)
+- [規格驅動開發方法論](./spec-driven.md)
+- [如何為開源做出貢獻](https://opensource.guide/how-to-contribute/)
+- [使用拉取請求](https://help.github.com/articles/about-pull-requests/)
+- [GitHub 說明](https://help.github.com)

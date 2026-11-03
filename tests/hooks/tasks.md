@@ -1,1 +1,1 @@
-- [ ] T001 [US1] Create script that prints 'Hello hooks!' in hello.py
+- [ ] T001 [US1] 在 hello.py 中建立會印出 'Hello hooks!' 的指令碼

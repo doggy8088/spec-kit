@@ -1,58 +1,31 @@
-# Spec of Specs
+# 規格的規格
 
-When a feature is too large to run through a single
-`/speckit.specify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`
-cycle without the model losing track mid-implementation, you can break it into a
-**roadmap** of smaller, independently-specified sub-features. This is the "spec of
-specs" approach: one up-front pass decomposes a massive feature into self-contained
-specs, and each of those runs through its own specify/plan/tasks/implement cycle.
+當某個功能過於龐大，無法在單一 `/speckit.specify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement` 循環中完成而不讓模型在實作中途失去脈絡時，你可以將它拆解為一份**路線圖**，由較小、可獨立規格化的子功能組成。這就是「規格的規格」作法：先進行一輪拆解，將龐大的功能分解為自成一體的規格，每份規格再各自走完 specify/plan/tasks/implement 循環。
 
-> **When to reach for this.** Decomposition adds the most overhead of any strategy
-> in [Handling Complex Features](complex-features.md). Use it **only when the lighter
-> options there are insufficient** — first try limiting how many tasks run per
-> `/speckit.implement` invocation, then sub-agent delegation, then a combination.
-> Reach for a spec of specs only when even a single phase is too large to handle in
-> one run.
+> **何時該採用此作法。** 拆解是[處理複雜功能](complex-features.md)中額外成本最高的策略。**僅在該頁較輕量的選項不足時**才使用——先嘗試限制每次 `/speckit.implement` 呼叫執行的任務數量，再嘗試子代理委派，然後兩者並用。只有當單一階段都過大、無法在一次執行中處理時，才採用規格的規格。
 
-The rest of this page describes *how* to do it with the tools you already have. No
-new commands or extensions are required.
+本頁其餘部分說明*如何*用你已有的工具做到這一點。不需要任何新命令或擴充功能。
 
-## The roadmap pass
+## 路線圖階段
 
-Before writing any sub-spec, do a single decomposition pass to produce a roadmap.
-Treat this as a lightweight planning conversation with your agent, not a full spec:
+在撰寫任何子規格之前，先進行一輪拆解，產出一份路線圖。將此視為與代理的輕量規劃對話，而不是完整的規格：
 
-1. **State the whole feature.** Describe the large feature (the "epic") in a
-   sentence or two so the agent has the full picture up front.
-2. **Identify independent slices.** Ask the agent to propose a small set of
-   sub-features that each deliver a coherent piece of the epic and can be specified
-   on their own. Aim for slices that are independently testable — implementing just
-   one should leave you with something demonstrable.
-3. **Draw the boundaries.** For each slice, write one line of intent and an explicit
-   scope boundary (what is in, what is deferred to a sibling slice). Sharp
-   boundaries are what keep each sub-spec small enough to fit in context.
-4. **Order by dependency.** Note which slices depend on others and sequence them so
-   prerequisites come first. Slices with no dependency on each other can be built in
-   any order. To build independent slices in parallel, use separate worktrees so each
-   run has isolated active-feature state.
-5. **Record the result as a roadmap.** Capture the slices in a durable roadmap file
-   (below) so every later sub-spec can point back to it.
+1. **陳述整個功能。** 用一兩句話描述大型功能（即「epic」），讓代理一開始就掌握全貌。
+2. **找出獨立切片。** 請代理提出一組少量的子功能，每個子功能都能交付 epic 的一個連貫部分，且能獨立規格化。目標是能獨立測試的切片——只實作其中一個，就應該留下可展示的成果。
+3. **劃清邊界。** 為每個切片寫一行意圖與明確的範圍邊界（哪些納入、哪些延後到同層級切片）。清晰的邊界正是讓每份子規格小到能納入上下文的關鍵。
+4. **依相依性排序。** 註明哪些切片相依於其他切片，並排序讓前置條件先行。彼此無相依關係的切片可以任意順序建置。若要平行建置獨立切片，請使用獨立的 worktree，讓每次執行都有隔離的使用中功能狀態。
+5. **將結果記錄為路線圖。** 將切片記錄在持久的路線圖檔案中（見下文），讓後續每份子規格都能指向它。
 
-The roadmap is deliberately shallow: it names and orders the sub-features but does
-**not** design them. The design happens when each slice runs through its own
-`/speckit.specify`.
+路線圖刻意保持淺層：它命名並排序子功能，但**不**設計它們。設計會在每個切片走完自己的 `/speckit.specify` 時才發生。
 
-## The roadmap artifact
+## 路線圖成品
 
-The roadmap is an ordinary Markdown file you author and keep under version control —
-there is no special tooling behind it. Put it where the sub-specs can find it:
+路線圖是你撰寫並納入版本控制的普通 Markdown 檔案——背後沒有特殊工具。將它放在子規格能找到的位置：
 
-- For a feature-scoped epic: `specs/<epic-slug>/roadmap.md`.
-- For a larger, cross-cutting epic: a top-level `ROADMAP.md`.
+- 以功能為範疇的 epic：`specs/<epic-slug>/roadmap.md`。
+- 較大型、橫切性的 epic：頂層的 `ROADMAP.md`。
 
-Each roadmap entry carries a stable id (used later for linking), a name, its intent,
-its scope boundary, its dependencies, a status, and — once the sub-spec exists — a
-link to it. A minimal template:
+每筆路線圖條目都包含穩定的 id（稍後用於連結）、名稱、意圖、範圍邊界、相依性、狀態，以及——子規格存在後——指向它的連結。最小範本如下：
 
 ```markdown
 # Roadmap: <epic name>
@@ -68,69 +41,46 @@ link to it. A minimal template:
 | R3 | <name>      | <one line> | <in / deferred> | R1     | planned | — |
 ```
 
-Keep the `ID` column immutable once a sub-spec references it — it is the anchor for
-traceability. Fill in the `Sub-spec` column with the path to each sub-feature's spec
-directory as you create it, and update `Status` as work progresses.
+一旦子規格引用了 `ID` 欄位，就保持它不可變——它是可追溯性的錨點。當你建立每個子功能的規格目錄時，在 `Sub-spec` 欄位填入其路徑，並隨著工作進展更新 `Status`。
 
-## Specifying each sub-feature
+## 為每個子功能撰寫規格
 
-With the roadmap in hand, work through the entries one at a time using the normal
-Spec Kit flow — nothing new to learn:
+有了路線圖後，使用正常的 Spec Kit 流程逐一處理條目——無需學習新東西：
 
-1. Pick the next roadmap entry whose dependencies are already `done` (or have none).
-2. Run `/speckit.specify` for just that slice, describing only its intent and scope
-   from the roadmap entry. Because the slice is bounded, its spec, plan, and tasks
-   stay well within the context window.
-3. Run `/speckit.plan`, `/speckit.tasks`, and `/speckit.implement` for that slice as
-   usual.
-4. Mark the roadmap entry `done` and move to the next one.
+1. 挑選下一個相依性已 `done`（或沒有相依性）的路線圖條目。
+2. 只針對該切片執行 `/speckit.specify`，僅描述路線圖條目中的意圖與範圍。由於切片有明確邊界，其規格、計畫與任務都能遠低於上下文視窗上限。
+3. 照常為該切片執行 `/speckit.plan`、`/speckit.tasks` 與 `/speckit.implement`。
+4. 將路線圖條目標記為 `done`，再移到下一個。
 
-Each slice is a complete, independent Spec Kit feature with its own
-`spec.md`/`plan.md`/`tasks.md`. The roadmap is what ties them together.
+每個切片都是完整、獨立的 Spec Kit 功能，擁有自己的 `spec.md`/`plan.md`/`tasks.md`。路線圖就是將它們串連起來的東西。
 
-## Linking sub-specs to the roadmap
+## 將子規格連結到路線圖
 
-To keep scope and intent from drifting across separate runs, every sub-spec
-references its roadmap entry, and the roadmap links back — a simple, greppable,
-bidirectional convention:
+為了避免範圍與意圖在不同執行之間偏離，每份子規格都引用其路線圖條目，路線圖也反向連結——這是一種簡單、可搜尋、雙向的慣例：
 
-- **Sub-spec → roadmap.** In the sub-feature's `spec.md`, name the parent roadmap
-  and entry id in the `Input` / summary line, for example:
+- **子規格 → 路線圖。** 在子功能的 `spec.md` 中，在 `Input`／摘要行註明父路線圖與條目 id，例如：
 
   ```markdown
   **Input**: Parent roadmap: `specs/<epic>/roadmap.md` → entry **R3**. <feature description>
   ```
 
-- **Roadmap → sub-spec.** In the roadmap table, set the entry's `Sub-spec` column to
-  the sub-feature's directory, e.g. `specs/<epic>-part-3/`.
+- **路線圖 → 子規格。** 在路線圖表格中，將條目的 `Sub-spec` 欄位設為子功能的目錄，例如 `specs/<epic>-part-3/`。
 
-Because both directions are plain text, you can trace any sub-spec back to its place
-in the epic (and find its siblings) with a quick search — no tooling, no metadata
-schema.
+由於兩個方向都是純文字，你可以快速搜尋將任何子規格追溯回它在 epic 中的位置（並找到其同層級切片）——無需工具、無需中繼資料結構描述。
 
-## Keeping the roadmap and sub-specs in sync
+## 保持路線圖與子規格同步
 
-The roadmap is a living document. As you learn more, keep it and the sub-specs
-aligned:
+路線圖是活文件。隨著你了解得更多，請保持它與子規格一致：
 
-- **Roadmap first, then reconcile.** When scope shifts, update the roadmap entry
-  first, then update any sub-specs it affects. The roadmap is the source of truth for
-  how the epic is divided.
-- **Respect dependencies and ordering.** If a slice depends on another, build the
-  prerequisite first and cross-reference the dependent sub-spec so the relationship
-  is visible from both sides.
-- **Recurse when a slice is still too big.** If a sub-feature turns out to be too
-  large to specify in one cycle, give it its own roadmap and decompose it further —
-  the same approach applies one level down. Recursion adds overhead, so only go as
-  deep as the context problem actually requires.
+- **先改路線圖，再調和。** 當範圍變動時，先更新路線圖條目，再更新受影響的子規格。路線圖是 epic 如何拆分的真實來源。
+- **尊重相依性與順序。** 如果某個切片相依於另一個切片，請先建置前置項目，並在相依的子規格中交叉引用，讓關係從兩邊都能看見。
+- **當切片仍然過大時遞迴拆解。** 如果某個子功能大到無法在一個循環中規格化，就為它建立自己的路線圖並進一步拆解——同樣的作法可再往下一層。遞迴會增加額外成本，因此只深入到上下文問題實際需要的程度。
 
-## Worked example
+## 實際範例
 
-Suppose the epic is **"Add a self-service billing portal"** — far too large for a
-single cycle. The roadmap pass breaks it into three independently-specifiable
-slices.
+假設 epic 是**「新增自助帳單入口網站」**——遠大到無法用單一循環完成。路線圖階段將它拆解為三個可獨立規格化的切片。
 
-`specs/billing-portal/roadmap.md`:
+`specs/billing-portal/roadmap.md`：
 
 ```markdown
 # Roadmap: Self-service billing portal
@@ -147,8 +97,7 @@ contacting support. Too large for one cycle, so it is split into independent sli
 | R3 | Plan changes       | Upgrade/downgrade the subscription plan   | Uses R2's default payment method            | R1, R2    | planned | — |
 ```
 
-Each slice is then specified on its own. For example, the **R2** sub-feature's
-`spec.md` opens with a back-reference:
+然後逐一切片撰寫規格。例如，**R2** 子功能的 `spec.md` 開頭有反向引用：
 
 ```markdown
 # Feature Specification: Billing — payment methods
@@ -157,15 +106,8 @@ Each slice is then specified on its own. For example, the **R2** sub-feature's
 Let customers add, remove, and set a default payment method in the billing portal.
 ```
 
-From here a reader can trace **R2** back to the roadmap, see that it depends on
-**R1** (invoice history, already `done`), and see that **R3** (plan changes) is
-waiting on it. Building R1, then R2, then R3 keeps every run small while the roadmap
-preserves the shape of the whole epic.
+從這裡，讀者可以將 **R2** 追溯回路線圖，看出它相依於 **R1**（發票歷史，已 `done`），並看出 **R3**（方案變更）正在等待它。依序建置 R1、R2、R3，能讓每次執行保持小規模，同時路線圖保留了整個 epic 的形貌。
 
-## For automation (optional)
+## 自動化（選用）
 
-If you would rather automate roadmap capture and consistency checks than maintain
-the file by hand, the community-maintained
-[Spec Roadmap extension](https://github.com/srobroek/speckit-roadmap) explores that
-direction. It is a third-party extension and is not required — the manual convention
-above is enough on its own.
+如果你希望自動化路線圖的擷取與一致性檢查，而非手動維護檔案，社群維護的 [Spec Roadmap 擴充功能](https://github.com/srobroek/speckit-roadmap)探索了這個方向。它是第三方擴充功能，並非必要——上述手動慣例本身就已足夠。

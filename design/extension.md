@@ -1,53 +1,35 @@
-# Extension Architecture
+# 擴充功能架構
 
-This document defines the implemented architecture of Spec Kit extensions.
-Extensions are project-local content packages that contribute commands, skills,
-templates, scripts, hooks, runtime events, and configuration without adding
-Python code to the extension runtime.
+本文件定義 Spec Kit 擴充功能的已實作架構。擴充功能是專案本機的內容套件，可提供命令、技能、範本、指令碼、掛鉤、執行階段事件與設定，而不需為擴充功能執行階段新增 Python 程式碼。
 
-The implementation and executable tests are the source of truth for this
-document. The command adapter conventions in
-[Specify CLI Command Architecture](cli.md), the multi-adapter boundary in
-[Shared Command Application Architecture](shared.md), MCP exposure in
-[Specify MCP Command Architecture](mcp.md), and agent output formats in
-[Agent Integration Design](integration.md) remain authoritative for those
-respective concerns.
+實作與可執行測試是本文件的真實來源。[Specify CLI 命令架構](cli.md)中的命令配接器慣例、[共用命令應用架構](shared.md)中的多配接器邊界、[Specify MCP 命令架構](mcp.md)中的 MCP 公開方式，以及[代理整合設計](integration.md)中的代理輸出格式，仍分別為其相關事項的權威依據。
 
-## Responsibilities and boundaries
+## 職責與邊界
 
-The extension domain under `src/specify_cli/extensions/` owns:
+`src/specify_cli/extensions/` 之下的擴充功能領域擁有：
 
-- parsing and validating `extension.yml`;
-- compatibility and command-namespace validation;
-- project-local installation, enablement, disablement, update, and removal;
-- the installed-extension registry and catalog stack;
-- registration and cleanup of extension commands and generated skills;
-- layered extension configuration;
-- declarative hook registration; and
-- extension lifecycle CLI commands.
+- 解析與驗證 `extension.yml`；
+- 相容性與命令命名空間驗證；
+- 專案本機的安裝、啟用、停用、更新與移除；
+- 已安裝擴充功能註冊表與目錄堆疊；
+- 擴充功能命令與產生的技能的註冊與清理；
+- 分層擴充功能設定；
+- 宣告式掛鉤註冊；以及
+- 擴充功能生命週期 CLI 命令。
 
-Adjacent domains own behavior that extensions participate in:
+相鄰領域擁有擴充功能參與的行為：
 
-- integrations render extension commands or skills into the active agent's
-  native layout and refresh those outputs when the active integration changes;
-- presets and artifacts resolve extension-provided commands, templates, and
-  scripts as layers in the composed artifact stack;
-- events validate and project extension-declared runtime events into supported
-  agent-native event configuration;
-- bundles install and remove extension components by calling the extension
-  manager rather than reimplementing extension lifecycle behavior; and
-- shared download, archive, authentication, file-change, and path-safety
-  helpers provide common infrastructure.
+- 整合將擴充功能命令或技能呈現為作用中代理的原生版面，並在作用中整合變更時重新整理這些輸出；
+- 預設集與構件將擴充功能提供的命令、範本與指令碼，解析為組合構件堆疊中的層；
+- 事件驗證擴充功能宣告的執行階段事件，並將其投射為支援的代理原生事件設定；
+- 套件組透過呼叫擴充功能管理員來安裝與移除擴充功能元件，而不是重新實作擴充功能生命週期行為；以及
+- 共用的下載、封存、驗證、檔案變更與路徑安全輔助工具提供通用基礎設施。
 
-An extension is declarative content. It does not register Python plugins,
-replace CLI handlers, or import executable package code. External executable
-agent adapters are integrations and follow
-[the separate integration trust model](integration.md#external-adapter-package-contract).
+擴充功能是宣告式內容。它不註冊 Python 外掛、不取代 CLI 處理常式，也不匯入可執行的套件程式碼。外部可執行代理配接器屬於整合，並遵循[獨立的整合信任模型](integration.md#external-adapter-package-contract)。
 
-## Manifest contract
+## 清單合約
 
-Every extension root contains `extension.yml` with schema version `1.0`. The
-required top-level mappings are:
+每個擴充功能根目錄都包含結構描述版本為 `1.0` 的 `extension.yml`。必要的頂層對應為：
 
 ```yaml
 schema_version: "1.0"
@@ -64,44 +46,24 @@ provides:
       file: commands/speckit.example.run.md
 ```
 
-`extension.id` is a lowercase alphanumeric-and-hyphen slug. The version is
-parsed as a PEP 440 version, and `requires.speckit_version` is enforced against
-the installed CLI. Optional extension metadata includes authoring,
-categorization, effect, repository, license, tags, and support information.
-Most optional metadata is descriptive; it does not grant trust or filesystem
-access.
+`extension.id` 是小寫英數字與連字號組成的 slug。版本以 PEP 440 版本解析，`requires.speckit_version` 會對已安裝的 CLI 強制執行。選擇性的擴充功能中繼資料包括撰寫、分類、效果、儲存庫、授權、標籤與支援資訊。大部分選擇性中繼資料是描述性的；它不授予信任或檔案系統存取權。
 
-An extension must provide at least one command, hook, event, template, or
-script. Supported behavioral declarations are:
+擴充功能必須至少提供一個命令、掛鉤、事件、範本或指令碼。支援的行為宣告為：
 
-- `provides.commands`: canonical `speckit.<extension-id>.<command>` names,
-  source files, descriptions, and optional aliases;
-- `provides.templates`: named template files;
-- `provides.scripts`: named script entries with optional runtime declarations
-  from `bash`, `powershell`, and `python`;
-- `provides.config`: templates scaffolded into the installed extension
-  directory without overwriting existing files;
-- `hooks`: one or more command bindings for a Spec Kit workflow event; and
-- `events`: validated agent-runtime event bindings handled by the events
-  domain.
+- `provides.commands`：正規的 `speckit.<extension-id>.<command>` 名稱、來源檔案、說明與選擇性別名；
+- `provides.templates`：具名範本檔案；
+- `provides.scripts`：具名指令碼項目，附有來自 `bash`、`powershell` 與 `python` 的選擇性執行階段宣告；
+- `provides.config`：在不覆寫現有檔案的情況下，於已安裝擴充功能目錄中搭建的範本；
+- `hooks`：針對 Spec Kit 工作流程事件的一個或多個命令繫結；以及
+- `events`：由事件領域處理的已驗證代理執行階段事件繫結。
 
-Manifest paths are relative to the extension root. Absolute paths, traversal,
-and unsafe command or alias output names are rejected. Templates and scripts
-always have `replace` semantics when they participate in artifact resolution;
-extensions cannot author preset composition strategies.
+清單路徑相對於擴充功能根目錄。絕對路徑、遍歷，以及不安全的命令或別名輸出名稱都會被拒絕。範本與指令碼在參與構件解析時，一律具有 `replace` 語意；擴充功能無法撰寫預設集組合策略。
 
-Primary command names must use the extension's namespace. Installation rejects
-names and aliases that exactly match a name from another installed extension,
-and rejects names whose normalized agent output form conflicts with a core
-command. Installed-extension comparisons are not normalized, so differently
-spelled names can still converge on the same output path for a particular
-renderer. A small set of legacy two-segment command names is normalized to the
-canonical form with a warning; hook and event command references are rewritten
-consistently.
+主要命令名稱必須使用擴充功能的命名空間。安裝會拒絕與另一個已安裝擴充功能的名稱完全相符的名稱與別名，並拒絕其正規化代理輸出形式與核心命令衝突的名稱。已安裝擴充功能的比較不做正規化，因此拼寫不同的名稱仍可能在特定呈現器上匯聚到同一個輸出路徑。一小組舊版兩段式命令名稱會以警告正規化為正規形式；掛鉤與事件命令參照會一致地重寫。
 
-## Project state and filesystem layout
+## 專案狀態與檔案系統版面
 
-Extension state is project-local:
+擴充功能狀態為專案本機：
 
 ```text
 .specify/
@@ -120,314 +82,168 @@ Extension state is project-local:
         └── *-config.yml
 ```
 
-The JSON `.registry` is the lifecycle source of truth for installed
-extensions. Each valid entry records version, source provenance, manifest
-hash, enablement, priority, installation time, registered command outputs,
-registered skills, and, where needed, hashes proving ownership of generic
-integration artifacts. Lower numeric priority has higher precedence; ties are
-ordered by extension ID.
+JSON `.registry` 是已安裝擴充功能的生命週期真實來源。每個有效項目記錄版本、來源出處、清單雜湊、啟用狀態、優先順序、安裝時間、已註冊的命令輸出、已註冊的技能，以及必要時證明一般整合構件擁有權的雜湊。數字較小的優先順序具有較高的優先權；相同時依擴充功能 ID 排序。
 
-`.specify/extensions.yml` is a separate YAML projection used by declarative
-hooks. It contains a normalized installed list, hook bindings, and settings.
-It does not replace `.registry`.
+`.specify/extensions.yml` 是供宣告式掛鉤使用的獨立 YAML 投影。它包含正規化的已安裝列表、掛鉤繫結與設定。它不取代 `.registry`。
 
-Catalog configuration resolves in this order:
+目錄設定的解析順序為：
 
-1. `SPECKIT_CATALOG_URL`, which replaces the whole stack;
-2. `.specify/extension-catalogs.yml`;
-3. `~/.specify/extension-catalogs.yml`; then
-4. the built-in installable catalog followed by the discovery-only community
-   catalog.
+1. `SPECKIT_CATALOG_URL`，取代整個堆疊；
+2. `.specify/extension-catalogs.yml`；
+3. `~/.specify/extension-catalogs.yml`；然後
+4. 內建的可安裝目錄，接著是僅供探索的社群目錄。
 
-Extension configuration merges, from lowest to highest precedence:
+擴充功能設定的合併，優先順序由低至高為：
 
-1. the top-level `defaults` and `config.defaults` in `extension.yml`, merged
-   with `config.defaults` winning on conflicting keys;
-2. `.specify/extensions/<id>/<id>-config.yml`;
-3. `.specify/extensions/<id>/local-config.yml`; and
-4. `SPECKIT_<NORMALIZED_EXTENSION_ID>_*` environment variables.
+1. `extension.yml` 中頂層的 `defaults` 與 `config.defaults` 合併，衝突鍵以 `config.defaults` 獲勝；
+2. `.specify/extensions/<id>/<id>-config.yml`；
+3. `.specify/extensions/<id>/local-config.yml`；以及
+4. `SPECKIT_<NORMALIZED_EXTENSION_ID>_*` 環境變數。
 
-Configuration files are treated as data. Invalid or unreadable YAML degrades
-to an empty layer. Environment variables are nested by underscore-separated
-keys, and longer installed extension IDs win ambiguous prefix matches.
+設定檔視為資料。無效或無法讀取的 YAML 會退化為空層。環境變數依底線分隔的鍵巢狀化，較長的已安裝擴充功能 ID 在含糊的前綴比對中獲勝。
 
-Removal and force-reinstallation preserve only top-level files named
-`*-config.yml` or `*-config.local.yml`. The runtime `local-config.yml`
-override matches the first suffix and is covered by that preservation
-convention.
+移除與強制重新安裝僅保留名稱為 `*-config.yml` 或 `*-config.local.yml` 的頂層檔案。執行階段的 `local-config.yml` 覆寫符合第一個後綴，並受該保留慣例涵蓋。
 
-## Lifecycle and data flow
+## 生命週期與資料流程
 
-### Discovery
+### 探索
 
-`specify extension search` and `info` merge active catalogs in ascending
-priority order. The first catalog defining an extension ID wins. Fetch
-failures are isolated per catalog; the operation fails only when no active
-catalog can be fetched. Catalog caches are project-local and expire after one
-hour; malformed or unreadable cache entries are ignored and refetched.
+`specify extension search` 與 `info` 依優先順序遞增合併作用中的目錄。第一個定義擴充功能 ID 的目錄獲勝。擷取失敗依目錄隔離；只有當沒有作用中目錄可擷取時，操作才失敗。目錄快取為專案本機，一小時後到期；格式錯誤或無法讀取的快取項目會被忽略並重新擷取。
 
-The built-in community catalog is discovery-only. Its entries may be listed
-and inspected but cannot be installed until the user chooses a direct URL or
-places the extension in an install-enabled catalog they control.
+內建社群目錄僅供探索。其項目可列出與檢查，但在使用者選擇直接 URL，或將擴充功能置於其控制的可安裝目錄之前，無法安裝。
 
-### Installation
+### 安裝
 
-Installation accepts:
+安裝接受：
 
-- a bundled extension shipped with the current Spec Kit distribution;
-- a local directory, including development mode;
-- an install-enabled catalog entry; or
-- an explicitly trusted HTTPS archive URL.
+- 隨目前 Spec Kit 散發一起提供的隨附擴充功能；
+- 本機目錄，包括開發模式；
+- 可安裝的目錄項目；或
+- 明確信任的 HTTPS 封存 URL。
 
-All routes converge on `ExtensionManager.install_from_directory()` after safe
-archive extraction when applicable. The manager:
+所有路徑在適用時經安全封存解壓後，都匯聚到 `ExtensionManager.install_from_directory()`。管理員會：
 
-1. validates the manifest, compatibility, priority, command namespace, and
-   install conflicts;
-2. when the generic integration is active, validates its registration
-   settings, command sources, and unsafe existing output collisions;
-3. preserves eligible configuration before any destructive force reinstall;
-4. copies the extension under `.specify/extensions/<id>/`, honoring
-   `.extensionignore`;
-5. renders commands or skills for the active integration;
-6. registers hooks and the installed projection in `extensions.yml`;
-7. commits lifecycle and ownership metadata to `.registry`;
-8. restores executable bits for project scripts.
+1. 驗證清單、相容性、優先順序、命令命名空間與安裝衝突；
+2. 當一般整合作用中時，驗證其註冊設定、命令來源與不安全的現有輸出衝突；
+3. 在任何破壞性強制重新安裝前，保留符合資格的設定；
+4. 將擴充功能複製到 `.specify/extensions/<id>/` 之下，遵守 `.extensionignore`；
+5. 為作用中整合呈現命令或技能；
+6. 在 `extensions.yml` 中註冊掛鉤與已安裝投影；
+7. 將生命週期與擁有權中繼資料提交到 `.registry`；
+8. 還原專案指令碼的可執行位元。
 
-Configuration scaffolding is a caller-owned follow-up rather than a shared
-manager step. `extension add`, `extension enable`, and bundle installation call
-`scaffold_config()` without overwriting existing targets. Extension
-installation during `init` and extension update paths do not scaffold declared
-configuration templates.
+設定搭建是呼叫端擁有的後續步驟，而不是共用管理員步驟。`extension add`、`extension enable` 與套件組安裝會呼叫 `scaffold_config()` 而不覆寫現有目標。`init` 期間的擴充功能安裝與擴充功能更新路徑，不搭建宣告的設定範本。
 
-Development installs may use symlinks to rendered caches where the selected
-integration and platform support them. Integrations that prohibit such
-symlinks receive ordinary files instead.
+開發安裝在所選整合與平台支援時，可使用指向呈現快取的符號連結。禁止此類符號連結的整合，則改為接收一般檔案。
 
-### Enablement and integration changes
+### 啟用與整合變更
 
-Disabled extensions remain installed and are excluded from registry-driven
-artifact resolution, hook and event projection, and future integration
-registration. Enable and disable update registry state and hook bindings. For
-the generic integration, disablement also removes owned invocation artifacts
-after proving ownership. Other integrations retain already-generated command
-and skill files until an integration switch, uninstall, or other reconciliation
-removes them, so those stale files may remain invocable while the extension is
-disabled.
+已停用的擴充功能仍保持安裝，並從註冊表驅動的構件解析、掛鉤與事件投影，以及未來的整合註冊中排除。啟用與停用會更新註冊表狀態與掛鉤繫結。對於一般整合，停用也會在證明擁有權後，移除所擁有的呼叫構件。其他整合則保留已產生的命令與技能檔案，直到整合切換、解除安裝或其他調和將其移除，因此這些過期檔案在擴充功能停用時仍可能被呼叫。
 
-An extension install targets the active integration recorded in project state.
-Projects predating that state may fall back to detected agent directories;
-present but invalid active-integration state fails closed and registers no
-agent outputs. Selecting, switching, upgrading, or removing integrations
-reconciles enabled extension outputs for the affected active agent through the
-integration lifecycle. Those post-commit reconciliation steps are
-best-effort and surface warnings rather than rolling back a successful
-integration operation.
+擴充功能安裝以專案狀態中記錄的作用中整合為目標。早於該狀態的專案可回退到偵測到的代理目錄；現有但無效的作用中整合狀態會以失敗關閉，且不註冊任何代理輸出。選擇、切換、升級或移除整合，會透過整合生命週期，調和受影響作用中代理的已啟用擴充功能輸出。這些提交後調和步驟是盡力而為的，會顯示警告，而不是回滾成功的整合操作。
 
-### Update
+### 更新
 
-Update discovery compares the installed registry version with the winning
-install-enabled catalog release and any required bundled copy. It does not
-filter candidates for Spec Kit compatibility, so an incompatible release may
-still be offered. Exact catalog releases remain bound to the winning catalog
-source.
+更新探索會比較註冊表中已安裝的版本，與獲勝的可安裝目錄發行及任何必要的隨附副本。它不會依 Spec Kit 相容性篩選候選，因此不相容的發行仍可能被提供。精確的目錄發行仍繫結於獲勝的目錄來源。
 
-After selection and before mutation, the update command preflights the
-replacement archive, including manifest and Spec Kit compatibility checks, and
-backs up the extension directory, registry entry, eligible configuration, hook
-projection, command files, skills, and symlinks. A failed destructive update
-attempts to restore the prior package and all tracked outputs. Backup
-directories are unique per attempt; cleanup failures leave an isolated backup
-and produce a warning rather than contradicting a committed or restored state.
+在選擇後、變更前，更新命令會預檢取代封存，包括清單與 Spec Kit 相容性檢查，並備份擴充功能目錄、註冊表項目、符合資格的設定、掛鉤投影、命令檔案、技能與符號連結。失敗的破壞性更新會嘗試還原先前的套件與所有追蹤的輸出。備份目錄每次嘗試皆唯一；清理失敗會留下隔離的備份並產生警告，而不是與已提交或已還原的狀態矛盾。
 
-Update orchestration currently lives in CLI-private
-`_command_update_*` modules. It is not a shared typed operation.
+更新協調目前位於 CLI 專屬的 `_command_update_*` 模組中。它不是共用的型別操作。
 
-### Removal
+### 移除
 
-Removal unregisters tracked command and skill outputs, removes hook bindings,
-and deletes the registry entry. By default it copies eligible top-level config
-files to `.specify/extensions/.backup/<id>/` before deleting the package.
-`--keep-config` leaves those eligible files in the extension directory and
-writes a provenance marker so a later install can distinguish intentional
-preservation from a partial failed installation.
+移除會取消註冊追蹤的命令與技能輸出、移除掛鉤繫結，並刪除註冊表項目。預設情況下，它會在刪除套件前，將符合資格的頂層設定檔複製到 `.specify/extensions/.backup/<id>/`。`--keep-config` 將這些符合資格的檔案留在擴充功能目錄中，並寫入出處標記，讓後續安裝能區分刻意保留與部分失敗的安裝。
 
-## Command, skill, hook, and event delivery
+## 命令、技能、掛鉤與事件交付
 
-Extension command source is agent-neutral Markdown. The active integration's
-registrar converts it to the agent's command, recipe, TOML, YAML, or
-`SKILL.md` layout, rewrites extension-relative asset paths to the installed
-extension directory, resolves command references, and records the generated
-outputs in `.registry`. The output formats and integration ownership rules are
-defined in [Agent Integration Design](integration.md).
+擴充功能命令來源是與代理無關的 Markdown。作用中整合的註冊器將其轉換為代理的命令、配方、TOML、YAML 或 `SKILL.md` 版面，將擴充功能相對的資產路徑重寫為已安裝的擴充功能目錄，解析命令參照，並將產生的輸出記錄在 `.registry` 中。輸出格式與整合擁有權規則定義於[代理整合設計](integration.md)。
 
-Native registration follows the selected integration's output flavor. It
-renders primary names and aliases, so integrations whose native command format
-is `SKILL.md` create separate primary and alias skill directories. Non-generic
-native registration writes its selected destination and may replace an
-existing file; the generic integration applies its ownership checks first.
+原生註冊遵循所選整合的輸出形式。它呈現主要名稱與別名，因此原生命令格式為 `SKILL.md` 的整合，會建立獨立的主要與別名技能目錄。非一般的原生註冊會寫入其所選目的地，並可能取代現有檔案；一般整合會先套用其擁有權檢查。
 
-Command-backed integrations configured to use skills take a separate
-supplemental path. That path renders only primary commands as
-`speckit-<extension>-<command>/SKILL.md`. A normal install skips an existing
-unverified skill file or directory, while an expected development symlink or a
-forced integration refresh may be replaced.
+設定為使用技能的命令型整合，走獨立的補充路徑。該路徑僅將主要命令呈現為 `speckit-<extension>-<command>/SKILL.md`。一般安裝會跳過現有未驗證的技能檔案或目錄，而預期的開發符號連結或強制整合重新整理則可被取代。
 
-Hooks are declarative AI-agent follow-up instructions, not direct subprocess
-execution. `HookExecutor` is a helper API that filters enabled bindings,
-evaluates the limited `config.*` and `env.*` condition grammar, orders hooks by
-priority, and renders the invocation syntax for the active integration.
-`execute_hook()` returns execution metadata; the calling AI agent performs the
-command.
+掛鉤是宣告式的 AI 代理後續指示，而不是直接的子行程執行。`HookExecutor` 是輔助 API，可篩選已啟用的繫結、評估有限的 `config.*` 與 `env.*` 條件文法、依優先順序排序掛鉤，並為作用中整合呈現呼叫語法。`execute_hook()` 回傳執行中繼資料；呼叫的 AI 代理執行該命令。
 
-The shipped core command templates do not call `HookExecutor`. They read
-`.specify/extensions.yml` directly, preserve configured YAML order, skip
-disabled hooks, and skip every hook with a non-empty condition rather than
-evaluating it. For remaining hooks they emit optional or mandatory agent
-instructions, and the active AI agent performs any mandatory command.
+隨附的核心命令範本不呼叫 `HookExecutor`。它們直接讀取 `.specify/extensions.yml`，保留設定的 YAML 順序，跳過已停用的掛鉤，並跳過每個具有非空條件的掛鉤，而不是評估它。對於其餘掛鉤，它們發出選擇性或強制性的代理指示，作用中的 AI 代理執行任何強制命令。
 
-Runtime `events` are a distinct mechanism. The events domain validates their
-shape, merges enabled extension declarations with integration defaults and
-project overrides, and writes supported agent-native event configuration.
-Event dispatch resolves the declared command template and may execute its
-frontmatter script under the project process user's permissions with path
-confinement and timeouts.
+執行階段 `events` 是獨立的機制。事件領域驗證其形狀，將已啟用的擴充功能宣告與整合預設值及專案覆寫合併，並寫入支援的代理原生事件設定。事件分派解析宣告的命令範本，並可在路徑限制與逾時下，以專案行程使用者的權限執行其 frontmatter 指令碼。
 
-## Artifact registration and resolution
+## 構件註冊與解析
 
-Extensions contribute to the same artifact inventory and resolver used by
-presets and core assets. For commands, templates, and scripts, the resolution
-order is:
+擴充功能貢獻到與預設集及核心資產相同的構件清單與解析器。對於命令、範本與指令碼，解析順序為：
 
-1. project overrides;
-2. installed presets;
-3. enabled extensions in registry priority order; then
-4. core assets.
+1. 專案覆寫；
+2. 已安裝的預設集；
+3. 依註冊表優先順序的已啟用擴充功能；然後
+4. 核心資產。
 
-A successfully loaded and validated extension manifest declaration is
-authoritative. A declared but missing or unsafe file is not silently replaced
-by a conventionally named file. For legacy compatibility, an absent,
-unreadable, or invalid manifest reopens conventional lookup, as does a valid
-manifest that does not declare the requested artifact. Commands and scripts
-are searched under `commands/` and `scripts/`; templates are searched under
-`templates/` and at the extension root. Consequently, an undeclared root-level
-template can precede a core template.
+成功載入並驗證的擴充功能清單宣告具有權威性。已宣告但缺少或不安全的檔案，不會被依慣例命名的檔案靜默取代。為了舊版相容性，缺少、無法讀取或無效的清單會重新開啟慣例查找，有效但未宣告所請求構件的清單亦然。命令與指令碼在 `commands/` 與 `scripts/` 之下搜尋；範本在 `templates/` 之下與擴充功能根目錄搜尋。因此，未宣告的根層級範本可優先於核心範本。
 
-Extension layers always use `replace` semantics. Artifact listing and info
-project their manifest provenance, active stack entry, concrete source path,
-and hook bindings without changing resolver behavior. A corrupt extension
-registry causes artifact resolution to fail closed.
+擴充功能層一律使用 `replace` 語意。構件列表與資訊會投射其清單出處、作用中堆疊項目、具體來源路徑與掛鉤繫結，而不改變解析器行為。損毀的擴充功能註冊表會使構件解析以失敗關閉。
 
-When the registry is healthy, the legacy resolver also admits safe
-unregistered extension directories at default priority `10`. This compatibility
-path is not equivalent to installation: it has no lifecycle or generated
-output ownership metadata.
+當註冊表健康時，舊版解析器也允許安全的未註冊擴充功能目錄，預設優先順序為 `10`。此相容性路徑不等同於安裝：它沒有生命週期或產生的輸出擁有權中繼資料。
 
-## Bundled extensions and bundles
+## 隨附擴充功能與套件組
 
-First-party bundled extensions live under `extensions/<id>/` in the source
-tree and are copied into `specify_cli/core_pack/extensions/<id>/` when the
-wheel is built. Source and packaged lookup use the same asset resolver.
-`extensions/catalog.json` advertises bundled identity and version; contract
-tests require catalog and manifest versions to agree so updates are neither
-hidden nor repeatedly offered.
+第一方隨附擴充功能位於原始碼樹的 `extensions/<id>/` 之下，並在建構 wheel 時複製到 `specify_cli/core_pack/extensions/<id>/`。來源與封裝查找使用相同的資產解析器。`extensions/catalog.json` 宣傳隨附的身分與版本；合約測試要求目錄與清單版本一致，讓更新既不被隱藏也不會重複提供。
 
-A Spec Kit bundle may reference an extension component. The bundle installer
-delegates to `ExtensionManager` for bundled or catalog installation,
-configuration scaffolding, refresh, and removal. Bundles do not define a
-second extension format or lifecycle.
+Spec Kit 套件組可參照擴充功能元件。套件組安裝程式委派 `ExtensionManager` 進行隨附或目錄安裝、設定搭建、重新整理與移除。套件組不定義第二種擴充功能格式或生命週期。
 
-## Trust and security boundaries
+## 信任與安全邊界
 
-Extension content is trusted project content once installed. Commands run in
-the AI agent's context, and runtime event scripts run with the permissions of
-the invoking process. Manifest validation and path confinement reduce unsafe
-packaging and output writes; they are not a sandbox.
+擴充功能內容一旦安裝，即為受信任的專案內容。命令在 AI 代理的內容中執行，執行階段事件指令碼以呼叫行程的權限執行。清單驗證與路徑限制減少不安全的封裝與輸出寫入；它們不是沙箱。
 
-Network and package trust rules are:
+網路與套件信任規則為：
 
-- catalog and archive URLs require HTTPS, except loopback HTTP for local
-  development;
-- catalog redirects are validated at every hop;
-- configured authentication providers may add credentials for matching hosts,
-  and redirect handling does not forward them to untrusted hosts;
-- catalog responses and downloads are size-bounded;
-- archives reject traversal, links, and unsupported layouts during extraction;
-- a catalog `sha256`, when present, must match the downloaded archive;
-- direct URL installation is default-deny and requires interactive
-  confirmation or the explicit initialization trust flag; and
-- catalog `install_allowed` controls whether metadata is an install source,
-  but does not certify extension safety.
+- 目錄與封存 URL 需要 HTTPS，本機開發的 loopback HTTP 除外；
+- 目錄重新導向在每個躍點驗證；
+- 已設定的驗證提供者可為符合的主機新增認證，重新導向處理不會將其轉發給不受信任的主機；
+- 目錄回應與下載有大小界限；
+- 封存在解壓期間拒絕遍歷、連結與不支援的版面；
+- 目錄 `sha256` 若存在，必須與下載的封存相符；
+- 直接 URL 安裝預設拒絕，需要互動確認或明確的初始化信任旗標；以及
+- 目錄 `install_allowed` 控制中繼資料是否為安裝來源，但不證明擴充功能安全性。
 
-Guarded archive, package, integration, removal, and refresh paths validate
-containment or prove ownership with registry records, generated frontmatter,
-hashes, or expected symlink targets before mutating user-adjacent artifacts.
-This is not a universal property of registry persistence:
-`ExtensionRegistry._save()` does not itself validate containment of the
-`.specify/extensions` root. Without an active integration file-change observer,
-a symlinked root is followed and `.registry` can be written outside the
-project.
+受保護的封存、套件、整合、移除與重新整理路徑，會在變更使用者相鄰構件前，驗證包含關係，或以註冊表記錄、產生的 frontmatter、雜湊或預期的符號連結目標證明擁有權。這不是註冊表保存的普遍屬性：`ExtensionRegistry._save()` 本身不驗證 `.specify/extensions` 根目錄的包含關係。在沒有作用中整合檔案變更觀察者的情況下，符號連結的根目錄會被跟隨，`.registry` 可寫入專案之外。
 
-## Failure and transactional guarantees
+## 失敗與交易保證
 
-Expected manifest, compatibility, catalog, and lifecycle failures use
-`ValidationError`, `CompatibilityError`, or `ExtensionError`; CLI adapters map
-them to user-facing messages and non-zero exits.
+預期的清單、相容性、目錄與生命週期失敗使用 `ValidationError`、`CompatibilityError` 或 `ExtensionError`；CLI 配接器將它們對應為面向使用者的訊息與非零結束代碼。
 
-The implementation provides targeted transactional guarantees rather than one
-global filesystem transaction:
+實作提供有針對性的交易保證，而不是一個全域檔案系統交易：
 
-- manifest, compatibility, priority, namespace, conflict, and generic
-  active-output checks precede destructive force removal. `.extensionignore`
-  is loaded afterward, so an unreadable or invalid ignore file can still fail
-  after the prior package has been removed;
-- kept configuration is durably staged and restored across copy failures and
-  interrupted retries;
-- generic integration registration rolls back generated outputs, hooks, and
-  registry state on commit failure;
-- update backs up every tracked lifecycle surface before mutation and restores
-  it on failure; and
-- corrupted registries fail closed in artifact resolution even though registry
-  construction normalizes malformed content so repair-oriented lifecycle
-  commands can continue.
+- 清單、相容性、優先順序、命名空間、衝突與一般作用中輸出檢查，先於破壞性強制移除。`.extensionignore` 在之後載入，因此無法讀取或無效的忽略檔案，仍可能在先前套件被移除後失敗；
+- 保留的設定會持久地暫存，並在複製失敗與中斷重試時還原；
+- 一般整合註冊在提交失敗時，回滾產生的輸出、掛鉤與註冊表狀態；
+- 更新在變更前備份每個追蹤的生命週期介面，並在失敗時還原；以及
+- 損毀的註冊表在構件解析中以失敗關閉，儘管註冊表建構會正規化格式錯誤的內容，讓以修復為導向的生命週期命令能繼續。
 
-Best-effort cleanup may leave backups or caches after a successful commit or
-rollback. Such leftovers are not treated as active extension state.
+盡力而為的清理可能在成功提交或回滾後留下備份或快取。此類殘留不視為作用中的擴充功能狀態。
 
-## Supported external surfaces
+## 支援的外部介面
 
-The supported extension surfaces are:
+支援的擴充功能介面為：
 
-- `specify extension ...` and `specify extension catalog ...`;
-- repeated `specify init --extension ...` inputs;
-- extension components in bundle manifests;
-- `specify artifact list`, `info`, and `lookup` for composed extension
-  contributions;
-- installed command or skill outputs consumed through the selected agent
-  integration; and
-- the declarative `extension.yml` package format.
+- `specify extension ...` 與 `specify extension catalog ...`；
+- 重複的 `specify init --extension ...` 輸入；
+- 套件組清單中的擴充功能元件；
+- 針對組合擴充功能貢獻的 `specify artifact list`、`info` 與 `lookup`；
+- 透過所選代理整合使用的已安裝命令或技能輸出；以及
+- 宣告式 `extension.yml` 套件格式。
 
-Extension lifecycle operations do not currently have shared typed application
-operations or first-class MCP adapters. The experimental MCP server registers
-version and artifact tools; its artifact list and info tools can report
-extension contributions, but extension add, update, remove, enablement,
-catalog, and configuration lifecycle remain CLI-only. This is the implemented
-boundary, independent of the broader adapter rules in
-[the MCP design](mcp.md).
+擴充功能生命週期操作目前沒有共用的型別應用操作或第一級 MCP 配接器。實驗性的 MCP 伺服器註冊版本與構件工具；其構件列表與資訊工具可報告擴充功能貢獻，但擴充功能的 add、update、remove、啟用、目錄與設定生命週期仍僅限 CLI。這是已實作的邊界，獨立於[MCP 設計](mcp.md)中更廣泛的配接器規則。
 
-The Python classes in `specify_cli.extensions` are internal domain APIs used by
-Spec Kit itself. They are not a separately versioned third-party SDK.
+`specify_cli.extensions` 中的 Python 類別是 Spec Kit 本身使用的內部領域 API。它們不是另外版本化的第三方 SDK。
 
-## Non-goals
+## 非目標
 
-The implemented extension system does not:
+已實作的擴充功能系統不會：
 
-- execute arbitrary Python plugins from extension packages;
-- sandbox command prompts or event scripts;
-- treat catalog inclusion as a security endorsement;
-- allow extensions to replace core CLI or MCP registration;
-- define preset-style append, prepend, or wrap composition strategies;
-- install dependencies or arbitrary tools declared in manifest metadata;
-- make every manifest metadata field an enforced runtime contract; or
-- guarantee all lifecycle operations are globally atomic across every
-  filesystem and agent integration.
+- 從擴充功能套件執行任意 Python 外掛；
+- 對命令提示詞或事件指令碼進行沙箱隔離；
+- 將目錄收錄視為安全背書；
+- 允許擴充功能取代核心 CLI 或 MCP 註冊；
+- 定義預設集樣式的 append、prepend 或 wrap 組合策略；
+- 安裝清單中繼資料中宣告的相依性或任意工具；
+- 將每個清單中繼資料欄位都變成強制執行的執行階段合約；或
+- 保證所有生命週期操作在每個檔案系統與代理整合上都全域原子。

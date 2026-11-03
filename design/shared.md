@@ -1,50 +1,34 @@
-# Shared Command Application Architecture
+# 共用命令應用架構
 
-This document defines the application layer beneath Specify delivery adapters.
-A logical operation has one shared implementation. The CLI, MCP, and any future
-delivery surface translate their inputs into that operation and translate its
-outcome into their own output and error conventions.
+本文件定義 Specify 交付配接器之下的應用層。一個邏輯操作只有一個共用實作。CLI、MCP 與任何未來的交付介面，都將其輸入轉換為該操作，並將其結果轉換為各自的輸出與錯誤慣例。
 
-[Specify CLI Command Architecture](cli.md) defines the Typer/terminal adapter.
-[Specify MCP Command Architecture](mcp.md) defines MCP tool exposure, protocol
-mapping, and transport. Neither adapter document owns application behavior.
-[Remote Catalog Contracts](catalogs.md) records the behavior-preserving
-boundaries for catalog-backed domain services.
+[Specify CLI 命令架構](cli.md) 定義 Typer／終端配接器。[Specify MCP 命令架構](mcp.md) 定義 MCP 工具公開方式、通訊協定對應與傳輸。兩份配接器文件都不擁有應用行為。[遠端目錄合約](catalogs.md) 記錄以目錄為後端的領域服務在保持行為不變下的邊界。
 
-## Design goals
+## 設計目標
 
-The shared layer optimizes for:
+共用層的優化方向為：
 
-- **One behavior:** every adapter for a logical operation invokes the same
-  semantic implementation.
-- **Adapter independence:** adapters own invocation and reporting without
-  calling or parsing one another.
-- **Typed contracts:** requests, results, warnings, and expected errors are
-  explicit and testable.
-- **Lean boundaries:** shared code contains application behavior, not a
-  universal runtime, service locator, transport abstraction, or policy engine.
-- **Explicit paths:** project and target paths are passed as operation inputs
-  rather than established through mutable process cwd.
-- **Reviewable ownership:** application behavior has a predictable source and
-  mirrored tests.
+- **單一行為：**邏輯操作的每個配接器都呼叫相同的語意實作。
+- **配接器獨立：**配接器各自負責呼叫與回報，不互相呼叫或解析。
+- **型別合約：**請求、結果、警告與預期錯誤皆明確且可測試。
+- **精簡邊界：**共用程式碼包含應用行為，而不是通用執行階段、服務定位器、傳輸抽象或政策引擎。
+- **明確路徑：**專案與目標路徑以操作輸入傳入，而不是透過可變的行程 cwd 建立。
+- **可審查的擁有權：**應用行為有可預測的來源與對應的測試。
 
-## Non-goals
+## 非目標
 
-The shared layer does not:
+共用層不會：
 
-- Standardize how adapters spell arguments, display progress, or format human
-  output.
-- Require byte-identical CLI JSON and MCP protocol envelopes.
-- Turn operations into a universal string-based command dispatcher.
-- Replace focused domain modules with a central execution engine.
-- Define CLI prompting, MCP host approval, transport authentication, or host
-  sandboxing.
-- Require a context object or extra module when ordinary typed parameters and
-  an existing domain module are sufficient.
+- 統一配接器拼寫引數、顯示進度或格式化人類可讀輸出的方式。
+- 要求 CLI JSON 與 MCP 通訊協定封裝逐位元相同。
+- 將操作變成通用的字串式命令分派器。
+- 以中央執引擎取代聚焦的領域模組。
+- 定義 CLI 提示、MCP 主機核准、傳輸驗證或主機沙箱。
+- 在一般的型別參數與既有領域模組已足夠時，要求內容物件或額外模組。
 
-## One logical operation, multiple adapters
+## 一個邏輯操作、多個配接器
 
-Adapters are peers above one application operation:
+配接器是位於同一個應用操作之上的對等層：
 
 ```text
 CLI arguments/options ─┐
@@ -56,38 +40,34 @@ typed outcome ─────────┬─> CLI text, JSON, warnings, and e
                       └─> future adapter representation
 ```
 
-The shared operation is the semantic source of truth. Equivalent requests
-produce equivalent results, warnings, expected failures, and side effects.
+共用操作是語意的真實來源。等價的請求會產生等價的結果、警告、預期失敗與副作用。
 
-An adapter must not:
+配接器不得：
 
-- Invoke another adapter.
-- Parse another adapter's output.
-- Reimplement semantic validation or application orchestration.
-- Add semantic defaults, trust, consent, or side effects absent from the
-  shared request.
+- 呼叫另一個配接器。
+- 解析另一個配接器的輸出。
+- 重新實作語意驗證或應用協調。
+- 新增共用請求中不存在的語意預設值、信任、同意或副作用。
 
-## Ownership boundaries
+## 擁有權邊界
 
-| Concern | Owner |
+| 事項 | 擁有者 |
 | --- | --- |
-| Logical operation ID and contract version | Relevant command/domain hierarchy |
-| Typed request, result, warning, and error models | Relevant command/domain hierarchy |
-| Semantic validation, orchestration, and side effects | Shared operation and domain modules |
-| Operation-private phases | `_operation_<name>_<phase>.py` |
-| Project and target path validation | Shared operation or focused domain helper |
-| Bundled assets and distribution metadata | Existing shared/domain resource helpers |
-| CLI syntax, prompting, rendering, JSON, and exit codes | CLI adapter |
-| MCP schemas, annotations, protocol mapping, and tool errors | MCP adapter |
-| MCP server lifecycle and transport | MCP infrastructure |
+| 邏輯操作 ID 與合約版本 | 相關命令／領域階層 |
+| 型別請求、結果、警告與錯誤模型 | 相關命令／領域階層 |
+| 語意驗證、協調與副作用 | 共用操作與領域模組 |
+| 操作專屬階段 | `_operation_<name>_<phase>.py` |
+| 專案與目標路徑驗證 | 共用操作或聚焦的領域輔助工具 |
+| 隨附資產與散發中繼資料 | 既有的共用／領域資源輔助工具 |
+| CLI 語法、提示、呈現、JSON 與結束代碼 | CLI 配接器 |
+| MCP 結構描述、註解、通訊協定對應與工具錯誤 | MCP 配接器 |
+| MCP 伺服器生命週期與傳輸 | MCP 基礎設施 |
 
-Domain behavior that already has a focused Typer-free owner remains there. A
-dedicated `_operation_<name>.py` coordinates domain calls only when an adapter
-would otherwise own semantic validation or orchestration.
+已有聚焦且不依賴 Typer 的擁有者的領域行為，仍保留在該處。只有當配接器否則會擁有語意驗證或協調時，才需要專用的 `_operation_<name>.py` 來協調領域呼叫。
 
-## Logical operation identity
+## 邏輯操作身分
 
-The operation ID follows the CLI leaf path without the leading `specify`:
+操作 ID 沿用 CLI 葉節點路徑，但不含開頭的 `specify`：
 
 ```text
 specify version                -> version
@@ -95,8 +75,7 @@ specify artifact list          -> artifact.list
 specify extension set-priority -> extension.set-priority
 ```
 
-The ID names application behavior, not a transport endpoint. Adapter identities
-derive from it:
+此 ID 命名的是應用行為，而不是傳輸端點。配接器身分由它衍生：
 
 ```text
 operation: artifact.list
@@ -104,7 +83,7 @@ CLI:       specify artifact list
 MCP:       specify_artifact_list
 ```
 
-An operation descriptor declares the metadata shared by adapters:
+操作描述元宣告配接器共用的中繼資料：
 
 ```text
 operation_id
@@ -117,19 +96,17 @@ capabilities
 network_access
 ```
 
-Adapter registration extends this metadata without moving command-specific
-contracts into central infrastructure.
+配接器註冊會擴充這些中繼資料，而不將命令專屬合約移入中央基礎設施。
 
-## Naming and layout
+## 命名與版面
 
-Use an existing focused domain module when it already provides the correct
-Typer-free application entry point. Otherwise use:
+當既有聚焦的領域模組已提供正確且不依賴 Typer 的應用進入點時，使用該模組。否則使用：
 
 ```text
 _operation_<name>.py
 ```
 
-For example:
+例如：
 
 ```text
 src/specify_cli/
@@ -138,18 +115,16 @@ src/specify_cli/
 └── mcp_version.py
 ```
 
-A simple operation stays in one operation or domain module. Do not split it for
-symmetry.
+簡單的操作保留在單一操作或領域模組中。不要為了對稱而拆分。
 
-When a complex operation has cohesive phases with distinct invariants, failure
-behavior, rollback, or tests, use:
+當複雜操作具有內聚的階段，且各階段有不同的不變條件、失敗行為、回滾或測試時，使用：
 
 ```text
 _operation_<name>.py
 _operation_<name>_<phase>.py
 ```
 
-For example:
+例如：
 
 ```text
 src/specify_cli/
@@ -162,100 +137,73 @@ src/specify_cli/
 └── mcp_init.py
 ```
 
-`_operation_init.py` is the shared application entry point. Phase modules do
-not register commands or tools.
+`_operation_init.py` 是共用應用進入點。階段模組不註冊命令或工具。
 
-Adapter-only phases retain adapter-specific names:
+配接器專屬階段保留配接器專屬名稱：
 
 ```text
 _command_<name>_<phase>.py
 _mcp_<name>_<phase>.py
 ```
 
-If more than one adapter needs a phase, it belongs in the shared operation or
-domain layer.
+若多個配接器需要某個階段，它屬於共用操作或領域層。
 
-Nested directories continue to represent real command namespaces or bounded
-subdomains. Do not create an operation-phase directory that implies a
-nonexistent CLI namespace.
+巢狀目錄持續表示真實的命令命名空間或有界子領域。不要建立會暗示不存在的 CLI 命名空間的操作階段目錄。
 
-## Typed request contract
+## 型別請求合約
 
-The relevant command/domain hierarchy owns a typed request model. It:
+相關命令／領域階層擁有型別請求模型。它：
 
-- Uses semantic names rather than CLI flag or MCP field implementation names.
-- Distinguishes omitted values from explicit false, empty, or null values.
-- Rejects unknown fields.
-- Represents paths, enums, identifiers, and bounded collections explicitly.
-- Carries explicit consent such as `force` or external-source trust only when
-  the operation defines that behavior.
+- 使用語意名稱，而非 CLI 旗標或 MCP 欄位的實作名稱。
+- 區分省略值與明確的 false、空值或 null 值。
+- 拒絕未知欄位。
+- 明確表示路徑、列舉、識別字與有界集合。
+- 僅在操作定義該行為時，才攜帶明確同意，例如 `force` 或外部來源信任。
 
-Adapters parse their transport input and map it into this request. Semantic
-validation remains in the shared operation.
+配接器解析其傳輸輸入，並對應到此請求。語意驗證保留在共用操作中。
 
-## Invocation lifecycle
+## 呼叫生命週期
 
-Invocation follows a small, explicit sequence:
+呼叫遵循一個簡短且明確的順序：
 
-1. The adapter parses and schema-validates its input.
-2. The shared operation performs pure request validation.
-3. The shared operation performs state-dependent validation, orchestration, and
-   side effects.
-4. The operation returns its typed outcome for adapter-specific reporting.
+1. 配接器解析並以結構描述驗證其輸入。
+2. 共用操作執行純請求驗證。
+3. 共用操作執行與狀態相關的驗證、協調與副作用。
+4. 操作回傳其型別結果，供配接器專屬回報使用。
 
-The CLI normally proceeds under the invoking user's operating-system
-permissions. MCP publishes operation metadata so its host or client can decide
-whether to expose, confirm, or invoke a tool. Once invoked, both adapters call
-the same application implementation.
+CLI 通常在呼叫使用者的一般作業系統權限下執行。MCP 發布操作中繼資料，讓其主機或使用者端決定是否公開、確認或呼叫工具。一旦呼叫，兩個配接器都呼叫相同的應用實作。
 
-## Project and working-directory handling
+## 專案與工作目錄處理
 
-Project-scoped request types carry an explicit project directory, or an
-explicit value derived by the adapter from its launch working directory:
+專案範圍的請求型別攜帶明確的專案目錄，或由配接器從其啟動工作目錄衍生的明確值：
 
-- CLI defaults to the cwd captured when the command invocation begins.
-- Local stdio MCP defaults to the cwd captured when the server starts.
-- A caller may supply a project or target directory when the command supports
-  it.
+- CLI 預設為命令呼叫開始時擷取的 cwd。
+- 本機 stdio MCP 預設為伺服器啟動時擷取的 cwd。
+- 當命令支援時，呼叫端可提供專案或目標目錄。
 
-The shared operation or focused domain helper resolves and validates the path,
-including `.specify` project checks where required. It passes the resolved path
-through domain calls and operation phases.
+共用操作或聚焦的領域輔助工具會解析並驗證路徑，包括必要時的 `.specify` 專案檢查。它將已解析的路徑傳遞給領域呼叫與操作階段。
 
-Shared code must not call `os.chdir()` to establish request state. A long-lived
-MCP server may handle calls for different projects, and process-wide cwd would
-couple otherwise independent invocations.
+共用程式碼不得呼叫 `os.chdir()` 來建立請求狀態。長時間運行的 MCP 伺服器可能處理不同專案的呼叫，而全行程 cwd 會使原本獨立的呼叫彼此耦合。
 
-Package metadata and first-party bundled assets use normal shared Python/domain
-helpers such as `importlib.metadata`, `importlib.resources`, or the established
-asset resolver. They are not caller-selected project paths and require no
-universal application-resource abstraction.
+套件中繼資料與第一方隨附資產使用一般的共用 Python／領域輔助工具，例如 `importlib.metadata`、`importlib.resources` 或既有的資產解析器。它們不是呼叫端選擇的專案路徑，不需要通用的應用資源抽象。
 
-This architecture does not claim that an in-process path check is an operating
-system sandbox. CLI and local stdio MCP run with the permissions of their
-process user. A deployment that requires filesystem confinement must sandbox
-the MCP server process; command behavior does not implement a second virtual
-filesystem.
+本架構不宣稱行程內的路徑檢查就是作業系統沙箱。CLI 與本機 stdio MCP 以其行程使用者的權限執行。需要檔案系統限制的部署，必須對 MCP 伺服器行程進行沙箱隔離；命令行為不實作第二個虛擬檔案系統。
 
-## Typed outcome contract
+## 型別結果合約
 
-The operation returns a typed outcome containing:
+操作回傳的型別結果包含：
 
-- The command-specific result.
-- Zero or more structured warnings.
-- Command-relevant execution metadata such as changed paths or transaction
-  status.
+- 命令專屬的結果。
+- 零個或多個結構化警告。
+- 與命令相關的執行中繼資料，例如變更的路徑或交易狀態。
 
-Warnings have a stable code, human-readable message, and typed details. The
-operation does not print them. Each adapter decides how its surface represents
-them.
+警告具有穩定的代碼、人類可讀訊息與型別詳細資料。操作不會列印它們。每個配接器決定其介面如何表示它們。
 
-There is no mandatory universal success envelope. Command-specific output
-types remain owned by the command/domain hierarchy.
+沒有強制性的通用成功封裝。命令專屬的輸出型別仍由命令／領域階層擁有。
 
-## Structured errors
+## 結構化錯誤
 
-Expected failures use a transport-neutral operation error:
+預期失敗使用與傳輸無關的操作錯誤：
 
 ```text
 code
@@ -264,98 +212,72 @@ details
 retryable
 ```
 
-The operation hierarchy owns error codes and detail schemas. Adapters map them:
+操作階層擁有錯誤代碼與詳細資料結構描述。配接器將它們對應為：
 
-- CLI maps them to human or JSON failure output and established exit codes.
-- MCP maps them to structured tool errors.
+- CLI 將它們對應為人類可讀或 JSON 失敗輸出與既定的結束代碼。
+- MCP 將它們對應為結構化工具錯誤。
 
-Shared errors contain no CLI exit code, Rich markup, MCP content block,
-traceback, raw subprocess output, or secret.
+共用錯誤不包含 CLI 結束代碼、Rich 標記、MCP 內容區塊、追蹤回溯、原始子行程輸出或秘密。
 
-Unexpected exceptions are normalized by the adapter boundary to a sanitized
-internal error and logged only through the adapter's diagnostic channel.
+未預期的例外會由配接器邊界正規化為已清理的內部錯誤，且僅透過配接器的診斷通道記錄。
 
-## Contract versions and machine compatibility
+## 合約版本與機器相容性
 
-The operation descriptor is the source of truth for `contract_version`. The
-version covers the semantic request, result, warning, and expected-error
-contract, not package or transport versions.
+操作描述元是 `contract_version` 的真實來源。此版本涵蓋語意請求、結果、警告與預期錯誤合約，而不是套件或傳輸版本。
 
-Both adapters conform to that declared version. It is hierarchy-owned source
-and inventory metadata used by adapter contract tests; it is not automatically
-injected into CLI JSON or MCP tool metadata. A version field appears in a
-machine result only when that command's established result contract defines
-one.
+兩個配接器都遵循該宣告版本。它是階層擁有的來源與清單中繼資料，供配接器合約測試使用；它不會自動注入 CLI JSON 或 MCP 工具中繼資料。只有當該命令既定的結果合約定義了版本欄位時，版本欄位才會出現在機器結果中。
 
-Contract evolution follows these rules:
+合約演進遵循以下規則：
 
-- Backward-compatible optional fields and warning codes may retain the current
-  major version.
-- Removing, renaming, or changing the meaning of an input, output, warning, or
-  error requires a new major version and explicit compatibility strategy.
-- Adapter-only presentation changes do not change the operation contract
-  version.
-- Tests lock established adapter schemas and machine-output shapes to the
-  declared contract.
+- 向後相容的選擇性欄位與警告代碼可保留目前的主要版本。
+- 移除、重新命名或改變輸入、輸出、警告或錯誤的含義，需要新的主要版本與明確的相容性策略。
+- 僅配接器的呈現變更不會改變操作合約版本。
+- 測試會將既定的配接器結構描述與機器輸出形狀鎖定到宣告的合約。
 
-## Capability declarations
+## 能力宣告
 
-Capabilities are cumulative operation metadata:
+能力是累積的操作中繼資料：
 
-| Capability | Meaning |
+| 能力 | 含義 |
 | --- | --- |
-| `local-read` | Reads local process, installation, host, or project state |
-| `project-write` | Creates or changes project or target files/configuration |
-| `execution` | Starts host tools, workflows, hooks, agents, or processes |
-| `self-modifying` | Changes the Specify installation or machine-level state |
+| `local-read` | 讀取本機行程、安裝、主機或專案狀態 |
+| `project-write` | 建立或變更專案或目標檔案／設定 |
+| `execution` | 啟動主機工具、工作流程、掛鉤、代理或行程 |
+| `self-modifying` | 變更 Specify 安裝或機器層級狀態 |
 
-The descriptor declares the conservative union an operation may require.
-Adapters and hosts use this metadata for discovery, review, and confirmation;
-it does not add a policy engine to the shared layer.
+描述元宣告操作可能需要的保守聯集。配接器與主機使用這些中繼資料進行探索、審查與確認；它不會為共用層新增政策引擎。
 
-`execution` means the operation may start a child process with the MCP server
-process user's privileges. It is not a filesystem sandbox. A host that needs
-stronger isolation runs the server inside an appropriate OS sandbox, container,
-or restricted account.
+`execution` 表示操作可能以 MCP 伺服器行程使用者的權限啟動子行程。它不是檔案系統沙箱。需要更強隔離的主機，會在適當的作業系統沙箱、容器或受限帳號中執行伺服器。
 
-Network access is declared separately as `none`, `optional`, or `required`.
-Trust and destructive consent remain explicit request values, not implied
-capabilities.
+網路存取另外宣告為 `none`、`optional` 或 `required`。信任與破壞性同意仍為明確的請求值，而不是隱含的能力。
 
-## Trust and consent
+## 信任與同意
 
-The shared operation owns semantic rules that require explicit request values:
+共用操作擁有需要明確請求值的語意規則：
 
-- Trusting an external URL or downloaded executable content.
-- Overwriting a non-empty target or user-modified file.
-- Selecting a workflow, hook, installer, or other executable operation and
-  supplying any confirmation fields that operation defines.
-- Performing a self-modifying action.
+- 信任外部 URL 或下載的可執行內容。
+- 覆寫非空目標或使用者已修改的檔案。
+- 選擇工作流程、掛鉤、安裝程式或其他可執行操作，並提供該操作定義的任何確認欄位。
+- 執行自我修改的操作。
 
-The CLI may prompt before constructing or retrying a request. MCP never prompts
-and returns a structured input- or confirmation-required error when the
-request lacks required consent.
+CLI 可在建構或重試請求前提示。MCP 從不提示，當請求缺少必要的同意時，會回傳結構化的需要輸入或需要確認錯誤。
 
-Machine-readable mode, non-interactive mode, transport authentication, or a
-host confirmation never implies `force`, trust, or destructive consent.
+機器可讀模式、非互動模式、傳輸驗證或主機確認，都不表示 `force`、信任或破壞性同意。
 
-## Timeouts and bounded output
+## 逾時與有界輸出
 
-Do not force every operation through a universal runtime object.
+不要強迫每個操作都經過通用執行階段物件。
 
-- The stdio adapter enforces response-size limits.
-- Subprocess and network helpers receive explicit timeouts from the operation
-  that invokes them.
-- Potentially large commands own pagination or limit fields in their request
-  and result contracts.
-- Truncation is explicit and never returned as a successful complete result.
+- stdio 配接器強制執行回應大小限制。
+- 子行程與網路輔助工具從呼叫它們的操作接收明確的逾時。
+- 可能龐大的命令在其請求與結果合約中擁有分頁或限制欄位。
+- 截斷是明確的，絕不會以成功的完整結果回傳。
 
-CLI and MCP adapters may choose different presentation limits, but neither may
-change the semantic result silently.
+CLI 與 MCP 配接器可選擇不同的呈現限制，但兩者都不得靜默改變語意結果。
 
-## Testing structure
+## 測試結構
 
-Tests mirror source ownership:
+測試對應來源擁有權：
 
 ```text
 src/specify_cli/artifacts/_operation_list.py
@@ -368,59 +290,48 @@ src/specify_cli/artifacts/mcp_list.py
 tests/specify_cli/artifacts/test_mcp_list.py
 ```
 
-Operation tests cover:
+操作測試涵蓋：
 
-- Valid requests and intended results.
-- Pure and state-dependent validation failures.
-- Warnings and structured errors.
-- Side effects, rollback, trust, consent, network behavior, and execution.
-- Explicit project/target paths without process-wide cwd changes.
-- Domain behavior without Typer, Rich, MCP, or transport assertions.
+- 有效請求與預期結果。
+- 純驗證與與狀態相關的驗證失敗。
+- 警告與結構化錯誤。
+- 副作用、回滾、信任、同意、網路行為與執行。
+- 明確的專案／目標路徑，且不變更全行程 cwd。
+- 不含 Typer、Rich、MCP 或傳輸斷言的領域行為。
 
-Adapter tests cover invocation mapping, metadata, and adapter-specific
-reporting.
+配接器測試涵蓋呼叫對應、中繼資料與配接器專屬回報。
 
-Parity tests invoke CLI and MCP adapters against the same operation fixture and
-compare semantic request, result, warning, error, and side-effect behavior.
-Parity does not require byte-identical presentation.
+同等性測試會針對同一個操作固定資料，呼叫 CLI 與 MCP 配接器，並比較語意請求、結果、警告、錯誤與副作用行為。同等性不要求逐位元相同的呈現。
 
-Behavioral changes follow
-[Testing deterministic behavior](../CONTRIBUTING.md#testing-deterministic-behavior):
-positive and negative evidence is required, and bug fixes need before-and-after
-regression evidence.
+行為變更遵循[測試確定性行為](../CONTRIBUTING.md#testing-deterministic-behavior)：需要正面與負面證據，錯誤修正需要前後對照的迴歸證據。
 
-## Anti-patterns
+## 反模式
 
-Avoid:
+避免：
 
-- Calling a Typer handler from MCP or an MCP tool from CLI.
-- Invoking the human CLI as application dispatch.
-- Parsing Rich, stdout, stderr, or protocol output to recover domain results.
-- Duplicating validation or orchestration in adapters.
-- Adding adapter concepts to request, outcome, warning, or error models.
-- Hiding operations behind a central string dispatcher or service locator.
-- Adding a universal invocation context, filesystem abstraction, or resource
-  provider when focused Python parameters and existing helpers suffice.
-- Letting adapters infer force, trust, consent, or extra capabilities.
-- Reading mutable process cwd instead of passing an explicit path.
-- Splitting simple operations or creating phase modules solely for symmetry.
+- 從 MCP 呼叫 Typer 處理常式，或從 CLI 呼叫 MCP 工具。
+- 將人類 CLI 作為應用分派來呼叫。
+- 解析 Rich、stdout、stderr 或通訊協定輸出以還原領域結果。
+- 在配接器中重複驗證或協調。
+- 將配接器概念新增到請求、結果、警告或錯誤模型中。
+- 將操作藏在中央字串分派器或服務定位器之後。
+- 在聚焦的 Python 參數與既有輔助工具已足夠時，新增通用呼叫內容、檔案系統抽象或資源提供者。
+- 讓配接器推斷 force、信任、同意或額外能力。
+- 讀取可變的行程 cwd，而不是傳入明確路徑。
+- 僅為了對稱而拆分簡單操作或建立階段模組。
 
-## Review checklist
+## 審查檢核清單
 
-For an operation with CLI and MCP adapters:
+對於同時具有 CLI 與 MCP 配接器的操作：
 
-- [ ] One logical operation ID identifies both surfaces.
-- [ ] Both adapters map into the same typed request and shared entry point.
-- [ ] Semantic validation, orchestration, and side effects are below adapters.
-- [ ] Adapter modules contain only invocation, mapping, presentation, and
-      adapter-specific concerns.
-- [ ] Shared request, outcome, warning, and error types are transport-neutral.
-- [ ] Project and target paths are explicit; shared code does not call
-      `os.chdir()`.
-- [ ] MCP annotations and inventory reflect operation metadata without moving
-      host approval behavior into the shared layer.
-- [ ] CLI exit codes and MCP tool errors remain adapter-owned.
-- [ ] Contract-version ownership and compatibility tests are explicit.
-- [ ] Operation tests and adapter parity tests cover positive and negative
-      behavior.
-- [ ] No adapter invokes or parses another adapter.
+- [ ] 一個邏輯操作 ID 同時識別兩個介面。
+- [ ] 兩個配接器都對應到相同的型別請求與共用進入點。
+- [ ] 語意驗證、協調與副作用位於配接器之下。
+- [ ] 配接器模組僅包含呼叫、對應、呈現與配接器專屬事項。
+- [ ] 共用的請求、結果、警告與錯誤型別與傳輸無關。
+- [ ] 專案與目標路徑明確；共用程式碼不呼叫 `os.chdir()`。
+- [ ] MCP 註解與清單反映操作中繼資料，而不將主機核准行為移入共用層。
+- [ ] CLI 結束代碼與 MCP 工具錯誤仍由配接器擁有。
+- [ ] 合約版本擁有權與相容性測試明確。
+- [ ] 操作測試與配接器同等性測試涵蓋正面與負面行為。
+- [ ] 沒有配接器呼叫或解析另一個配接器。

@@ -1,113 +1,84 @@
-# Integration CLI Reference
+# 整合 CLI 參考
 
-This reference documents shared `specify integration` commands, catalog
-management, and lifecycle behavior. For agent-specific setup, installed paths,
-options, and limitations, start with the [integration guides](index.md).
+本參考文件記載共用的 `specify integration` 命令、目錄管理與生命週期行為。代理專屬的設定、安裝路徑、選項與限制，請從[整合指南](index.md)開始。
 
-Run these commands inside a project initialized with `specify init`.
-For a new project, use `specify init <project> --integration <key>`.
+請在已以 `specify init` 初始化的專案內執行這些命令。若是新專案，請使用 `specify init <project> --integration <key>`。
 
-## Supported AI Coding Agents
+## 支援的 AI 程式代理
 
-The [integration directory](index.md#choose-an-integration)
-lists supported agents and their exact keys, with a dedicated guide for each
-integration. Run `specify integration list` to inspect local availability.
+[整合目錄](index.md#choose-an-integration)列出了受支援的代理及其確切鍵值，每個整合都有一份專屬指南。執行 `specify integration list` 可查看本機可用性。
 
-## Command Invocation
+## 命令呼叫方式
 
-Invoke Spec Kit's process steps inside your coding agent, not in the terminal.
-In GitHub Copilot's default mode, these are skills you invoke in the agent's
-chat. CLI installation and setup commands are separate terminal operations.
-The steps are the same across integrations, but their spelling depends on the
-agent and its installed mode:
+請在你的程式代理內呼叫 Spec Kit 的流程步驟，不要在終端機中呼叫。在 GitHub Copilot 的預設模式中，這些是你在代理聊天中呼叫的技能。CLI 的安裝與設定命令則是另外的終端機操作。這些步驟在各整合間相同，但其寫法取決於代理及其安裝模式：
 
-| Integration or mode | SDD example | Extension example |
+| 整合或模式 | SDD 範例 | 擴充功能範例 |
 | --- | --- | --- |
-| GitHub Copilot, default skills mode | `/speckit-specify` | `/speckit-bug-assess` |
-| Dotted slash-command notation used in the references | `/speckit.specify` | `/speckit.bug.assess` |
-| Codex, Command Code, ZCode skills | `$speckit-specify` | `$speckit-bug-assess` |
-| Kimi skills | `/skill:speckit-specify` | `/skill:speckit-bug-assess` |
+| GitHub Copilot，預設技能模式 | `/speckit-specify` | `/speckit-bug-assess` |
+| 參考文件中使用的點記法斜線命令 | `/speckit.specify` | `/speckit.bug.assess` |
+| Codex、Command Code、ZCode 技能 | `$speckit-specify` | `$speckit-bug-assess` |
+| Kimi 技能 | `/skill:speckit-specify` | `/skill:speckit-bug-assess` |
 
-Use the form exposed by your agent. See the
-[GitHub Copilot guide](copilot.md) for its skills and commands
-layouts, or choose another agent from the [integration directory](index.md).
+請使用你的代理所公開的形式。GitHub Copilot 的技能與命令版式請參閱 [GitHub Copilot 指南](copilot.md)，或從[整合目錄](index.md)選擇另一個代理。
 
-## List Available Integrations
+## 列出可用的整合
 
 ```bash
 specify integration list
 ```
 
-| Option      | Description                                                                                                             |
+| 選項 | 說明 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `--catalog` | Also browse the catalog, including external integrations not installed in this project. |
+| `--catalog` | 一併瀏覽目錄，包括未安裝在本專案中的外部整合。 |
 
-Shows built-in and trusted installed external integrations, their setup
-requirements, and their multi-install safety declarations. Installed
-integrations and the default are marked separately.
-The `CLI Required` column reports the agent CLI requirement declared by
-`config.requires_cli`, not whether the integration is IDE-only. External adapters
-can separately require executables through their descriptor's `requires.tools`;
-installation and `specify check` validate those tool requirements even when
-`CLI Required` is `no`.
+顯示內建與受信任的已安裝外部整合、它們的設定要求，以及它們的多重安裝安全宣告。已安裝的整合與預設整合會分開標示。`CLI Required` 欄位回報的是 `config.requires_cli` 所宣告的代理 CLI 要求，而不是該整合是否僅限 IDE 使用。外部轉接器可以另外透過其描述檔的 `requires.tools` 要求執行檔；即使 `CLI Required` 是 `no`，安裝與 `specify check` 也會驗證那些工具要求。
 
-## Search Available Integrations
+## 搜尋可用的整合
 
 ```bash
 specify integration search [query]
 ```
 
-| Option     | Description        |
+| 選項 | 說明 |
 | ---------- | ------------------ |
-| `--tag`    | Filter by tag      |
-| `--author` | Filter by author   |
+| `--tag`    | 依標籤篩選 |
+| `--author` | 依作者篩選 |
 
-Searches the active catalog stack. Without a query, lists all available integrations.
+搜尋使用中的目錄堆疊。若未提供查詢，則列出所有可用的整合。
 
-## Integration Info
+## 整合資訊
 
 ```bash
 specify integration info <integration_id>
 specify integration info <integration_id> --versions
 ```
 
-Shows an integration's catalog metadata, source catalog, and whether it is active.
-`--versions` lists the advertised current and historical versions from the
-winning catalog, with the current release first and older releases in descending
-version order. Discovery-only sources are labeled as such.
+顯示某個整合的目錄中繼資料、來源目錄，以及它是否為使用中。`--versions` 會列出獲勝目錄所公布的目前與歷來版本，目前版本在前，較舊的版本依版本遞減排列。僅供探索的來源會標示為僅供探索。
 
-## Install an Integration
+## 安裝整合
 
 ```bash
 specify integration install <key>
 ```
 
-| Option                   | Description                                                              |
+| 選項 | 說明 |
 | ------------------------ | ------------------------------------------------------------------------ |
-| `--script sh\|ps\|py`    | Script type: `sh` (bash/zsh), `ps` (PowerShell), or `py` (Python)        |
-| `--force`                | Opt in to installing alongside integrations that are not declared multi-install safe |
-| `--integration-options`  | Integration-specific options (e.g. `--integration-options="--commands-dir .myagent/cmds"`) |
-| `--trust-integration` | After reviewing the code, pre-authorize an external adapter's Python execution without the interactive trust prompt |
+| `--script sh\|ps\|py`    | 指令稿類型：`sh`（bash/zsh）、`ps`（PowerShell）或 `py`（Python） |
+| `--force`                | 選擇與未宣告為多重安裝安全的整合一併安裝 |
+| `--integration-options`  | 整合專屬選項（例如 `--integration-options="--commands-dir .myagent/cmds"`） |
+| `--trust-integration` | 在審查程式碼後，預先授權外部轉接器執行 Python，跳過互動式信任提示 |
 
-Installs the integration into the current project. Multi-install proceeds
-automatically only when all involved integrations are declared safe. Otherwise,
-use `switch` to replace the default or `--force` to opt in to multi-install.
-Failed setup triggers rollback.
+將整合安裝到目前的專案中。只有當所有涉及的整合都宣告為安全時，多重安裝才會自動進行。否則，請使用 `switch` 取代預設整合，或以 `--force` 選擇多重安裝。設定失敗會觸發復原。
 
-**Catalog history is metadata only.** `integration install` still resolves
-registered built-in implementations directly, or the current external adapter
-release from an install-enabled catalog, not historical catalog records.
-There is no `integration install --version`. The default community catalog
-remains discovery-only.
+**目錄歷程只是中繼資料。** `integration install` 仍會直接解析已註冊的內建實作，或從允許安裝的目錄取得目前的外部轉接器版本，而不是歷來目錄紀錄。沒有 `integration install --version`。預設的社群目錄仍僅供探索。
 
-Installing an additional integration does not change the default integration. Use `specify integration use <key>` to change the default.
+安裝額外的整合不會變更預設整合。使用 `specify integration use <key>` 可變更預設值。
 
-Extensions and presets follow the default integration only. Use `use <key>` or
-`switch <key>` to activate another integration and register their commands for it.
+擴充功能與預設集只跟隨預設整合。使用 `use <key>` 或 `switch <key>` 可啟用另一個整合，並為它註冊它們的命令。
 
-### Catalog-installed external adapters
+### 透過目錄安裝的外部轉接器
 
-Register a reviewed catalog in the initialized project, then install its adapter:
+在已初始化的專案中註冊一個經過審查的目錄，然後安裝它的轉接器：
 
 ```bash
 specify integration catalog add https://example.com/catalog.json --name samples
@@ -115,253 +86,180 @@ specify integration install sample-agent
 specify integration use sample-agent
 ```
 
-Installation prompts for trust **before** downloading/importing Python. For
-automation, explicitly authorize code you have reviewed:
+安裝會在下載／匯入 Python **之前**提示信任。對於自動化，請明確授權你已審查的程式碼：
 
 ```bash
 specify integration install sample-agent --trust-integration
 specify integration upgrade sample-agent --trust-integration
 ```
 
-The source must have `install_allowed: true`. The default community catalog is
-discovery-only; neither `--force` nor the trust flag bypasses that policy.
-Catalog listing/search/info do not import catalog code. See the
-[catalog schema](catalog.md#catalog-schema) for required metadata and supported
-archive URLs.
-Search advertises `specify integration install <id>` for install-enabled sources;
-discovery-only results do not advertise installation.
+來源必須具有 `install_allowed: true`。預設的社群目錄僅供探索；`--force` 與信任旗標都無法繞過該政策。目錄的列表／搜尋／資訊不會匯入目錄程式碼。必要的中繼資料與受支援的封存檔 URL 請參閱[目錄綱要](catalog.md#catalog-schema)。搜尋會為允許安裝的來源公布 `specify integration install <id>`；僅供探索的結果不會公布安裝方式。
 
-`specify check` probes an external adapter's required descriptor tools rather
-than its catalog ID. With no required tools declared, CLI adapters are checked
-using their runtime executable; optional tools do not produce missing-tool
-errors. These checks do not run the executable or invoke generic version probes.
+`specify check` 會探查外部轉接器所要求的描述檔工具，而不是其目錄 ID。若未宣告任何必要工具，CLI 轉接器會以其執行階段執行檔進行檢查；選用工具不會產生缺少工具的錯誤。這些檢查不會執行該執行檔，也不會呼叫一般的版本探查。
 
-Installed adapter code persists separately from generated agent files. New CLI
-processes load the trusted package without consulting the catalog. Missing,
-modified, or incompatible code is an error, not a silent fallback. Upgrade
-fetches the catalog's current version; uninstall removes the package while
-preserving modified generated files by default.
-Metadata-only `workflow status` and `workflow info` remain available without
-loading adapter code, including when an installed adapter is damaged. Workflow
-execution and resume still report adapter-loading failures explicitly.
+已安裝的轉接器程式碼與產生的代理檔案分開保存。新的 CLI 行程會載入受信任的套件，不諮詢目錄。程式碼遺失、被修改或不相容都是錯誤，而不是無聲備援。升級會取得目錄的目前版本；解除安裝會移除套件，並預設保留已修改的產生檔案。僅中繼資料的 `workflow status` 與 `workflow info` 在不載入轉接器程式碼的情況下仍可使用，包括已安裝的轉接器受損時。工作流程的執行與繼續仍會明確回報轉接器載入失敗。
 
-Execution consent is user-local and bound to the project, integration, and
-verified package contents. Copying project metadata does not transfer consent.
-After copying a project or changing users, review the adapter and reauthorize
-from an install-enabled catalog:
+執行同意是使用者本機的，並與專案、整合以及經驗證的套件內容綁定。複製專案中繼資料不會轉移同意。複製專案或變更使用者後，請審查轉接器，並從允許安裝的目錄重新授權：
 
 ```bash
 specify integration upgrade sample-agent --force --trust-integration
 ```
 
-Forced uninstall also works when package code is untrusted or its entire
-directory is missing; it does not import that code.
+當套件程式碼不受信任或其整個目錄遺失時，強制解除安裝也能運作；它不會匯入該程式碼。
 
-For initialization, a project/user catalog or `SPECKIT_INTEGRATION_CATALOG_URL`
-can supply an external adapter:
+在初始化時，專案／使用者目錄或 `SPECKIT_INTEGRATION_CATALOG_URL` 可以提供外部轉接器：
 
 ```bash
 specify init my-project --integration sample-agent --trust-integration
 ```
 
-Review the [external adapter API](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract)
-before publishing a package. No pip installation or source-registry edit is
-needed for adapters using the host API and standard library.
+發佈套件之前，請先檢視[外部轉接器 API](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract)。使用主機 API 與標準函式庫的轉接器，不需要 pip 安裝，也不需要編輯原始碼登錄。
 
-If your CLI rejects multi-install, check `specify version` and follow the
-[upgrade guide](../upgrade.md). A one-shot `uvx` invocation does not update the
-persistent `specify` executable on your `PATH`.
+若你的 CLI 拒絕多重安裝，請檢查 `specify version` 並遵循[升級指南](../upgrade.md)。一次性的 `uvx` 呼叫不會更新你 `PATH` 上持續存在的 `specify` 執行檔。
 
-## Uninstall an Integration
+## 解除安裝整合
 
 ```bash
 specify integration uninstall [<key>]
 ```
 
-| Option    | Description                                         |
+| 選項 | 說明 |
 | --------- | --------------------------------------------------- |
-| `--force` | Remove files even if they have been modified         |
+| `--force` | 即使檔案已被修改也將其移除 |
 
-Removes the specified integration, or the default if no key is given.
-Manifest-tracked generated files use content hashes for cleanup:
+移除指定的整合；若未提供鍵值，則移除預設整合。由清單追蹤的產生檔案會使用內容雜湊進行清理：
 
-- **Unmodified files** are removed automatically.
-- **Modified files** (where you've made manual edits) are preserved so your customizations are not lost.
-- Use `--force` to remove modified tracked files too.
+- **未修改的檔案**會自動移除。
+- **已修改的檔案**（你曾手動編輯的檔案）會被保留，讓你的自訂內容不會遺失。
+- 使用 `--force` 也可移除已修改的追蹤檔案。
 
-These are the rules for manifest-tracked generated files. Integration-specific
-cleanup can differ: [Hermes global skills](hermes.md#global-ownership-and-removal)
-and [Kimi legacy skills](kimi.md#legacy-cleanup-on-uninstall)
-can be removed without modified-file protection. Check the agent guide before
-uninstalling or switching away.
+以上是由清單追蹤的產生檔案的規則。整合專屬的清理方式可能不同：[Hermes 全域技能](hermes.md#global-ownership-and-removal)與 [Kimi 舊版技能](kimi.md#legacy-cleanup-on-uninstall)可以在沒有已修改檔案保護的情況下被移除。解除安裝或切離之前，請先查看代理指南。
 
-Uninstall also removes the integration's registered extension and preset
-artifacts; the extensions and presets themselves stay installed. Removing the
-default selects a remaining integration and registers enabled contributions for
-it. Removing the last integration does not install `none` automatically.
+解除安裝也會移除該整合已註冊的擴充功能與預設集成品；擴充功能與預設集本身仍保持安裝。移除預設整合會選取一個其餘的整合，並為它註冊已啟用的貢獻。移除最後一個整合不會自動安裝 `none`。
 
-## Switch to a Different Integration
+## 切換到不同的整合
 
 ```bash
 specify integration switch <key>
 ```
 
-| Option                   | Description                                                              |
+| 選項 | 說明 |
 | ------------------------ | ------------------------------------------------------------------------ |
-| `--script sh\|ps\|py`    | Script type: `sh` (bash/zsh), `ps` (PowerShell), or `py` (Python)        |
-| `--force`                | Force removal of modified files during uninstall; when the target is already installed, overwrite managed shared templates while changing the default |
-| `--refresh-shared-infra` | Also overwrite shared infrastructure files even if you customized them (otherwise customizations are preserved) |
-| `--integration-options`  | Options for the target integration when it is not already installed      |
-| `--trust-integration` | Authorize downloading and executing a reviewed external adapter without the interactive trust prompt |
+| `--script sh\|ps\|py`    | 指令稿類型：`sh`（bash/zsh）、`ps`（PowerShell）或 `py`（Python） |
+| `--force`                | 在解除安裝期間強制移除已修改的檔案；當目標已安裝時，在變更預設值的同時覆寫受管理的共用範本 |
+| `--refresh-shared-infra` | 即使你已自訂，也一併覆寫共用基礎設施檔案（否則自訂內容會被保留） |
+| `--integration-options`  | 當目標尚未安裝時，提供給目標整合的選項 |
+| `--trust-integration` | 授權下載並執行經過審查的外部轉接器，跳過互動式信任提示 |
 
-- **Target not installed:** removes the current default, installs the target,
-  and makes it the default. Other installed integrations remain.
-- **Target already installed:** changes the default without removing any
-  integrations, like `use`. To change its setup options, run
-  `upgrade <key> --integration-options ...` first, then `use <key>`;
-  `switch` rejects setup options for installed targets.
+- **目標未安裝：** 移除目前的預設整合，安裝目標，並將它設為預設。其他已安裝的整合會保留。
+- **目標已安裝：** 在不移除任何整合的情況下變更預設值，如同 `use`。若要變更它的設定選項，請先執行 `upgrade <key> --integration-options ...`，再執行 `use <key>`；`switch` 會拒絕已安裝目標的設定選項。
 
-Both paths register enabled extensions and presets for the new default.
-See the option table for the different meanings of `--force`.
+兩條路徑都會為新的預設整合註冊已啟用的擴充功能與預設集。`--force` 的不同含義請參閱選項表。
 
-When switching to an external adapter that must be downloaded and installed,
-use `--trust-integration` only after reviewing its code:
+切換到必須下載並安裝的外部轉接器時，只有在審查其程式碼後才使用 `--trust-integration`：
 
 ```bash
 specify integration switch sample-agent --trust-integration
 ```
 
-Switching to an already-installed adapter still validates its existing trust.
-The flag does not bypass that validation or a catalog's discovery-only policy.
-See [catalog-installed external adapters](#catalog-installed-external-adapters)
-for the trust requirements.
+切換到已安裝的轉接器仍會驗證其既有的信任。此旗標不會繞過該驗證，也不會繞過目錄的僅供探索政策。信任要求請參閱[透過目錄安裝的外部轉接器](#catalog-installed-external-adapters)。
 
-## Use an Installed Integration
+## 使用已安裝的整合
 
 ```bash
 specify integration use <key>
 ```
 
-| Option    | Description                                         |
+| 選項 | 說明 |
 | --------- | --------------------------------------------------- |
-| `--force` | Overwrite managed shared templates while changing the default |
+| `--force` | 在變更預設值的同時覆寫受管理的共用範本 |
 
-Sets the default integration without uninstalling any other installed integrations. This also refreshes managed shared templates so command references match the new default integration's invocation style. Modified or untracked shared templates are preserved unless `--force` is used.
+將預設整合設定為指定的整合，不解除安裝任何其他已安裝的整合。這也會重新整理受管理的共用範本，讓命令參照與新預設整合的呼叫風格相符。已修改或未追蹤的共用範本會被保留，除非使用 `--force`。
 
-It also registers enabled extension and preset commands or skills for the new
-default, including contributions installed while another integration was active.
+它也會為新的預設整合註冊已啟用的擴充功能與預設集命令或技能，包括在另一個整合使用期間安裝的貢獻。
 
-## Upgrade an Integration
+## 升級整合
 
 ```bash
 specify integration upgrade [<key>]
 ```
 
-| Option                   | Description                                                              |
+| 選項 | 說明 |
 | ------------------------ | ------------------------------------------------------------------------ |
-| `--force`                | Overwrite files even if they have been modified                          |
-| `--script sh\|ps\|py`    | Script type: `sh` (bash/zsh), `ps` (PowerShell), or `py` (Python)        |
-| `--integration-options`  | Options for the integration                                              |
-| `--trust-integration`    | Authorize downloading/importing the reviewed replacement external adapter |
+| `--force`                | 即使檔案已被修改也將其覆寫 |
+| `--script sh\|ps\|py`    | 指令稿類型：`sh`（bash/zsh）、`ps`（PowerShell）或 `py`（Python） |
+| `--integration-options`  | 提供給整合的選項 |
+| `--trust-integration`    | 授權下載／匯入經過審查的替代外部轉接器 |
 
-Reinstalls an installed integration with updated templates and commands (e.g., after upgrading Spec Kit). Defaults to the default integration; if a key is provided, it must be one of the installed integrations. Detects locally modified files and blocks the upgrade unless `--force` is used. Stale files from the previous install that are no longer needed are removed automatically. Shared templates stay aligned with the default integration even when upgrading a non-default integration.
+以更新後的範本與命令重新安裝已安裝的整合（例如在升級 Spec Kit 之後）。預設對象是預設整合；若提供鍵值，它必須是已安裝的整合之一。它會偵測本機修改過的檔案，並阻止升級，除非使用 `--force`。先前安裝中不再需要的過期檔案會自動移除。即使升級的是非預設整合，共用範本仍與預設整合保持一致。
 
-Enabled extensions and presets are re-registered only when upgrading the currently active (default) integration. A non-default upgrade still refreshes that integration's core commands, but does not re-register its extension or preset layers — `use`/`switch` that integration afterward to rescaffold them.
+只有在升級目前使用中（預設）的整合時，已啟用的擴充功能與預設集才會重新註冊。非預設整合的升級仍會重新整理該整合的核心命令，但不會重新註冊它的擴充功能或預設集層——事後請對該整合執行 `use`/`switch`，重新建立它們的骨架。
 
-If the generated-file manifest is missing, upgrade reports that there is nothing
-to upgrade and leaves the installed adapter package, generated files, and local
-recovery ownership unchanged, including with `--force`. Replacement code is
-persisted only after the upgrade regenerates the managed files successfully.
+若產生的檔案清單遺失，升級會回報沒有可升級的內容，並讓已安裝的轉接器套件、產生的檔案與本機復原所有權保持不變，包括使用 `--force` 時也一樣。替代程式碼只有在升級成功重新產生受管理的檔案之後才會保存。
 
-If an upgrade would change an integration between command and skills layouts while preset artifacts are registered for it, the upgrade is rejected before changing files. Remove the affected presets, run the layout-changing upgrade, then reinstall them.
+若某次升級會在已為某整合註冊預設集成品的情況下，將它在命令與技能版式之間變更，該升級會在變更檔案之前被拒絕。請先移除受影響的預設集，執行變更版式的升級，再重新安裝它們。
 
-For external adapters, forced upgrade or uninstall can recover damaged or
-unloadable packages using user-local ownership records. Without that proof,
-old-only generated files are preserved with a manual-cleanup warning. Recovery
-preserves shared event dispatchers and partially owned settings; a trusted
-replacement may still overwrite its declared destinations under `upgrade --force`.
-Recovery does not bypass catalog policy or replacement-package trust.
+對於外部轉接器，強制升級或解除安裝可以使用使用者本機的所有權紀錄，復原受損或無法載入的套件。若沒有該證明，僅屬於舊版的產生檔案會被保留，並附上手動清理警告。復原程序會保留共用的事件分派器與部分擁有的設定；在 `upgrade --force` 下，受信任的替代品仍可覆寫它宣告的目的地。復原不會繞過目錄政策或替代套件的信任。
 
-Failed operations roll back their own changes, not unrelated user files or
-workflow progress. Conflicting concurrent edits are reported with recovery
-snapshots retained. Adapter authors should follow the
-[storage, loading, and lifecycle contract](https://github.com/github/spec-kit/blob/main/design/integration.md#storage-loading-and-lifecycle)
-for ownership, journaling, and recovery requirements.
+失敗的操作會復原它們自己的變更，而不是無關的使用者檔案或工作流程進度。衝突的並行編輯會被回報，並保留復原快照。轉接器作者應遵循[儲存、載入與生命週期合約](https://github.com/github/spec-kit/blob/main/design/integration.md#storage-loading-and-lifecycle)中的所有權、記錄與復原要求。
 
-## Report Integration Status
+## 回報整合狀態
 
 ```bash
 specify integration status
 specify integration status --json
 ```
 
-Reports the current project's integration status without changing files. The
-status report includes the default integration, installed integrations,
-multi-install safety, missing managed files, modified managed files, invalid
-manifest paths, shared Spec Kit infrastructure health, unchecked manifests, and
-the target integration for default-sensitive shared templates. The JSON form is
-intended for CI and coding agents that need stable machine-readable status data;
-it also reports the raw recorded integrations and the integration manifests that
-were checked when state repair heuristics differ from the recorded file.
-The command exits 0 when the report status is `ok` or `warning`; it exits 1
-only when the report status is `error`. In JSON output, `multi_install_safe`
-is `null` when no installed integration set can be evaluated, such as when the
-integration state is missing, unreadable, lacks a valid recorded integration
-list, or records no installed integrations.
+在不變更檔案的情況下回報目前專案的整合狀態。狀態報告包括預設整合、已安裝的整合、多重安裝安全性、遺失的受管理檔案、已修改的受管理檔案、無效的清單路徑、共用 Spec Kit 基礎設施的健康狀態、未檢查的清單，以及對預設值敏感的共用範本的目標整合。JSON 形式供需要穩定、可由機器讀取的狀態資料的 CI 與程式代理使用；當狀態修復的啟發式判斷與記錄的檔案不同時，它也會回報原始記錄的整合與已檢查的整合清單。當報告狀態為 `ok` 或 `warning` 時，命令以 0 結束；只有當報告狀態為 `error` 時才以 1 結束。在 JSON 輸出中，當沒有可評估的已安裝整合集合時（例如整合狀態遺失、無法讀取、缺少有效的已記錄整合清單，或未記錄任何已安裝的整合），`multi_install_safe` 為 `null`。
 
-## Catalog Management
+## 目錄管理
 
-Integration catalogs control where the discovery commands (`search` and `info`) look for integrations. Catalogs are checked in priority order.
+整合目錄控制探索命令（`search` 與 `info`）尋找整合的位置。目錄會依優先順序檢查。
 
-Catalog management, `integration list --catalog`, and `integration info` do not
-execute adapter code. Ordinary integration listing, setup, selection, status,
-registration, and workflow dispatch load trusted installed implementations.
+目錄管理、`integration list --catalog` 與 `integration info` 不會執行轉接器程式碼。一般的整合列表、設定、選取、狀態、註冊與工作流程分派，則會載入受信任的已安裝實作。
 
-### List Catalogs
+### 列出目錄
 
 ```bash
 specify integration catalog list
 ```
 
-Shows the active catalog sources. Project-level sources (when configured) are removable by index; otherwise the active sources are shown as non-removable.
+顯示使用中的目錄來源。專案層級的來源（有設定時）可以依索引移除；否則使用中的來源會顯示為不可移除。
 
-### Add a Catalog
+### 加入目錄
 
 ```bash
 specify integration catalog add <url>
 ```
 
-| Option          | Description                   |
+| 選項 | 說明 |
 | --------------- | ----------------------------- |
-| `--name <name>` | Optional name for the catalog |
+| `--name <name>` | 目錄的選用名稱 |
 
-Adds a custom catalog URL to the project's `.specify/integration-catalogs.yml`. The URL must use HTTPS (except `http://localhost`, `http://127.0.0.1`, or `http://[::1]` for local testing).
+將自訂目錄 URL 加入專案的 `.specify/integration-catalogs.yml`。URL 必須使用 HTTPS（供本機測試的 `http://localhost`、`http://127.0.0.1` 或 `http://[::1]` 除外）。
 
-Re-adding the same URL with the same name succeeds without changing the configuration; a different name is rejected.
+以相同名稱重新加入相同的 URL 會成功，且不會變更設定；不同的名稱則會被拒絕。
 
-### Remove a Catalog
+### 移除目錄
 
 ```bash
 specify integration catalog remove <index>
 ```
 
-Removes a project catalog source by its 0-based index in `catalog list`.
+依其在 `catalog list` 中以 0 為起點的索引，移除一個專案目錄來源。
 
-### Catalog Resolution Order
+### 目錄解析順序
 
-The first configured layer replaces lower layers. Within that layer, lower
-numeric priority wins:
+第一個設定的層級會取代較低的層級。在該層級內，數字較小的優先順序勝出：
 
-1. **Environment variable** — `SPECKIT_INTEGRATION_CATALOG_URL` overrides all catalogs
-2. **Project config** — `.specify/integration-catalogs.yml`
-3. **User config** — `~/.specify/integration-catalogs.yml`
-4. **Built-in defaults** — official catalog + community catalog
+1. **環境變數**——`SPECKIT_INTEGRATION_CATALOG_URL` 覆寫所有目錄
+2. **專案設定**——`.specify/integration-catalogs.yml`
+3. **使用者設定**——`~/.specify/integration-catalogs.yml`
+4. **內建預設值**——官方目錄 + 社群目錄
 
-### Historical Integration Metadata
+### 歷來整合中繼資料
 
-An integration entry may retain the existing top-level fields for its advertised
-current release and add a `releases` mapping of historical version to metadata.
-Single-version entries remain valid without a `releases` key. For example:
+整合項目可以保留其所公布的目前版本的既有最上層欄位，並加入歷來版本到中繼資料的 `releases` 對應。單一版本的項目在沒有 `releases` 鍵的情況下仍然有效。例如：
 
 ```json
 {
@@ -379,54 +277,28 @@ Single-version entries remain valid without a `releases` key. For example:
 }
 ```
 
-The top-level fields retain their original meaning for older clients and for
-unqualified `search`, `info`, `list --catalog`, and `install` commands. Historical
-records may contain `name`, `description`, `author`, `repository`, `license`,
-`tags` (a list of strings), and `requires` (a mapping). Shared identity, name,
-author, and source policy are retained; current-only metadata such as
-description, repository, tags, and requirements is **not** inherited by an
-older release unless explicitly supplied in its record. Release records cannot
-override `id`, `version`, `releases`, or source policy, and cannot advertise
-download URLs or archives.
+最上層欄位對較舊的 client，以及未指定版本的 `search`、`info`、`list --catalog` 與 `install` 命令，保留其原始含義。歷來紀錄可以包含 `name`、`description`、`author`、`repository`、`license`、`tags`（字串清單）與 `requires`（對應）。共用的身分、名稱、作者與來源政策會被保留；僅屬於目前版本的中繼資料，例如說明、儲存庫、標籤與要求，**不會**被較舊版本繼承，除非在其紀錄中明確提供。版本紀錄不能覆寫 `id`、`version`、`releases` 或來源政策，也不能公布下載 URL 或封存檔。
 
-For programmatic metadata lookup,
-`IntegrationCatalog.get_integration_info(id, version="1.0.0")` selects the
-exact historical record from the winning source, or returns `None` if that
-version is missing. `get_integration_versions(id)` returns the versions
-advertised by that same source. PEP 440-equivalent spellings (such as `v1.0`
-and `1.0.0`) match the same release while retaining its catalog spelling.
-The current release must not be repeated in `releases`; malformed records and
-duplicate equivalent versions are rejected. An absent version never falls
-through to a lower-priority source or silently selects current. These lookups
-do not install an integration.
+對於程式化的中繼資料查詢，`IntegrationCatalog.get_integration_info(id, version="1.0.0")` 會從獲勝來源中選出確切的歷來紀錄，若該版本不存在則回傳 `None`。`get_integration_versions(id)` 會回傳同一個來源所公布的版本。與 PEP 440 等價的寫法（例如 `v1.0` 與 `1.0.0`）會對應到同一個版本，同時保留其目錄寫法。目前版本不得在 `releases` 中重複；格式錯誤的紀錄與重複的等價版本會被拒絕。不存在的版本永遠不會穿透到優先順序較低的來源，也不會無聲地選取目前版本。這些查詢不會安裝整合。
 
-## Integration-Specific Options
+## 整合專屬選項
 
-Pass agent-specific setup options through `--integration-options`. Their
-semantics, examples, and migration caveats live in the relevant agent guide:
+透過 `--integration-options` 傳入代理專屬的設定選項。它們的語義、範例與遷移注意事項記載於相關的代理指南中：
 
-| Integration | Guide |
+| 整合 | 指南 |
 | --- | --- |
-| Generic | [Output directory and skills mode](generic.md#output-options-and-invocation) |
-| GitHub Copilot | [Skills and commands layouts](copilot.md#commands-layout) |
-| IBM Bob | [Legacy commands and migration](bob.md#legacy-commands-and-migration) |
-| Kimi Code | [Legacy migration](kimi.md#legacy-migration) |
+| Generic | [輸出目錄與技能模式](generic.md#output-options-and-invocation) |
+| GitHub Copilot | [技能與命令版式](copilot.md#commands-layout) |
+| IBM Bob | [舊版命令與遷移](bob.md#legacy-commands-and-migration) |
+| Kimi Code | [舊版遷移](kimi.md#legacy-migration) |
 
-Other agent-specific details are listed in the
-[integration directory](index.md).
+其他代理專屬的細節列於[整合目錄](index.md)中。
 
-## Runtime Events
+## 執行階段事件
 
-Event-capable integrations accept `--events true|false` through the setup
-`--integration-options` string; the default is enabled. Handler definitions
-come from integration defaults, installed extensions, and
-`.specify/integration-events.yml`. Enabling events does not create handlers
-where none are configured, and an integration emits only the native events
-it supports.
+支援事件的整合透過設定用的 `--integration-options` 字串接受 `--events true|false`；預設為啟用。處理常式的定義來自整合預設值、已安裝的擴充功能，以及 `.specify/integration-events.yml`。啟用事件並不會在未設定處理常式的地方建立處理常式，而且整合只會發出它支援的原生事件。
 
-To configure project overrides, create `.specify/integration-events.yml`.
-Replace `<key>` with your integration key and the example command with an
-installed, script-backed Spec Kit command:
+若要設定專案覆寫，請建立 `.specify/integration-events.yml`。將 `<key>` 換成你的整合鍵，並將範例命令換成已安裝、以指令稿為基礎的 Spec Kit 命令：
 
 ```yaml
 integrations:
@@ -438,103 +310,62 @@ integrations:
           timeout: 60
 ```
 
-Each event accepts a handler mapping or a list of handlers. A handler requires
-a non-empty `command` string; `matcher` is an optional native filter string,
-and `timeout` is an optional positive integer in seconds.
+每個事件接受一個處理常式對應，或一組處理常式清單。處理常式必須有非空的 `command` 字串；`matcher` 是選用的原生篩選字串，`timeout` 是選用的正整數，單位為秒。
 
-Integration defaults and extension handlers accumulate. A valid project override
-**replaces the entire event map for that integration**, not just the events
-listed in the override. Set `events: {}` under the integration key to disable
-all its handlers. If the override cannot be read or parsed, or an event fails
-validation, Spec Kit warns and retains the defaults and extension handlers.
-`--events false` takes precedence over all these sources.
+整合預設值與擴充功能處理常式會累加。有效的專案覆寫會**取代該整合的整個事件對應表**，而不只是覆寫中列出的事件。在整合鍵之下設定 `events: {}` 可停用它的所有處理常式。若覆寫無法讀取或解析，或某個事件未通過驗證，Spec Kit 會發出警告，並保留預設值與擴充功能處理常式。`--events false` 的優先順序高於所有這些來源。
 
-With events enabled, apply configuration changes using
-`specify integration upgrade <key>`.
+啟用事件時，請使用 `specify integration upgrade <key>` 套用設定變更。
 
-For an event-capable integration, disable Spec Kit event handlers during an upgrade:
+對於支援事件的整合，在升級期間停用 Spec Kit 事件處理常式：
 
 ```bash
 specify integration upgrade <key> --integration-options="--events false"
 ```
 
-Supplying `--integration-options` replaces stored setup options, so repeat other
-options you want to keep. A disabled event set removes previously installed
-Spec Kit hooks rather than merely stopping new hook generation.
-Agent-specific guides identify native event configuration paths and
-limitations. These runtime events are distinct from extension command hooks.
+提供 `--integration-options` 會取代已儲存的設定選項，因此請重複列出你想保留的其他選項。已停用的事件集合會移除先前安裝的 Spec Kit hook，而不是僅僅停止產生新的 hook。代理專屬的指南會指出原生事件的設定路徑與限制。這些執行階段事件與擴充功能命令 hook 不同。
 
-## Workflow CLI Dispatch
+## 工作流程 CLI 分派
 
-The agent guides distinguish IDE setup from workflow CLI support. Some IDE
-integrations can dispatch workflow steps if their separate CLI is available;
-others explicitly do not support command/prompt dispatch. Adapter support means
-Spec Kit can construct the invocation, not that every vendor CLI release has
-been exercised against it.
+代理指南會區分 IDE 設定與工作流程 CLI 支援。某些 IDE 整合在其另外的 CLI 可用時可以分派工作流程步驟；其他整合則明確不支援命令／提示詞分派。轉接器支援表示 Spec Kit 可以建構呼叫方式，而不是每個廠商的每個 CLI 版本都曾實際對它測試過。
 
-CLI-capable adapters support
-`SPECKIT_INTEGRATION_<KEY>_EXECUTABLE` for executable selection and
-`SPECKIT_INTEGRATION_<KEY>_EXTRA_ARGS` for additional CLI arguments, where
-`<KEY>` is uppercase with hyphens replaced by underscores. Extra arguments are
-parsed using POSIX shell quoting. Placement and duplicate-flag behavior differ
-by adapter; see the agent guide, especially for Docker Agent and Goose.
+支援 CLI 的轉接器支援以 `SPECKIT_INTEGRATION_<KEY>_EXECUTABLE` 選取執行檔，並以 `SPECKIT_INTEGRATION_<KEY>_EXTRA_ARGS` 提供額外的 CLI 參數，其中 `<KEY>` 為大寫，連字號換成底線。額外參數使用 POSIX shell 引號規則解析。參數的放置位置與重複旗標行為因轉接器而異；請參閱代理指南，特別是 Docker Agent 與 Goose。
 
-Setup `--integration-options` are separate from workflow
-[`integration_args` and `integration_options`](../reference/workflows.md#per-step-integration-configuration).
-Adapters reject non-empty per-step configuration unless they implement it;
-Docker Agent currently exposes structured agent/safety configuration.
-Headless approval flags, model forwarding, and structured-output support are
-also adapter-specific, not universal guarantees.
+設定用的 `--integration-options` 與工作流程的 [`integration_args` 與 `integration_options`](../reference/workflows.md#per-step-integration-configuration)不同。轉接器會拒絕非空的逐步設定，除非它有實作該功能；Docker Agent 目前公開了結構化的代理／安全設定。無頭核准旗標、模型轉傳與結構化輸出支援同樣因轉接器而異，不是普遍保證。
 
-## FAQ
+## 常見問題
 
-### Can I install multiple integrations in the same project?
+### 我可以在同一個專案中安裝多個整合嗎？
 
-Yes, but it is intended for team portability rather than the default setup. Multiple integrations are allowed automatically only when the installed integration and the new integration are declared multi-install safe by Spec Kit. For other combinations, pass `--force` to acknowledge that multiple agents may see unrelated agent-specific instructions or commands.
+可以，但它的用途是團隊可攜性，而不是預設設定。只有當已安裝的整合與新整合都被 Spec Kit 宣告為多重安裝安全時，才會自動允許多重安裝。對於其他組合，請傳入 `--force`，表示你了解多個代理可能會看到無關的代理專屬指示或命令。
 
-Spec Kit tracks one default integration in `.specify/integration.json` with `default_integration`, all installed integrations with `installed_integrations`, per-integration runtime settings with `integration_settings`, and a dedicated `integration_state_schema` for future state migrations. The legacy `integration` field remains as an alias for the default integration.
+Spec Kit 在 `.specify/integration.json` 中追蹤一個預設整合（`default_integration`）、所有已安裝的整合（`installed_integrations`）、每個整合的執行階段設定（`integration_settings`），以及供未來狀態遷移使用的專用 `integration_state_schema`。舊版的 `integration` 欄位仍保留，作為預設整合的別名。
 
-### Which integrations are multi-install safe?
+### 哪些整合是多重安裝安全的？
 
-For integrations that generate agent files, safety requires static, unique
-output paths, stable command invocation settings, and a separate manifest whose
-managed files do not overlap another safe integration. Registry tests enforce
-those invariants. Shared Spec Kit templates remain aligned to the single default.
+對於會產生代理檔案的整合，安全性要求靜態且唯一的輸出路徑、穩定的命令呼叫設定，以及一份獨立的清單，其受管理的檔案不與另一個安全的整合重疊。登錄測試會強制執行這些不變條件。共用的 Spec Kit 範本仍與單一預設整合保持一致。
 
-Run `specify integration list` to inspect each integration's declaration.
-Each integration's guide documents its safety status and installed command
-directories.
+執行 `specify integration list` 可查看每個整合的宣告。每個整合的指南都會記載其安全狀態與已安裝的命令目錄。
 
-Integrations that share a command directory with another integration, require dynamic install paths such as `--commands-dir`, or merge shared tool settings are not declared safe by default. They can still be installed alongside another integration with `--force`.
+與另一個整合共用命令目錄、需要動態安裝路徑（例如 `--commands-dir`），或合併共用工具設定的整合，預設不會宣告為安全。它們仍可以透過 `--force` 與另一個整合一併安裝。
 
-### What happens to my changes when I uninstall or switch?
+### 當我解除安裝或切換時，我的變更會如何？
 
-Manifest-tracked files you've modified are preserved automatically. Only
-unmodified tracked files (matching their original SHA-256 hash) are removed.
-Use `--force` to override this. See
-[uninstall](#uninstall-an-integration) for integration-specific cleanup exceptions.
+你修改過的、由清單追蹤的檔案會自動被保留。只有未修改的追蹤檔案（與其原始 SHA-256 雜湊相符）會被移除。使用 `--force` 可覆寫此行為。整合專屬的清理例外請參閱[解除安裝](#uninstall-an-integration)。
 
-### How do I know which key to use?
+### 我要如何知道該使用哪個鍵？
 
-Run `specify integration list` to see all available integrations with their keys,
-or check the [integration directory](index.md#choose-an-integration).
+執行 `specify integration list` 可查看所有可用的整合及其鍵值，或查看[整合目錄](index.md#choose-an-integration)。
 
-### Do I need the AI coding agent installed to use an integration?
+### 使用整合是否需要安裝 AI 程式代理？
 
-CLI-based integrations require the tool to be installed. IDE-based integrations
-work through the IDE itself and may not require a separate CLI for setup.
-Workflow dispatch can have additional CLI requirements; see your integration's
-guide. `specify integration list` shows each integration's setup requirements.
+以 CLI 為基礎的整合需要安裝該工具。以 IDE 為基礎的整合透過 IDE 本身運作，設定時可能不需要另外的 CLI。工作流程分派可能有額外的 CLI 要求；請參閱你所用整合的指南。`specify integration list` 會顯示每個整合的設定要求。
 
-If an integration has no command templates, `specify init` keeps the
-project-directory guidance and shows how to choose an integration with
-`specify integration list` and switch to it with `specify integration switch <key>`,
-rather than recommending unavailable agent commands.
+若某個整合沒有命令範本，`specify init` 會保留專案目錄指引，並顯示如何以 `specify integration list` 選擇整合，以及如何以 `specify integration switch <key>` 切換到它，而不是推薦無法使用的代理命令。
 
-### When should I use `upgrade` vs `switch`?
+### 我應該在何時使用 `upgrade`，何時使用 `switch`？
 
-Use `upgrade` when you've upgraded Spec Kit and want to refresh an installed integration's managed files. Use `switch` when you want to replace the current default with another integration; if the target is already installed, `switch` behaves like `use`.
+當你已升級 Spec Kit，並想重新整理已安裝整合的受管理檔案時，請使用 `upgrade`。當你想以另一個整合取代目前的預設整合時，請使用 `switch`；若目標已安裝，`switch` 的行為如同 `use`。
 
-### Do extensions and presets I install apply to every installed integration?
+### 我安裝的擴充功能與預設集會套用到每個已安裝的整合嗎？
 
-No. Extensions (`specify extension add`) and presets (`specify preset add`) register their command overrides for the currently active (default) integration only, even if other integrations are installed. A non-default integration does not receive those artifacts until it becomes the default: `specify integration use <key>` (or `switch <key>`) rescaffolds every enabled extension and preset for the newly active integration. `specify integration upgrade` follows the same rule — it only re-registers extensions and presets when upgrading the active integration.
+不會。擴充功能（`specify extension add`）與預設集（`specify preset add`）只會為目前使用中（預設）的整合註冊它們的命令覆寫，即使已安裝了其他整合也一樣。非預設整合在成為預設之前不會收到那些成品：`specify integration use <key>`（或 `switch <key>`）會為新啟用的整合重新建立每個已啟用擴充功能與預設集的骨架。`specify integration upgrade` 也遵循相同規則——它只有在升級使用中的整合時才會重新註冊擴充功能與預設集。

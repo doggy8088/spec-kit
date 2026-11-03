@@ -1,43 +1,43 @@
-# Installation Guide
+# 安裝指南
 
-## Prerequisites
+## 前置條件
 
-- **Linux/macOS** (or Windows; PowerShell scripts now supported without WSL)
-- AI coding agent: [Claude Code](https://www.anthropic.com/claude-code), [GitHub Copilot](https://code.visualstudio.com/), [CodeBuddy CLI](https://www.codebuddy.cn/docs/cli/installation), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Pi Coding Agent](https://pi.dev), or [Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
-- [uv](https://docs.astral.sh/uv/) for package management (recommended) or [pipx](https://pipx.pypa.io/) for persistent installation
+- **Linux／macOS**（或 Windows；PowerShell script 現在不需 WSL 即可支援）
+- AI 程式代理：[Claude Code](https://www.anthropic.com/claude-code)、[GitHub Copilot](https://code.visualstudio.com/)、[CodeBuddy CLI](https://www.codebuddy.cn/docs/cli/installation)、[Gemini CLI](https://github.com/google-gemini/gemini-cli)、[Pi Coding Agent](https://pi.dev)，或 [Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
+- [uv](https://docs.astral.sh/uv/) 用於套件管理（建議），或 [pipx](https://pipx.pypa.io/) 用於持久安裝
 - [Python 3.11+](https://www.python.org/downloads/)
-- [Git](https://git-scm.com/downloads) *(optional — required only when the git extension is enabled)*
+- [Git](https://git-scm.com/downloads) *（選用——只有在啟用 git 擴充功能時才需要）*
 
-## Installation
+## 安裝
 
 > [!IMPORTANT]
-> Spec Kit is distributed through two official channels, both published and maintained by the Spec Kit maintainers: the [github/spec-kit](https://github.com/github/spec-kit) GitHub repository (source installs) and the [`specify-cli`](https://pypi.org/project/specify-cli/) package on [PyPI](https://pypi.org/project/specify-cli/). Either route is supported for normal installs — use the commands shown below. After installing, run `specify version` as a local version/runtime sanity check. It confirms that the `specify` command is available and reports its version, but it does not prove whether the executable came from PyPI or GitHub. For offline or air-gapped environments, locally built wheels created from this repository are also valid.
+> Spec Kit 透過兩個官方管道發行，兩者都由 Spec Kit 維護者發布與維護：[github/spec-kit](https://github.com/github/spec-kit) GitHub 儲存庫（原始碼安裝），以及 [PyPI](https://pypi.org/project/specify-cli/) 上的 [`specify-cli`](https://pypi.org/project/specify-cli/) 套件。一般安裝兩條路線都受支援——使用下面所示的命令。安裝後，執行 `specify version` 做本地版本／執行環境健全檢查。它確認 `specify` 命令可用並回報其版本，但無法證明該可執行檔來自 PyPI 還是 GitHub。對於離線或氣隙環境，從本儲存庫本地建置的 wheel 也是有效的。
 
-Spec Kit supports two install routes:
+Spec Kit 支援兩條安裝路線：
 
-1. **Install from source (GitHub)** — the recommended route, pinned to a release tag.
-2. **Install from PyPI** — install the published `specify-cli` package with your usual Python tooling.
+1. **從原始碼安裝（GitHub）**——建議路線，釘住到某個 release 標籤。
+2. **從 PyPI 安裝**——用你慣用的 Python 工具安裝已發布的 `specify-cli` 套件。
 
-### Install from Source — Persistent Installation (Recommended)
+### 從原始碼安裝——持久安裝（建議）
 
-Install once and use everywhere. Replace `vX.Y.Z` with a release tag from [Releases](https://github.com/github/spec-kit/releases) — keep the leading `v` (for example, `v0.12.11`, not `0.12.11`):
+安裝一次，到處使用。把 `vX.Y.Z` 換成 [Releases](https://github.com/github/spec-kit/releases) 中的某個 release 標籤——保留開頭的 `v`（例如 `v0.12.11`，不是 `0.12.11`）：
 
 > [!NOTE]
-> The command below requires **[uv](https://docs.astral.sh/uv/)**. If you see `command not found: uv`, [install uv first](./install/uv.md).
+> 下面的命令需要 **[uv](https://docs.astral.sh/uv/)**。若你看到 `command not found: uv`，請[先安裝 uv](./install/uv.md)。
 
 ```bash
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@vX.Y.Z
 ```
 
-Then initialize a project:
+接著初始化專案：
 
 ```bash
 specify init <PROJECT_NAME> --integration copilot
 ```
 
-### Install from PyPI
+### 從 PyPI 安裝
 
-Spec Kit is also published to PyPI as [`specify-cli`](https://pypi.org/project/specify-cli/), so you can install it with your preferred Python package manager without referencing the Git URL:
+Spec Kit 也以 [`specify-cli`](https://pypi.org/project/specify-cli/) 發布到 PyPI，所以你可以用偏好的 Python 套件管理工具安裝它，不必參照 Git URL：
 
 ```bash
 # Using uv (recommended)
@@ -50,25 +50,25 @@ pipx install specify-cli
 pip install specify-cli
 ```
 
-If `specify-cli` is already installed, these commands keep the installed version, even when a newer release exists. Compare the version shown by `specify version` with the [latest version on PyPI](https://pypi.org/project/specify-cli/). To replace an older install, use the same tool as the original install: `uv tool install --force specify-cli`, `pipx install --force specify-cli` or `pip install --upgrade specify-cli`. A different tool can install a second copy and leave the old `specify` first on `PATH`. An old CLI can't set up projects from current releases: with 0.1.6, for example, `specify init --integration ...` fails with `No such option: --integration`, and `specify init --ai ...` fails with `No matching release asset found`.
+若 `specify-cli` 已經安裝，即使有較新的 release，這些命令仍會保留已安裝的版本。把 `specify version` 顯示的版本與 [PyPI 上的最新版本](https://pypi.org/project/specify-cli/) 比較。若要取代較舊的安裝，請使用與原始安裝相同的工具：`uv tool install --force specify-cli`、`pipx install --force specify-cli` 或 `pip install --upgrade specify-cli`。不同的工具可能安裝第二份副本，而讓舊的 `specify` 仍排在 `PATH` 的前面。舊的 CLI 無法從目前的 release 設定專案：例如在 0.1.6，`specify init --integration ...` 會以 `No such option: --integration` 失敗，而 `specify init --ai ...` 會以 `No matching release asset found` 失敗。
 
-To install a specific release, pin the version — for example `uv tool install specify-cli==0.12.11`. See the [PyPI installation guide](install/pypi.md) for details, including how to upgrade and how to [install from a custom or private package index](install/pypi.md#install-from-a-custom-or-private-package-index).
+若要安裝特定 release，請釘住版本——例如 `uv tool install specify-cli==0.12.11`。詳情請見 [PyPI 安裝指南](install/pypi.md)，包括如何升級，以及如何[從自訂或私有套件索引安裝](install/pypi.md#install-from-a-custom-or-private-package-index)。
 
-### One-time Usage
+### 一次性使用
 
-Run directly without installing — see the [One-time usage (uvx)](install/one-time.md) guide.
+直接執行而不安裝——請見[一次性使用（uvx）](install/one-time.md)指南。
 
-### Alternative Package Managers
+### 其他套件管理工具
 
-- **PyPI** — see the [PyPI installation guide](install/pypi.md)
-- **pipx** — see the [pipx installation guide](install/pipx.md)
-- **Enterprise / Air-Gapped** — see the [air-gapped installation guide](install/air-gapped.md)
+- **PyPI**——請見 [PyPI 安裝指南](install/pypi.md)
+- **pipx**——請見 [pipx 安裝指南](install/pipx.md)
+- **企業／氣隙**——請見[氣隙安裝指南](install/air-gapped.md)
 
-### Specify Integration
+### 指定整合
 
-Interactive terminals prompt you to choose a coding agent integration during initialization. Non-interactive sessions, such as CI or piped runs, default to GitHub Copilot unless you pass `--integration`.
+互動式終端機會在初始化期間提示你選擇程式代理整合。非互動式工作階段，例如 CI 或管線執行，預設為 GitHub Copilot，除非你傳入 `--integration`。
 
-You can proactively specify your coding agent integration during initialization:
+你可以在初始化時主動指定程式代理整合：
 
 ```bash
 specify init <project_name> --integration claude
@@ -79,23 +79,19 @@ specify init <project_name> --integration pi
 specify init <project_name> --integration omp
 ```
 
-The README examples use GitHub Copilot's default skills mode. To use another
-supported agent, replace `copilot` with its
-[integration key](integrations/index.md). See
-[Command Invocation](integrations/cli.md#command-invocation) for the
-syntax used by each agent and mode.
+README 範例使用 GitHub Copilot 的預設 skills 模式。若要使用其他受支援的代理，把 `copilot` 換成它的[整合鍵](integrations/index.md)。每個代理與模式所使用的語法，請見[命令呼叫](integrations/cli.md#command-invocation)。
 
-### Specify Script Type (Shell, PowerShell, or Python)
+### 指定 Script 類型（Shell、PowerShell 或 Python）
 
-Automation scripts are available as Bash (`.sh`), PowerShell (`.ps1`), and Python (`.py`) variants.
+自動化 script 提供 Bash（`.sh`）、PowerShell（`.ps1`）與 Python（`.py`）三種變體。
 
-Auto behavior:
+自動行為：
 
-- Windows default: `ps`
-- Other OS default: `sh`
-- Interactive mode: you'll be prompted unless you pass `--script`
+- Windows 預設：`ps`
+- 其他作業系統預設：`sh`
+- 互動模式：除非你傳入 `--script`，否則會提示你
 
-Force a specific script type:
+強制指定特定 script 類型：
 
 ```bash
 specify init <project_name> --script sh
@@ -103,80 +99,70 @@ specify init <project_name> --script ps
 specify init <project_name> --script py
 ```
 
-### CI and AI Agent Harnesses
+### CI 與 AI 代理框架
 
-For environments without a keyboard, or a PTY that cannot send arrow keys, pass
-`--non-interactive` so initialization never waits on a picker:
+對於沒有鍵盤、或 PTY 無法傳送方向鍵的環境，傳入 `--non-interactive`，讓初始化永遠不會卡在選擇器上：
 
 ```bash
 specify init my-project --non-interactive --ignore-agent-tools
 ```
 
-`--ignore-agent-tools` skips the agent executable check when the agent will run
-elsewhere; omit it when you want that check. Non-interactive initialization
-defaults to Copilot unless you select another integration explicitly.
+`--ignore-agent-tools` 會在代理將在其他地方執行時，略過代理可執行檔檢查；若你想要那項檢查，就省略它。非互動式初始化預設為 Copilot，除非你明確選擇其他整合。
 
-For a non-empty directory, `--force` acknowledges the merge warning. Review the
-[existing-project guide](guides/existing-projects.md) and commit or back up local
-changes before initializing:
+對於非空目錄，`--force` 表示確認合併警告。在初始化之前，請檢視[既有專案指南](guides/existing-projects.md)，並提交或備份本地變更：
 
 ```bash
 specify init --here --force --non-interactive --integration claude
 ```
 
-### Ignore Agent Tools Check
+### 略過代理工具檢查
 
-If you prefer to get the templates without checking for the right tools:
+若你偏好在不檢查正確工具的情況下取得範本：
 
 ```bash
 specify init <project_name> --integration claude --ignore-agent-tools
 ```
 
-## Verification
+## 驗證
 
-After installation, run the following command as a local version/runtime check:
+安裝後，執行下列命令做本地版本／執行環境檢查：
 
 ```bash
 specify version
 ```
 
-This confirms that the `specify` command is available and reporting the expected version. It does not prove whether that executable came from PyPI or GitHub.
+這確認 `specify` 命令可用，並回報預期的版本。它無法證明該可執行檔來自 PyPI 還是 GitHub。
 
-**Stay current:** Run `specify self check` periodically to learn whether a newer release is available — it is read-only and never modifies your installation. When you are ready to upgrade, follow the [Upgrade Guide](./upgrade.md).
+**保持最新：**定期執行 `specify self check`，了解是否有較新的 release 可用——它是唯讀的，永遠不會修改你的安裝。當你準備好升級時，請依[升級指南](./upgrade.md)。
 
-After initialization, you should see the following commands available in your coding agent:
+初始化之後，你應該會在程式代理中看到下列命令可用：
 
-- `/speckit.specify` - Create specifications
-- `/speckit.plan` - Generate implementation plans
-- `/speckit.tasks` - Break down into actionable tasks
-- `/speckit.implement` - Execute implementation tasks
-- `/speckit.analyze` - Validate cross-artifact consistency
-- `/speckit.clarify` - Identify and resolve ambiguities
-- `/speckit.checklist` - Generate quality checklists
-- `/speckit.constitution` - Create or update project principles
-- `/speckit.converge` - Assess codebase against artifacts and append remaining tasks
+- `/speckit.specify` - 建立規格
+- `/speckit.plan` - 產生成實作計畫
+- `/speckit.tasks` - 拆解為可執行的任務
+- `/speckit.implement` - 執行實作任務
+- `/speckit.analyze` - 驗證跨產出物的一致性
+- `/speckit.clarify` - 找出並釐清模糊之處
+- `/speckit.checklist` - 產生品質檢核清單
+- `/speckit.constitution` - 建立或更新專案原則
+- `/speckit.converge` - 對照產出物評估程式碼庫，並追加剩餘任務
 
-Scripts are installed into a variant subdirectory matching the chosen script type:
+Script 會安裝到與所選 script 類型相符的變體子目錄中：
 
-- `.specify/scripts/bash/` — contains `.sh` scripts (default on Linux/macOS)
-- `.specify/scripts/powershell/` — contains `.ps1` scripts (default on Windows)
-- `.specify/scripts/python/` — contains `.py` scripts (chosen with `--script py`; also installs the platform shell fallback)
+- `.specify/scripts/bash/`——包含 `.sh` script（Linux／macOS 預設）
+- `.specify/scripts/powershell/`——包含 `.ps1` script（Windows 預設）
+- `.specify/scripts/python/`——包含 `.py` script（以 `--script py` 選擇；同時安裝平台 shell 的後備）
 
-## Choose a Process
+## 選擇流程
 
-After initialization, launch your coding agent in the project directory and
-follow the [SDD quickstart](quickstart.md),
-[bug-fixing quickstart](guides/bugfix.md), or
-[idea assessment quickstart](guides/assessment.md). These are independent entry
-points. SDD is available immediately; the other guides show how to install their
-bundled, opt-in extensions.
+初始化之後，在專案目錄中啟動你的程式代理，並依 [SDD 快速入門](quickstart.md)、[錯誤修復快速入門](guides/bugfix.md) 或[構想評估快速入門](guides/assessment.md)。這些是獨立的進入點。SDD 可以立即使用；其他指南說明如何安裝它們隨附的選用擴充功能。
 
-## Troubleshooting
+## 疑難排解
 
-### Enterprise / Air-Gapped Installation
+### 企業／氣隙安裝
 
-If your environment blocks access to PyPI or GitHub, see the [Enterprise / Air-Gapped Installation](install/air-gapped.md) guide for step-by-step instructions on creating portable wheel bundles.
+若你的環境封鎖了對 PyPI 或 GitHub 的存取，請見[企業／氣隙安裝](install/air-gapped.md)指南，了解建立可攜式 wheel 套件組的逐步說明。
 
-### Git Credential Manager on Linux
+### Linux 上的 Git Credential Manager
 
-If you're having issues with Git authentication on Linux, see the [Air-Gapped Installation guide](install/air-gapped.md#git-credential-manager-on-linux) for Git Credential Manager setup instructions.
+若你在 Linux 上遇到 Git 驗證問題，請見[氣隙安裝指南](install/air-gapped.md#git-credential-manager-on-linux)了解 Git Credential Manager 的設定說明。

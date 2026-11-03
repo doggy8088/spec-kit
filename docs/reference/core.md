@@ -1,60 +1,42 @@
-# Core Commands
+# 核心命令
 
-The core `specify` commands handle project initialization, system checks, and version information.
+核心 `specify` 命令處理專案初始化、系統檢查與版本資訊。
 
-## Initialize a Project
+## 初始化專案
 
 ```bash
 specify init [<project_name>]
 ```
 
-| Option                   | Description                                                              |
+| 選項 | 說明 |
 | ------------------------ | ------------------------------------------------------------------------ |
-| `--integration <key>`    | AI coding agent integration to use (e.g. `copilot`, `claude`, `gemini`). See the [integration directory](../integrations/index.md) for all available keys |
-| `--integration-options`  | Options for the integration (e.g. `--integration-options="--commands-dir .myagent/cmds"`) |
-| `--script sh\|ps\|py`    | Script type: `sh` (bash/zsh), `ps` (PowerShell), or `py` (Python)       |
-| `--here`                 | Initialize in the current directory instead of creating a new one        |
-| `--force`                | Force merge/overwrite when initializing in an existing directory         |
-| `--allow-symlinks`       | Persist permission for contained symlinks in migrated FileHelper operations; default is deny |
-| `--ignore-agent-tools`   | Skip checks for AI coding agent CLI tools                                |
-| `--preset <id>`          | Install a preset during initialization                                   |
+| `--integration <key>`    | 要使用的 AI 程式代理整合（例如 `copilot`、`claude`、`gemini`）。所有可用鍵請參見[整合目錄](../integrations/index.md) |
+| `--integration-options`  | 整合的選項（例如 `--integration-options="--commands-dir .myagent/cmds"`） |
+| `--script sh\|ps\|py`    | 指令碼類型：`sh`（bash/zsh）、`ps`（PowerShell）或 `py`（Python）       |
+| `--here`                 | 在目前目錄初始化，而非建立新目錄        |
+| `--force`                | 在既有目錄初始化時強制合併／覆寫         |
+| `--allow-symlinks`       | 持續允許已遷移 FileHelper 操作中包含的符號連結；預設為拒絕 |
+| `--ignore-agent-tools`   | 略過 AI 程式代理 CLI 工具的檢查                                |
+| `--preset <id>`          | 在初始化期間安裝預設集                                   |
 
-Creates a new Spec Kit project with the necessary directory structure, templates, scripts, and AI coding agent integration files.
+建立新的 Spec Kit 專案，包含必要的目錄結構、範本、指令碼與 AI 程式代理整合檔案。
 
 > [!NOTE]
-> Git repository initialization and branching are managed by the **git extension**, which is not installed by default. Run `specify extension add git` after init to enable git workflows.
+> Git 儲存庫的初始化與分支由 **git 擴充功能**管理，該擴充功能預設未安裝。在 init 後執行 `specify extension add git` 以啟用 git 工作流程。
 
-Use `<project_name>` to create a new directory, or `--here` (or `.`) to initialize in the current directory. If the directory already has files, use `--force` to merge without confirmation.
+使用 `<project_name>` 建立新目錄，或使用 `--here`（或 `.`）在目前目錄初始化。若目錄已有檔案，請使用 `--force` 在不經確認的情況下合併。
 
-When `--integration` is omitted, interactive terminals prompt you to choose an integration. Non-interactive sessions, such as CI or piped runs, default to GitHub Copilot; pass `--integration <key>` to choose a different integration explicitly, or set `SPECKIT_INTEGRATION_DEFAULT` to change the fallback (see [Environment Variables](#environment-variables)).
+省略 `--integration` 時，互動式終端機會提示你選擇整合。非互動式工作階段，例如 CI 或管線執行，預設為 GitHub Copilot；傳入 `--integration <key>` 可明確選擇不同的整合，或設定 `SPECKIT_INTEGRATION_DEFAULT` 變更備援值（請參見[環境變數](#environment-variables)）。
 
-### Persisted filesystem policy
+### 已保存的檔案系統原則
 
-Only `init` accepts `--allow-symlinks`. It records `allow_symlinks: true` in
-`.specify/init-options.json`; omitting it records `false`, including on re-init.
-Project-scoped CLI commands read the current value on each invocation, so a
-manual edit takes effect immediately. A missing file or key means deny; the
-value must be a JSON boolean, not a string, number or null. Invalid/unreadable
-configuration is an error, not a fallback. Unrelated recorded init options are
-preserved.
+只有 `init` 接受 `--allow-symlinks`。它會在 `.specify/init-options.json` 中記錄 `allow_symlinks: true`；省略時記錄 `false`，包括重新初始化時。專案範圍的 CLI 命令在每次呼叫時讀取目前值，因此手動編輯會立即生效。檔案或鍵遺失表示拒絕；值必須是 JSON 布林值，不是字串、數字或 null。無效或無法讀取的設定是錯誤，不是備援。無關的已記錄 init 選項會保留。
 
-The configuration bootstrap hierarchy (`.specify` and `init-options.json`)
-must always be non-symlinked below the trusted project root, even in allow mode.
-Help, version, check and projectless tool/catalog operations do not gain a
-project requirement. Init uses its explicit target, not `SPECIFY_INIT_DIR`.
-`check` can consume installed project integrations: it validates any present
-policy at its selected cwd or `SPECIFY_INIT_DIR` boundary before loading them
-or checking tools. It still works in a projectless cwd without `.specify` or
-init options. Help and version do not read project policy.
+設定啟動階層（`.specify` 與 `init-options.json`）在受信任的專案根目錄之下必須永遠不是符號連結，即使在允許模式下也是如此。說明、版本、檢查與無專案的工具／目錄操作不會因此取得專案需求。Init 使用其明確目標，不使用 `SPECIFY_INIT_DIR`。`check` 可以取用已安裝的專案整合：它在載入整合或檢查工具前，會在其選定的 cwd 或 `SPECIFY_INIT_DIR` 邊界驗證任何存在的原則。它在無 `.specify` 或 init 選項的無專案 cwd 中仍可運作。說明與版本不讀取專案原則。
 
-**Migration limit:** policy is enforced by FileHelper operations, currently
-including init-options bootstrap I/O. Loading policy does not yet route all
-other command filesystem operations through FileHelper. Shared infrastructure,
-registration, managed storage, scripts and runtime operations retain their
-existing behavior until migrated. See [FileHelper design](../../design/file-helper.md)
-for the boundary and handoff contract.
+**遷移限制：**原則由 FileHelper 操作強制執行，目前包括 init-options 啟動 I/O。載入原則尚未將所有其他命令的檔案系統操作導向 FileHelper。共用基礎設施、註冊、受管理儲存、指令碼與執行時期操作，在遷移前仍保留其既有行為。邊界與交接合約請參見 [FileHelper 設計](../../design/file-helper.md)。
 
-### Examples
+### 範例
 
 ```bash
 # Create a new project with an integration
@@ -73,107 +55,79 @@ specify init my-project --integration copilot --script ps
 specify init my-project --integration copilot --preset compliance
 ```
 
-### Environment Variables
+### 環境變數
 
-| Variable          | Description                                                              |
+| 變數 | 說明 |
 | ----------------- | ------------------------------------------------------------------------ |
-| `SPECKIT_INTEGRATION_DEFAULT` | Override the fallback integration used by `specify init` when `--integration` is omitted (interactive prompt default and non-interactive fallback). Set it to any registered integration key (e.g. `gemini`, `claude`). An unrecognized value is ignored with a warning and the built-in default (`copilot`) is used. An explicit `--integration <key>` always takes precedence. |
-| `SPECIFY_INIT_DIR` | Target a member project from outside its directory (e.g. a monorepo root) without `cd`, for non-interactive / CI use. Set it to the **project root** — the directory *containing* `.specify/` (relative paths resolve against the current directory). The path must exist and contain `.specify/`, otherwise the command errors and does **not** fall back to the current directory. Resolved once in the core root helper (`get_repo_root` in Bash, `Get-RepoRoot` in PowerShell), so it is honored by the core feature scripts (`/speckit.plan`, `/speckit.tasks`, …) and the Git extension's feature-branch creation, which inherit it. The `specify` CLI applies the **same** validation rules to every project-scoped subcommand (`specify integration …`, `specify extension …`, `specify workflow …`, `specify preset …`, and the rest that operate on a `.specify/` project), so those can target a member project too. When unset, Bash/PowerShell helpers keep their existing upward search; the `specify` CLI keeps its project-scoped resolver cwd-only unless a command explicitly defines broader detection (for example, bundle commands). |
-| `SPECIFY_FEATURE_DIRECTORY` | Override the active feature directory (takes precedence over `.specify/feature.json`). A relative path is joined to the project root without a containment check, so a value like `../shared-feature` still resolves outside it; an absolute path is used as-is and may likewise point outside the project root. The project root still identifies the Spec Kit project and its command/configuration context, but the selected feature directory itself is not required to live under it. Combine with `SPECIFY_INIT_DIR` to pick both the project and the feature non-interactively. |
-| `SPECIFY_FEATURE` | Explicitly override the active feature **label** (e.g. `001-photo-albums`) — the identifier the core helpers report as the current feature/branch (`get_current_branch` in Bash, `Get-CurrentBranch` in PowerShell). Those helpers never inspect Git: when the variable is set they return it verbatim, and when it is unset they return an empty string. The basename fallback happens later — `get_feature_paths` / `Get-FeaturePathsEnv` substitute the resolved feature directory's basename so the reported label is still usable — so calling the named helpers directly does **not** give you that fallback. You set it yourself: the Bash and Python feature scripts only **print** a commented `export SPECIFY_FEATURE=…` / `$env:SPECIFY_FEATURE = …` hint for you to run, because a child process cannot change its parent's environment, and `/speckit.specify` persists `feature_directory` to `.specify/feature.json` instead of setting this variable. (The PowerShell feature scripts do assign `$env:SPECIFY_FEATURE`, but that only reaches you when the script runs inside your current PowerShell session.) It does **not** locate the feature directory: with only `SPECIFY_FEATURE` set, `get_feature_paths` fails with *"Feature directory not found. Set `SPECIFY_FEATURE_DIRECTORY` or run the specify command to create `.specify/feature.json`."* Use `SPECIFY_FEATURE_DIRECTORY` (above) or `.specify/feature.json` to select the directory. |
-| `SPECIFY_FEATURE_NO_PERSIST` | Set to `1` or `true` to stop every core script from writing `.specify/feature.json`, even when it would otherwise persist `SPECIFY_FEATURE_DIRECTORY` on read. Useful when multiple agents run concurrently against the same checkout, each with its own `SPECIFY_FEATURE_DIRECTORY`: without it, each invocation's persist step can overwrite another agent's pinned feature directory. |
+| `SPECKIT_INTEGRATION_DEFAULT` | 覆寫 `specify init` 在省略 `--integration` 時使用的備援整合（互動提示預設值與非互動備援值）。將它設為任何已註冊的整合鍵（例如 `gemini`、`claude`）。無法辨識的值會被忽略並發出警告，並使用內建預設值（`copilot`）。明確的 `--integration <key>` 永遠優先。 |
+| `SPECIFY_INIT_DIR` | 從目錄外（例如 monorepo 根目錄）鎖定成員專案，無需 `cd`，供非互動／CI 使用。將它設為**專案根目錄**，也就是*包含* `.specify/` 的目錄（相對路徑以目前目錄為基準解析）。路徑必須存在且包含 `.specify/`，否則命令會出錯，且**不會**退回目前目錄。它在核心根目錄輔助程式中只解析一次（Bash 中的 `get_repo_root`、PowerShell 中的 `Get-RepoRoot`），因此核心功能指令碼（`/speckit.plan`、`/speckit.tasks` 等）與 Git 擴充功能的功能分支建立都會遵循它，它們會繼承此值。`specify` CLI 對每個專案範圍的子命令（`specify integration …`、`specify extension …`、`specify workflow …`、`specify preset …`，以及其餘操作 `.specify/` 專案的命令）套用**相同**的驗證規則，因此它們也可以鎖定成員專案。未設定時，Bash／PowerShell 輔助程式保持其既有的向上搜尋；`specify` CLI 保持其專案範圍解析器僅限 cwd，除非命令明確定義更廣的偵測（例如套件組命令）。 |
+| `SPECIFY_FEATURE_DIRECTORY` | 覆寫啟用中的功能目錄（優先於 `.specify/feature.json`）。相對路徑會連接到專案根目錄，不做包含檢查，因此像 `../shared-feature` 這樣的值仍會解析到其外部；絕對路徑按原樣使用，同樣可能指向專案根目錄之外。專案根目錄仍標識 Spec Kit 專案及其命令／設定上下文，但所選功能目錄本身不需位於其下。與 `SPECIFY_INIT_DIR` 組合使用，可非互動地同時選取專案與功能。 |
+| `SPECIFY_FEATURE` | 明確覆寫啟用中的功能**標籤**（例如 `001-photo-albums`），也就是核心輔助程式回報為目前功能／分支的識別碼（Bash 中的 `get_current_branch`、PowerShell 中的 `Get-CurrentBranch`）。這些輔助程式從不檢查 Git：變數已設定時直接原樣回傳，未設定時回傳空字串。基底名稱備援發生在之後，`get_feature_paths`／`Get-FeaturePathsEnv` 會以已解析功能目錄的基底名稱替代，因此回報的標籤仍可使用，所以直接呼叫具名輔助程式**不會**給你該備援。你需自行設定：Bash 與 Python 功能指令碼只會**列印**已註解的 `export SPECIFY_FEATURE=…`／`$env:SPECIFY_FEATURE = …` 提示供你執行，因為子行程無法變更其父行程的環境，而 `/speckit.specify` 會將 `feature_directory` 保存到 `.specify/feature.json`，而非設定此變數。（PowerShell 功能指令碼確實會指派 `$env:SPECIFY_FEATURE`，但只有當指令碼在你目前的 PowerShell 工作階段內執行時才會傳達給你。）它**不會**定位功能目錄：只有 `SPECIFY_FEATURE` 已設定時，`get_feature_paths` 會以 *「Feature directory not found. Set `SPECIFY_FEATURE_DIRECTORY` or run the specify command to create `.specify/feature.json`.」* 失敗。使用 `SPECIFY_FEATURE_DIRECTORY`（見上）或 `.specify/feature.json` 選取目錄。 |
+| `SPECIFY_FEATURE_NO_PERSIST` | 設為 `1` 或 `true` 可阻止每個核心指令碼寫入 `.specify/feature.json`，即使它原本會在讀取時保存 `SPECIFY_FEATURE_DIRECTORY`。當多個代理同時對同一個 checkout 執行、各自有自己的 `SPECIFY_FEATURE_DIRECTORY` 時很有用：若無此設定，每次呼叫的保存步驟可能覆寫另一個代理釘選的功能目錄。 |
 
-> **Two resolution axes.** `SPECIFY_INIT_DIR` selects the **project** (which directory contains `.specify/`); `SPECIFY_FEATURE_DIRECTORY` / `.specify/feature.json` select the **feature** — its default location is under `specs/` in that project, but an explicitly selected feature directory is not restricted to living inside it. They are independent — project first, then feature.
+> **兩個解析軸。** `SPECIFY_INIT_DIR` 選取**專案**（哪個目錄包含 `.specify/`）；`SPECIFY_FEATURE_DIRECTORY`／`.specify/feature.json` 選取**功能**，其預設位置在該專案的 `specs/` 之下，但明確選取的功能目錄不限於位於其內。兩者獨立，先專案，後功能。
 >
-> **Version control.** `specify init` scaffolds a managed `.specify/.gitignore` that excludes machine-local state — `feature.json` (the current-feature pointer, rewritten on every feature switch) and per-machine extension `extensions/*/local-config.yml` overrides — while leaving everything else under `.specify/` (constitution, templates, scripts, extension config) shareable so teams stay aligned. Like the rest of `.specify/`'s shared scripts and templates, the file is tracked in the shared-infrastructure manifest: your edits are preserved on re-init and `specify init --here --force` restores the managed content. It is intentionally left in place by `specify integration uninstall`, which only removes the uninstalled agent's own files.
+> **版本控制。** `specify init` 會建立受管理的 `.specify/.gitignore`，排除本機狀態，也就是 `feature.json`（目前功能指標，每次切換功能時重寫）與每台電腦的擴充功能 `extensions/*/local-config.yml` 覆寫，同時讓 `.specify/` 下的其他一切（憲章、範本、指令碼、擴充功能設定）可共用，讓團隊保持一致。如同 `.specify/` 其餘的共用指令碼與範本，此檔案會在共用基礎設施清單中追蹤：你的編輯在重新 init 時會保留，`specify init --here --force` 會還原受管理內容。它會被 `specify integration uninstall` 有意保留原處，該命令只移除被解除安裝代理自己的檔案。
 >
-> **Symlinked project roots.** An explicitly established project-root alias is
-> trusted, including OS ancestors above it. The configuration hierarchy below
-> that root is always checked in deny mode: `.specify/` and `init-options.json`
-> cannot be symlinks. Unmigrated operations elsewhere in the project retain
-> their existing symlink behavior.
+> **符號連結的專案根目錄。** 明確建立的專案根目錄別名是受信任的，包括其上方的作業系統祖先。其下的設定階層永遠以拒絕模式檢查：`.specify/` 與 `init-options.json` 不能是符號連結。專案其他位置尚未遷移的操作，保留其既有的符號連結行為。
 
-## Naming Features with the Helper Scripts
+## 使用輔助指令碼命名功能
 
-When calling the bundled `create-new-feature` helper scripts directly, generated
-names retain Unicode letters and decimal digits in UTF-8, so a description such as
-`添加用户` produces `001-添加用户`. Descriptions made only of punctuation can still
-produce an empty suffix such as `001-`; the scripts warn on stderr when this
-happens, including during a dry run. JSON output remains parseable.
+直接呼叫隨附的 `create-new-feature` 輔助指令碼時，產生的名稱會在 UTF-8 中保留 Unicode 字母與十進位數字，因此像 `添加用户` 這樣的描述會產生 `001-添加用户`。只由標點組成的描述仍可能產生像 `001-` 這樣的空後綴；發生時指令碼會在 stderr 發出警告，包括試執行時。JSON 輸出仍可解析。
 
-To choose a different name, keep the original description and supply a short name:
+若要選擇不同的名稱，請保留原始描述並提供短名稱：
 
 ```bash
 bash .specify/scripts/bash/create-new-feature.sh --json --short-name 用户管理 "添加用户"
 ```
 
-The Python helper also accepts `--short-name`; the PowerShell helper uses
-`-ShortName`. A supplied short name is cleaned by the same rules, so it must
-contain at least one letter or digit. For non-ASCII names, the Bash helper needs
-an installed UTF-8 locale and a Python 3 interpreter for Unicode classification.
-ASCII input, including tabs and newlines, is sanitized without either requirement.
-If `LC_ALL` is non-empty, Bash uses that locale rather than selecting another:
-Unicode names fail with an error if the selected locale is not usable for UTF-8
-names. With `LC_ALL` unset or empty, Bash selects an installed UTF-8 locale even
-when `LANG` or `LC_CTYPE` names a non-UTF-8 locale.
-ASCII capitals are lowercased; non-ASCII letter casing is preserved across the
-script variants.
+Python 輔助程式也接受 `--short-name`；PowerShell 輔助程式使用 `-ShortName`。提供的短名稱會依相同規則清理，因此必須至少包含一個字母或數字。對於非 ASCII 名稱，Bash 輔助程式需要已安裝的 UTF-8 語系與 Python 3 直譯器進行 Unicode 分類。ASCII 輸入，包括 tab 與換行，不需要這兩者即可清理。若 `LC_ALL` 非空，Bash 會使用該語系，而非另選一個：若所選語系無法用於 UTF-8 名稱，Unicode 名稱會以錯誤失敗。當 `LC_ALL` 未設定或為空時，Bash 會選取已安裝的 UTF-8 語系，即使 `LANG` 或 `LC_CTYPE` 指定了非 UTF-8 語系。ASCII 大寫字母會轉為小寫；非 ASCII 字母的大小寫在各指令碼變體間會保留。
 
-## Check Installed Tools
+## 檢查已安裝的工具
 
 ```bash
 specify check
 ```
 
-Checks that CLI-based AI coding agents are available on your system. IDE-based agents are skipped since they don't require a CLI tool.
+檢查以 CLI 為基礎的 AI 程式代理是否可在你的系統上使用。IDE 型代理會被略過，因為它們不需要 CLI 工具。
 
-Installed project integrations are included when available. Any present
-filesystem policy at the selected project boundary must be valid; a projectless
-cwd remains supported without configuration.
+已安裝的專案整合在可用時會包含在內。在所選專案邊界存在的任何檔案系統原則都必須有效；無專案的 cwd 在無設定時仍受支援。
 
-This command stays offline. If a command behaves like an older Spec Kit version or an expected CLI feature is missing, run `specify self check` to check whether your local CLI is behind the latest release.
+此命令保持離線。若命令行為像舊版 Spec Kit，或預期的 CLI 功能遺失，請執行 `specify self check` 檢查你的本機 CLI 是否落後於最新版本。
 
-## Version Information
+## 版本資訊
 
 ```bash
 specify version
 ```
 
-Displays the Spec Kit CLI version, Python version, platform, and architecture.
+顯示 Spec Kit CLI 版本、Python 版本、平台與架構。
 
-To inspect local CLI capabilities without checking the network:
+若要在不檢查網路的情況下檢視本機 CLI 功能：
 
 ```bash
 specify version --features
 ```
 
-To print complete version, runtime, system, and feature information as JSON,
-use:
+若要以 JSON 列印完整的版本、執行環境、系統與功能資訊，請使用：
 
 ```bash
 specify version --json
 ```
 
-Combining `--features` and `--json` emits the same complete JSON output;
-`--features` does not filter the result in JSON mode. If OpenSSL information
-is unavailable, `runtime.openssl` is `null`.
-Successful JSON output is written only to stdout. Failures leave stdout empty
-and write one sanitized JSON error object to stderr.
+組合 `--features` 與 `--json` 會輸出相同的完整 JSON 輸出；在 JSON 模式下，`--features` 不會篩選結果。若 OpenSSL 資訊不可用，`runtime.openssl` 為 `null`。成功的 JSON 輸出只寫入 stdout。失敗時 stdout 保持空白，並將一個已清理的 JSON 錯誤物件寫入 stderr。
 
-A quick version check is also available via:
+快速版本檢查也可透過以下方式取得：
 
 ```bash
 specify --version
 specify -V
 ```
 
-## Experimental MCP Server
+## 實驗性 MCP 伺服器
 
 ```bash
 specify mcp
 ```
 
-Starts the experimental stdio-only MCP server. The initial server exposes only
-the stable `version` JSON command through generic list, describe, and run tools.
-See the [MCP Server reference](mcp.md) for the tool names, result contract, and
-current limitations.
+啟動實驗性、僅限 stdio 的 MCP 伺服器。初始伺服器只透過通用 list、describe 與 run 工具公開穩定的 `version` JSON 命令。工具名稱、結果合約與目前限制請參見 [MCP 伺服器參考](mcp.md)。

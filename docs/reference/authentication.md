@@ -1,12 +1,10 @@
-# Authentication
+# 驗證
 
-Specify CLI uses **opt-in authentication** for HTTP requests to catalog
-sources, extension downloads, and release checks.  No credentials are
-sent unless you explicitly configure them.
+Specify CLI 對目錄來源、擴充功能下載與版本檢查的 HTTP 請求，使用**主動啟用的驗證**。除非你明確設定，否則不會傳送任何憑證。
 
-## Configuration
+## 設定
 
-Create `~/.specify/auth.json` to enable authentication:
+建立 `~/.specify/auth.json` 以啟用驗證：
 
 ```json
 {
@@ -21,47 +19,47 @@ Create `~/.specify/auth.json` to enable authentication:
 }
 ```
 
-> **Security:** Restrict the file to owner-only access:
+> **安全性：**將檔案限制為僅擁有者可存取：
 >
 > ```bash
 > chmod 600 ~/.specify/auth.json
 > ```
 
-Without this file, all HTTP requests are unauthenticated.
+沒有此檔案時，所有 HTTP 請求皆未經驗證。
 
-## Fields
+## 欄位
 
-Each entry in the `providers` array has the following fields:
+`providers` 陣列中的每個項目都有以下欄位：
 
-| Field | Required | Description |
+| 欄位 | 必要 | 說明 |
 |---|---|---|
-| `hosts` | Yes | Array of hostnames this entry applies to. Supports exact hostnames, or a leading `*.` wildcard for subdomains only (for example, `*.visualstudio.com`). `*.visualstudio.com` matches `foo.visualstudio.com`, but not `visualstudio.com`. Other glob patterns such as `*github.com` or `gith?b.com` are not supported. |
-| `provider` | Yes | Built-in provider key: `github`, `azure-devops`, or `bitbucket`. |
-| `auth` | Yes | Auth scheme (see below). |
-| `token` | No | Token value (inline). Use `token_env` instead when possible. |
-| `token_env` | No | Environment variable name to read the token from. |
-| `username` | For `basic` | Username half of a Basic credential — for Bitbucket API tokens, the Atlassian account email. Must not contain `:`. |
+| `hosts` | 是 | 此項目適用的主機名稱陣列。支援精確主機名稱，或以 `*.` 開頭的萬用字元（僅限子網域，例如 `*.visualstudio.com`）。`*.visualstudio.com` 符合 `foo.visualstudio.com`，但不符合 `visualstudio.com`。不支援其他 glob 模式，例如 `*github.com` 或 `gith?b.com`。 |
+| `provider` | 是 | 內建提供者鍵：`github`、`azure-devops` 或 `bitbucket`。 |
+| `auth` | 是 | 驗證方案（見下）。 |
+| `token` | 否 | 權杖值（內嵌）。盡量改用 `token_env`。 |
+| `token_env` | 否 | 讀取權杖的環境變數名稱。 |
+| `username` | `basic` 時必要 | Basic 憑證的使用者名稱部分，對於 Bitbucket API 權杖，即 Atlassian 帳號電子郵件。不得包含 `:`。 |
 
-For `azure-ad` auth, additional fields are required:
+對於 `azure-ad` 驗證，還需要額外欄位：
 
-| Field | Required | Description |
+| 欄位 | 必要 | 說明 |
 |---|---|---|
-| `tenant_id` | Yes | Azure AD tenant ID. |
-| `client_id` | Yes | Service principal client ID. |
-| `client_secret_env` | Yes | Environment variable containing the client secret. |
+| `tenant_id` | 是 | Azure AD 租戶 ID。 |
+| `client_id` | 是 | 服務主體使用者端 ID。 |
+| `client_secret_env` | 是 | 包含使用者端密碼的環境變數。 |
 
-Either `token` or `token_env` must be set for the `bearer`, `basic-pat`, and `basic` schemes.
+對於 `bearer`、`basic-pat` 與 `basic` 方案，必須設定 `token` 或 `token_env` 其中之一。
 
-## Providers and auth schemes
+## 提供者與驗證方案
 
-### GitHub (`github`)
+### GitHub（`github`）
 
-| Scheme | Header | Use for |
+| 方案 | 標頭 | 適用於 |
 |---|---|---|
-| `bearer` | `Authorization: Bearer <token>` | PATs, fine-grained PATs, OAuth tokens, GitHub App tokens |
-| `github-cli` | `Authorization: Bearer <token>` | Credentials acquired on demand via `gh auth token` |
+| `bearer` | `Authorization: Bearer <token>` | PAT、細粒度 PAT、OAuth 權杖、GitHub App 權杖 |
+| `github-cli` | `Authorization: Bearer <token>` | 透過 `gh auth token` 依需求取得的憑證 |
 
-**Example — PAT via environment variable:**
+**範例——透過環境變數使用 PAT：**
 
 ```json
 {
@@ -72,7 +70,7 @@ Either `token` or `token_env` must be set for the `bearer`, `basic-pat`, and `ba
 }
 ```
 
-**Example — GitHub CLI:**
+**範例——GitHub CLI：**
 
 ```json
 {
@@ -91,39 +89,13 @@ Either `token` or `token_env` must be set for the `bearer`, `basic-pat`, and `ba
 }
 ```
 
-Install [GitHub CLI](https://cli.github.com/) and run `gh auth login` before
-using this mode. Specify runs the fixed command
-`gh auth token --hostname github.com` without a shell, caches the result in
-memory for the current process, and never writes the token to disk.
-Surrounding whitespace is trimmed; tokens containing non-ASCII characters,
-embedded carriage returns, or newlines are rejected without including the
-token in the error.
-Credential acquisition failures fail the affected request without trying another
-credential or an unauthenticated request. They use the existing URL-error
-category, so callers retain their normal error handling (for example, warning
-and skipping an unavailable catalog).
-Release checks and upgrades preserve the authentication diagnostic rather than
-reporting a network outage. Online bundle catalog fetching and reference
-validation treat authentication failures as errors, not as availability
-fallbacks to packaged snapshots or unchecked references.
+使用此模式前，請安裝 [GitHub CLI](https://cli.github.com/) 並執行 `gh auth login`。Specify 會在不使用 shell 的情況下執行固定命令 `gh auth token --hostname github.com`，將結果快取在目前行程的記憶體中，絕不將權杖寫入磁碟。周圍的空白會被修剪；包含非 ASCII 字元、內嵌歸位字元或換行的權杖會被拒絕，且錯誤中不會包含權杖。憑證取得失敗會讓受影響的請求失敗，不會嘗試其他憑證或未經驗證的請求。它們使用既有的 URL 錯誤類別，因此呼叫者保留其正常的錯誤處理（例如警告並略過無法使用的目錄）。版本檢查與升級會保留驗證診斷，而非回報為網路中斷。線上套件組目錄取得與參照驗證會將驗證失敗視為錯誤，而不是可用性備援，退回封裝快照或未檢查的參照。
 
-For `github-cli` only, the **first hostname in `hosts`** is passed to
-`gh auth token --hostname`. Put `github.com` or your enterprise instance's
-GitHub CLI login hostname first. It must be an exact hostname, not a wildcard.
-All listed hosts remain request-matching destinations authorized to receive
-that credential; later entries may use supported wildcards. Specify does not
-infer the credential hostname from service prefixes or the requested URL.
-The in-memory cache is keyed by the first hostname. Use separate provider
-entries for hosts requiring different credentials. Host order has no effect
-on existing authentication modes.
+僅對於 `github-cli`，**`hosts` 中的第一個主機名稱**會傳給 `gh auth token --hostname`。請將 `github.com` 或你的企業執行個體的 GitHub CLI 登入主機名稱放在第一位。它必須是精確主機名稱，不是萬用字元。所有列出的主機仍是獲授權接收該憑證的請求比對目的地；後續項目可以使用受支援的萬用字元。Specify 不會從服務前綴或所請求的 URL 推斷憑證主機名稱。記憶體快取以第一個主機名稱為鍵。對於需要不同憑證的主機，請使用獨立的提供者項目。主機順序對既有的驗證模式沒有影響。
 
-### GitHub Enterprise Server (GHES)
+### GitHub Enterprise Server（GHES）
 
-To use a private catalog or extension hosted on a GitHub Enterprise Server
-instance, add a `github` entry listing your GHES host(s). The same entry
-authenticates both catalog JSON fetches **and** private release-asset
-downloads — Specify recognizes the listed hosts as GitHub Enterprise and
-resolves release downloads through the GHES REST API (`/api/v3`).
+若要使用代管在 GitHub Enterprise Server 執行個體上的私人目錄或擴充功能，請新增列出你的 GHES 主機的 `github` 項目。同一個項目同時驗證目錄 JSON 取得**以及**私人版本資產下載，Specify 會將列出的主機辨識為 GitHub Enterprise，並透過 GHES REST API（`/api/v3`）解析版本下載。
 
 ```json
 {
@@ -138,15 +110,9 @@ resolves release downloads through the GHES REST API (`/api/v3`).
 }
 ```
 
-List the **bare** web host (e.g. `ghes.example.com`) — release-download URLs
-live there. If your instance uses subdomain isolation, also list the `raw.`
-and `codeload.` subdomains your catalog/extension URLs use. A
-`*.ghes.example.com` wildcard matches subdomains but **not** the bare host,
-so always include the bare host explicitly.
+列出**裸**網站主機（例如 `ghes.example.com`），版本下載 URL 位於該處。若你的執行個體使用子網域隔離，也請列出你的目錄／擴充功能 URL 使用的 `raw.` 與 `codeload.` 子網域。`*.ghes.example.com` 萬用字元符合子網域，但**不**符合裸主機，因此永遠要明確包含裸主機。
 
-With `auth: "github-cli"`, list your enterprise instance's GitHub CLI login
-hostname first, followed by any request hosts or wildcard patterns that should
-receive the same credential:
+使用 `auth: "github-cli"` 時，將你的企業執行個體的 GitHub CLI 登入主機名稱列在第一位，後面接著應接收相同憑證的任何請求主機或萬用字元模式：
 
 ```json
 {
@@ -160,16 +126,11 @@ receive the same credential:
 }
 ```
 
-Specify runs `gh auth token --hostname ghes.example.com`, using the first
-hostname exactly as configured. Use separate provider entries for separate
-GitHub instances. The selected host must already be
-authenticated in GitHub CLI; failures suggest `gh auth login --hostname <host>`
-without including GitHub CLI command output.
+Specify 會執行 `gh auth token --hostname ghes.example.com`，完全依設定使用第一個主機名稱。不同的 GitHub 執行個體請使用獨立的提供者項目。所選主機必須已在 GitHub CLI 中驗證；失敗時會建議 `gh auth login --hostname <host>`，且不包含 GitHub CLI 命令輸出。
 
-### GitHub Enterprise Cloud with data residency (GHE.com)
+### 具資料落地功能的 GitHub Enterprise Cloud（GHE.com）
 
-GHE.com tenants use separate web and REST API hostnames. List both hosts so
-Specify can authenticate the release-metadata lookup and asset download:
+GHE.com 租戶使用獨立的網站與 REST API 主機名稱。將兩個主機都列出，讓 Specify 能驗證版本中繼資料查詢與資產下載：
 
 ```json
 {
@@ -184,23 +145,18 @@ Specify can authenticate the release-metadata lookup and asset download:
 }
 ```
 
-For a release URL on `tenant.ghe.com`, Specify resolves metadata and release
-assets through `api.tenant.ghe.com`. The returned asset must identify the same
-owner and repository and use the exact numeric
-`/repos/.../releases/assets/...` endpoint. A wildcard such as
-`*.tenant.ghe.com` matches the API hostname but not the bare tenant web
-hostname, so list the web hostname explicitly.
+對於 `tenant.ghe.com` 上的版本 URL，Specify 透過 `api.tenant.ghe.com` 解析中繼資料與版本資產。回傳的資產必須標識相同的擁有者與儲存庫，並使用精確的數字 `/repos/.../releases/assets/...` 端點。像 `*.tenant.ghe.com` 這樣的萬用字元符合 API 主機名稱，但不符合裸租戶網站主機名稱，因此請明確列出網站主機名稱。
 
-### Azure DevOps (`azure-devops`)
+### Azure DevOps（`azure-devops`）
 
-| Scheme | Header | Use for |
+| 方案 | 標頭 | 適用於 |
 |---|---|---|
-| `basic-pat` | `Authorization: Basic base64(:<PAT>)` | Personal Access Tokens |
-| `bearer` | `Authorization: Bearer <token>` | Pre-acquired OAuth / Azure AD tokens |
-| `azure-cli` | `Authorization: Bearer <token>` | Token acquired via `az account get-access-token` |
-| `azure-ad` | `Authorization: Bearer <token>` | Token acquired via OAuth2 client credentials flow |
+| `basic-pat` | `Authorization: Basic base64(:<PAT>)` | Personal Access Token |
+| `bearer` | `Authorization: Bearer <token>` | 預先取得的 OAuth／Azure AD 權杖 |
+| `azure-cli` | `Authorization: Bearer <token>` | 透過 `az account get-access-token` 取得的權杖 |
+| `azure-ad` | `Authorization: Bearer <token>` | 透過 OAuth2 使用者端憑證流程取得的權杖 |
 
-**Example — PAT via environment variable:**
+**範例——透過環境變數使用 PAT：**
 
 ```json
 {
@@ -211,7 +167,7 @@ hostname, so list the web hostname explicitly.
 }
 ```
 
-**Example — Azure CLI (interactive login):**
+**範例——Azure CLI（互動式登入）：**
 
 ```json
 {
@@ -221,9 +177,9 @@ hostname, so list the web hostname explicitly.
 }
 ```
 
-Requires `az login` to have been run beforehand.
+需要事先已執行 `az login`。
 
-**Example — Azure AD service principal (CI/automation):**
+**範例——Azure AD 服務主體（CI／自動化）：**
 
 ```json
 {
@@ -236,27 +192,16 @@ Requires `az login` to have been run beforehand.
 }
 ```
 
-### Bitbucket (`bitbucket`)
+### Bitbucket（`bitbucket`）
 
-| Scheme | Header | Use for |
+| 方案 | 標頭 | 適用於 |
 |---|---|---|
-| `bearer` | `Authorization: Bearer <token>` | Repository / project / workspace access tokens, or Atlassian API tokens sent without the account email (Bitbucket Cloud, **`api.bitbucket.org` only** — see note below); HTTP access tokens (Bitbucket Data Center) |
-| `basic` | `Authorization: Basic base64(<username>:<token>)` | Atlassian API tokens (username = Atlassian account email) against `api.bitbucket.org`. Bitbucket Cloud app passwords were removed by Atlassian on July 28, 2026 — use an API token or an access token instead. |
+| `bearer` | `Authorization: Bearer <token>` | 儲存庫／專案／工作區存取權杖，或不帶帳號電子郵件傳送的 Atlassian API 權杖（Bitbucket Cloud，**僅限 `api.bitbucket.org`**，見下方說明）；HTTP 存取權杖（Bitbucket Data Center） |
+| `basic` | `Authorization: Basic base64(<username>:<token>)` | 對 `api.bitbucket.org` 使用的 Atlassian API 權杖（username 為 Atlassian 帳號電子郵件）。Bitbucket Cloud 應用程式密碼已由 Atlassian 於 2026 年 7 月 28 日移除，請改用 API 權杖或存取權杖。 |
 
-> **Host note:** Bitbucket Cloud splits its surface by host. `api.bitbucket.org`
-> accepts repository/project/workspace access tokens as Bearer, and
-> Atlassian API tokens either as Basic (with the account email as the
-> username) or as Bearer (no email needed), on any REST call, including
-> fetching a catalog file via
-> `GET /2.0/repositories/<workspace>/<repo>/src/<ref>/<path>`. The plain
-> `bitbucket.org` web host (browser pages, `.../raw/...` links, `git clone`
-> over HTTPS) does **not** accept either of those — it authenticates
-> git-over-HTTPS with HTTP Basic using the literal username `x-token-auth`
-> and the access token as the password. Point catalog and `download_url`
-> entries at `api.bitbucket.org` (below) rather than `bitbucket.org/.../raw/...`
-> so the credentials in your `auth.json` actually apply.
+> **主機說明：**Bitbucket Cloud 依主機區分其介面。`api.bitbucket.org` 接受儲存庫／專案／工作區存取權杖作為 Bearer，也接受 Atlassian API 權杖作為 Basic（以帳號電子郵件為使用者名稱）或 Bearer（不需電子郵件），適用於任何 REST 呼叫，包括透過 `GET /2.0/repositories/<workspace>/<repo>/src/<ref>/<path>` 取得目錄檔案。純 `bitbucket.org` 網站主機（瀏覽器頁面、`.../raw/...` 連結、透過 HTTPS 的 `git clone`）**不**接受這兩者，它以 HTTP Basic 驗證 git-over-HTTPS，使用字面使用者名稱 `x-token-auth` 與存取權杖作為密碼。請將目錄與 `download_url` 項目指向 `api.bitbucket.org`（見下），而非 `bitbucket.org/.../raw/...`，讓你的 `auth.json` 中的憑證真正生效。
 
-**Example — Bitbucket Cloud access token (recommended):**
+**範例——Bitbucket Cloud 存取權杖（建議）：**
 
 ```json
 {
@@ -267,13 +212,9 @@ Requires `az login` to have been run beforehand.
 }
 ```
 
-Create the token with the **Repositories: Read** scope on the repository
-(or project/workspace) that hosts your catalogs and archives. Fetch a
-catalog file with this credential via
-`https://api.bitbucket.org/2.0/repositories/<workspace>/<repo>/src/<ref>/catalog.json`
-rather than a `bitbucket.org/.../raw/...` URL.
+在代管你的目錄與封存檔的儲存庫（或專案／工作區）上，以 **Repositories: Read** 範圍建立權杖。透過 `https://api.bitbucket.org/2.0/repositories/<workspace>/<repo>/src/<ref>/catalog.json` 以此憑證取得目錄檔案，而非 `bitbucket.org/.../raw/...` URL。
 
-**Example — Atlassian API token (Basic auth):**
+**範例——Atlassian API 權杖（Basic 驗證）：**
 
 ```json
 {
@@ -285,7 +226,7 @@ rather than a `bitbucket.org/.../raw/...` URL.
 }
 ```
 
-**Example — Bitbucket Data Center HTTP access token:**
+**範例——Bitbucket Data Center HTTP 存取權杖：**
 
 ```json
 {
@@ -296,17 +237,11 @@ rather than a `bitbucket.org/.../raw/...` URL.
 }
 ```
 
-> **Note:** Bitbucket Cloud serves file downloads (the repository
-> **Downloads** section) via a redirect to a pre-signed Amazon S3 URL.
-> Specify strips the `Authorization` header on that redirect because the
-> target leaves your declared hosts — this is expected and the download
-> still succeeds, since the S3 URL is self-authorizing. Pin a `sha256` in
-> your catalog entries so the unauthenticated final hop stays
-> integrity-checked.
+> **注意：**Bitbucket Cloud 透過重新導向到預先簽章的 Amazon S3 URL 提供檔案下載（儲存庫的 **Downloads** 區段）。Specify 會在該重新導向上移除 `Authorization` 標頭，因為目標離開了你宣告的主機，這是預期行為，且下載仍會成功，因為 S3 URL 本身即具授權。請在目錄項目中釘選 `sha256`，讓未經驗證的最後一跳保持完整性檢查。
 
-## Multiple entries
+## 多個項目
 
-You can configure multiple entries for different hosts or organizations:
+你可以為不同的主機或組織設定多個項目：
 
 ```json
 {
@@ -327,25 +262,17 @@ You can configure multiple entries for different hosts or organizations:
 }
 ```
 
-## How it works
+## 運作方式
 
-1. For each outbound HTTP request, the URL hostname is matched against
-   the `hosts` patterns in `auth.json`.
-2. If a match is found, the corresponding provider resolves the token
-   and attaches the appropriate `Authorization` header. A `github-cli`
-   acquisition failure ends the request immediately, without trying later
-   matching entries or making an unauthenticated request.
-3. After successful token acquisition, if the request receives a 401 or 403,
-   the next matching entry is tried.
-4. After all matching entries are exhausted without an acquisition failure,
-   an unauthenticated request is attempted as a final fallback.
-5. On redirects, the `Authorization` header is stripped if the redirect
-   target leaves the entry's declared hosts — preventing credential
-   leakage to CDNs or third-party services.
+1. 對於每個對外 HTTP 請求，URL 主機名稱會與 `auth.json` 中的 `hosts` 模式比對。
+2. 若找到符合項，對應的提供者會解析權杖並附加適當的 `Authorization` 標頭。`github-cli` 取得失敗會立即結束請求，不會嘗試後續符合的項目，也不會發出未經驗證的請求。
+3. 權杖成功取得後，若請求收到 401 或 403，會嘗試下一個符合的項目。
+4. 在沒有取得失敗的情況下，所有符合項目都用盡後，會嘗試未經驗證的請求作為最後備援。
+5. 在重新導向時，若重新導向目標離開該項目的宣告主機，`Authorization` 標頭會被移除，以防止憑證外洩到 CDN 或第三方服務。
 
-## Template
+## 範本
 
-A reference `auth.json` with GitHub pre-configured:
+已預先設定 GitHub 的參照 `auth.json`：
 
 ```json
 {
@@ -365,7 +292,7 @@ A reference `auth.json` with GitHub pre-configured:
 }
 ```
 
-To use it:
+使用方式：
 
 ```bash
 mkdir -p ~/.specify

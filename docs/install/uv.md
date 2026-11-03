@@ -1,60 +1,60 @@
-# Installing uv
+# 安裝 uv
 
-[uv](https://docs.astral.sh/uv/) is a fast Python package manager by [Astral](https://astral.sh/). Spec Kit uses `uv` (via `uvx` or `uv tool install`) to run the `specify` CLI without polluting your global Python environment.
+[uv](https://docs.astral.sh/uv/) 是由 [Astral](https://astral.sh/) 開發的快速 Python 套件管理工具。Spec Kit 使用 `uv`（透過 `uvx` 或 `uv tool install`）執行 `specify` CLI，不會污染你的全域 Python 環境。
 
 > [!NOTE]
-> **Already have uv?** Run `uv --version` to confirm it is installed, then head back to the [Installation Guide](../installation.md).
+> **已經有 uv 了嗎？** 執行 `uv --version` 確認它已安裝，然後回到[安裝指南](../installation.md)。
 
-## Installation
+## 安裝
 
-### macOS and Linux — Standalone Installer
+### macOS 與 Linux——獨立安裝程式
 
-The quickest way to install uv on macOS or Linux is the official shell script:
+在 macOS 或 Linux 上安裝 uv 最快的方式是使用官方 shell 指令稿：
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-After the script finishes, follow any instructions printed by the installer to add uv to your `PATH`, then open a new terminal.
+指令稿執行完畢後，請依照安裝程式印出的指示將 uv 加入你的 `PATH`，然後開啟新的終端機。
 
-### Windows — Standalone Installer
+### Windows——獨立安裝程式
 
-Run the following in **Command Prompt or PowerShell**:
+在 **Command Prompt 或 PowerShell** 中執行下列指令：
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-After the script finishes, open a new terminal so the `uv` binary is on your `PATH`.
+指令稿執行完畢後，開啟新的終端機，讓 `uv` 執行檔出現在你的 `PATH` 上。
 
-### macOS — Homebrew
+### macOS——Homebrew
 
 ```bash
 brew install uv
 ```
 
-### Windows — WinGet
+### Windows——WinGet
 
 ```powershell
 winget install --id=astral-sh.uv -e
 ```
 
-### Windows — Scoop
+### Windows——Scoop
 
 ```powershell
 scoop install uv
 ```
 
-## Verification
+## 驗證
 
-Confirm that uv is installed and on your `PATH`:
+確認 uv 已安裝且位於你的 `PATH` 上：
 
 ```bash
 uv --version
 ```
 
-You should see output similar to `uv 0.x.y (...)`.
+你應該會看到類似 `uv 0.x.y (...)` 的輸出。
 
-## Further Reading
+## 延伸閱讀
 
-For advanced options (self-update, proxy settings, uninstall, etc.) see the official [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/).
+進階選項（自我更新、代理伺服器設定、解除安裝等）請參閱官方 [uv 安裝文件](https://docs.astral.sh/uv/getting-started/installation/)。

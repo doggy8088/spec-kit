@@ -1,24 +1,24 @@
-# Development Notes
+# 開發備註
 
-Spec Kit is a toolkit for spec-driven development. At its core, it is a coordinated set of prompts, templates, scripts, and CLI/integration assets that define and deliver a spec-driven workflow for AI coding agents. This document is a starting point for people modifying Spec Kit itself, with a compact orientation to the key project documents and repository organization.
+Spec Kit 是一套用於規格驅動開發的工具組。其核心是一組相互協調的提示詞、範本、指令碼與 CLI／整合資產，共同定義並交付一套供 AI 程式代理使用的規格驅動工作流程。本文件是給修改 Spec Kit 本身的人的起點，簡要介紹專案的關鍵文件與儲存庫的組織方式。
 
-**Essential project documents:**
+**專案核心文件：**
 
-| Document                                                   | Role                                                                                  |
+| 文件                                                       | 角色                                                                                  |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| [README.md](README.md)                                     | Primary user-facing overview of Spec Kit and its workflow.                            |
-| [DEVELOPMENT.md](DEVELOPMENT.md)                           | This document.                                                                        |
-| [spec-driven.md](spec-driven.md)                           | End-to-end explanation of the Spec-Driven Development workflow supported by Spec Kit. |
-| [RELEASE-PROCESS.md](.github/workflows/RELEASE-PROCESS.md) | Release workflow, versioning rules, and changelog generation process.                 |
-| [docs/index.md](docs/index.md)                             | Entry point to the `docs/` documentation set.                                         |
-| [CONTRIBUTING.md](CONTRIBUTING.md)                         | Contribution process, review expectations, testing, and required development practices. |
+| [README.md](README.md)                                     | Spec Kit 及其工作流程的主要使用者導向總覽。                                           |
+| [DEVELOPMENT.md](DEVELOPMENT.md)                           | 本文件。                                                                              |
+| [spec-driven.md](spec-driven.md)                           | Spec Kit 所支援的規格驅動開發工作流程的端到端說明。                                   |
+| [RELEASE-PROCESS.md](.github/workflows/RELEASE-PROCESS.md) | 發布工作流程、版本規則與變更記錄產生流程。                                            |
+| [docs/index.md](docs/index.md)                             | `docs/` 文件集的入口。                                                                |
+| [CONTRIBUTING.md](CONTRIBUTING.md)                         | 貢獻流程、審查期望、測試與必要的開發實務。                                            |
 
-**Main repository components:**
+**儲存庫主要組成：**
 
-| Directory          | Role                                                                                        |
+| 目錄               | 角色                                                                                        |
 | ------------------ | ------------------------------------------------------------------------------------------- |
-| `templates/`       | Prompt assets and templates that define the core workflow behavior and generated artifacts. |
-| `scripts/`         | Supporting scripts used by the workflow, setup, and repository tooling.                     |
-| `src/specify_cli/` | Python source for the `specify` CLI, including agent-specific assets.                       |
-| `extensions/`      | Extension-related docs, catalogs, and supporting assets.                                    |
-| `presets/`         | Preset-related docs, catalogs, and supporting assets.                                       |
+| `templates/`       | 定義核心工作流程行為與產生資產的提示詞資產與範本。                                          |
+| `scripts/`         | 工作流程、設定與儲存庫工具所使用的支援指令碼。                                              |
+| `src/specify_cli/` | `specify` CLI 的 Python 原始碼，包括代理專屬資產。                                          |
+| `extensions/`      | 與擴充功能相關的文件、目錄與支援資產。                                                      |
+| `presets/`         | 與預設集相關的文件、目錄與支援資產。                                                        |

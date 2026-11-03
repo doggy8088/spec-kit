@@ -1,74 +1,55 @@
-# Remote Catalog Contracts
+# 遠端目錄合約
 
-This document records the behavior-preserving contracts of Spec Kit's
-remote/catalog-backed primitives:
+本文件記錄 Spec Kit 以遠端／目錄為後端的原語在保持行為不變下的合約：
 
-- extensions
-- presets
-- integrations
-- workflows
-- workflow step types
-- bundles
+- 擴充功能
+- 預設集
+- 整合
+- 工作流程
+- 工作流程步驟類型
+- 套件組
 
-It defines the boundary for a future shared catalog layer. It does not require
-the current implementations to move into that layer, and it does not change any
-existing trust, installation, network, cache, or user-interface behavior.
+它定義未來共用目錄層的邊界。它不要求目前的實作移入該層，也不改變任何既有的信任、安裝、網路、快取或使用者介面行為。
 
-[Shared Command Application Architecture](shared.md) remains the governing
-application-layer design. A future catalog layer is a focused domain service
-below CLI and MCP adapters, not a central command dispatcher or adapter-owned
-abstraction.
+[共用命令應用架構](shared.md) 仍是具主導性的應用層設計。未來的目錄層是位於 CLI 與 MCP 配接器之下的聚焦領域服務，而不是中央命令分派器或配接器擁有的抽象。
 
-## Out of scope
+## 範圍之外
 
-Two other uses of the word "catalog" are intentionally separate:
+「目錄」一詞的另外兩種用法刻意分開：
 
-- `ArtifactCatalog` resolves locally installed artifact contributions and
-  composition stacks. It is not a remote source catalog.
-- `specify_cli.mcp_server.catalog` is the explicit inventory of MCP command
-  exposure. It describes tools and adapter metadata, not downloadable content.
+- `ArtifactCatalog` 解析本機已安裝的構件貢獻與組合堆疊。它不是遠端來源目錄。
+- `specify_cli.mcp_server.catalog` 是 MCP 命令公開方式的明確清單。它描述工具與配接器中繼資料，而不是可下載的內容。
 
-Neither belongs in the shared remote catalog layer described here.
+兩者都不屬於此處所述的共用遠端目錄層。
 
-## Current source models
+## 目前的來源模型
 
-The implementations use two source-stack models.
+各實作使用兩種來源堆疊模型。
 
-### Replacement-layer catalogs
+### 取代層目錄
 
-Extensions, presets, integrations, workflows, and workflow step types resolve
-exactly one source layer:
+擴充功能、預設集、整合、工作流程與工作流程步驟類型，恰好解析一個來源層：
 
-1. An environment override can replace every configured/default source.
-2. A project config replaces the user and built-in layers when that project
-   config contributes an active stack.
-3. A user config replaces the built-in layer when it contributes an active
-   stack.
-4. Otherwise the built-in official and community sources are used.
+1. 環境覆寫可取代每個已設定／預設的來源。
+2. 當專案設定提供作用中的堆疊時，專案設定取代使用者與內建層。
+3. 當使用者設定提供作用中的堆疊時，使用者設定取代內建層。
+4. 否則使用內建的官方與社群來源。
 
-Within the selected layer, lower numeric `priority` means higher precedence.
-Equal priorities preserve source-file order because the current loaders use a
-stable sort.
+在所選層內，數字較小的 `priority` 表示較高的優先順序。相同優先順序保留來源檔案順序，因為目前的載入器使用穩定排序。
 
-The built-in official source permits installation. The built-in community
-source is discovery-only. Environment overrides are currently install-enabled.
-Configured sources default to discovery-only when `install_allowed` is omitted.
+內建官方來源允許安裝。內建社群來源僅供探索。目前環境覆寫已啟用安裝。已設定的來源在省略 `install_allowed` 時，預設僅供探索。
 
-Environment-value normalization is not uniform. Extensions and presets test the
-raw variable for presence and then strip it, so a whitespace-only value selects
-the override path and fails URL validation. Integrations, workflows, and
-workflow steps strip first, so a whitespace-only value is ignored and
-resolution continues to project, user, or built-in configuration.
+環境值的正規化並不一致。擴充功能與預設集先測試原始變數是否存在，再將其去除空白，因此只含空白的值會選擇覆寫路徑並在 URL 驗證時失敗。整合、工作流程與工作流程步驟則先去除空白，因此只含空白的值會被忽略，解析會繼續到專案、使用者或內建設定。
 
-| Primitive | Environment override | Project config | User config |
+| 原語 | 環境覆寫 | 專案設定 | 使用者設定 |
 | --- | --- | --- | --- |
-| Extensions | `SPECKIT_CATALOG_URL` | `.specify/extension-catalogs.yml` | `~/.specify/extension-catalogs.yml` |
-| Presets | `SPECKIT_PRESET_CATALOG_URL` | `.specify/preset-catalogs.yml` | `~/.specify/preset-catalogs.yml` |
-| Integrations | `SPECKIT_INTEGRATION_CATALOG_URL` | `.specify/integration-catalogs.yml` | `~/.specify/integration-catalogs.yml` |
-| Workflows | `SPECKIT_WORKFLOW_CATALOG_URL` | `.specify/workflow-catalogs.yml` | `~/.specify/workflow-catalogs.yml` |
-| Workflow steps | `SPECKIT_STEP_CATALOG_URL` | `.specify/step-catalogs.yml` | `~/.specify/step-catalogs.yml` |
+| 擴充功能 | `SPECKIT_CATALOG_URL` | `.specify/extension-catalogs.yml` | `~/.specify/extension-catalogs.yml` |
+| 預設集 | `SPECKIT_PRESET_CATALOG_URL` | `.specify/preset-catalogs.yml` | `~/.specify/preset-catalogs.yml` |
+| 整合 | `SPECKIT_INTEGRATION_CATALOG_URL` | `.specify/integration-catalogs.yml` | `~/.specify/integration-catalogs.yml` |
+| 工作流程 | `SPECKIT_WORKFLOW_CATALOG_URL` | `.specify/workflow-catalogs.yml` | `~/.specify/workflow-catalogs.yml` |
+| 工作流程步驟 | `SPECKIT_STEP_CATALOG_URL` | `.specify/step-catalogs.yml` | `~/.specify/step-catalogs.yml` |
 
-The source entry shape is effectively:
+來源項目的形狀實際上為：
 
 ```yaml
 catalogs:
@@ -79,24 +60,20 @@ catalogs:
     description: Optional text
 ```
 
-`name` is display/provenance data, not the content identifier used for
-shadowing.
+`name` 是顯示／出處資料，而不是用於遮蔽的內容識別字。
 
-### Scope-merging bundle catalogs
+### 依範圍合併的套件組目錄
 
-Bundles merge sources by source `id` across built-in, user, and project scopes:
+套件組依來源 `id`，跨內建、使用者與專案範圍合併來源：
 
-1. Built-in sources establish the fallback.
-2. User sources replace built-in sources with the same `id`.
-3. Project sources replace user or built-in sources with the same `id`.
-4. Sources with distinct IDs remain in the effective stack.
+1. 內建來源建立回退。
+2. 使用者來源取代具有相同 `id` 的內建來源。
+3. 專案來源取代具有相同 `id` 的使用者或內建來源。
+4. 具有不同 ID 的來源保留在有效堆疊中。
 
-The final stack sorts by `(priority, id)`, so source ID is the deterministic
-tie-breaker. Bundle source configuration is project-writable through
-`.specify/bundle-catalogs.yml`; callers may also supply a user config directory
-when loading the stack. There is no bundle environment override.
+最終堆疊依 `(priority, id)` 排序，因此來源 ID 是確定性的同分決勝者。套件組來源設定可透過 `.specify/bundle-catalogs.yml` 由專案寫入；呼叫端在載入堆疊時也可提供使用者設定目錄。套件組沒有環境覆寫。
 
-Bundle sources use an explicit policy enum rather than a boolean:
+套件組來源使用明確的政策列舉，而非布林值：
 
 ```yaml
 schema_version: "1.0"
@@ -107,245 +84,140 @@ catalogs:
     install_policy: discovery-only
 ```
 
-Supported bundle source schemes are `https`, localhost `http`, `file`,
-`builtin`, and local filesystem paths. The other five catalog types accept
-remote HTTPS URLs, with HTTP allowed only for localhost.
+支援的套件組來源 scheme 為 `https`、localhost 的 `http`、`file`、`builtin` 與本機檔案系統路徑。其他五種目錄類型接受遠端 HTTPS URL，HTTP 僅允許用於 localhost。
 
-## Configuration semantics
+## 設定語意
 
-The active-stack readers for all six primitives reject a non-mapping YAML root,
-a non-list non-null `catalogs` value, and non-mapping source entries. Validation
-phase and accepted values otherwise differ:
+六種原語的作用中堆疊讀取器都拒絕非對應的 YAML 根、非列表且非 null 的 `catalogs` 值，以及非對應的來源項目。驗證階段與接受的值除此之外有所不同：
 
-- Replacement-layer loaders validate remote URLs while reading the active
-  stack. Bundle resolution validates source structure while materializing
-  `CatalogSource` values, but the bundle catalog command reader's `_read()`
-  only validates the outer configuration shape and schema version.
-  `add_source()` materializes and validates existing entries before appending,
-  while `remove_source()` intentionally filters raw mappings by ID or URL
-  without validating their other fields. This lets users remove a hand-edited
-  invalid source instead of being trapped by the invalid entry.
-- All readers reject boolean priorities. Replacement-layer loaders otherwise
-  call `int(value)`, so a fractional numeric value such as `1.9` is truncated
-  to `1`. Bundle `CatalogSource` materialization rejects booleans and floats
-  rather than coercing them, but `_read()` and `remove_source()` can carry or
-  remove those raw values without materializing them.
-- Replacement-layer loaders reject malformed remote URLs and non-localhost
-  HTTP while resolving the active stack. Bundle source validation depends on
-  the path: catalog commands validate supported schemes and remote security
-  before writing, while a hand-edited stack is revalidated by the fetcher when
-  used.
-- Presets, workflows, workflow steps, and both bundle readers treat
-  `catalogs: null` as contributing no entries. Extensions and integrations
-  treat it as an empty selected config and fail closed.
+- 取代層載入器在讀取作用中堆疊時驗證遠端 URL。套件組解析在具體化 `CatalogSource` 值時驗證來源結構，但套件組目錄命令讀取器的 `_read()` 僅驗證外部設定形狀與結構描述版本。`add_source()` 在附加前具體化並驗證現有項目，而 `remove_source()` 刻意依 ID 或 URL 篩選原始對應而不驗證其其他欄位。這讓使用者可以移除手動編輯的無效來源，而不是被無效項目困住。
+- 所有讀取器都拒絕布林優先順序。取代層載入器除此之外呼叫 `int(value)`，因此小數值如 `1.9` 會被截斷為 `1`。套件組 `CatalogSource` 具體化拒絕布林值與浮點數而不強制轉換，但 `_read()` 與 `remove_source()` 可攜帶或移除這些原始值而不具體化它們。
+- 取代層載入器在解析作用中堆疊時，拒絕格式錯誤的遠端 URL 與非 localhost 的 HTTP。套件組來源驗證取決於路徑：目錄命令在寫入前驗證支援的 scheme 與遠端安全性，而手動編輯的堆疊在使用時由擷取器重新驗證。
+- 預設集、工作流程、工作流程步驟與兩個套件組讀取器，都將 `catalogs: null` 視為不提供任何項目。擴充功能與整合則將其視為空的已選設定並以失敗關閉。
 
-The current empty-config behavior is intentionally not uniform:
+目前的空設定行為刻意不一致：
 
-| Primitive | Empty document / `null` | Missing or empty `catalogs` | Entries with no usable URL |
+| 原語 | 空文件／`null` | 缺少或空的 `catalogs` | 無可用 URL 的項目 |
 | --- | --- | --- | --- |
-| Extensions | Error | Error | Error |
-| Integrations | Error | Error | Error |
-| Presets | Layer contributes nothing | Layer contributes nothing | Layer contributes nothing |
-| Workflows | Layer contributes nothing | Layer contributes nothing | Error when a non-empty list has no usable URL |
-| Workflow steps | Layer contributes nothing | Layer contributes nothing | Error when a non-empty list has no usable URL |
-| Bundles, resolution reader | Empty document contributes nothing; explicit `null` is malformed | Contributes nothing | Source validation fails |
-| Bundles, config command reader | Missing/empty document returns an empty project list; explicit `null` is malformed | Returns an empty project list | Source validation occurs when materializing entries |
+| 擴充功能 | 錯誤 | 錯誤 | 錯誤 |
+| 整合 | 錯誤 | 錯誤 | 錯誤 |
+| 預設集 | 該層不提供任何內容 | 該層不提供任何內容 | 該層不提供任何內容 |
+| 工作流程 | 該層不提供任何內容 | 該層不提供任何內容 | 當非空列表無可用 URL 時錯誤 |
+| 工作流程步驟 | 該層不提供任何內容 | 該層不提供任何內容 | 當非空列表無可用 URL 時錯誤 |
+| 套件組，解析讀取器 | 空文件不提供任何內容；明確的 `null` 格式錯誤 | 不提供任何內容 | 來源驗證失敗 |
+| 套件組，設定命令讀取器 | 缺少／空文件回傳空的專案列表；明確的 `null` 格式錯誤 | 回傳空的專案列表 | 具體化項目時進行來源驗證 |
 
-These differences are historical contracts, not recommendations. A future
-unification must make any semantic change explicit, separately reviewed, and
-covered as a behavior change rather than silently normalizing the readers.
+這些差異是歷史合約，而不是建議。未來的統一必須將任何語意變更明確化、另外審查，並作為行為變更涵蓋，而不是靜默正規化讀取器。
 
-Bundle configuration accepts a missing schema version for backward
-compatibility, accepts forward-compatible `1.x` versions, and rejects an
-unsupported major version. The other source config files are currently
-unversioned.
+套件組設定為了向後相容接受缺少的結構描述版本，接受向前相容的 `1.x` 版本，並拒絕不支援的主要版本。其他來源設定檔目前沒有版本。
 
-## Fetching, redirects, and cache behavior
+## 擷取、重新導向與快取行為
 
-Catalog payload fetches are bounded and use the repository's authenticated HTTP
-helpers where supported. Remote source URLs must be validated before use and
-after redirects.
+目錄酬載擷取是有界的，並在支援時使用儲存庫的已驗證 HTTP 輔助工具。遠端來源 URL 必須在使用前與重新導向後驗證。
 
-Current behavior differs by primitive:
+目前行為依原語而異：
 
-- Extensions and presets use one-hour per-URL caches, retain legacy cache names
-  for the official source, validate every redirect hop, validate cached payload
-  shape, and treat cache read/write failures as best-effort.
-- Integrations use one-hour per-URL caches. The shared HTTP redirect handler
-  applies its strict scheme, host, and remote-to-local policy on every hop;
-  integrations do not add their catalog-specific URL validator per hop, but do
-  apply it to a changed terminal URL. They validate cached payload shape,
-  discard invalid cache entries when possible, and treat cache writes as
-  best-effort.
-- Workflows use one-hour per-URL caches, validate every redirect hop, fall back
-  to any readable stale cache after errors while opening, redirecting, bounded
-  reading, UTF-8 decoding, or JSON parsing, and currently require only a mapping
-  at the payload root before merge. A freshly parsed non-object payload is
-  rejected after that fallback boundary.
-- Workflow steps follow the workflow cache/fallback model, validate every
-  redirect hop, and disable cache use when the cache path contains a symlink.
-  Duplicate JSON fields are re-raised as fatal validation errors before stale
-  fallback; a freshly parsed non-object payload is also rejected after the
-  fallback boundary.
-- Bundle catalog fetchers do not maintain a general remote TTL cache. Built-in
-  sources fetch repository catalogs when online and fall back to packaged
-  snapshots only for catalog-unavailable failures; malformed or unsafe content
-  is not masked by the snapshot. Bundle stacks memoize parsed payloads for the
-  lifetime of one stack instance.
+- 擴充功能與預設集使用每 URL 一小時的快取，為官方來源保留舊版快取名稱，驗證每個重新導向躍點，驗證快取酬載形狀，並將快取讀寫失敗視為盡力而為。
+- 整合使用每 URL 一小時的快取。共用 HTTP 重新導向處理常式在每個躍點套用其嚴格的 scheme、主機與遠端到本機政策；整合不會在每個躍點新增其目錄專屬 URL 驗證器，但會將其套用到已變更的終端 URL。它們驗證快取酬載形狀，盡可能捨棄無效的快取項目，並將快取寫入視為盡力而為。
+- 工作流程使用每 URL 一小時的快取，驗證每個重新導向躍點，在開啟、重新導向、有界讀取、UTF-8 解碼或 JSON 解析出錯後，回退到任何可讀的過期快取，且目前在合併前僅要求酬載根為對應。新解析的非物件酬載會在該回退邊界後被拒絕。
+- 工作流程步驟遵循工作流程的快取／回退模型，驗證每個重新導向躍點，並在快取路徑包含符號連結時停用快取。重複的 JSON 欄位會在過期回退前，重新以致命驗證錯誤擲出；新解析的非物件酬載也會在回退邊界後被拒絕。
+- 套件組目錄擷取器不維護一般的遠端 TTL 快取。內建來源在線上時擷取儲存庫目錄，僅在目錄無法使用的失敗時回退到封裝的快照；格式錯誤或不安全的內容不會被快照掩蓋。套件組堆疊會在單一堆疊執行個體的生命期間，記憶已解析的酬載。
 
-A future shared fetch boundary may share URL validation, redirect validation,
-bounded reads, cache records, and error types. It must preserve each
-primitive's fallback policy until a separate behavior change is approved.
+未來的共用擷取邊界可共用 URL 驗證、重新導向驗證、有界讀取、快取記錄與錯誤型別。它必須保留每個原語的回退政策，直到另外核准獨立的行為變更。
 
-## Payload validation ownership
+## 酬載驗證擁有權
 
-The shared source layer should own source configuration, fetching, cache
-mechanics, and source provenance. The primitive remains responsible for its
-payload schema and entry semantics:
+共用來源層應擁有來源設定、擷取、快取機制與來源出處。原語仍負責其酬載結構描述與項目語意：
 
-- extension catalogs validate the `extensions` mapping and extension metadata
-- preset catalogs validate the `presets` mapping and preset metadata
-- integration catalogs validate the `integrations` mapping and integration
-  metadata
-- workflow catalogs validate workflow records
-- workflow-step catalogs validate step records, including duplicate identifiers
-- bundle catalogs validate their schema version and strongly typed bundle
-  entries
+- 擴充功能目錄驗證 `extensions` 對應與擴充功能中繼資料
+- 預設集目錄驗證 `presets` 對應與預設集中繼資料
+- 整合目錄驗證 `integrations` 對應與整合中繼資料
+- 工作流程目錄驗證工作流程記錄
+- 工作流程步驟目錄驗證步驟記錄，包括重複識別字
+- 套件組目錄驗證其結構描述版本與強型別套件組項目
 
-Domain validation must happen before installation side effects. The shared
-layer must not turn malformed payloads into empty successful results.
+領域驗證必須在安裝副作用之前進行。共用層不得將格式錯誤的酬載變成空的成功結果。
 
-## Source failures
+## 來源失敗
 
-Recoverable source-fetch errors can be skipped by extensions, presets,
-integrations, workflows, and workflow steps so another selected source remains
-usable. Validation errors are not uniformly recoverable:
+可復原的來源擷取錯誤可被擴充功能、預設集、整合、工作流程與工作流程步驟跳過，讓另一個所選來源仍可使用。驗證錯誤並非一致可復原：
 
-- Extensions and integrations emit warnings for failed sources and raise when
-  every source fails. Because integration release-history validation happens
-  during `_fetch_single_catalog`, malformed release history is represented as
-  an `IntegrationCatalogError`, so the merge warns, skips that source, and can
-  expose a lower-precedence copy.
-- Preset lookup preserves the first fetch error when no source is readable;
-  preset search currently converts ordinary fetch failures to an empty result.
-  `PresetCatalogValidationError` remains fatal: search can fail on invalid
-  lower-precedence content even after reading a valid higher source, while a
-  targeted lookup can return as soon as it finds the requested higher entry.
-- Workflow and step merges count source failures and raise when every source
-  fails. Workflow-step duplicate JSON fields and duplicate IDs are fatal
-  validation errors rather than skippable source-fetch errors.
-- Workflow and step fetches may use readable stale cache data after broad
-  fetch-path failures, including rejected redirects, bounded-read failures,
-  decoding failures, and malformed JSON. Fresh non-object payloads and step
-  duplicate-field errors remain outside that fallback.
+- 擴充功能與整合會為失敗的來源發出警告，並在每個來源都失敗時擲出。由於整合發行歷程驗證發生在 `_fetch_single_catalog` 期間，格式錯誤的發行歷程會表示為 `IntegrationCatalogError`，因此合併會警告、跳過該來源，並可公開優先順序較低的副本。
+- 預設集查找在沒有來源可讀時，保留第一個擷取錯誤；預設集搜尋目前將一般擷取失敗轉換為空結果。`PresetCatalogValidationError` 仍為致命：搜尋即使在讀取有效的高優先來源後，仍可能因無效的低優先內容而失敗，而定向查找可在找到所請求的高優先項目後立即回傳。
+- 工作流程與步驟合併會計算來源失敗次數，並在每個來源都失敗時擲出。工作流程步驟的重複 JSON 欄位與重複 ID 是致命驗證錯誤，而不是可跳過的來源擷取錯誤。
+- 工作流程與步驟擷取可在廣泛的擷取路徑失敗後，使用可讀的過期快取資料，包括被拒絕的重新導向、有界讀取失敗、解碼失敗與格式錯誤的 JSON。新的非物件酬載與步驟重複欄位錯誤仍在該回退之外。
 
-Bundle lookup is fail-fast in precedence order: loading a source error stops
-the operation. Built-in fetch fallback is handled inside the bundle fetcher,
-not by skipping the source in `CatalogStack`.
+套件組查找依優先順序快速失敗：載入來源錯誤會停止操作。內建擷取回退在套件組擷取器內部處理，而不是在 `CatalogStack` 中跳過來源。
 
-These are visible behavior differences. A shared layer needs a declared source
-failure strategy per caller rather than one implicit global policy.
+這些是可見的行為差異。共用層需要為每個呼叫端宣告來源失敗策略，而不是一個隱含的全域政策。
 
-## Shadowing, provenance, search, and lookup
+## 遮蔽、出處、搜尋與查找
 
-For well-formed entries from readable sources, the highest-precedence source
-that defines a content ID wins. A lower-precedence copy is shadowed even when:
+對於來自可讀來源的格式正確項目，定義內容 ID 的最高優先來源獲勝。即使以下情況，低優先副本仍被遮蔽：
 
-- the lower copy matches a search query that the winning copy does not
-- the lower copy permits installation and the winning copy is discovery-only
-- the lower copy contains a requested historical version absent from the
-  winning copy
+- 低優先副本符合搜尋查詢，而獲勝副本不符合
+- 低優先副本允許安裝，而獲勝副本僅供探索
+- 低優先副本包含獲勝副本所缺少的所請求歷史版本
 
-Search must describe the same winning entry that lookup/install would resolve;
-it must not expose an unreachable shadowed entry.
+搜尋必須描述查找／安裝會解析的同一個獲勝項目；它不得公開無法到達的被遮蔽項目。
 
-Malformed entry handling is an established exception:
+格式錯誤項目的處理是既定的例外：
 
-- Extensions, integrations, workflows, and workflow steps skip non-mapping
-  entries during merge, so a well-formed lower-precedence copy can win.
-- Preset search skips non-mapping entries and can show a lower-precedence copy,
-  but targeted preset lookup/install treats a malformed matching entry as
-  fatal and does not fall through.
-- Bundle payload parsing rejects malformed entries rather than skipping them.
-- Integration release-history validation occurs at fetch time; an invalid
-  higher source is skipped as a failed source, allowing a lower copy and its
-  installation policy to win.
+- 擴充功能、整合、工作流程與工作流程步驟在合併期間跳過非對應項目，因此格式正確的低優先副本可獲勝。
+- 預設集搜尋跳過非對應項目並可顯示低優先副本，但定向的預設集查找／安裝將格式錯誤的符合項目視為致命，且不會繼續往下找。
+- 套件組酬載解析拒絕格式錯誤的項目，而不是跳過它們。
+- 整合發行歷程驗證發生在擷取時；無效的高優先來源會作為失敗來源被跳過，讓低優先副本及其安裝政策獲勝。
 
-Resolved/search results preserve source provenance:
+已解析／搜尋結果保留來源出處：
 
-- replacement-layer catalogs annotate records with `_catalog_name` and
-  `_install_allowed`
-- bundles return a `ResolvedBundle` carrying its `CatalogSource`, and the
-  materialized entry records `source_id` and `source_policy`
+- 取代層目錄以 `_catalog_name` 與 `_install_allowed` 註解記錄
+- 套件組回傳攜帶其 `CatalogSource` 的 `ResolvedBundle`，且具體化的項目記錄 `source_id` 與 `source_policy`
 
-Provenance is semantic data needed for installation policy checks and
-diagnostics. It is not presentation-only metadata.
+出處是安裝政策檢查與診斷所需的語意資料。它不是僅供呈現的中繼資料。
 
-## Exact historical release selection
+## 精確的歷史發行選擇
 
-All six primitives support selecting the advertised current version or an
-exact historical release from the winning well-formed entry. Selection:
+六種原語都支援從獲勝的格式正確項目中，選擇宣傳的目前版本或精確的歷史發行。選擇：
 
-- never falls through to a lower-precedence source
-- accepts PEP 440-equivalent spellings where the current selector does
-- preserves the release spelling advertised by the catalog
-- materializes historical release fields without inheriting current-only
-  download, checksum, compatibility, or similar metadata
-- reports or returns "not found" when the winning entry does not advertise the
-  requested release
+- 絕不會繼續往下找低優先來源
+- 在目前選擇器接受的情況下，接受 PEP 440 等價拼寫
+- 保留目錄宣傳的發行拼寫
+- 具體化歷史發行欄位，而不繼承僅供目前版本使用的下載、總和檢查碼、相容性或類似中繼資料
+- 當獲勝項目未宣傳所請求的發行時，報告或回傳「找不到」
 
-Malformed release history is a validation failure, but its failure phase
-matters. Extensions, presets, workflows, workflow steps, and bundles do not
-consult a lower source after the winning entry fails release selection.
-Integrations validate history while fetching a source, so the merge can skip
-that source and select a lower copy instead.
+格式錯誤的發行歷程是驗證失敗，但其失敗階段很重要。擴充功能、預設集、工作流程、工作流程步驟與套件組，在獲勝項目發行選擇失敗後，不會諮詢低優先來源。整合在擷取來源時驗證歷程，因此合併可跳過該來源並改選低優先副本。
 
-## Intended shared-layer boundary
+## 預期的共用層邊界
 
-`src/specify_cli/catalogs.py` already provides a narrow shared starting point:
-`CatalogEntry` and `CatalogStackBase` centralize source-entry fields, remote URL
-validation, and YAML config loading. Extensions and integrations subclass that
-base today. Presets, workflows, workflow steps, and bundles retain independent
-source models and loaders, and fetching, cache, merge, failure, payload, and
-release behavior remains primitive-owned for all six domains.
+`src/specify_cli/catalogs.py` 已提供狹窄的共用起點：`CatalogEntry` 與 `CatalogStackBase` 集中了來源項目欄位、遠端 URL 驗證與 YAML 設定載入。擴充功能與整合目前繼承該基底。預設集、工作流程、工作流程步驟與套件組保留獨立的來源模型與載入器，且六個領域的擷取、快取、合併、失敗、酬載與發行行為仍由原語擁有。
 
-A broader shared catalog domain, whether evolved in `specify_cli.catalogs` or
-split into focused adjacent modules, may own:
+更廣泛的共用目錄領域，無論是在 `specify_cli.catalogs` 中演進，還是拆分為聚焦的相鄰模組，都可擁有：
 
-- typed source identity, scope, priority, trust/install policy, and provenance
-- config parsing primitives with an explicit empty-config policy
-- environment/project/user/built-in source resolution strategies
-- stable source ordering and shadowing
-- authenticated bounded fetches and per-hop redirect validation
-- cache interfaces and explicitly selected stale/offline fallback strategies
-- source-failure strategies
-- generic "winning source first" search/lookup orchestration
+- 型別來源身分、範圍、優先順序、信任／安裝政策與出處
+- 具有明確空設定政策的設定解析原語
+- 環境／專案／使用者／內建來源解析策略
+- 穩定的來源排序與遮蔽
+- 已驗證的有界擷取與逐躍點重新導向驗證
+- 快取介面與明確選擇的過期／離線回退策略
+- 來源失敗策略
+- 一般的「獲勝來源優先」搜尋／查找協調
 
-Primitive modules continue to own:
+原語模組繼續擁有：
 
-- payload and entry schemas
-- release metadata fields and domain-specific validation
-- install/download planning and side effects
-- CLI prompting, warnings, rendering, and exit codes
-- MCP schemas, annotations, and protocol errors
+- 酬載與項目結構描述
+- 發行中繼資料欄位與領域專屬驗證
+- 安裝／下載規劃與副作用
+- CLI 提示、警告、呈現與結束代碼
+- MCP 結構描述、註解與通訊協定錯誤
 
-The shared layer must accept explicit project and user paths. It must not read
-mutable process working-directory state, prompt, print, infer trust from
-machine-readable mode, or make a source installable merely because it is
-reachable.
+共用層必須接受明確的專案與使用者路徑。它不得讀取可變的行程工作目錄狀態、提示、列印、從機器可讀模式推斷信任，或僅因來源可到達就使其可安裝。
 
-## Migration constraints
+## 移轉限制
 
-Refactoring into the shared layer must be incremental and behavior-preserving:
+重構到共用層必須漸進且保持行為不變：
 
-1. Keep the characterization matrix passing.
-2. Move one independently testable concern at a time.
-3. Preserve existing import and monkeypatch paths where tests or consumers rely
-   on them, including `specify_cli.catalogs.CatalogEntry`,
-   `specify_cli.catalogs.CatalogStackBase`, and the extension/integration
-   package exports and subclass patch points built on those types.
-4. Do not normalize empty configs, source failure handling, cache fallback, or
-   trust defaults in a structural PR.
-5. Treat any intended normalization as a separate behavior change with positive
-   and negative evidence under
-   [Testing deterministic behavior](../CONTRIBUTING.md#testing-deterministic-behavior).
+1. 保持特徵矩陣通過。
+2. 一次移動一個可獨立測試的事項。
+3. 在測試或消費者依賴時，保留既有的匯入與 monkeypatch 路徑，包括 `specify_cli.catalogs.CatalogEntry`、`specify_cli.catalogs.CatalogStackBase`，以及建立在這些型別之上的擴充功能／整合套件匯出與子類別 patch 點。
+4. 不要在結構性 PR 中正規化空設定、來源失敗處理、快取回退或信任預設值。
+5. 將任何預期的正規化視為獨立的行為變更，並依[測試確定性行為](../CONTRIBUTING.md#testing-deterministic-behavior)提供正面與負面證據。

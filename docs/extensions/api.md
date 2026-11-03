@@ -1,23 +1,23 @@
-# Extension API Reference
+# 擴充功能 API 參考
 
-Technical reference for Spec Kit extension system APIs and manifest schema.
+Spec Kit 擴充功能系統 API 與資訊清單結構描述的技術參考。
 
-## Table of Contents
+## 目錄
 
-1. [Extension Manifest](#extension-manifest)
+1. [擴充功能資訊清單](#擴充功能資訊清單)
 2. [Python API](#python-api)
-3. [Command File Format](#command-file-format)
-4. [Configuration Schema](#configuration-schema)
-5. [Hook System](#hook-system)
-6. [CLI Commands](#cli-commands)
+3. [命令檔案格式](#命令檔案格式)
+4. [設定結構描述](#設定結構描述)
+5. [Hook 系統](#hook-系統)
+6. [CLI 命令](#cli-命令)
 
 ---
 
-## Extension Manifest
+## 擴充功能資訊清單
 
-### Schema Version 1.0
+### 結構描述版本 1.0
 
-File: `extension.yml`
+檔案：`extension.yml`
 
 ```yaml
 schema_version: "1.0"  # Required
@@ -85,75 +85,69 @@ defaults:                # Optional, default configuration values
   key: value             # Any YAML structure
 ```
 
-### Field Specifications
+### 欄位規格
 
 #### `extension.id`
 
-- **Type**: string
-- **Pattern**: `^[a-z0-9-]+$`
-- **Description**: Unique extension identifier
-- **Examples**: `jira`, `linear`, `azure-devops`
-- **Invalid**: `Jira`, `my_extension`, `extension.id`
+- **類型**：string
+- **模式**：`^[a-z0-9-]+$`
+- **說明**：唯一的擴充功能識別碼
+- **範例**：`jira`、`linear`、`azure-devops`
+- **無效**：`Jira`、`my_extension`、`extension.id`
 
 #### `extension.version`
 
-- **Type**: string
-- **Format**: Semantic versioning (X.Y.Z)
-- **Description**: Extension version
-- **Examples**: `1.0.0`, `0.9.5`, `2.1.3`
-- **Invalid**: `v1.0`, `1.0`, `1.0.0-beta`
+- **類型**：string
+- **格式**：語意化版本（X.Y.Z）
+- **說明**：擴充功能版本
+- **範例**：`1.0.0`、`0.9.5`、`2.1.3`
+- **無效**：`v1.0`、`1.0`、`1.0.0-beta`
 
 #### `requires.speckit_version`
 
-- **Type**: string
-- **Format**: Version specifier
-- **Description**: Required spec-kit version range
-- **Examples**:
-  - `>=0.1.0` - Any version 0.1.0 or higher
-  - `>=0.1.0,<2.0.0` - Version 0.1.x or 1.x
-  - `==0.1.0` - Exactly 0.1.0
-- **Invalid**: `0.1.0`, `>= 0.1.0` (space), `latest`
+- **類型**：string
+- **格式**：版本指定子
+- **說明**：所需的 spec-kit 版本範圍
+- **範例**：
+  - `>=0.1.0`——0.1.0 或更高版本
+  - `>=0.1.0,<2.0.0`——0.1.x 或 1.x 版本
+  - `==0.1.0`——恰好 0.1.0
+- **無效**：`0.1.0`、`>= 0.1.0`（空格）、`latest`
 
 #### `provides.commands[].name`
 
-- **Type**: string
-- **Pattern**: `^speckit\.[a-z0-9-]+\.[a-z0-9-]+$`
-- **Description**: Namespaced command name
-- **Format**:  `speckit.{extension-id}.{command-name}`
-- **Examples**: `speckit.jira.specstoissues`, `speckit.linear.sync`
-- **Invalid**: `jira.specstoissues`, `speckit.command`, `speckit.jira.CreateIssues`
+- **類型**：string
+- **模式**：`^speckit\.[a-z0-9-]+\.[a-z0-9-]+$`
+- **說明**：具命名空間的命令名稱
+- **格式**：`speckit.{extension-id}.{command-name}`
+- **範例**：`speckit.jira.specstoissues`、`speckit.linear.sync`
+- **無效**：`jira.specstoissues`、`speckit.command`、`speckit.jira.CreateIssues`
 
 #### `provides.templates[].name` / `provides.scripts[].name`
 
-- **Type**: string
-- **Pattern**: `^[a-z0-9-]+$`
-- **Description**: Unlike commands, templates and scripts are not invoked by
-  name, so they use the same plain slug pattern as `extension.id` rather than
-  the namespaced command pattern.
-- **Examples**: `myext-template`, `myext-collect`
+- **類型**：string
+- **模式**：`^[a-z0-9-]+$`
+- **說明**：與命令不同，範本與指令碼不是依名稱呼叫，因此它們使用與 `extension.id` 相同的純 slug 模式，而非具命名空間的命令模式。
+- **範例**：`myext-template`、`myext-collect`
 
 #### `provides.templates[].strategy` / `provides.scripts[].strategy`
 
-- Not an authorable field. Extension-contributed templates and scripts are
-  always resolved as `replace`; a manifest that includes a `strategy` key on
-  one of these entries is rejected with a `ValidationError`. Composable
-  strategies (`wrap`/`prepend`/`append`) are preset-only.
+- 不是可撰寫的欄位。擴充功能提供的範本與指令碼一律解析為 `replace`；若資訊清單在其中一個條目上包含 `strategy` 鍵，將以 `ValidationError` 拒絕。可組合策略（`wrap`/`prepend`/`append`）僅供預設集使用。
 
 #### `provides.scripts[].runtimes`
 
-- **Type**: array of strings
-- **Values**: `bash`, `powershell`, `python`
-- **Description**: Declares which runtimes the script supports. Purely
-  informational metadata — it is not used to select or invoke the script.
+- **類型**：字串陣列
+- **值**：`bash`、`powershell`、`python`
+- **說明**：宣告指令碼支援的執行環境。純粹是資訊性後設資料——不用於選擇或呼叫指令碼。
 
 #### `hooks`
 
-- **Type**: object
-- **Keys**: Event names (e.g., `after_specify`, `after_plan`, `after_tasks`, `after_implement`, `before_analyze`)
-- **Value**: A single hook mapping, or a list of hook mappings to register multiple commands on one event
-- **Description**: Hooks that execute at lifecycle events
-- **Events**: Defined by core spec-kit commands
-- **Ordering**: Within an event, hooks run by ascending `priority` (integer ≥ 1, default 10; lower runs first; equal priorities keep authoring order via a stable sort)
+- **類型**：object
+- **鍵**：事件名稱（例如 `after_specify`、`after_plan`、`after_tasks`、`after_implement`、`before_analyze`）
+- **值**：單一 hook 對應，或 hook 對應清單（在一個事件上註冊多個命令）
+- **說明**：在生命週期事件執行的 hook
+- **事件**：由核心 spec-kit 命令定義
+- **順序**：在一個事件內，hook 依 `priority` 遞增執行（整數 ≥ 1，預設 10；數字越小越先執行；優先順序相同時透過穩定排序保留撰寫順序）
 
 ---
 
@@ -161,7 +155,7 @@ defaults:                # Optional, default configuration values
 
 ### ExtensionManifest
 
-**Module**: `specify_cli.extensions`
+**模組**：`specify_cli.extensions`
 
 ```python
 from specify_cli.extensions import ExtensionManifest
@@ -169,7 +163,7 @@ from specify_cli.extensions import ExtensionManifest
 manifest = ExtensionManifest(Path("extension.yml"))
 ```
 
-**Properties**:
+**屬性**：
 
 ```python
 manifest.id                        # str: Extension ID
@@ -183,13 +177,13 @@ manifest.scripts                   # List[Dict]: Declared script definitions
 manifest.hooks                     # Dict: Hook definitions
 ```
 
-**Methods**:
+**方法**：
 
 ```python
 manifest.get_hash()  # str: SHA256 hash of manifest file
 ```
 
-**Exceptions**:
+**例外**：
 
 ```python
 ValidationError       # Invalid manifest structure
@@ -198,7 +192,7 @@ CompatibilityError    # Incompatible with current spec-kit version
 
 ### ExtensionRegistry
 
-**Module**: `specify_cli.extensions`
+**模組**：`specify_cli.extensions`
 
 ```python
 from specify_cli.extensions import ExtensionRegistry
@@ -206,7 +200,7 @@ from specify_cli.extensions import ExtensionRegistry
 registry = ExtensionRegistry(extensions_dir)
 ```
 
-**Methods**:
+**方法**：
 
 ```python
 # Add extension to registry
@@ -225,7 +219,7 @@ extensions = registry.list()  # Dict[str, dict]
 is_installed = registry.is_installed(extension_id: str)  # bool
 ```
 
-**Registry Format**:
+**登錄格式**：
 
 ```json
 {
@@ -245,7 +239,7 @@ is_installed = registry.is_installed(extension_id: str)  # bool
 
 ### ExtensionManager
 
-**Module**: `specify_cli.extensions`
+**模組**：`specify_cli.extensions`
 
 ```python
 from specify_cli.extensions import ExtensionManager
@@ -253,7 +247,7 @@ from specify_cli.extensions import ExtensionManager
 manager = ExtensionManager(project_root)
 ```
 
-**Methods**:
+**方法**：
 
 ```python
 # Install from directory
@@ -290,9 +284,9 @@ manager.check_compatibility(
 
 ### CatalogEntry
 
-**Module**: `specify_cli.extensions`
+**模組**：`specify_cli.extensions`
 
-Represents a single catalog in the active catalog stack.
+表示使用中目錄堆疊中的單一目錄。
 
 ```python
 from specify_cli.extensions import CatalogEntry
@@ -306,19 +300,19 @@ entry = CatalogEntry(
 )
 ```
 
-**Fields**:
+**欄位**：
 
-| Field | Type | Description |
+| 欄位 | 類型 | 說明 |
 |-------|------|-------------|
-| `url` | `str` | Catalog URL (must use HTTPS, or HTTP for localhost) |
-| `name` | `str` | Human-readable catalog name |
-| `priority` | `int` | Sort order (lower = higher priority, wins on conflicts) |
-| `install_allowed` | `bool` | Whether extensions from this catalog can be installed |
-| `description` | `str` | Optional human-readable description of the catalog (default: empty) |
+| `url` | `str` | 目錄 URL（必須使用 HTTPS，或 localhost 使用 HTTP） |
+| `name` | `str` | 方便閱讀的目錄名稱 |
+| `priority` | `int` | 排序順序（數字越小優先順序越高，衝突時勝出） |
+| `install_allowed` | `bool` | 是否可安裝此目錄的擴充功能 |
+| `description` | `str` | 目錄的選用說明（預設：空） |
 
 ### ExtensionCatalog
 
-**Module**: `specify_cli.extensions`
+**模組**：`specify_cli.extensions`
 
 ```python
 from specify_cli.extensions import ExtensionCatalog
@@ -326,14 +320,14 @@ from specify_cli.extensions import ExtensionCatalog
 catalog = ExtensionCatalog(project_root)
 ```
 
-**Class attributes**:
+**類別屬性**：
 
 ```python
 ExtensionCatalog.DEFAULT_CATALOG_URL    # default catalog URL
 ExtensionCatalog.COMMUNITY_CATALOG_URL  # community catalog URL
 ```
 
-**Methods**:
+**方法**：
 
 ```python
 # Get the ordered list of active catalogs
@@ -362,16 +356,16 @@ is_valid = catalog.is_cache_valid()  # bool
 catalog.clear_cache()
 ```
 
-**Result annotation fields**:
+**結果註記欄位**：
 
-Each extension dict returned by `search()` and `get_extension_info()` includes:
+`search()` 與 `get_extension_info()` 回傳的每個擴充功能 dict 都包含：
 
-| Field | Type | Description |
+| 欄位 | 類型 | 說明 |
 |-------|------|-------------|
-| `_catalog_name` | `str` | Name of the source catalog |
-| `_install_allowed` | `bool` | Whether installation is allowed from this catalog |
+| `_catalog_name` | `str` | 來源目錄的名稱 |
+| `_install_allowed` | `bool` | 是否允許從此目錄安裝 |
 
-**Catalog config file** (`.specify/extension-catalogs.yml`):
+**目錄設定檔**（`.specify/extension-catalogs.yml`）：
 
 ```yaml
 catalogs:
@@ -389,7 +383,7 @@ catalogs:
 
 ### HookExecutor
 
-**Module**: `specify_cli.extensions`
+**模組**：`specify_cli.extensions`
 
 ```python
 from specify_cli.extensions import HookExecutor
@@ -397,7 +391,7 @@ from specify_cli.extensions import HookExecutor
 hook_executor = HookExecutor(project_root)
 ```
 
-**Methods**:
+**方法**：
 
 ```python
 # Get project config
@@ -427,7 +421,7 @@ message = hook_executor.format_hook_message(
 
 ### CommandRegistrar
 
-**Module**: `specify_cli.extensions`
+**模組**：`specify_cli.extensions`
 
 ```python
 from specify_cli.extensions import CommandRegistrar
@@ -435,7 +429,7 @@ from specify_cli.extensions import CommandRegistrar
 registrar = CommandRegistrar()
 ```
 
-**Methods**:
+**方法**：
 
 ```python
 # Register commands for Claude Code
@@ -454,11 +448,11 @@ yaml_text = registrar.render_frontmatter(frontmatter: Dict)  # str
 
 ---
 
-## Command File Format
+## 命令檔案格式
 
-### Universal Command Format
+### 通用命令格式
 
-**File**: `commands/{command-name}.md`
+**檔案**：`commands/{command-name}.md`
 
 ```markdown
 ---
@@ -504,17 +498,17 @@ Information about configuration options.
 Additional notes and tips.
 ```
 
-### Frontmatter Fields
+### Frontmatter 欄位
 
 ```yaml
 description: string   # Required, brief command description
 tools: [string]       # Optional, MCP tools required
 ```
 
-### Special Variables
+### 特殊變數
 
-- `$ARGUMENTS` - Placeholder for user-provided arguments
-- Extension context automatically injected:
+- `$ARGUMENTS`——使用者提供參數的佔位符
+- 自動注入的擴充功能上下文：
 
   ```markdown
   <!-- Extension: {extension-id} -->
@@ -523,13 +517,13 @@ tools: [string]       # Optional, MCP tools required
 
 ---
 
-## Configuration Schema
+## 設定結構描述
 
-### Extension Config File
+### 擴充功能設定檔
 
-**File**: `.specify/extensions/{extension-id}/{extension-id}-config.yml`
+**檔案**：`.specify/extensions/{extension-id}/{extension-id}-config.yml`
 
-Extensions define their own config schema. Common patterns:
+擴充功能自行定義設定結構描述。常見模式：
 
 ```yaml
 # Connection settings
@@ -557,18 +551,18 @@ field_mappings:
   internal_name: "external_field_id"
 ```
 
-### Config Layers
+### 設定層級
 
-1. **Extension Defaults** (from `extension.yml` `defaults` section)
-2. **Project Config** (`{extension-id}-config.yml`)
-3. **Local Override** (`{extension-id}-config.local.yml`, gitignored)
-4. **Environment Variables** (`SPECKIT_{EXTENSION}_*`)
+1. **擴充功能預設值**（來自 `extension.yml` 的 `defaults` 區段）
+2. **專案設定**（`{extension-id}-config.yml`）
+3. **本機覆寫**（`{extension-id}-config.local.yml`，已加入 gitignore）
+4. **環境變數**（`SPECKIT_{EXTENSION}_*`）
 
-### Environment Variable Pattern
+### 環境變數模式
 
-Format: `SPECKIT_{EXTENSION}_{KEY}`
+格式：`SPECKIT_{EXTENSION}_{KEY}`
 
-Examples:
+範例：
 
 - `SPECKIT_JIRA_PROJECT_KEY`
 - `SPECKIT_LINEAR_API_KEY`
@@ -576,13 +570,13 @@ Examples:
 
 ---
 
-## Hook System
+## Hook 系統
 
-### Hook Definition
+### Hook 定義
 
-Each event accepts either a single hook mapping or a list of mappings. A list registers multiple commands on the same event.
+每個事件可接受單一 hook 對應或對應清單。清單可在同一事件上註冊多個命令。
 
-**Single mapping (in extension.yml)**:
+**單一對應（在 extension.yml 中）**：
 
 ```yaml
 hooks:
@@ -594,7 +588,7 @@ hooks:
     condition: null
 ```
 
-**List of mappings with priority**:
+**附優先順序的對應清單**：
 
 ```yaml
 hooks:
@@ -610,43 +604,43 @@ hooks:
       description: "Generate a report from the plan"
 ```
 
-Within a single manifest list, a repeated `command` is deduped as "last wins" and moved to the end, so it also breaks equal-priority ties in authoring order.
+在單一資訊清單的清單中，重複的 `command` 會以「最後者勝出」去重並移到末尾，因此它也會在撰寫順序上打破優先順序相同的平手。
 
-### Hook Events
+### Hook 事件
 
-Standard events (defined by core):
+標準事件（由核心定義）：
 
-- `before_specify` - Before specification generation
-- `after_specify` - After specification generation
-- `before_plan` - Before implementation planning
-- `after_plan` - After implementation planning
-- `before_tasks` - Before task generation
-- `after_tasks` - After task generation
-- `before_implement` - Before implementation
-- `after_implement` - After implementation
-- `before_analyze` - Before cross-artifact analysis
-- `after_analyze` - After cross-artifact analysis
-- `before_checklist` - Before checklist generation
-- `after_checklist` - After checklist generation
-- `before_clarify` - Before spec clarification
-- `after_clarify` - After spec clarification
-- `before_constitution` - Before constitution update
-- `after_constitution` - After constitution update
+- `before_specify`——規格產生之前
+- `after_specify`——規格產生之後
+- `before_plan`——實作規劃之前
+- `after_plan`——實作規劃之後
+- `before_tasks`——任務產生之前
+- `after_tasks`——任務產生之後
+- `before_implement`——實作之前
+- `after_implement`——實作之後
+- `before_analyze`——跨成品分析之前
+- `after_analyze`——跨成品分析之後
+- `before_checklist`——檢核清單產生之前
+- `after_checklist`——檢核清單產生之後
+- `before_clarify`——規格釐清之前
+- `after_clarify`——規格釐清之後
+- `before_constitution`——憲章更新之前
+- `after_constitution`——憲章更新之後
 
-#### Bundled `bug` extension events (available when the extension is installed)
+#### 內建 `bug` 擴充功能事件（安裝該擴充功能時可用）
 
-Hooks are prompts run in the same session; they reuse the resolved `BUG_SLUG` and `BUG_DIR` (and, for post-hooks, the written report) from the conversation, and no variables are injected. Pre-hooks run after slug resolution and prerequisites; post-hooks run after the report is written and before completion is reported.
+Hook 是在同一工作階段中執行的提示詞；它們重用從對話中解析的 `BUG_SLUG` 與 `BUG_DIR`（post-hook 則重用已寫入的報告），不會注入任何變數。Pre-hook 在 slug 解析與必要條件之後執行；post-hook 在報告寫入後、回報完成之前執行。
 
-- `before_bug_assess` - After the bug directory exists, before ingesting the report
-- `after_bug_assess` - After writing `assessment.md`; not reached when an unintelligible report causes an early stop
-- `before_bug_fix` - Before applying the remediation
-- `after_bug_fix` - After writing `fix.md`
-- `before_bug_test` - Before running verification
-- `after_bug_test` - After writing `test.md`
+- `before_bug_assess`——bug 目錄存在之後、擷取報告之前
+- `after_bug_assess`——寫入 `assessment.md` 之後；報告難以理解導致提早停止時不會到達
+- `before_bug_fix`——套用修復之前
+- `after_bug_fix`——寫入 `fix.md` 之後
+- `before_bug_test`——執行驗證之前
+- `after_bug_test`——寫入 `test.md` 之後
 
-### Hook Configuration
+### Hook 設定
 
-**In `.specify/extensions.yml`**:
+**在 `.specify/extensions.yml` 中**：
 
 ```yaml
 hooks:
@@ -660,7 +654,7 @@ hooks:
       condition: null
 ```
 
-### Hook Message Format
+### Hook 訊息格式
 
 ```markdown
 ## Extension Hooks
@@ -673,7 +667,7 @@ Prompt: {prompt}
 To execute: `/{command}`
 ```
 
-Or for mandatory hooks:
+或強制 hook：
 
 ```markdown
 **Automatic Hook**: {extension}
@@ -683,137 +677,137 @@ EXECUTE_COMMAND: {command}
 
 ---
 
-## CLI Commands
+## CLI 命令
 
 ### extension list
 
-**Usage**: `specify extension list [OPTIONS]`
+**用法**：`specify extension list [OPTIONS]`
 
-**Options**:
+**選項**：
 
-- `--available` - Show available extensions from catalog
-- `--all` - Show both installed and available
+- `--available`——顯示目錄中可用的擴充功能
+- `--all`——同時顯示已安裝與可用的擴充功能
 
-**Output**: List of installed extensions with metadata
+**輸出**：已安裝擴充功能清單及後設資料
 
 ### extension catalog list
 
-**Usage**: `specify extension catalog list`
+**用法**：`specify extension catalog list`
 
-Lists all active catalogs in the current catalog stack, showing name, description, URL, priority, and `install_allowed` status.
+列出目前目錄堆疊中所有使用中的目錄，顯示名稱、說明、URL、優先順序與 `install_allowed` 狀態。
 
 ### extension catalog add
 
-**Usage**: `specify extension catalog add URL [OPTIONS]`
+**用法**：`specify extension catalog add URL [OPTIONS]`
 
-**Options**:
+**選項**：
 
-- `--name NAME` - Catalog name (required)
-- `--priority INT` - Priority (lower = higher priority, default: 10)
-- `--install-allowed / --no-install-allowed` - Allow installs from this catalog (default: false)
-- `--description TEXT` - Optional description of the catalog
+- `--name NAME`——目錄名稱（必填）
+- `--priority INT`——優先順序（數字越小優先順序越高，預設：10）
+- `--install-allowed / --no-install-allowed`——是否允許從此目錄安裝（預設：false）
+- `--description TEXT`——目錄的選用說明
 
-**Arguments**:
+**參數**：
 
-- `URL` - Catalog URL (must use HTTPS)
+- `URL`——目錄 URL（必須使用 HTTPS）
 
-Adds a catalog entry to `.specify/extension-catalogs.yml`.
+將目錄條目加入 `.specify/extension-catalogs.yml`。
 
 ### extension catalog remove
 
-**Usage**: `specify extension catalog remove NAME`
+**用法**：`specify extension catalog remove NAME`
 
-**Arguments**:
+**參數**：
 
-- `NAME` - Catalog name to remove
+- `NAME`——要移除的目錄名稱
 
-Removes a catalog entry from `.specify/extension-catalogs.yml`.
+從 `.specify/extension-catalogs.yml` 移除目錄條目。
 
 ### extension add
 
-**Usage**: `specify extension add EXTENSION [OPTIONS]`
+**用法**：`specify extension add EXTENSION [OPTIONS]`
 
-**Options**:
+**選項**：
 
-- `--from URL` - Install from custom URL
-- `--dev PATH` - Install from local directory
+- `--from URL`——從自訂 URL 安裝
+- `--dev PATH`——從本機目錄安裝
 
-**Arguments**:
+**參數**：
 
-- `EXTENSION` - Extension name or URL
+- `EXTENSION`——擴充功能名稱或 URL
 
-**Note**: Extensions from catalogs with `install_allowed: false` cannot be installed via this command.
+**注意**：`install_allowed: false` 的目錄中的擴充功能無法透過此命令安裝。
 
 ### extension remove
 
-**Usage**: `specify extension remove EXTENSION [OPTIONS]`
+**用法**：`specify extension remove EXTENSION [OPTIONS]`
 
-**Options**:
+**選項**：
 
-- `--keep-config` - Preserve config files
-- `--force` - Skip confirmation
+- `--keep-config`——保留設定檔
+- `--force`——跳過確認
 
-**Arguments**:
+**參數**：
 
-- `EXTENSION` - Extension ID
+- `EXTENSION`——擴充功能 ID
 
 ### extension search
 
-**Usage**: `specify extension search [QUERY] [OPTIONS]`
+**用法**：`specify extension search [QUERY] [OPTIONS]`
 
-Searches all active catalogs simultaneously. Results include source catalog name and install_allowed status.
+同時搜尋所有使用中的目錄。結果包含來源目錄名稱與 install_allowed 狀態。
 
-**Options**:
+**選項**：
 
-- `--tag TAG` - Filter by tag
-- `--author AUTHOR` - Filter by author
-- `--verified` - Show only verified extensions
+- `--tag TAG`——依標籤篩選
+- `--author AUTHOR`——依作者篩選
+- `--verified`——僅顯示已驗證的擴充功能
 
-**Arguments**:
+**參數**：
 
-- `QUERY` - Optional search query
+- `QUERY`——選用的搜尋查詢
 
 ### extension info
 
-**Usage**: `specify extension info EXTENSION`
+**用法**：`specify extension info EXTENSION`
 
-Shows source catalog and install_allowed status.
+顯示來源目錄與 install_allowed 狀態。
 
-**Arguments**:
+**參數**：
 
-- `EXTENSION` - Extension ID
+- `EXTENSION`——擴充功能 ID
 
 ### extension update
 
-**Usage**: `specify extension update [EXTENSION]`
+**用法**：`specify extension update [EXTENSION]`
 
-**Arguments**:
+**參數**：
 
-- `EXTENSION` - Optional, extension ID (default: all)
+- `EXTENSION`——選用，擴充功能 ID（預設：全部）
 
 ### extension enable
 
-**Usage**: `specify extension enable EXTENSION`
+**用法**：`specify extension enable EXTENSION`
 
-**Arguments**:
+**參數**：
 
-- `EXTENSION` - Extension ID
+- `EXTENSION`——擴充功能 ID
 
 ### extension disable
 
-**Usage**: `specify extension disable EXTENSION`
+**用法**：`specify extension disable EXTENSION`
 
-**Arguments**:
+**參數**：
 
-- `EXTENSION` - Extension ID
+- `EXTENSION`——擴充功能 ID
 
 ---
 
-## Exceptions
+## 例外
 
 ### ValidationError
 
-Raised when extension manifest validation fails.
+當擴充功能資訊清單驗證失敗時擲出。
 
 ```python
 from specify_cli.extensions import ValidationError
@@ -826,7 +820,7 @@ except ValidationError as e:
 
 ### CompatibilityError
 
-Raised when extension is incompatible with current spec-kit version.
+當擴充功能與目前的 spec-kit 版本不相容時擲出。
 
 ```python
 from specify_cli.extensions import CompatibilityError
@@ -839,7 +833,7 @@ except CompatibilityError as e:
 
 ### ExtensionError
 
-Base exception for all extension-related errors.
+所有擴充功能相關錯誤的基底例外。
 
 ```python
 from specify_cli.extensions import ExtensionError
@@ -852,11 +846,11 @@ except ExtensionError as e:
 
 ---
 
-## Version Functions
+## 版本函式
 
 ### version_satisfies
 
-Check if a version satisfies a specifier.
+檢查版本是否符合指定子。
 
 ```python
 from specify_cli.extensions import version_satisfies
@@ -867,7 +861,7 @@ satisfied = version_satisfies("1.2.3", ">=1.0.0,<2.0.0")  # bool
 
 ---
 
-## File System Layout
+## 檔案系統配置
 
 ```text
 .specify/
@@ -899,6 +893,6 @@ satisfied = version_satisfies("1.2.3", ">=1.0.0,<2.0.0")  # bool
 
 ---
 
-*Last Updated: 2026-01-28*
-*API Version: 1.0*
-*Spec Kit Version: 0.1.0*
+*最後更新：2026-01-28*
+*API 版本：1.0*
+*Spec Kit 版本：0.1.0*

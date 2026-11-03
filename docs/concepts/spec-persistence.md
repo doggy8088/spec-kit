@@ -1,151 +1,88 @@
-# Spec Persistence Models
+# 規格保存模型
 
-Spec Kit intentionally leaves teams in control of what happens to `spec.md`,
-`plan.md`, and `tasks.md` after a feature is delivered. The toolkit gives you a
-repeatable workflow, but it does not force one artifact maintenance strategy.
+Spec Kit 有意讓團隊自行決定功能交付後，`spec.md`、`plan.md` 與 `tasks.md` 的去向。這套工具組提供可重複的工作流程，但不強制採用單一成品維護策略。
 
-This page names three common models so teams can make that choice explicit.
-None is the default, and none is required by Spec Kit.
+本頁列出三種常見模型，讓團隊能明確做出選擇。三者皆非預設值，Spec Kit 也不要求採用任何一種。
 
-## Shared Delivery, Separate Persistence
+## 交付共用，保存各自獨立
 
-All three models use the same feature delivery process:
-specify -> plan -> tasks -> implement -> converge. Repeat implement and
-converge until the agreed feature is complete.
+三種模型都使用相同的功能交付流程：specify -> plan -> tasks -> implement -> converge。反覆執行 implement 與 converge，直到約定的功能完成為止。
 
-Converge assesses the implementation against the feature's spec, plan, and
-tasks, governed by the constitution. It is append-only: its only possible write
-is adding remaining work to `tasks.md`. It does not select a persistence model,
-rewrite intent to match code, or treat approval of code as agreement with
-documented intent.
+Converge 會依據功能的規格、計畫與任務，並受憲章約束，評估實作成果。它僅能附加：唯一的寫入可能是將剩餘工作加入 `tasks.md`。它不會選擇保存模型、不會改寫意圖以符合程式碼，也不會將程式碼的核准視為對已記錄意圖的同意。
 
-The core workflow has no dedicated command that automatically reconciles
-differences among `spec.md`, `plan.md`, and `tasks.md`. Analyze reports
-inconsistencies without editing artifacts, and converge only appends remaining
-work to `tasks.md`. Teams can reconcile artifacts directly, and extensions can
-provide their own commands or hooks to coordinate reconciliation during or
-after delivery. Extension behavior does not change the responsibilities of the
-core commands.
+核心工作流程沒有專門的命令能自動調和 `spec.md`、`plan.md` 與 `tasks.md` 之間的差異。Analyze 會回報不一致之處，但不編輯成品；converge 僅將剩餘工作附加到 `tasks.md`。團隊可以直接調和成品，擴充功能也能提供自己的命令或 hook，在交付期間或之後協調調和工作。擴充功能的行為不會改變核心命令的職責。
 
-Persistence is the team's choice of how to maintain artifacts **after
-delivery**, not an alternative way to deliver or determine completeness.
-Discoveries can occur during implementation, but their timing does not define
-the persistence model. Reconciliation can also occur during delivery without
-becoming part of the core workflow or the persistence strategy. If the team
-agrees to change the intended contract, make that intent explicit in the
-artifacts and deliver against it.
+保存是團隊選擇在**交付之後**如何維護成品的方式，而不是另一種交付或判定完成的方式。實作過程中可能會有新發現，但發現的時機並不定義保存模型。調和也可能在交付期間發生，而不會成為核心工作流程或保存策略的一部分。如果團隊同意變更預定的合約，請將該意圖明確寫入成品，並據此交付。
 
-A later change requiring implementation still goes through the shared delivery
-process and convergence against its explicit intended artifacts, whether those
-artifacts are new or revised. See
-[Evolving Specs in Existing Projects](../guides/evolving-specs.md) for practical
-guidance.
+後續需要實作的變更，仍須走共用的交付流程，並依據其明確的預定成品進行收斂——無論這些成品是新建還是修訂。實務指引請參閱[在既有專案中演進規格](../guides/evolving-specs.md)。
 
-## Two Separate Questions
+## 兩個獨立的問題
 
-Spec-driven development has a temporal question: how long should the
-specification matter? One
-[overview of SDD tooling](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)
-frames that lifecycle in three levels:
+規格驅動開發有一個時間維度的問題：規格應該重要多久？一篇 [SDD 工具概覽](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)將其生命週期分為三個層級：
 
-- **Spec-first**: write a spec before coding, then allow it to be discarded.
-- **Spec-anchored**: keep the spec after implementation and use it for future
-  changes.
-- **Spec-as-source**: treat the spec as the only human-edited source and
-  regenerate implementation artifacts from it.
+- **規格優先（Spec-first）**：先寫規格再寫程式，之後允許丟棄規格。
+- **規格錨定（Spec-anchored）**：實作後保留規格，並用於後續變更。
+- **規格即原始碼（Spec-as-source）**：將規格視為唯一由人編輯的原始來源，並從中重新產生實作成品。
 
-Spec Kit also exposes a second question: what happens to the artifact set when
-requirements change after delivery? The models below describe that maintenance
-strategy.
+Spec Kit 還提出了第二個問題：交付後需求變更時，成品集合會如何處理？以下模型描述的正是該維護策略。
 
-## Flow-Back Spec
+## 回流規格（Flow-Back Spec）
 
-Use flow-back when `spec.md`, `plan.md`, `tasks.md`, and the implementation are
-all allowed to inform each other.
+當 `spec.md`、`plan.md`、`tasks.md` 與實作彼此都能互相提供資訊時，採用回流模式。
 
-After delivery, accepted discoveries can inform maintenance edits to any
-artifact. The team decides what those discoveries mean for intended behavior,
-technical approach, or task breakdown. The team can reconcile `spec.md`,
-`plan.md`, and `tasks.md` itself or use an extension whose documented behavior
-does so. The implementation is evidence for that discussion, not a replacement
-source of intent.
+交付後，已接受的發現可作為任何成品維護編輯的依據。團隊決定這些發現對預期行為、技術作法或任務拆解意味著什麼。團隊可以自行調和 `spec.md`、`plan.md` 與 `tasks.md`，或使用有文件說明會執行此工作的擴充功能。實作是該討論的證據，而不是取代意圖的來源。
 
-This is a team-owned maintenance convention, not a requirement for a new core
-amendment command or an artifact-rewriting role for analyze or converge.
-Extension-provided reconciliation remains extension behavior, whether it runs
-during or after delivery. If reconciliation identifies implementation work,
-deliver that change through the shared process against the explicit intended
-artifacts.
+這是團隊自有的維護慣例，不要求新增核心修訂命令，也不要求 analyze 或 converge 承擔改寫成品的角色。擴充功能提供的調和仍屬擴充功能行為，無論它在交付期間還是之後執行。如果調和發現需要實作的工作，請透過共用流程、依據明確的預定成品來交付該變更。
 
-Flow-back works well when:
+回流模式在以下情況運作良好：
 
-- the team is small enough to notice and reconcile drift quickly
-- implementation discoveries are expected to reshape the original plan
-- speed matters more than preserving each intermediate decision as immutable
-  history
+- 團隊夠小，能快速注意到並調和偏差
+- 預期實作發現會重塑原始計畫
+- 速度比將每個中間決策保存為不可變歷史更重要
 
-The main risk is silent divergence. If the team changes lower-level artifacts
-without reflecting the decision back into `spec.md`, future contributors may
-not know which artifact to trust.
+主要風險是無聲的偏離。如果團隊變更了較低層級的成品，卻未將決策反映回 `spec.md`，未來的貢獻者可能不知道該信任哪份成品。
 
-## Flow-Forward Spec
+## 前進規格（Flow-Forward Spec）
 
-Use flow-forward when each feature directory should remain a historical record.
+當每個功能目錄都應保留為歷史紀錄時，採用前進模式。
 
-In this model, completed artifacts are treated as immutable. When requirements
-change, the team creates a new feature directory instead of mutating the
-existing `spec.md`, `plan.md`, or `tasks.md`. The older directory remains useful
-for audit, comparison, or explaining how the project reached its current state.
+在此模型中，已完成的成品被視為不可變。當需求變更時，團隊會建立新的功能目錄，而不是修改既有的 `spec.md`、`plan.md` 或 `tasks.md`。舊目錄仍可用於稽核、比較，或解釋專案如何走到目前的狀態。
 
-Flow-forward works well when:
+前進模式在以下情況運作良好：
 
-- auditability and traceability matter
-- features are well-scoped and rarely revisited in place
-- the team wants a clear sequence of requirement changes over time
+- 稽核能力與可追溯性很重要
+- 功能範疇明確，且很少原地重訪
+- 團隊希望隨時間清楚呈現需求變更的順序
 
-The main tradeoff is duplication. Related decisions can be spread across
-multiple feature directories, so teams need naming, linking, or review habits
-that make the lineage easy to follow.
+主要取捨是重複。相關決策可能分散在多個功能目錄中，因此團隊需要命名、連結或審查習慣，讓脈絡容易追蹤。
 
-## Living Spec
+## 活規格（Living Spec）
 
-Use living spec when `spec.md` is the contract and the other artifacts are
-derived from it.
+當 `spec.md` 是合約、其他成品則由它衍生時，採用活規格模式。
 
-After delivery, teams maintain `spec.md` as the contract, updating it first when
-intended behavior changes, then regenerating or revising `plan.md` and
-`tasks.md` from that source. The plan and task list are still valuable, but they
-are treated as disposable derivations rather than permanent sources of truth.
+交付後，團隊將 `spec.md` 維護為合約：當預期行為變更時先更新它，再從該來源重新產生或修訂 `plan.md` 與 `tasks.md`。計畫與任務清單仍然有價值，但它們被視為可拋棄的衍生物，而不是永久的真實來源。
 
-Living spec works well when:
+活規格在以下情況運作良好：
 
-- the product contract is stable enough to own the workflow
-- the team is comfortable regenerating derived artifacts after spec changes
-- consistency between requirements and implementation matters more than keeping
-  every intermediate plan intact
+- 產品合約夠穩定，能主導工作流程
+- 團隊樂於在規格變更後重新產生衍生成品
+- 需求與實作之間的一致性，比保留每個中間計畫完整無缺更重要
 
-The main risk is losing useful implementation rationale if derived artifacts are
-discarded without preserving important decisions elsewhere.
+主要風險是，若衍生成品在未將重要決策保存在其他地方的情況下被丟棄，可能遺失有用的實作理由。
 
-## Choosing a Model
+## 選擇模型
 
-The model is a team convention, not a CLI setting. A project can even use
-different models in different areas, as long as contributors know which one
-applies.
+模型是團隊慣例，不是 CLI 設定。專案甚至可以在不同區域使用不同模型，只要貢獻者知道哪個區域適用哪種模型。
 
-| Model | Post-delivery maintenance rule | Best fit | Watch out for |
+| 模型 | 交付後維護規則 | 最適用於 | 注意事項 |
 |---|---|---|---|
-| Flow-back spec | Reflect accepted discoveries in any artifact, then reconcile | Fast iteration and close collaboration | Silent drift between artifacts |
-| Flow-forward spec | Create a new feature directory for new requirements | Audit trails and historical clarity | Duplicate or fragmented context |
-| Living spec | Edit `spec.md`; regenerate derived artifacts | Spec as contract | Lost rationale in regenerated files |
+| 回流規格 | 將已接受的發現反映到任何成品中，然後調和 | 快速迭代與緊密協作 | 成品之間無聲偏離 |
+| 前進規格 | 為新需求建立新的功能目錄 | 稽核軌跡與歷史清晰度 | 上下文重複或碎片化 |
+| 活規格 | 編輯 `spec.md`；重新產生衍生成品 | 規格即合約 | 重新產生的檔案遺失理由 |
 
-If your team has not chosen a model yet, start by answering two questions:
+如果你的團隊尚未選定模型，請先回答兩個問題：
 
-1. Should completed feature directories be historical records or editable work
-   areas?
-2. Is `spec.md` the single source of truth, or are `plan.md` and `tasks.md`
-   allowed to become co-equal sources?
+1. 已完成的功能目錄應該是歷史紀錄，還是可編輯的工作區？
+2. `spec.md` 是唯一的真實來源，還是允許 `plan.md` 與 `tasks.md` 成為同等重要的來源？
 
-Once those answers are clear, document the convention in your project
-constitution or team onboarding notes so future contributors know how to handle
-changes.
+一旦答案明確，請將慣例記錄在專案憲章或團隊入門說明中，讓未來的貢獻者知道如何處理變更。

@@ -1,93 +1,81 @@
-# Reference
+# 參考文件
 
-The Specify CLI (`specify`) manages the full lifecycle of Spec-Driven Development — from project initialization to workflow automation. This section is the detailed reference for the CLI's commands and primitives, plus the agentic `/speckit.*` processes your coding agent runs.
+Specify CLI（`specify`）管理規格驅動開發的完整生命週期，從專案初始化到工作流程自動化皆涵蓋在內。本節是 CLI 命令與原語的詳細參考，也包含程式代理執行的 agentic `/speckit.*` 流程。
 
-## Core Commands
+## 核心命令
 
-The foundational commands for creating and managing Spec Kit projects. Initialize a new project with the necessary directory structure, templates, and scripts. Verify that your system has the required tools installed. Check version and system information.
+建立與管理 Spec Kit 專案的基礎命令。初始化新專案，建立所需的目錄結構、範本與指令碼。確認系統已安裝必要工具。查看版本與系統資訊。
 
-[Core Commands reference →](core.md)
+[核心命令參考 →](core.md)
 
-## MCP Server
+## MCP 伺服器
 
-The experimental `specify mcp` command exposes stable CLI JSON commands to MCP
-clients through a local stdio server.
+實驗性的 `specify mcp` 命令透過本機 stdio 伺服器，將穩定的 CLI JSON 命令提供給 MCP 使用者端使用。
 
-[MCP Server reference →](mcp.md)
+[MCP 伺服器參考 →](mcp.md)
 
-## Integrations
+## 整合
 
-Integrations connect Spec Kit to your AI coding agent. Each integration sets up the appropriate command files and directory structures for a specific agent. Only one integration is active per project at a time, and you can switch between them at any point.
+整合將 Spec Kit 連接到你的 AI 程式代理。每個整合會為特定代理設定適當的命令檔案與目錄結構。每個專案同一時間只有一個整合處於啟用狀態，你隨時可以切換。
 
-[Agent-specific setup guides →](../integrations/index.md)
+[代理專屬設定指南 →](../integrations/index.md)
 
-[Integration management reference →](../integrations/cli.md)
+[整合管理參考 →](../integrations/cli.md)
 
-## Catalogs
+## 目錄
 
-Catalogs are priority-ordered indexes for discovering integrations, extensions,
-presets, workflows, workflow step types, and bundles. Spec Kit includes
-built-in sources and supports private, organization-managed catalogs with
-explicit discovery and installation policies.
+目錄是依優先順序排列的索引，用於探索整合、擴充功能、預設集、工作流程、工作流程步驟類型與套件組。Spec Kit 內建來源，也支援私人、由組織管理的目錄，並有明確的探索與安裝原則。
 
-[Catalogs reference →](catalogs.md)
+[目錄參考 →](catalogs.md)
 
-## Extensions
+## 擴充功能
 
-Extensions add new capabilities to Spec Kit — domain-specific commands, external tool integrations, quality gates, and more. They are discovered through catalogs and can be installed, updated, enabled, disabled, or removed independently. Multiple extensions can coexist in a single project.
+擴充功能為 Spec Kit 新增功能，包括領域專屬命令、外部工具整合、品質關卡等。它們透過目錄探索，可以獨立安裝、更新、啟用、停用或移除。單一專案中可以同時存在多個擴充功能。
 
-[Extensions reference →](extensions.md)
+[擴充功能參考 →](extensions.md)
 
-## Presets
+## 預設集
 
-Presets customize how Spec Kit works — overriding command files, template files, and script files without changing any tooling. They let you enforce organizational standards, adapt the workflow to your methodology, or localize the entire experience. Multiple presets can be stacked with priority ordering to layer customizations.
+預設集自訂 Spec Kit 的運作方式，覆寫命令檔案、範本檔案與指令碼檔案，不需變更任何工具。它們可讓你落實組織標準、依方法論調整工作流程，或將整個體驗在地化。多個預設集可以依優先順序堆疊，分層套用自訂內容。
 
-[Presets reference →](presets.md)
+[預設集參考 →](presets.md)
 
-## Artifacts
+## 成品
 
-Artifacts are the commands, templates, and scripts a project exposes, whichever layer contributes them. The `specify artifact` command group is the read-only introspection surface over that inventory — a flat list of everything visible, plus the full composition stack behind any single entry, including which layer wins and which layers are hidden.
+成品是專案對外提供的命令、範本與指令碼，無論由哪一層貢獻。`specify artifact` 命令群組是這份清單的唯讀檢視介面，提供所有可見項目的平面清單，以及任一單一項目背後的完整組成堆疊，包括哪一層勝出、哪些層被隱藏。
 
-[Artifacts reference →](artifacts.md)
+[成品參考 →](artifacts.md)
 
-## Workflows
+## 工作流程
 
-Workflows automate multi-step Spec-Driven Development processes into repeatable sequences. They chain commands, prompts, shell steps, and human checkpoints together, with support for conditional logic, loops, fan-out/fan-in, and the ability to pause and resume from the exact point of interruption.
+工作流程將多步驟的規格驅動開發流程自動化為可重複的序列。它們串連命令、提示詞、shell 步驟與人工檢查點，支援條件邏輯、迴圈、fan-out／fan-in，並能從中斷的確切位置暫停與繼續。
 
-[Workflows reference →](workflows.md)
+[工作流程參考 →](workflows.md)
 
-## Bundles
+## 套件組
 
-Bundles compose existing extensions, presets, workflows, and steps into a single, versioned, installable unit. Rather than adding new behavior, a bundle curates a stack of primitives — everything a team or role needs — and installs it in one step through each component's own machinery, with version pinning, conflict checks, and provenance tracking for clean updates and removal.
+套件組將既有的擴充功能、預設集、工作流程與步驟組成為單一、具版本、可安裝的單位。套件組不是新增行為，而是彙整一組原語堆疊，也就是團隊或角色所需的一切，並透過每個元件自身的機制一次完成安裝，包含版本釘選、衝突檢查與來源追蹤，讓更新與移除保持乾淨。
 
-[Bundles reference →](bundles.md)
+[套件組參考 →](bundles.md)
 
-## Agentic Commands
+## Agentic 命令
 
-The sections above cover primitives managed by the `specify` CLI. The following
-are independent processes your coding agent runs, not terminal commands. The
-references use `/speckit.*` notation; see
-[Command invocation](../integrations/cli.md#command-invocation) for your agent's syntax.
-For guided examples, start with [SDD](../quickstart.md),
-[bug fixing](../guides/bugfix.md), or [idea assessment](../guides/assessment.md).
+上述章節涵蓋由 `specify` CLI 管理的原語。以下是程式代理執行的獨立流程，不是終端機命令。參考文件使用 `/speckit.*` 記法；你的代理語法請參見[命令呼叫方式](../integrations/cli.md#command-invocation)。如需引導式範例，請從 [SDD](../quickstart.md)、[錯誤修復](../guides/bugfix.md) 或[想法評估](../guides/assessment.md)開始。
 
 ### Agentic SDD
 
-The `/speckit.*` slash commands that drive the core Spec-Driven Development process your coding agent runs step by step: constitution, specify, clarify, plan, checklist, tasks, analyze, implement, and converge. Run them in order, adding the clarify/checklist/analyze quality gates for anything with meaningful ambiguity.
+驅動核心規格驅動開發流程的 `/speckit.*` 斜線命令，由程式代理逐步執行，包括憲章、規格、釐清、計畫、檢核清單、任務、分析、實作與收斂。請依序執行，對於有明顯模糊之處，加入釐清、檢核清單、分析等品質關卡。
 
-[Agentic SDD reference →](agentic-sdd.md)
+[Agentic SDD 參考 →](agentic-sdd.md)
 
-### Agentic Bug Fix
+### Agentic 錯誤修復
 
-The bundled **bug** extension adds a three-step bug triage process — assess, fix, and validate — with each bug tracked in its own directory under `.specify/bugs/`. Install it with `specify extension add bug`.
+隨附的 **bug** 擴充功能新增三步驟的錯誤分流流程，也就是評估、修復與驗證，每個錯誤在 `.specify/bugs/` 下各自有獨立目錄。使用 `specify extension add bug` 安裝。
 
-[Agentic Bug Fix reference →](agentic-bugfix.md)
+[Agentic 錯誤修復參考 →](agentic-bugfix.md)
 
-### Agentic Idea Assessment
+### Agentic 想法評估
 
-The bundled, opt-in **assess** extension evaluates an idea through intake,
-research, definition, shaping, and a go / needs-clarification / kill decision.
-It works without source code and does not require or automatically start SDD.
-Install it with `specify extension add assess`.
+隨附、需主動啟用的 **assess** 擴充功能，透過受理、研究、定義、塑形與 go／needs-clarification／kill 決策來評估想法。它不需要原始碼即可運作，也不需要、也不會自動啟動 SDD。使用 `specify extension add assess` 安裝。
 
-[Agentic Idea Assessment reference →](agentic-assessment.md)
+[Agentic 想法評估參考 →](agentic-assessment.md)

@@ -1,33 +1,25 @@
 # ZCode
 
-Install [ZCode](https://zcode.z.ai/) before setup.
-The integration key is `zcode`.
+設定前請先安裝 [ZCode](https://zcode.z.ai/)。整合鍵為 `zcode`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration zcode
 ```
 
-For an existing Spec Kit project, use `specify integration install zcode`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install zcode`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Skills are installed as `.zcode/skills/speckit-<command>/SKILL.md`.
-Invoke them in the agent's chat with a dollar prefix, for example
-`$speckit-specify` or `$speckit-bug-assess` for the installed bug extension.
+技能會安裝為 `.zcode/skills/speckit-<command>/SKILL.md`。在代理的聊天中以美元符號前綴呼叫它們，例如 `$speckit-specify`，或已安裝 bug 擴充功能的 `$speckit-bug-assess`。
 
-The optional `--integration-options="--skills"` flag restates the default;
-this integration always scaffolds skills.
+選用的 `--integration-options="--skills"` 旗標只是重述預設值；本整合一律產生技能。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Workflow steps use `zcode -p <prompt>` and request `--output-format json` for
-structured output. The adapter ignores the workflow `model` setting because
-ZCode has no per-invocation model flag; select the model in-session with `/model`.
+工作流程步驟使用 `zcode -p <prompt>`，並要求以 `--output-format json` 取得結構化輸出。轉接器會忽略工作流程的 `model` 設定，因為 ZCode 沒有每次呼叫專用的模型旗標；請在工作階段中以 `/model` 選取模型。

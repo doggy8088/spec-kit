@@ -1,32 +1,25 @@
 # Command Code
 
-Install [Command Code](https://commandcode.ai/docs) before setup.
-The integration key is `command-code`.
+設定前請先安裝 [Command Code](https://commandcode.ai/docs)。整合鍵為 `command-code`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration command-code
 ```
 
-For an existing Spec Kit project, use `specify integration install command-code`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install command-code`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Skills are installed as `.commandcode/skills/speckit-<command>/SKILL.md`.
-Invoke them in the agent's chat with a dollar prefix, for example
-`$speckit-specify` or `$speckit-bug-assess` for the installed bug extension.
+技能會安裝為 `.commandcode/skills/speckit-<command>/SKILL.md`。在代理的聊天中以美元符號前綴呼叫它們，例如 `$speckit-specify`，或已安裝 bug 擴充功能的 `$speckit-bug-assess`。
 
-## Options and Workflow Dispatch
+## 選項與工作流程分派
 
-The optional `--integration-options="--skills"` flag restates the default;
-this integration always scaffolds skills.
+選用的 `--integration-options="--skills"` 旗標只是重述預設值；本整合一律產生技能。
 
-Workflow steps use `command-code -p <prompt>`, with `--model` when configured
-and `--output-format json` when structured output is requested.
+工作流程步驟使用 `command-code -p <prompt>`，並在已設定時傳入 `--model`、在要求結構化輸出時傳入 `--output-format json`。

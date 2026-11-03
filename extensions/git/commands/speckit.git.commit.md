@@ -1,44 +1,44 @@
 ---
-description: "Auto-commit changes after a Spec Kit command completes"
+description: "在 Spec Kit 命令完成後自動提交變更"
 ---
 
-# Auto-Commit Changes
+# 自動提交變更
 
-Automatically stage and commit all changes after a Spec Kit command completes.
+在 Spec Kit 命令完成後，自動暫存並提交所有變更。
 
-## Behavior
+## 行為
 
-This command is invoked as a hook after (or before) core commands. It:
+本命令會作為 hook，在核心命令之後（或之前）觸發。它會：
 
-1. Determines the event name from the hook context (e.g., if invoked as an `after_specify` hook, the event is `after_specify`; if `before_plan`, the event is `before_plan`)
-2. Checks `.specify/extensions/git/git-config.yml` for the `auto_commit` section
-3. Looks up the specific event key to see if auto-commit is enabled
-4. Falls back to `auto_commit.default` if no event-specific key exists
-5. Determines the commit message based on `commit_style` (see below)
-6. If enabled and there are uncommitted changes, runs `git add .` + `git commit`
+1. 從 hook 情境判斷事件名稱（例如以 `after_specify` hook 觸發時，事件為 `after_specify`；若為 `before_plan`，事件則為 `before_plan`）
+2. 檢查 `.specify/extensions/git/git-config.yml` 中的 `auto_commit` 區段
+3. 查詢對應的事件鍵，確認是否啟用自動提交
+4. 若沒有事件專屬的鍵，改用 `auto_commit.default`
+5. 依 `commit_style` 決定提交訊息（見下文）
+6. 若已啟用且有未提交的變更，執行 `git add .` + `git commit`
 
-## Commit Message Styles
+## 提交訊息樣式
 
-Controlled by the `commit_style` key in `.specify/extensions/git/git-config.yml`:
+由 `.specify/extensions/git/git-config.yml` 中的 `commit_style` 鍵控制：
 
-- **`fixed`** (default): use the per-command `message` if configured, otherwise a generic `[Spec Kit] Auto-commit <phase> <command>` message.
-- **`conventional`**: inspect the actual changes (`git diff` / `git status`) since the last commit and generate a single-line [Conventional Commit](https://www.conventionalcommits.org/) message (`type(scope): subject`, e.g. `feat: add OAuth specification` or `docs: update implementation plan`) that accurately summarizes the change. Write this message to a temporary file and pass the file's path to the script (see Execution below). The configured `message` values are ignored in this mode.
+- **`fixed`**（預設）：若有設定，使用各命令專屬的 `message`；否則使用通用的 `[Spec Kit] Auto-commit <phase> <command>` 訊息。
+- **`conventional`**：檢視自上次提交以來的實際變更（`git diff`／`git status`），產生單行的 [Conventional Commit](https://www.conventionalcommits.org/) 訊息（`type(scope): subject`，例如 `feat: add OAuth specification` 或 `docs: update implementation plan`），準確摘要這次變更。將訊息寫入暫存檔，並把檔案路徑傳給指令碼（見下方的執行說明）。在此模式下，已設定的 `message` 值會被忽略。
 
-## Execution
+## 執行
 
-Determine the event name from the hook that triggered this command, then run the script:
+從觸發本命令的 hook 判斷事件名稱，然後執行指令碼：
 
-- **Bash**: `.specify/extensions/git/scripts/bash/auto-commit.sh <event_name> [--message-file <path>]`
-- **PowerShell**: `.specify/extensions/git/scripts/powershell/auto-commit.ps1 <event_name> [-MessageFile <path>]`
+- **Bash**：`.specify/extensions/git/scripts/bash/auto-commit.sh <event_name> [--message-file <path>]`
+- **PowerShell**：`.specify/extensions/git/scripts/powershell/auto-commit.ps1 <event_name> [-MessageFile <path>]`
 
-Replace `<event_name>` with the actual hook event (e.g., `after_specify`, `before_plan`, `after_implement`). Only pass a generated message when `commit_style: conventional` is configured — first check `.specify/extensions/git/git-config.yml` for the value of `commit_style`:
+將 `<event_name>` 換成實際的 hook 事件（例如 `after_specify`、`before_plan`、`after_implement`）。只有在設定為 `commit_style: conventional` 時，才傳入產生的訊息——先檢查 `.specify/extensions/git/git-config.yml` 中 `commit_style` 的值：
 
-- If `conventional`: inspect the diff and generate a Conventional Commit message. **Do not interpolate the generated message directly into a shell command string** — its content is derived from repository changes and may contain characters (quotes, `$(...)`, backticks) that a shell would execute or that would break command quoting. Instead, write the message to a temporary file using your file-editing tool (not a shell `echo`/`printf`), then pass that file's path via `--message-file <path>` (Bash) or `-MessageFile <path>` (PowerShell).
-- If `fixed` or absent: run the script with just `<event_name>`; it uses the configured/static message.
+- 若為 `conventional`：檢視差異並產生 Conventional Commit 訊息。**不要將產生的訊息直接插入 shell 命令字串**——其內容來自儲存庫變更，可能包含 shell 會執行或破壞命令引號的字元（引號、`$(...)`、反引號）。應改用檔案編輯工具（而非 shell 的 `echo`／`printf`）將訊息寫入暫存檔，再透過 `--message-file <path>`（Bash）或 `-MessageFile <path>`（PowerShell）傳入該檔案的路徑。
+- 若為 `fixed` 或未設定：只以 `<event_name>` 執行指令碼；它會使用已設定／固定的訊息。
 
-## Configuration
+## 設定
 
-In `.specify/extensions/git/git-config.yml`:
+在 `.specify/extensions/git/git-config.yml` 中：
 
 ```yaml
 # "fixed" (default) uses the messages below; "conventional" asks the agent
@@ -55,9 +55,9 @@ auto_commit:
     message: "[Spec Kit] Add implementation plan"
 ```
 
-## Graceful Degradation
+## 優雅降級
 
-- If Git is not available or the current directory is not a repository: skips with a warning
-- If no config file exists: skips (disabled by default)
-- If no changes to commit: skips with a message
-- If `commit_style: conventional` is set and no generated message was supplied: fails with a clear error instead of silently falling back to the fixed message format
+- 若 Git 不可用，或目前目錄不是儲存庫：略過並顯示警告
+- 若設定檔不存在：略過（預設停用）
+- 若沒有可提交的變更：略過並顯示訊息
+- 若已設定 `commit_style: conventional`，但未提供產生的訊息：以明確的錯誤失敗，而不是靜默改用固定訊息格式

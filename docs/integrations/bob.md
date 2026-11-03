@@ -1,59 +1,39 @@
 # IBM Bob
 
-Install [IBM Bob](https://www.ibm.com/products/bob) before setup.
-The integration key is `bob`; no separate CLI is required.
+設定前請先安裝 [IBM Bob](https://www.ibm.com/products/bob)。整合鍵為 `bob`；不需要另外的 CLI。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration bob
 ```
 
-For an existing Spec Kit project, use `specify integration install bob`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install bob`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Default Skills Layout
+## 預設技能版式
 
-Skills are installed as `.bob/skills/speckit-<command>/SKILL.md`.
-Bob's skills are intent-activated: ask Bob to use the `speckit-specify` skill,
-or `speckit-bug-assess` for the installed bug extension. Spec Kit renders
-`/speckit-<command>` references for skills-mode command dispatch, but that does
-not mean each skill is a separately registered IDE slash command.
+技能會安裝為 `.bob/skills/speckit-<command>/SKILL.md`。Bob 的技能是依意圖啟用的：請要求 Bob 使用 `speckit-specify` 技能，或已安裝 bug 擴充功能的 `speckit-bug-assess`。Spec Kit 會為技能模式的命令分派算繪 `/speckit-<command>` 參照，但這不表示每個技能都是另外註冊的 IDE 斜線命令。
 
-## Legacy Commands and Migration
+## 舊版命令與遷移
 
-Pass `--integration-options="--legacy-commands"` to scaffold the deprecated Bob
-1.x layout (`.bob/commands/*.md`) instead. This flag will be removed in a future
-release.
+傳入 `--integration-options="--legacy-commands"` 可改為產生已淘汰的 Bob 1.x 版式（`.bob/commands/*.md`）。此旗標將在未來版本中移除。
 
-Existing legacy installations can migrate with:
+既有的舊版安裝可以這樣遷移：
 
 ```bash
 specify integration upgrade bob --integration-options="--skills"
 ```
 
-This converts the installation to the skills layout and removes the old
-command files. If preset overrides are installed, migration is rejected because
-preset artifacts cannot yet be reconciled across a layout change. Remove the
-presets, migrate, then reinstall them.
+這會將安裝轉換為技能版式，並移除舊的命令檔案。若已安裝預設集覆寫，遷移會被拒絕，因為預設集成品尚無法跨版式變更進行協調。請先移除預設集、完成遷移，再重新安裝它們。
 
-`--skills` and `--legacy-commands` are mutually exclusive. Without an explicit
-selector, managed legacy command files keep an existing installation in legacy
-mode unless managed Spec Kit skills are present. Merely creating an unrelated
-`.bob/skills/` directory does not migrate it. Legacy command references retain
-the dotted `/speckit.<command>` form.
+`--skills` 與 `--legacy-commands` 互斥。在沒有明確選取器的情況下，若受管理的 Spec Kit 技能不存在，受管理的舊版命令檔案會讓既有安裝保持在舊版模式。僅僅建立一個無關的 `.bob/skills/` 目錄並不會觸發遷移。舊版命令參照保留點記法 `/speckit.<command>` 形式。
 
-## Workflow Permissions
+## 工作流程權限
 
-Workflow dispatch additionally requires the `bob` CLI, even though IDE setup
-does not. It uses `bob run --trust --accept-license` with a positional prompt,
-selecting `-f pretty` for streamed output or `-f json` for captured output.
-The trust and license flags apply to this non-interactive invocation.
+工作流程分派另外需要 `bob` CLI，雖然 IDE 設定不需要。它會以位置參數提示詞使用 `bob run --trust --accept-license`，串流輸出時選取 `-f pretty`，擷取輸出時選取 `-f json`。信任與授權旗標適用於這次非互動呼叫。
 
-The adapter does not forward the workflow `model` setting; Bob selects its
-model through `session.model` in its own settings.
+轉接器不會轉傳工作流程的 `model` 設定；Bob 透過它自己設定中的 `session.model` 選取模型。

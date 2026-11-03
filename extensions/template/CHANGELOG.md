@@ -1,37 +1,37 @@
-# Changelog
+# 變更紀錄
 
-All notable changes to this extension will be documented in this file.
+本檔案記錄本擴充功能的所有重要變更。
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to  [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+格式以 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 為基礎，
+且本專案遵循 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
 ## [Unreleased]
 
-### Planned
+### 規劃中
 
-- Feature ideas for future versions
-- Enhancements
-- Bug fixes
+- 未來版本的功能構想
+- 強化事項
+- 錯誤修正
 
 ## [1.0.0] - YYYY-MM-DD
 
-### Added
+### 新增
 
-- Initial release of extension
-- Command: `/speckit.my-extension.example` - Example command functionality
-- Configuration system with template
-- Documentation and examples
+- 擴充功能初始版本
+- 命令：`/speckit.my-extension.example` - 範例命令功能
+- 含範本的設定系統
+- 文件與範例
 
-### Features
+### 功能
 
-- Feature 1 description
-- Feature 2 description
-- Feature 3 description
+- 功能 1 說明
+- 功能 2 說明
+- 功能 3 說明
 
-### Requirements
+### 需求
 
-- Spec Kit: >=0.1.0
-- External dependencies (if any)
+- Spec Kit：>=0.1.0
+- 外部相依項目（如有）
 
 ---
 

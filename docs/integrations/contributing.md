@@ -1,95 +1,62 @@
-# Contributing Integrations
+# 貢獻整合
 
-This guide covers built-in integrations, external adapter development, and
-community catalog submissions.
+本指南涵蓋內建整合、外部轉接器開發，以及社群目錄投稿。
 
-Start with the [agent integration design](https://github.com/github/spec-kit/blob/main/design/integration.md)
-for implementation contracts, ownership, and delivery requirements.
+實作合約、所有權與交付要求，請從[代理整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md)開始。
 
-## Adding a Built-In Integration
+## 加入內建整合
 
-Built-in integrations are maintained by the Spec Kit core team and ship with the CLI.
+內建整合由 Spec Kit 核心團隊維護，並隨 CLI 一起提供。
 
-For checkout setup, see [local development](../local-development.md). Follow the
-[contributor testing guidance](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#testing-deterministic-behavior)
-and [validation flow](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#recommended-validation-flow),
-then the [integration PR requirements](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#integration-pull-requests).
+簽出設定請參閱[本機開發](../local-development.md)。請遵循[貢獻者測試指引](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#testing-deterministic-behavior)與[驗證流程](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#recommended-validation-flow)，然後參閱[整合 PR 要求](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#integration-pull-requests)。
 
-### Checklist
+### 檢核清單
 
-1. **Create the integration subpackage** under `src/specify_cli/integrations/<package_dir>/`
-   using the integration key with hyphens replaced by underscores for `<package_dir>`.
-2. **Implement the integration class** following [Adding an agent](https://github.com/github/spec-kit/blob/main/design/integration.md#adding-an-agent).
-3. **Register the integration** in `src/specify_cli/integrations/__init__.py`.
-4. **Add tests** under `tests/integrations/test_integration_<package_dir>.py`.
-5. **Add a catalog entry** in `integrations/catalog.json`.
-6. **Update documentation:** add `docs/integrations/<key>.md` and link it from
-   the [integration index](index.md) and [navigation](../toc.yml).
-   Update the [catalog reference](catalog.md) if needed and
-   [integration design](https://github.com/github/spec-kit/blob/main/design/integration.md)
-   if the contract changes.
+1. **建立整合子套件**，位置在 `src/specify_cli/integrations/<package_dir>/`，其中 `<package_dir>` 是將整合鍵中的連字號換成底線後的名稱。
+2. **實作整合類別**，遵循[加入代理](https://github.com/github/spec-kit/blob/main/design/integration.md#adding-an-agent)。
+3. **註冊整合**，位置在 `src/specify_cli/integrations/__init__.py`。
+4. **加入測試**，位置在 `tests/integrations/test_integration_<package_dir>.py`。
+5. **在 `integrations/catalog.json` 中加入目錄項目**。
+6. **更新文件：** 加入 `docs/integrations/<key>.md`，並從[整合索引](index.md)與[導覽](../toc.yml)連結到它。視需要更新[目錄參考](catalog.md)，若合約有變更，也更新[整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md)。
 
-Use the [catalog schema](catalog.md#catalog-schema) for the built-in entry format.
+內建項目的格式請使用[目錄綱要](catalog.md#catalog-schema)。
 
-## Developing an External Adapter
+## 開發外部轉接器
 
-Implement and package your adapter using the
-[external adapter contract](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract).
-The [descriptor reference](catalog.md#integration-descriptor-integrationyml)
-documents package metadata; the [catalog schema](catalog.md#catalog-schema)
-documents published entries.
+使用[外部轉接器合約](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract)實作並封裝你的轉接器。[描述檔參考](catalog.md#integration-descriptor-integrationyml)記載了套件中繼資料；[目錄綱要](catalog.md#catalog-schema)記載了發佈的項目。
 
-For local installation and trust decisions, follow
-[catalog-installed external adapters](cli.md#catalog-installed-external-adapters).
-See [upgrading an integration](cli.md#upgrade-an-integration) for update behavior.
+本機安裝與信任決策請遵循[透過目錄安裝的外部轉接器](cli.md#catalog-installed-external-adapters)。更新行為請參閱[升級整合](cli.md#upgrade-an-integration)。
 
-### Validate Your Adapter
+### 驗證你的轉接器
 
-Test your package through the public path: register a local loopback test
-catalog, install its neutral adapter, start a fresh CLI process, register
-extension/preset contributions, and exercise command/prompt workflow dispatch
-with a harmless process double.
+透過公開途徑測試你的套件：註冊一個本機 loopback 測試目錄，安裝其中立的轉接器，啟動新的 CLI 行程，註冊擴充功能／預設集貢獻，並以無害的行程替身行使命令／提示詞工作流程分派。
 
-Cover the [lifecycle contract](https://github.com/github/spec-kit/blob/main/design/integration.md#storage-loading-and-lifecycle),
-including:
+涵蓋[生命週期合約](https://github.com/github/spec-kit/blob/main/design/integration.md#storage-loading-and-lifecycle)，包括：
 
-- Invalid metadata/classes, trust denial, unsafe archives, setup errors, and
-  upgrade/uninstall failures.
-- Package code kept separate from generated-file manifests; rollback and
-  cleanup that preserve modified files, unrelated user files, independent
-  workflow progress, and concurrent edits.
-- Metadata-only commands without import side effects; forced recovery of
-  damaged packages using local ownership proof, and manual-cleanup warnings
-  when that proof is absent.
-- Symlinked write destinations, reserved roots, unsafe legacy paths, and
-  case-insensitive overlap between primary and legacy output paths.
-- Overlapping project dispatch and lazy relative imports that retain the
-  correct adapter without serializing independent agent processes.
-- For event-capable adapters, event-only extension add/remove and enable/disable
-  in fresh CLI processes, including explicit errors when installed code cannot load.
+- 無效的中繼資料／類別、信任被拒、不安全的封存檔、設定錯誤，以及升級／解除安裝失敗。
+- 套件程式碼與產生的檔案清單分開保存；復原與清理會保留已修改的檔案、無關的使用者檔案、獨立的工作流程進度與並行編輯。
+- 沒有匯入副作用的純中繼資料命令；使用本機所有權證明強制復原受損的套件，以及在缺少該證明時的手動清理警告。
+- 以符號連結指向的寫入目的地、保留的根目錄、不安全的舊版路徑，以及主要與舊版輸出路徑之間不分大小寫的重疊。
+- 重疊的專案分派與延遲相對匯入，會保留正確的轉接器，而不序列化獨立的代理行程。
+- 對於支援事件的轉接器，在新的 CLI 行程中僅針對事件進行擴充功能的加入／移除與啟用／停用，包括已安裝程式碼無法載入時的明確錯誤。
 
-## Submitting to the Community Catalog
+## 投稿到社群目錄
 
-External developers can list integrations in `integrations/catalog.community.json`
-for discovery. Catalog maintainers review listing metadata, not adapter
-implementations; users must vet the code. A listing does not grant installation
-permission.
+外部開發者可以在 `integrations/catalog.community.json` 中列出整合，供他人探索。目錄維護者審查的是列表中繼資料，而不是轉接器實作；使用者必須自行審查程式碼。列表並不授予安裝許可。
 
-### Prerequisites
+### 先決條件
 
-1. **Working external adapter** — packaged and validated as described above.
-2. **Public repository** — hosted on GitHub or similar.
-3. **Documentation** — README with usage instructions.
-4. **License** — open source license file.
+1. **可運作的外部轉接器**——依上述方式封裝並驗證。
+2. **公開儲存庫**——託管在 GitHub 或類似服務上。
+3. **文件**——附有使用說明的 README。
+4. **授權**——開放原始碼授權檔案。
 
-Prepare your entry using the [catalog schema](catalog.md#catalog-schema).
-Metadata must match the packaged descriptor. Publish a pinned archive URL;
-an archive SHA-256 digest is recommended.
+使用[目錄綱要](catalog.md#catalog-schema)準備你的項目。中繼資料必須與封裝的描述檔相符。請發佈釘選的封存檔 URL；建議附上封存檔的 SHA-256 摘要。
 
-### Submission
+### 投稿
 
-1. **Fork** the [spec-kit repository](https://github.com/github/spec-kit)
-2. **Add your entry** under the `integrations` key in `integrations/catalog.community.json`:
+1. **Fork** [spec-kit 儲存庫](https://github.com/github/spec-kit)
+2. **加入你的項目**，位置在 `integrations/catalog.community.json` 的 `integrations` 鍵之下：
 
    ```json
    {
@@ -109,15 +76,15 @@ an archive SHA-256 digest is recommended.
    }
    ```
 
-3. **Open a pull request** with:
-   - Your catalog entry
-   - Link to your integration repository
-   - Confirmation that `integration.yml` is valid
+3. **開啟 pull request**，並附上：
+   - 你的目錄項目
+   - 指向你的整合儲存庫的連結
+   - 確認 `integration.yml` 有效
 
-### Version Updates
+### 版本更新
 
-To update your integration version in the catalog:
+若要更新你在目錄中的整合版本：
 
-1. Release a new version of your integration
-2. Open a PR updating the version, pinned archive URL, and digest (if provided)
-3. Ensure backward compatibility or document breaking changes
+1. 發佈你的整合的新版本
+2. 開啟 PR，更新版本、釘選的封存檔 URL 與摘要（如有提供）
+3. 確保向後相容，或記載破壞性變更

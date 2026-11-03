@@ -1,57 +1,44 @@
-# Generic: Bring Your Own Agent
+# Generic：自備代理
 
-Use the `generic` integration for an AI coding agent not covered by a built-in
-integration. Supply a project-local output directory with `--commands-dir`.
-Spec Kit does not require a particular agent CLI for this integration.
+將 `generic` 整合用於未被內建整合涵蓋的 AI 程式代理。透過 `--commands-dir` 提供專案本機的輸出目錄。本整合不要求 Spec Kit 使用特定的代理 CLI。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe because it uses dynamic
-output paths. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全，因為它使用動態輸出路徑。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration generic --integration-options="--commands-dir .myagent/cmds"
 ```
 
-For an existing Spec Kit project:
+若是既有的 Spec Kit 專案：
 
 ```bash
 specify integration install generic --integration-options="--commands-dir .myagent/cmds"
 ```
 
-See [integration management](cli.md) for activation, upgrades, and removal.
+啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Output Options and Invocation
+## 輸出選項與呼叫方式
 
-| Option | Description |
+| 選項 | 說明 |
 | --- | --- |
-| `--commands-dir <path>` | Required. Project-local output directory for commands or skills. |
-| `--skills` | Write `speckit-<command>/SKILL.md` directories instead of flat `speckit.<command>.md` files. |
+| `--commands-dir <path>` | 必填。命令或技能的專案本機輸出目錄。 |
+| `--skills` | 改寫入 `speckit-<command>/SKILL.md` 目錄，而不是平面的 `speckit.<command>.md` 檔案。 |
 
-Default command references use `/speckit.specify` and `/speckit.bug.assess`.
-Skills mode changes command references and next-step guidance to
-`/speckit-specify` and `/speckit-bug-assess`:
+預設的命令參照使用 `/speckit.specify` 與 `/speckit.bug.assess`。技能模式會將命令參照與後續步驟指引改為 `/speckit-specify` 與 `/speckit-bug-assess`：
 
 ```bash
 specify integration install generic --integration-options="--commands-dir .myagent/skills --skills"
 ```
 
-Your agent must support the selected file layout and invocation style; Spec Kit
-does not add native command discovery to the agent.
+你的代理必須支援所選的檔案版式與呼叫風格；Spec Kit 不會為代理加上原生命令探索能力。
 
-## Extensions
+## 擴充功能
 
-Once `generic` is the active integration, `specify extension add` registers
-extension commands in its configured `--commands-dir`, as command files or
-skills according to `--skills`. `specify extension remove` removes unchanged
-extension-owned artifacts while leaving core commands, user files, and edited
-extension files intact.
+當 `generic` 是使用中的整合時，`specify extension add` 會將擴充功能命令註冊到它設定的 `--commands-dir` 中，依 `--skills` 而定，形式為命令檔案或技能。`specify extension remove` 會移除未變更的擴充功能所屬成品，同時保持核心命令、使用者檔案與已編輯的擴充功能檔案完整無缺。
 
-## Workflow Limitation
+## 工作流程限制
 
-The generic integration does not support CLI dispatch for workflow command or
-prompt steps. Selecting an output directory does not configure an executable
-or teach Spec Kit how to invoke an arbitrary agent CLI.
+generic 整合不支援工作流程命令或提示詞步驟的 CLI 分派。選取輸出目錄並不會設定執行檔，也不會教會 Spec Kit 如何呼叫任意的代理 CLI。

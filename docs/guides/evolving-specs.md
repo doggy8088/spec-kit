@@ -1,136 +1,74 @@
-# Evolving Specs in Existing Projects
+# 在既有專案中演進規格
 
-If the repository has not been initialized with Spec Kit yet, start with
-[Adopting Spec Kit in an Existing Project](existing-projects.md). This page
-covers how to maintain feature artifacts after delivery and deliver subsequent
-changes.
+若儲存庫尚未以 Spec Kit 初始化，請先從[在既有專案中採用 Spec Kit](existing-projects.md)開始。本頁說明交付後如何維護功能產出物，以及如何交付後續變更。
 
-Existing projects need two separate maintenance loops:
+既有專案需要兩個獨立的維護循環：
 
-- **Spec Kit project-file updates** refresh managed commands, scripts,
-  templates, and shared memory files.
-- **Feature artifact evolution** maintains repository-specific `specs/`
-  artifacts according to the team's post-delivery persistence convention.
+- **Spec Kit 專案檔案更新**會刷新受管理的命令、script、範本與共用記憶檔案。
+- **功能產出物演進**會依團隊交付後的持久化慣例，維護儲存庫專屬的 `specs/` 產出物。
 
-Use the [upgrade workflow](../upgrade.md) when you need newer Spec Kit project
-files. Use one of the artifact persistence models below to decide how completed
-feature artifacts are maintained when requirements or implementation insights
-change an existing project. None is required or the default.
+當你需要較新的 Spec Kit 專案檔案時，使用[升級工作流程](../upgrade.md)。用下面其中一種產出物持久化模型，決定當需求或實作心得改變既有專案時，已完成的功能產出物如何維護。三種模型都不是必選，也都不是預設。
 
-For the conceptual model definitions, see
-[Spec Persistence Models](../concepts/spec-persistence.md).
+概念模型的定義，請見[規格持久化模型](../concepts/spec-persistence.md)。
 
-## Shared Feature Delivery Loop
+## 共用的功能交付循環
 
-All three persistence models use the same delivery/completeness process:
-specify -> plan -> tasks -> implement -> converge. Repeat implementation and
-convergence until the agreed feature is complete.
+三種持久化模型使用相同的交付／完整性流程：specify → plan → tasks → implement → converge。重複實作與收斂，直到約定的功能完成。
 
-For a new feature or a later change requiring implementation:
+對於需要實作的新功能或後續變更：
 
-1. Make the intended contract explicit in `spec.md`. Use `/speckit.specify` to
-   create a new feature directory under `specs/`, or revise an existing spec
-   according to your team's persistence convention.
-2. Run `/speckit.plan` or revise `plan.md` to define the implementation approach.
-3. Run `/speckit.tasks` or revise `tasks.md` to derive the work breakdown.
-   Run `/speckit.analyze` before implementation to catch cross-artifact gaps.
-4. Run `/speckit.implement` and review the resulting code and artifact diffs.
-5. Run `/speckit.converge` to assess implementation against the spec, plan, and
-   tasks, governed by the constitution. If it appends tasks for remaining gaps,
-   repeat `/speckit.implement` and `/speckit.converge` until the agreed feature
-   is complete.
+1. 在 `spec.md` 中把預期契約寫明確。用 `/speckit.specify` 在 `specs/` 下建立新的功能目錄，或依團隊的持久化慣例修訂既有規格。
+2. 執行 `/speckit.plan` 或修訂 `plan.md`，定義實作方式。
+3. 執行 `/speckit.tasks` 或修訂 `tasks.md`，推導工作分解。在實作前執行 `/speckit.analyze`，找出跨產出物的缺口。
+4. 執行 `/speckit.implement`，並檢視產生的程式碼與產出物差異。
+5. 執行 `/speckit.converge`，在憲章治理下，對照規格、計畫與任務評估實作。若它為剩餘缺口追加了任務，就重複 `/speckit.implement` 與 `/speckit.converge`，直到約定的功能完成。
 
-Converge is append-only: its only possible write is adding tasks to `tasks.md`.
-It does not choose a persistence strategy or rewrite the artifacts to accept
-code as a replacement for documented intent.
+Converge 是僅追加的：它唯一可能的寫入就是把任務加入 `tasks.md`。它不會選擇持久化策略，也不會改寫產出物來接受以程式碼取代已記錄的意圖。
 
-Core has no dedicated command that automatically reconciles differences among
-`spec.md`, `plan.md`, and `tasks.md`. `/speckit.analyze` reports inconsistencies
-without changing the artifacts. A team can reconcile them directly, or an
-extension can provide commands or hooks that do so during or after delivery
-according to that extension's documented behavior. Those actions do not change
-the responsibilities of the core commands.
+核心沒有專門的命令能自動對帳 `spec.md`、`plan.md` 與 `tasks.md` 之間的差異。`/speckit.analyze` 會回報不一致，但不變更產出物。團隊可以直接對帳，或由擴充功能依其文件所述的行為，在交付期間或之後提供命令或 hook 來完成。這些動作不會改變核心命令的職責。
 
-Discoveries may arise during delivery under any model. If they lead to an
-agreed change of intent, make the revised contract explicit in the artifacts
-and deliver against it. Reconciliation may occur during delivery, but the
-maintenance choices below describe what the team persists after delivery; they
-do not replace this loop.
+在任何模型下，交付期間都可能出現新發現。若這些發現導致意圖的約定變更，請在產出物中把修訂後的契約寫明確，並對照它來交付。對帳可能發生在交付期間，但下面的維護選項描述的是團隊在交付後保留什麼；它們不會取代這個循環。
 
-## Flow-Forward Spec
+## 向前流動規格（Flow-Forward Spec）
 
-Use flow-forward when each completed feature directory should remain a
-historical record.
+當每個已完成的功能目錄都應保留為歷史紀錄時，使用向前流動。
 
-After delivery, retain the completed artifacts without changing them. For
-another feature or a follow-up change requiring implementation, create a new
-feature directory and use the shared delivery loop above.
+交付後，保留已完成的產出物，不做變更。對於另一項功能，或需要實作的後續變更，建立新的功能目錄，並使用上面的共用交付循環。
 
-The previous feature directory remains intact for audit, comparison, or
-explaining how the project reached its current state. Use clear feature names or
-cross-links when a new directory supersedes or extends earlier work.
+先前的功能目錄保持完整，可供稽核、比較，或說明專案如何走到目前的狀態。當新目錄取代或擴展先前的工作時，使用清楚的功能名稱或交叉連結。
 
-## Living Spec
+## 活規格（Living Spec）
 
-Use living spec when `spec.md` is the contract and `plan.md` and `tasks.md` are
-derived from it.
+當 `spec.md` 是契約，而 `plan.md` 與 `tasks.md` 由它衍生時，使用活規格。
 
-After delivery, maintain `spec.md` as the contract. When intended behavior
-changes, revise the existing `spec.md` first. Then reconcile downstream
-artifacts so they match the updated spec:
+交付後，把 `spec.md` 維護為契約。當預期行為變更時，先修訂既有的 `spec.md`。接著對帳下游產出物，讓它們與更新後的規格一致：
 
-1. Start from a clean working tree or a dedicated branch so every artifact
-   change is reviewable.
-2. Update `spec.md` with the intended contract.
-3. Reconcile `plan.md` and `tasks.md` directly or through an extension according
-   to the team's documented convention.
-4. Run `/speckit.analyze` to report any remaining gaps between the spec, plan,
-   and tasks.
+1. 從乾淨的工作樹或專用分支開始，讓每一項產出物變更都可審查。
+2. 用預期契約更新 `spec.md`。
+3. 依團隊記錄的慣例，直接或透過擴充功能對帳 `plan.md` 與 `tasks.md`。
+4. 執行 `/speckit.analyze`，回報規格、計畫與任務之間任何剩餘的缺口。
 
-These steps maintain the artifact set; they do not deliver changed behavior.
-If the revised contract requires implementation, use the shared delivery loop
-above against those explicit intended artifacts.
+這些步驟維護的是產出物組合；它們不交付變更後的行為。若修訂後的契約需要實作，就對照那些明確的預期產出物，使用上面的共用交付循環。
 
-Preserve important implementation rationale before replacing derived artifacts.
-If a plan or task list contains decisions that still matter, carry them forward
-explicitly.
+在取代衍生產出物之前，先保留重要的實作理由。若某份計畫或任務清單含有仍然重要的決策，請明確地把它們帶往後續。
 
-## Flow-Back Spec
+## 回流規格（Flow-Back Spec）
 
-Use flow-back when accepted discoveries inform maintenance across the artifact
-set after delivery.
+當已接受的發現要在交付後回饋整套產出物的維護時，使用回流規格。
 
-A discovery may have originated in `spec.md`, `plan.md`, `tasks.md`, or the
-implementation, including during delivery. For post-delivery maintenance,
-the team decides which discoveries to accept and brings the artifacts into
-alignment with that agreed direction:
+一項發現可能源自 `spec.md`、`plan.md`、`tasks.md` 或實作，包括在交付期間。對於交付後的維護，團隊決定接受哪些發現，並讓產出物與那個約定的方向一致：
 
-1. Capture the discovery in the artifact closest to the work.
-2. Decide whether it changes intended behavior, implementation strategy, task
-   breakdown, or only code.
-3. Update any other artifacts that now disagree with the accepted direction.
-4. Run `/speckit.analyze` to check for gaps across `spec.md`, `plan.md`, and
-   `tasks.md`.
+1. 把發現記錄在最接近該工作的產出物中。
+2. 決定它改變的是預期行為、實作策略、任務分解，還是只有程式碼。
+3. 更新其他現在與已接受方向不一致的產出物。
+4. 執行 `/speckit.analyze`，檢查 `spec.md`、`plan.md` 與 `tasks.md` 之間的缺口。
 
-The implementation provides evidence for the team's decision; accepting code
-does not automatically make it the intended contract. Reconcile the artifacts
-directly or through an extension. Analyze and converge do not provide automatic
-all-artifact reconciliation, and no core amendment command is required. If the
-agreed direction requires implementation, use the shared delivery loop above
-against explicit intended artifacts.
+實作為團隊的決策提供證據；接受程式碼並不會自動使它成為預期契約。直接對帳產出物，或透過擴充功能對帳。Analyze 與 converge 不提供自動的全產出物對帳，也不需要核心的修訂命令。若約定的方向需要實作，就對照明確的預期產出物，使用上面的共用交付循環。
 
-Flow-back is flexible, but it requires discipline. Do not leave a lower-level
-change in `tasks.md` or code if `spec.md` still says something different and the
-spec is meant to remain trustworthy.
+回流很彈性，但需要紀律。若 `spec.md` 仍說著不同的內容、而規格本應保持可信，就不要把較低層級的變更只留在 `tasks.md` 或程式碼裡。
 
-## Before Updating Spec Kit Project Files
+## 更新 Spec Kit 專案檔案之前
 
-Before refreshing Spec Kit project files with the terminal command
-`specify init --here --force --integration <your-agent>`, protect any
-project-specific material that lives outside `specs/`, especially
-`.specify/memory/constitution.md` and customized files under
-`.specify/templates/` or `.specify/scripts/`. Use `<your-agent>` for the AI
-coding agent integration used by the target project.
+用終端機命令 `specify init --here --force --integration <your-agent>` 刷新 Spec Kit 專案檔案之前，請保護任何位於 `specs/` 之外、專案專屬的資料，尤其是 `.specify/memory/constitution.md`，以及 `.specify/templates/` 或 `.specify/scripts/` 下的自訂檔案。`<your-agent>` 請填目標專案所使用的 AI 程式代理整合。
 
-Your `specs/` directory is not part of the template package, but shared project
-files can be overwritten by a forced refresh.
+你的 `specs/` 目錄不屬於範本套件的一部分，但共用的專案檔案可能被強制刷新覆寫。

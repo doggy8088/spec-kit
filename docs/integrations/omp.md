@@ -1,31 +1,23 @@
 # Oh My Pi
 
-Install [Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent) before setup.
-The integration key is `omp`.
+設定前請先安裝 [Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)。整合鍵為 `omp`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration omp
 ```
 
-For an existing Spec Kit project, use `specify integration install omp`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install omp`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Commands
+## 已安裝的命令
 
-Markdown slash commands are installed under `.omp/commands/`.
-Invoke them in the agent's chat using dotted notation, for example
-`/speckit.specify` or `/speckit.bug.assess` for the installed bug extension.
+Markdown 斜線命令會安裝在 `.omp/commands/` 之下。在代理的聊天中以點記法呼叫它們，例如 `/speckit.specify`，或已安裝 bug 擴充功能的 `/speckit.bug.assess`。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Workflow steps use `omp --print <prompt>`; `--print` enables one-shot mode
-and the prompt is positional. The adapter forwards a configured `--model` and
-uses `--mode json`, not `--output-format`, for structured output.
-There are no integration-specific setup options.
+工作流程步驟使用 `omp --print <prompt>`；`--print` 會啟用一次性模式，提示詞以位置參數傳入。轉接器會轉傳已設定的 `--model`，並以 `--mode json`（而非 `--output-format`）取得結構化輸出。沒有整合專屬的設定選項。

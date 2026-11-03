@@ -1,11 +1,11 @@
-# One-time Usage (uvx)
+# 一次性使用（uvx）
 
-If you want to try Spec Kit without installing it permanently, use `uvx` to run it directly. This downloads the tool into a temporary environment that is discarded after the command finishes.
+若你想試用 Spec Kit 而不想永久安裝，可以使用 `uvx` 直接執行它。這會將工具下載到暫存環境中，指令結束後即丟棄。
 
 > [!NOTE]
-> The commands below require **[uv](https://docs.astral.sh/uv/)**. If you see `command not found: uvx`, [install uv first](uv.md).
+> 下列指令需要 **[uv](https://docs.astral.sh/uv/)**。若你看到 `command not found: uvx`，請[先安裝 uv](uv.md)。
 
-## Run Specify CLI
+## 執行 Specify CLI
 
 ```bash
 # Create a new project (latest from main)
@@ -22,12 +22,12 @@ uvx --from git+https://github.com/github/spec-kit.git specify init . --integrati
 uvx --from git+https://github.com/github/spec-kit.git specify init --here --integration copilot
 ```
 
-## When to use persistent installation instead
+## 何時改用永久安裝
 
-If you plan to use Spec Kit regularly, a persistent installation is recommended:
+若你打算經常使用 Spec Kit，建議採用永久安裝：
 
-- Tool stays installed and available in PATH
-- No re-download on every invocation
-- Better tool management with `uv tool list`, `uv tool upgrade`, `uv tool uninstall`
+- 工具會保持安裝狀態，且在 PATH 中隨時可用
+- 每次呼叫都不必重新下載
+- 以 `uv tool list`、`uv tool upgrade`、`uv tool uninstall` 進行更完善的工具管理
 
-See the main [Installation Guide](../installation.md) for persistent installation instructions.
+永久安裝的說明請參閱主要的[安裝指南](../installation.md)。

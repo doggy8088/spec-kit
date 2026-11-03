@@ -1,23 +1,23 @@
-## Description
+## 說明
 
-<!-- What does this PR do? Why is it needed? -->
+<!-- 這個 PR 做了什麼？為什麼需要？ -->
 
-## Testing
+## 測試
 
-<!-- How did you test your changes? -->
+<!-- 你如何測試你的變更？ -->
 
-- [ ] Tested locally with `uv run specify --help`
-- [ ] Ran existing tests with `uv sync && uv run pytest`
-- [ ] Tested with a sample project (if applicable)
+- [ ] 已在本機以 `uv run specify --help` 測試
+- [ ] 已以 `uv sync && uv run pytest` 執行既有測試
+- [ ] 已以範例專案測試（如適用）
 
-## AI Disclosure
+## AI 揭露
 
-<!-- Per our Contributing guidelines, AI assistance must be disclosed. -->
-<!-- See: https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#ai-contributions-in-spec-kit -->
+<!-- 依我們的貢獻指南，必須揭露 AI 協助。 -->
+<!-- 參見：https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#ai-contributions-in-spec-kit -->
 
-- [ ] I **did not** use AI assistance for this contribution
-- [ ] I **did** use AI assistance (fill in the disclosure below)
+- [ ] 我**未**為本次貢獻使用 AI 協助
+- [ ] 我**有**使用 AI 協助（填寫下方揭露內容）
 
-<!-- If you used AI assistance, replace "N/A" below with a free-form disclosure that names the agent/tool, model(s), settings/mode (reasoning effort; autonomous vs. human-supervised), and extent (docs vs. code generation). This does not change how much scrutiny your PR receives — the same evidence bar applies to everyone. It just gives maintainers visibility into model/agent usage. -->
+<!-- 若你使用了 AI 協助，請將下方「N/A」替換為自由形式的揭露內容，寫明代理／工具名稱、模型、設定／模式（推理強度；自主或人工監督）以及範圍（文件或程式碼產生）。這不會改變你的 PR 受到的審查程度——所有人都適用相同的證據標準。這只是讓維護者能瞭解模型／代理的使用情形。 -->
 
-**AI disclosure:** N/A
+**AI 揭露：** N/A

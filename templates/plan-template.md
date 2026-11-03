@@ -1,50 +1,49 @@
-# Implementation Plan: [FEATURE]
+# 實作計畫：[FEATURE]
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**分支**：`[###-feature-name]` | **日期**：[DATE] | **規格**：[link]
 
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**輸入**：功能規格，來自 `/specs/[###-feature-name]/spec.md`
 
-**Note**: This template is filled in by the `__SPECKIT_COMMAND_PLAN__` command; its definition describes the execution workflow.
+**注意**：這份範本由 `__SPECKIT_COMMAND_PLAN__` 命令填入；其定義說明了執行工作流程。
 
-## Summary
+## 摘要
 
 [Extract from feature spec: primary requirement + technical approach from research]
 
-## Technical Context
+## 技術背景
 
 <!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
+  需要處理：將這一節的內容換成專案的技術細節。
+  這裡的結構僅供參考，用來引導反覆迭代的過程。
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
+**語言／版本**：[e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
 
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+**主要相依套件**：[e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+**儲存**：[if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
+**測試**：[e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
 
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**目標平台**：[e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
+**專案類型**：[e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
 
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+**效能目標**：[domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
 
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
+**限制**：[domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
 
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**規模／範圍**：[domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
-## Constitution Check
+## 憲章檢查
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+*門檻：必須在 Phase 0 研究之前通過。Phase 1 設計之後再檢查一次。*
 
 [Gates determined based on constitution file]
 
-## Project Structure
+## 專案結構
 
-### Documentation (this feature)
+### 文件（本功能）
 
 ```text
 specs/[###-feature]/
@@ -56,12 +55,11 @@ specs/[###-feature]/
 └── tasks.md             # Phase 2 output (__SPECKIT_COMMAND_TASKS__ command - NOT created by __SPECKIT_COMMAND_PLAN__)
 ```
 
-### Source Code (repository root)
+### 原始碼（儲存庫根目錄）
 <!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
+  需要處理：將下方的佔位目錄樹換成本功能的實際版面配置。
+  刪除未使用的選項，並以真實路徑展開所選的結構（例如 apps/admin、
+  packages/something）。交付的計畫不得包含 Option 標籤。
 -->
 
 ```text
@@ -100,14 +98,14 @@ ios/ or android/
 └── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
+**結構決策**：[Document the selected structure and reference the real
 directories captured above]
 
-## Complexity Tracking
+## 複雜度追蹤
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
+> **只有在憲章檢查出現必須說明的違規時才填寫**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
+| 違規 | 為何需要 | 為何拒絕更簡單的替代方案 |
 |-----------|------------|-------------------------------------|
 | [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
 | [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

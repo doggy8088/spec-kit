@@ -1,48 +1,43 @@
 # Agentic SDD
 
-The `/speckit.*` slash commands drive the core Spec-Driven Development (SDD) process — an **agentic process** your coding agent runs step by step. For a guided, end-to-end run see the [Quick Start Guide](../quickstart.md); this page is the detailed reference for each command — including arguments, output, and how they interact. For the philosophy behind the process, see [What is SDD?](../concepts/sdd.md). For bug triage, see [Agentic Bug Fix](agentic-bugfix.md).
+`/speckit.*` 斜線命令驅動核心規格驅動開發（SDD）流程，這是由程式代理逐步執行的 **agentic 流程**。如需引導式的端到端執行，請參見[快速入門指南](../quickstart.md)；本頁是每個命令的詳細參考，包括參數、輸出與它們之間的互動。如需流程背後的理念，請參見[什麼是 SDD？](../concepts/sdd.md)。錯誤分流請參見 [Agentic 錯誤修復](agentic-bugfix.md)。
 
-The commands are designed to run in order, but only `/speckit.specify` is strictly required before `/speckit.plan`. The clarify, checklist, and analyze commands are quality gates you add for anything with meaningful ambiguity.
+這些命令設計為依序執行，但只有 `/speckit.specify` 是在 `/speckit.plan` 之前嚴格必須的。釐清、檢核清單與分析命令是品質關卡，適用於任何有明顯模糊之處的情況。
 
-For evaluating an idea before committing to a specification, see
-[Agentic Idea Assessment](agentic-assessment.md). Assessment is optional and
-independent of the SDD process.
+若要在投入規格前評估想法，請參見[Agentic 想法評估](agentic-assessment.md)。評估是選用的，且獨立於 SDD 流程。
 
 > [!NOTE]
-> Commands are written in `/speckit.*` form throughout this page. GitHub Copilot's default skills mode uses `/speckit-*`; some other agents use `$speckit-*` (e.g. Codex, ZCode) or `/skill:speckit-*` (e.g. Kimi). See [Command invocation](../integrations/cli.md#command-invocation).
+> 本頁的命令一律以 `/speckit.*` 形式撰寫。GitHub Copilot 的預設 skills 模式使用 `/speckit-*`；部分其他代理使用 `$speckit-*`（例如 Codex、ZCode）或 `/skill:speckit-*`（例如 Kimi）。請參見[命令呼叫方式](../integrations/cli.md#command-invocation)。
 
 ```text
 /speckit.constitution -> /speckit.specify -> /speckit.clarify -> /speckit.plan -> /speckit.checklist -> /speckit.tasks -> /speckit.analyze -> /speckit.implement -> /speckit.converge
 ```
 
-## Command overview
+## 命令總覽
 
-After `specify init`, these commands are available in the selected integration.
-Integrations that support optional skills mode can select it with
-`--integration-options="--skills"`; some integrations, including Copilot, use
-skills by default.
+在 `specify init` 之後，這些命令可在所選整合中使用。支援選用 skills 模式的整合，可以用 `--integration-options="--skills"` 選取；部分整合（包括 Copilot）預設使用 skills。
 
-| Command | Agent skill | Purpose |
+| 命令 | 代理技能 | 用途 |
 | --- | --- | --- |
-| `/speckit.constitution` | `speckit-constitution` | Establish or update project principles |
-| `/speckit.specify` | `speckit-specify` | Define requirements and user stories |
-| `/speckit.plan` | `speckit-plan` | Create the technical implementation plan |
-| `/speckit.tasks` | `speckit-tasks` | Break the plan into actionable tasks |
-| `/speckit.implement` | `speckit-implement` | Execute the tasks |
-| `/speckit.converge` | `speckit-converge` | Assess implementation against the artifacts and append remaining work |
-| `/speckit.clarify` | `speckit-clarify` | Resolve ambiguity before planning (optional quality gate; formerly `/quizme`) |
-| `/speckit.analyze` | `speckit-analyze` | Check artifact consistency after tasks and before implementation (optional quality gate) |
-| `/speckit.checklist` | `speckit-checklist` | Generate requirements-quality checklists (optional quality gate) |
+| `/speckit.constitution` | `speckit-constitution` | 建立或更新專案原則 |
+| `/speckit.specify` | `speckit-specify` | 定義需求與使用者故事 |
+| `/speckit.plan` | `speckit-plan` | 建立技術實作計畫 |
+| `/speckit.tasks` | `speckit-tasks` | 將計畫拆解為可執行的任務 |
+| `/speckit.implement` | `speckit-implement` | 執行任務 |
+| `/speckit.converge` | `speckit-converge` | 對照成品評估實作，並附加剩餘工作 |
+| `/speckit.clarify` | `speckit-clarify` | 在規劃前解決模糊（選用品質關卡；原名 `/quizme`） |
+| `/speckit.analyze` | `speckit-analyze` | 在任務後、實作前檢查成品一致性（選用品質關卡） |
+| `/speckit.checklist` | `speckit-checklist` | 產生需求品質檢核清單（選用品質關卡） |
 
 ## `/speckit.constitution`
 
-Creates or updates the project **constitution** — the guiding principles that every later phase is evaluated against — and keeps dependent templates in sync. Run it once up front and update it whenever your principles change. Pass the principles as arguments.
+建立或更新專案**憲章**，也就是每個後續階段都要對照評估的指導原則，並讓相依範本保持同步。在一開始執行一次，每當原則變更時再更新。將原則作為參數傳入。
 
 ```text
 /speckit.constitution This project follows a "Library-First" approach. All features must be implemented as standalone libraries first. We use TDD strictly. We prefer functional programming patterns.
 ```
 
-For a more general starting point:
+更通用的起點：
 
 ```text
 /speckit.constitution Create principles focused on code quality, testing standards, user experience consistency, and performance requirements.
@@ -50,9 +45,9 @@ For a more general starting point:
 
 ## `/speckit.specify`
 
-Creates or updates the feature **specification** from a natural-language description. Focus on the **what** and **why** — the user-facing behavior and goals — not the tech stack, which belongs in `/speckit.plan`.
+從自然語言描述建立或更新功能**規格**。聚焦於**做什麼**與**為什麼**，也就是使用者面向的行為與目標，而非技術堆疊，技術堆疊屬於 `/speckit.plan`。
 
-This workflow may also maintain `checklists/requirements.md`, the built-in spec-quality checklist that `/speckit.specify` creates and `/speckit.clarify` re-evaluates. That lifecycle is separate from custom checklists generated by `/speckit.checklist`.
+此工作流程也可能維護 `checklists/requirements.md`，這是內建的規格品質檢核清單，由 `/speckit.specify` 建立、由 `/speckit.clarify` 重新評估。該生命週期與 `/speckit.checklist` 產生的自訂檢核清單是分開的。
 
 ```text
 /speckit.specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
@@ -60,25 +55,25 @@ This workflow may also maintain `checklists/requirements.md`, the built-in spec-
 
 ## `/speckit.clarify`
 
-Asks up to five targeted questions about underspecified areas of the current spec and encodes your answers back into `spec.md`. Run it as many times as needed before planning, each time tackling a different area. Optionally pass a focus area as an argument.
+針對目前規格中未明確的區域，提出最多五個有針對性的問題，並將你的回答編碼回 `spec.md`。在規劃前視需要多次執行，每次處理不同區域。可以選用將聚焦區域作為參數傳入。
 
 ```text
 /speckit.clarify Focus on the task card behavior: status changes, comment limits, and who can be assigned.
 ```
 
-Clarifying before planning keeps you from designing on top of ambiguity. If `/speckit.analyze` later surfaces requirement gaps, come back and run `/speckit.clarify` (or `/speckit.specify`) again.
+在規劃前釐清，可避免在模糊之上做設計。若 `/speckit.analyze` 之後發現需求缺口，請回來再次執行 `/speckit.clarify`（或 `/speckit.specify`）。
 
-When `checklists/requirements.md` exists, `/speckit.clarify` may update its evaluated state as part of tightening the spec. This exception applies only to the built-in requirements checklist, not to custom review checklists.
+當 `checklists/requirements.md` 存在時，`/speckit.clarify` 可能會在收緊規格的過程中更新其評估狀態。此例外只適用於內建的需求檢核清單，不適用於自訂審查檢核清單。
 
 ## `/speckit.plan`
 
-Runs the planning process to generate design artifacts from the spec. This is where implementation detail belongs — provide your tech stack, architecture, and technical constraints as arguments.
+執行規劃流程，從規格產生設計成品。實作細節屬於此處，請將技術堆疊、架構與技術限制作為參數提供。
 
 ```text
 /speckit.plan Use .NET Aspire with Postgres. The frontend is Blazor Server with drag-and-drop boards and real-time updates. Expose REST APIs for projects, tasks, and notifications.
 ```
 
-For the photo-album example above:
+以上述相簿範例為例：
 
 ```text
 /speckit.plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
@@ -86,11 +81,11 @@ For the photo-album example above:
 
 ## `/speckit.checklist`
 
-Generates a quality checklist for the feature — think of it as **"unit tests for your requirements."** Rather than testing code, it checks whether the spec itself is complete, clear, unambiguous, and consistent (for example: "Are the drag-and-drop rules defined for every column?", "Is behavior specified for a deleted assigned user?").
+為功能產生品質檢核清單，可以將它想成是**「需求的單元測試」**。它不是測試程式碼，而是檢查規格本身是否完整、清楚、無歧義且一致（例如：「是否為每一欄都定義了拖放規則？」、「是否為被刪除的被指派使用者指定了行為？」）。
 
-Custom checklists generated by this command are reviewer-owned requirements-quality review artifacts. An agent may help evaluate them when explicitly asked, but implementation must not silently self-approve them. In a custom checklist, `[x]` means the reviewer determined the requirements-quality criterion is satisfied; it does not mean implementation work is complete.
+此命令產生的自訂檢核清單是審查者擁有的需求品質審查成品。代理在被明確要求時可以協助評估，但實作不得默默自行核准。在自訂檢核清單中，`[x]` 表示審查者判定需求品質標準已滿足；它不表示實作工作已完成。
 
-Run it with no arguments for a broad pass, or pass a focus area to target one aspect:
+不帶參數執行可做廣泛的檢查，或傳入聚焦區域以針對某個面向：
 
 ```text
 /speckit.checklist
@@ -100,11 +95,11 @@ Run it with no arguments for a broad pass, or pass a focus area to target one as
 /speckit.checklist Focus on the Kanban board interactions and comment permissions.
 ```
 
-Review the generated checklist. If it surfaces gaps, loop back to `/speckit.clarify` or `/speckit.specify` to tighten the spec before breaking the work down, then mark each custom checklist item `[x]` only after the requirements-quality criterion has been reviewed and satisfied.
+檢視產生的檢核清單。若它發現缺口，請回到 `/speckit.clarify` 或 `/speckit.specify` 收緊規格，然後再拆解工作，且只有在需求品質標準已審查並滿足後，才將每個自訂檢核清單項目標為 `[x]`。
 
 ## `/speckit.tasks`
 
-Generates an actionable, dependency-ordered `tasks.md` from the design artifacts. Tasks are organized into phases: **Setup**, **Foundational** (blocking prerequisites), then **one phase per user story** in priority order, and a final **Polish** phase for cross-cutting concerns. Tests are generated within a user story's phase when requested rather than as a separate phase, and tasks are marked for parallel execution where possible.
+從設計成品產生可執行、依相依順序排列的 `tasks.md`。任務組織為多個階段：**Setup**、**Foundational**（阻擋性的前置條件），然後**每個使用者故事一個階段**（依優先順序），以及最後處理橫切關注點的 **Polish** 階段。測試在被要求時，於使用者故事的階段內產生，而非獨立階段，且任務在可行的情況下會標示為可平行執行。
 
 ```text
 /speckit.tasks
@@ -112,27 +107,27 @@ Generates an actionable, dependency-ordered `tasks.md` from the design artifacts
 
 ## `/speckit.analyze`
 
-Performs a **read-only** cross-artifact consistency and quality analysis across `spec.md`, `plan.md`, and `tasks.md`, reporting conflicts, gaps, and ambiguities (for example a task with no matching requirement, or a plan choice that contradicts the spec). It never edits files — it produces a report and can optionally suggest remediations for you to approve.
+對 `spec.md`、`plan.md` 與 `tasks.md` 執行**唯讀**的跨成品一致性與品質分析，回報衝突、缺口與模糊（例如沒有對應需求的任務，或與規格矛盾的計畫選擇）。它絕不編輯檔案，只產生報告，並可選用提出供你核准的修復建議。
 
 ```text
 /speckit.analyze
 ```
 
-Run it before implementing, while the artifacts can still be adjusted cheaply. If it surfaces issues, **return to the earlier step that owns them** and fix them at the source — `/speckit.specify` or `/speckit.clarify` for requirement problems, `/speckit.plan` for design problems, `/speckit.tasks` to regenerate the task list — then re-run `/speckit.analyze` until it comes back clean. You can also run `/speckit.analyze` again after implementation as an extra review.
+在實作前執行，此時成品仍可低成本調整。若它發現問題，**回到擁有該問題的較早步驟**，並在源頭修正，需求問題用 `/speckit.specify` 或 `/speckit.clarify`，設計問題用 `/speckit.plan`，任務清單用 `/speckit.tasks` 重新產生，然後再次執行 `/speckit.analyze`，直到結果乾淨。你也可以在實作後再次執行 `/speckit.analyze` 作為額外審查。
 
 ## `/speckit.implement`
 
-Executes the tasks in `tasks.md`, running each phase in dependency order and respecting parallel markers.
+執行 `tasks.md` 中的任務，依相依順序執行每個階段，並尊重平行標記。
 
-Before executing tasks, it reads checklist checkbox state as a gate. Checklist markers are read-only for this command: `/speckit.implement` counts checked and unchecked items and asks before proceeding when any are unchecked, but it must not change checklist markers. For custom checklists, checked items mean reviewer approval of requirements quality, not completed implementation work.
+在執行任務前，它會讀取檢核清單的勾選狀態作為關卡。檢核清單標記對此命令而言是唯讀的：`/speckit.implement` 會計算已勾選與未勾選的項目數，並在有任何未勾選時於繼續前先詢問，但不得變更檢核清單標記。對於自訂檢核清單，已勾選項目表示審查者核准了需求品質，不是實作工作已完成。
 
-For a small feature, run it once to build everything:
+對於小型功能，執行一次即可建置全部：
 
 ```text
 /speckit.implement
 ```
 
-For a large feature, work in stages to avoid overwhelming the agent's context — scope each run with an argument, validate the result, then continue:
+對於大型功能，請分階段進行，避免壓垮代理的上下文，每次執行以參數限定範圍，驗證結果，然後再繼續：
 
 ```text
 /speckit.implement Implement only the Setup and Foundational phases: project scaffolding and the project/task data model with basic CRUD. Stop before the user-story features.
@@ -142,17 +137,17 @@ For a large feature, work in stages to avoid overwhelming the agent's context �
 /speckit.implement Now implement the Kanban board user story: drag-and-drop between columns.
 ```
 
-Verify each stage works before moving to the next.
+每個階段都要驗證可運作後，再進入下一個階段。
 
 ## `/speckit.converge`
 
-Assesses the codebase against the feature's spec, plan, and tasks to confirm nothing was missed. It is **append-only**: it never edits or deletes code, and its only possible write is adding tasks to `tasks.md`. Run it only after `/speckit.implement` has run on the current `tasks.md`.
+對照功能的規格、計畫與任務評估程式碼庫，確認沒有遺漏。它是**僅附加**的：絕不編輯或刪除程式碼，其唯一可能的寫入是將任務新增到 `tasks.md`。只有在 `/speckit.implement` 已對目前的 `tasks.md` 執行後，才執行它。
 
 ```text
 /speckit.converge
 ```
 
-It first prints a severity-graded findings summary, then resolves to one of two outcomes:
+它會先列印依嚴重程度分級的發現摘要，然後歸結為兩種結果之一：
 
-- **Converged** — no gaps found. `tasks.md` is left byte-for-byte unchanged and you'll see a clean result like `✅ Converged — the implementation satisfies the spec, plan, and tasks.` You're done; proceed to review or open a PR.
-- **Tasks appended** — gaps found. Converge appends them as new tasks under a Convergence section in `tasks.md` and tells you how many. Run `/speckit.implement` again to complete them, then `/speckit.converge` once more. Each pass finds fewer items; repeat until it reports converged.
+- **已收斂**——未發現缺口。`tasks.md` 保持逐位元不變，你會看到乾淨的結果，例如 `✅ Converged — the implementation satisfies the spec, plan, and tasks.`。你已完成；請進行審查或開啟 PR。
+- **已附加任務**——發現缺口。Converge 會將它們作為新任務附加到 `tasks.md` 的 Convergence 區段下，並告訴你數量。再次執行 `/speckit.implement` 完成它們，然後再執行一次 `/speckit.converge`。每一輪發現的項目會更少；重複直到它回報已收斂。

@@ -1,34 +1,25 @@
 # Muse Code
 
-Install [Muse Code](https://dev.meta.ai/docs/muse-code) before setup.
-The integration key is `muse`.
+設定前請先安裝 [Muse Code](https://dev.meta.ai/docs/muse-code)。整合鍵為 `muse`。
 
-## Multi-Install Safety
+## 多重安裝安全性
 
-This integration is not declared multi-install safe. See the
-[shared multi-install rules](cli.md#can-i-install-multiple-integrations-in-the-same-project).
+本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
 
-## Setup
+## 設定
 
 ```bash
 specify init my-project --integration muse
 ```
 
-For an existing Spec Kit project, use `specify integration install muse`.
-See [integration management](cli.md) for activation, upgrades, and removal.
+若是既有的 Spec Kit 專案，請使用 `specify integration install muse`。啟用、升級與移除方式請參閱[整合管理](cli.md)。
 
-## Installed Skills
+## 已安裝的技能
 
-Skills are installed as `.agents/skills/speckit-<command>/SKILL.md`.
-Invoke them in the agent's chat, for example `/speckit-specify` or
-`/speckit-bug-assess` for the installed bug extension.
-This directory is shared with other integrations, so do not assume their
-generated skills can coexist without overlap.
+技能會安裝為 `.agents/skills/speckit-<command>/SKILL.md`。在代理的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。此目錄與其他整合共用，因此不要假設它們產生的技能可以毫無重疊地共存。
 
-The optional `--integration-options="--skills"` flag restates the default;
-this integration always scaffolds skills.
+選用的 `--integration-options="--skills"` 旗標只是重述預設值；本整合一律產生技能。
 
-## Workflow Dispatch
+## 工作流程分派
 
-Workflow steps use `muse exec <prompt>`, with `--model` when configured and
-`--json` when structured output is requested.
+工作流程步驟使用 `muse exec <prompt>`，並在已設定時傳入 `--model`、在要求結構化輸出時傳入 `--json`。
