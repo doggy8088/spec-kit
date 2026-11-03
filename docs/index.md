@@ -9,13 +9,13 @@
 Spec Kit 為程式代理提供結構化流程，讓意圖與證據優先於實作。從規格驅動開發（SDD）、錯誤修正或構想評估開始。逐步執行流程、將其自動化，或[塑造屬於自己的流程](guides/customization.md)，包含軟體開發以外的流程。
 
 <a href="installation.md" class="btn btn-primary btn-lg">安裝 Spec Kit</a>&nbsp;
-<a href="#choose-your-process" class="btn btn-outline-primary btn-lg">選擇你的流程</a>
+<a href="#選擇你的流程" class="btn btn-outline-primary btn-lg">選擇你的流程</a>
 
 </div>
 
 ---
 
-## Choose your process
+## 選擇你的流程
 
 | 需求 | 從這裡開始 | 你將獲得 |
 | --- | --- | --- |
@@ -200,7 +200,7 @@ uv tool install specify-cli
 specify init my-project --integration copilot
 ```
 
-準備好開始了嗎？[選擇你的流程](#choose-your-process)。
+準備好開始了嗎？[選擇你的流程](#選擇你的流程)。
 
 </div>
 
