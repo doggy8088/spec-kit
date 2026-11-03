@@ -443,6 +443,7 @@ header > nav.navbar,
 
 .landing-hero h1 {
   font-weight: 900;
+  display: inline-block;
   background: linear-gradient(95deg, #f472b6 5%, #a855f7 45%, #3b82f6 95%);
   -webkit-background-clip: text;
   background-clip: text;
