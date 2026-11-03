@@ -4,7 +4,7 @@ name: Deploy Documentation to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["zh-tw"]
     paths:
       - 'docs/**'
 
@@ -26,7 +26,6 @@ concurrency:
 jobs:
   # Build job
   build:
-    if: github.repository == 'github/spec-kit'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -57,7 +56,6 @@ jobs:
 
   # Deploy job
   deploy:
-    if: github.repository == 'github/spec-kit'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
