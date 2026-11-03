@@ -451,13 +451,13 @@ header > nav.navbar,
 /* Segmented brand colors for the hero headline words
    (solid colors: render identically in every browser,
    unlike background-clip:text gradients) */
-.landing-hero h1 .h-word-1 { color: #ec4899; }
-.landing-hero h1 .h-word-2 { color: #a855f7; }
-.landing-hero h1 .h-word-3 { color: #3b82f6; }
+.landing-hero h1 .h-word-1 { color: #ec4899; -webkit-text-fill-color: #ec4899; }
+.landing-hero h1 .h-word-2 { color: #a855f7; -webkit-text-fill-color: #a855f7; }
+.landing-hero h1 .h-word-3 { color: #3b82f6; -webkit-text-fill-color: #3b82f6; }
 
-[data-bs-theme="dark"] .landing-hero h1 .h-word-1 { color: #f472b6; }
-[data-bs-theme="dark"] .landing-hero h1 .h-word-2 { color: #c084fc; }
-[data-bs-theme="dark"] .landing-hero h1 .h-word-3 { color: #60a5fa; }
+[data-bs-theme="dark"] .landing-hero h1 .h-word-1 { color: #f472b6; -webkit-text-fill-color: #f472b6; }
+[data-bs-theme="dark"] .landing-hero h1 .h-word-2 { color: #c084fc; -webkit-text-fill-color: #c084fc; }
+[data-bs-theme="dark"] .landing-hero h1 .h-word-3 { color: #60a5fa; -webkit-text-fill-color: #60a5fa; }
 
 .landing-hero .btn {
   border-radius: 999px;
