@@ -133,7 +133,7 @@ specify version
 
 這確認 `specify` 命令可用，並回報預期的版本。它無法證明該可執行檔來自 PyPI 還是 GitHub。
 
-**保持最新：**定期執行 `specify self check`，了解是否有較新的 release 可用——它是唯讀的，永遠不會修改你的安裝。當你準備好升級時，請依[升級指南](./upgrade.md)。
+**保持最新**：定期執行 `specify self check`，了解是否有較新的 release 可用——它是唯讀的，永遠不會修改你的安裝。當你準備好升級時，請依[升級指南](./upgrade.md)。
 
 初始化之後，你應該會在程式代理中看到下列命令可用：
 

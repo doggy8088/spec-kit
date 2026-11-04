@@ -2,7 +2,7 @@
 
 這是 Spec Kit 的五階段評估管線，能在構想進入規格驅動開發之前，把**任何構想**轉化為站得住腳的 **go／needs-clarification／kill** 決策。它正是缺少的那條**探索軌道**，位於 SDD **交付軌道**（`specify → clarify → plan → tasks → analyze → implement`）之前。
 
-探索回答的是*「這值得做嗎？」*，交付回答的是*「我們要怎麼做？」*。只有通過評估的構想才會交接給 `/speckit-specify`。
+探索回答的是「*這值得做嗎？*」，交付回答的是「*我們要怎麼做？*」。只有通過評估的構想才會交接給 `/speckit-specify`。
 
 ## 總覽
 

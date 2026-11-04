@@ -428,7 +428,7 @@ CLI 整合可以公開逐步的位置參數與具名執行期
 
 - 這個欄位必須是字面布林值（`true`／`false`）；強制轉換的
   字串如 `"true"` 會在驗證時被拒絕。
-- **範圍：僅限回傳的失敗。**這個旗標適用於
+- **範圍：僅限回傳的失敗**。這個旗標適用於
   `status=StepStatus.FAILED` 的步驟結果。從步驟的
   `execute()` 方法未處理而拋出的例外，會由上一層的 `WorkflowEngine.execute()` 捕捉，
   記錄為 `workflow_failed`，並且不論

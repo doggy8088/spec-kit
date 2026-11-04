@@ -19,7 +19,7 @@ Specify CLI 對型錄來源、擴充功能下載與版本檢查的 HTTP 請求�
 }
 ```
 
-> **安全性：**將檔案限制為僅擁有者可存取：
+> **安全性**：將檔案限制為僅擁有者可存取：
 >
 > ```bash
 > chmod 600 ~/.specify/auth.json
@@ -199,7 +199,7 @@ GHE.com 租戶使用獨立的網站與 REST API 主機名稱。將兩個主機�
 | `bearer` | `Authorization: Bearer <token>` | 儲存庫／專案／工作區存取權杖，或不帶帳號電子郵件傳送的 Atlassian API 權杖（Bitbucket Cloud，**僅限 `api.bitbucket.org`**，見下方說明）；HTTP 存取權杖（Bitbucket Data Center） |
 | `basic` | `Authorization: Basic base64(<username>:<token>)` | 對 `api.bitbucket.org` 使用的 Atlassian API 權杖（username 為 Atlassian 帳號電子郵件）。Bitbucket Cloud 應用程式密碼已由 Atlassian 於 2026 年 7 月 28 日移除，請改用 API 權杖或存取權杖。 |
 
-> **主機說明：**Bitbucket Cloud 依主機區分其介面。`api.bitbucket.org` 接受儲存庫／專案／工作區存取權杖作為 Bearer，也接受 Atlassian API 權杖作為 Basic（以帳號電子郵件為使用者名稱）或 Bearer（不需電子郵件），適用於任何 REST 呼叫，包括透過 `GET /2.0/repositories/<workspace>/<repo>/src/<ref>/<path>` 取得型錄檔案。純 `bitbucket.org` 網站主機（瀏覽器頁面、`.../raw/...` 連結、透過 HTTPS 的 `git clone`）**不**接受這兩者，它以 HTTP Basic 驗證 git-over-HTTPS，使用字面使用者名稱 `x-token-auth` 與存取權杖作為密碼。請將型錄與 `download_url` 項目指向 `api.bitbucket.org`（見下），而非 `bitbucket.org/.../raw/...`，讓你的 `auth.json` 中的憑證真正生效。
+> **主機說明**：Bitbucket Cloud 依主機區分其介面。`api.bitbucket.org` 接受儲存庫／專案／工作區存取權杖作為 Bearer，也接受 Atlassian API 權杖作為 Basic（以帳號電子郵件為使用者名稱）或 Bearer（不需電子郵件），適用於任何 REST 呼叫，包括透過 `GET /2.0/repositories/<workspace>/<repo>/src/<ref>/<path>` 取得型錄檔案。純 `bitbucket.org` 網站主機（瀏覽器頁面、`.../raw/...` 連結、透過 HTTPS 的 `git clone`）**不**接受這兩者，它以 HTTP Basic 驗證 git-over-HTTPS，使用字面使用者名稱 `x-token-auth` 與存取權杖作為密碼。請將型錄與 `download_url` 項目指向 `api.bitbucket.org`（見下），而非 `bitbucket.org/.../raw/...`，讓你的 `auth.json` 中的憑證真正生效。
 
 **範例——Bitbucket Cloud 存取權杖（建議）：**
 
@@ -237,7 +237,7 @@ GHE.com 租戶使用獨立的網站與 REST API 主機名稱。將兩個主機�
 }
 ```
 
-> **注意：**Bitbucket Cloud 透過重新導向到預先簽章的 Amazon S3 URL 提供檔案下載（儲存庫的 **Downloads** 區段）。Specify 會在該重新導向上移除 `Authorization` 標頭，因為目標離開了你宣告的主機，這是預期行為，且下載仍會成功，因為 S3 URL 本身即具授權。請在型錄項目中釘選 `sha256`，讓未經驗證的最後一跳保持完整性檢查。
+> **注意**：Bitbucket Cloud 透過重新導向到預先簽章的 Amazon S3 URL 提供檔案下載（儲存庫的 **Downloads** 區段）。Specify 會在該重新導向上移除 `Authorization` 標頭，因為目標離開了你宣告的主機，這是預期行為，且下載仍會成功，因為 S3 URL 本身即具授權。請在型錄項目中釘選 `sha256`，讓未經驗證的最後一跳保持完整性檢查。
 
 ## 多個項目
 

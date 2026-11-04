@@ -32,7 +32,7 @@
 
 強化浪潮進入 9 月後，成為常設紀律而非專案。本月由 **URL 與供應鏈收緊**領銜：型錄下載現在**要求以標籤釘選的 URL**（#4194），堵住了一條 `latest` 參考可能解析到非預期內容的繞過路徑；GitHub HTTP 層**驗證發佈資產中繼資料 URL**（#4438）；套件組安裝則**驗證獨立安裝元件的釘選**（#4789），堵住了元件與其紀錄釘選之間的漂移路徑。**消除競態**移除了 `catalog_fetch()` 中的檢查時／使用時（TOCTOU）窗口（#3910），**社群封存驗證獲得恢復**，讓提交的校驗和在信任前先行比對（#4689）。8 月的 URL 連接埠驗證持續擴及預設集型錄、憑證比對與 GitHub HTTP 處理（#4341、#4362、#4372），發佈標籤輸入獲得強化（#4386），無法讀取的來源資訊現在會**失敗即關閉**（#4092）。
 
-與之並行的是工作流程與型錄引擎中持續的**「大聲失敗」驗證掃蕩**。工作流程驗證變得更嚴格——格式錯誤的步驟資訊清單、為假值的非對映型錄設定、非字串的型錄標籤，以及不受支援的型錄酬載版本，現在都會以清楚的錯誤被拒絕（#4321、#4320、#4318、#4090）——產生的事件派送器也以與 CLI 命令相同的方式為 stdin 設上限（#4337）。一項 CI 防護現在**要求內建擴充功能變更時提升版本**（#4395），社群投稿工作流程也再次獲得強化（#4510）。這些強化是預防工作，隨著基本元素與型錄持續開啟新的介面而到來。 [\[github.com\]](https://github.com/github/spec-kit/releases)
+與之並行的是工作流程與型錄引擎中持續的「**大聲失敗」驗證掃蕩**。工作流程驗證變得更嚴格——格式錯誤的步驟資訊清單、為假值的非對映型錄設定、非字串的型錄標籤，以及不受支援的型錄酬載版本，現在都會以清楚的錯誤被拒絕（#4321、#4320、#4318、#4090）——產生的事件派送器也以與 CLI 命令相同的方式為 stdin 設上限（#4337）。一項 CI 防護現在**要求內建擴充功能變更時提升版本**（#4395），社群投稿工作流程也再次獲得強化（#4510）。這些強化是預防工作，隨著基本元素與型錄持續開啟新的介面而到來。 [\[github.com\]](https://github.com/github/spec-kit/releases)
 
 ### 代理整合
 
@@ -65,7 +65,7 @@
 
 **Microsoft DevBlogs／Azure Cosmos DB**（9 月 21 日）發表了本月的重頭戲——*「Spec-Driven Development comes to Azure Cosmos DB: The First Database Extension for GitHub Spec Kit」*，作者為 Theo van Kraay（Cosmos DB 工程團隊 Principal Program Manager）。文章宣佈了公開預覽中的 Cosmos DB 擴充功能——Spec Kit 生態系中的第一個*資料庫*擴充功能——它為分割、RU 與索引指引新增了 `before_implement`／`after_implement` hook。值得注意的是，其成效章節異常坦率：最佳實務遵循度測得約提升 10 個百分點，但端到端表現與單用 Spec Kit 大致相當，且仍需要人工審查。 [\[devblogs.microsoft.com\]](https://devblogs.microsoft.com/cosmosdb/spec-driven-development-comes-to-azure-cosmos-db-the-first-database-extension-for-github-spec-kit/)
 
-**Jesse Liberty**（Microsoft MVP）發表了兩篇文章——9 月 1 日的解說文章，逐步走過 Specify CLI 與憲章／規格／計畫／任務鏈；以及 9 月 17 日的實地報告，描述用 Spec Kit 搭配 Copilot 新增 Cosmos 支援的記憶功能時被*「徹底驚艷」*。 [\[jesseliberty.com\]](https://jesseliberty.com/2026/09/17/spec-driven-development/) **Tproger**（俄語，9 月 11 日）對 1.0.x 系列做了深入的新聞分析——六命令工作流程、擴充功能／預設集／套件組，以及「不承諾穩定性」的立場——並衡量了完整鏈條何時會過於繁重。 [\[tproger.ru\]](https://tproger.ru/news/spec-kit-1-0-i-eshhyo-desyat-ii-repozitoriev-sobravwih-zvyozdy-za-n)
+**Jesse Liberty**（Microsoft MVP）發表了兩篇文章——9 月 1 日的解說文章，逐步走過 Specify CLI 與憲章／規格／計畫／任務鏈；以及 9 月 17 日的實地報告，描述用 Spec Kit 搭配 Copilot 新增 Cosmos 支援的記憶功能時被「*徹底驚艷*」。 [\[jesseliberty.com\]](https://jesseliberty.com/2026/09/17/spec-driven-development/) **Tproger**（俄語，9 月 11 日）對 1.0.x 系列做了深入的新聞分析——六命令工作流程、擴充功能／預設集／套件組，以及「不承諾穩定性」的立場——並衡量了完整鏈條何時會過於繁重。 [\[tproger.ru\]](https://tproger.ru/news/spec-kit-1-0-i-eshhyo-desyat-ii-repozitoriev-sobravwih-zvyozdy-za-n)
 
 ### 開發者文章與實地報告
 

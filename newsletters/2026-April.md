@@ -90,13 +90,13 @@
 
 ### Thoughtworks Technology Radar
 
-**4 月 15 日**，**Thoughtworks Technology Radar 第 34 卷**將 GitHub Spec Kit 放入 Languages & Frameworks 類別的**「Assess」圈**。該條目指出，團隊回報其在 brownfield 專案中有價值，憲章能掌握專案範圍與架構，但也標示了潛在的**指令膨脹、上下文腐蝕與冗長的 markdown 輸出**等需要留意的疑慮。這是任何 SDD 專屬工具首次登上 Radar。 [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
+**4 月 15 日**，**Thoughtworks Technology Radar 第 34 卷**將 GitHub Spec Kit 放入 Languages & Frameworks 類別的「**Assess」圈**。該條目指出，團隊回報其在 brownfield 專案中有價值，憲章能掌握專案範圍與架構，但也標示了潛在的**指令膨脹、上下文腐蝕與冗長的 markdown 輸出**等需要留意的疑慮。這是任何 SDD 專屬工具首次登上 Radar。 [\[thoughtworks.com\]](https://www.thoughtworks.com/radar/languages-and-frameworks/github-spec-kit)
 
 ### 開發者文章與部落格貼文
 
 4 月出現了源源不絕的外部文章。
 
-**Matt Rickard** 於 4 月 1 日發表 *「The Spec Layer: Why Spec-Driven Development (SDD) Works」*。他的論點是：規格降低了 AI 代理的執行自由度，發揮約束面的作用。他比較了 Spec Kit、Kiro、OpenSpec、Tessl、Intent 與 Symphony，並倡導**「更小的規格、更嚴的檢查、更少的猜測」**。 [\[blog.matt-rickard.com\]](https://blog.matt-rickard.com/p/the-spec-layer)
+**Matt Rickard** 於 4 月 1 日發表 *「The Spec Layer: Why Spec-Driven Development (SDD) Works」*。他的論點是：規格降低了 AI 代理的執行自由度，發揮約束面的作用。他比較了 Spec Kit、Kiro、OpenSpec、Tessl、Intent 與 Symphony，並倡導「**更小的規格、更嚴的檢查、更少的猜測」**。 [\[blog.matt-rickard.com\]](https://blog.matt-rickard.com/p/the-spec-layer)
 
 **Fabián Silva** 於 4 月 3 日在 DEV Community 發表 *「I Built a Visual Spec-Driven Development Extension for VS Code That Works With Any LLM」*。他的 **Caramelo** VS Code 擴充功能在 Spec Kit 的工作流程之上加入視覺化 UI、核准關卡、Jira 整合與多 LLM 支援，並讀寫標準的 `specs/` 目錄。 [\[dev.to\]](https://dev.to/fabian_silva_/i-built-a-visual-spec-driven-development-extension-for-vs-code-that-works-with-any-llm-36ok)
 

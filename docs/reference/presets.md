@@ -31,7 +31,7 @@ specify preset add <preset_id> --version <version>
 
 從型錄、URL 或本機目錄安裝預設集。預設集命令會自動向受支援的啟用中 AI 程式代理整合註冊。generic 整合目前會交付擴充功能呼叫，但不註冊預設集命令或技能覆寫。`--version` 不能與 `--from` 或 `--dev` 組合使用。直接 URL 安裝仍獨立於型錄查詢。沒有 `--version` 時，安裝仍會選取公告的目前版本（或本機隨附的預設集）。所請求的版本若不在勝出型錄中即為錯誤；較低優先順序的型錄無法提供它。僅供探索的型錄無法安裝任何版本。依版本從型錄安裝時，會在修改已安裝的預設集前，驗證所選封存檔的 `preset.yml` ID 與版本。歷史版本需要 SHA-256 摘要，下載時也會驗證；舊版的目前版本可以省略摘要。
 
-> **注意：**所有預設集命令都需要已以 `specify init` 初始化的專案。
+> **注意**：所有預設集命令都需要已以 `specify init` 初始化的專案。
 
 ### 以 `.presetignore` 排除開發檔案
 
@@ -141,7 +141,7 @@ specify preset set-priority <preset_id> <priority>
 
 預設集型錄控制 `search` 與 `add` 尋找預設集的位置。型錄依優先順序檢查（數字越小優先程度越高）。
 
-> **專案的 `.specify/preset-catalogs.yml` 可以將 `add` 與 `search` 指向你沒有選擇的型錄。**在不熟悉的專案中安裝預設集前，請執行 `specify preset catalog list` 並檢查任何標為允許安裝的型錄，專案提供該設定，或將型錄標為允許安裝，都不是其預設集已獲檢視的證據。只將你自己撰寫或已審查的型錄標為 `install_allowed`；不熟悉與社群型錄請保持僅供探索。
+> **專案的 `.specify/preset-catalogs.yml` 可以將 `add` 與 `search` 指向你沒有選擇的型錄**。在不熟悉的專案中安裝預設集前，請執行 `specify preset catalog list` 並檢查任何標為允許安裝的型錄，專案提供該設定，或將型錄標為允許安裝，都不是其預設集已獲檢視的證據。只將你自己撰寫或已審查的型錄標為 `install_allowed`；不熟悉與社群型錄請保持僅供探索。
 
 ### 列出型錄
 

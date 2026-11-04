@@ -76,8 +76,8 @@ specify integration status     # reports apps/web's integration
 
 `SPECIFY_INIT_DIR` 由 slash 命令呼叫的 shell script 讀取（Bash 中的 `get_repo_root`、PowerShell 中的 `Get-RepoRoot`）。只有當它出現在執行那些 script 的 shell 環境中時才生效。
 
-- **Script 化／CI 執行：**在驅動命令的同一個 shell 中匯出它；在那裡它是可靠的。
-- **互動式代理：**匯出的變數是否能傳到代理使用的 shell 工具，取決於代理。請在啟動代理*之前*匯出 `SPECIFY_INIT_DIR`，並驗證一次（例如執行 `/speckit.specify`，確認新功能落在預期專案的 `specs/` 下）。
+- **Script 化／CI 執行**：在驅動命令的同一個 shell 中匯出它；在那裡它是可靠的。
+- **互動式代理**：匯出的變數是否能傳到代理使用的 shell 工具，取決於代理。請在啟動代理*之前*匯出 `SPECIFY_INIT_DIR`，並驗證一次（例如執行 `/speckit.specify`，確認新功能落在預期專案的 `specs/` 下）。
 
 ## Monorepo 中的 Git
 

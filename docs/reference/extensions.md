@@ -38,7 +38,7 @@ specify extension add <name>
 
 未限定版本的型錄安裝仍會選取公告的目前版本。`--version` 只使用該擴充功能 ID 的勝出型錄來源；當所請求的版本缺席時，它不會退回較低優先順序來源。僅供探索的型錄仍不可安裝。`--version` 不能與 `--dev` 或直接 URL 的 `--from` 選項組合使用。下載封存檔的擴充功能 ID 與版本會在安裝前檢查。
 
-> **注意：**所有擴充功能命令都需要已以 `specify init` 初始化的專案。
+> **注意**：所有擴充功能命令都需要已以 `specify init` 初始化的專案。
 
 ## 移除擴充功能
 
@@ -149,7 +149,7 @@ specify extension set-priority <name> <priority>
 
 `community` 被刻意設為僅供探索，因為它是開放、未經審查的清單。讓其中一切都能一鍵安裝，意味著在沒有審查的情況下引入任意第三方程式碼。
 
-> **不要將僅供探索的型錄翻轉為 `install_allowed`。**那會完全違背將探索與安裝分開的目的。從 `community` 找到的東西，有兩種正確的安裝方式：
+> **不要將僅供探索的型錄翻轉為 `install_allowed`**。那會完全違背將探索與安裝分開的目的。從 `community` 找到的東西，有兩種正確的安裝方式：
 >
 > 1. **直接安裝單一經審查的擴充功能**，使用 `--from`（不需撰寫型錄）。從 `specify extension info <name>` 取得候選封存檔 URL，對於僅供探索的項目，它會列印「Candidate archive」URL。檢視該版本封存檔，然後安裝它：
 >

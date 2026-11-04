@@ -195,7 +195,7 @@ URL，其路徑以 `README.md` 結尾、能解析到可讀的檔案，且包含�
 涵蓋最低限度的結構）是人工審查者會檢查的期望 —
 請遵循它們，以免你的提交被退回修改。
 
-- **將 `documentation` 指向限定於預設集的 README。**在預設集
+- **將 `documentation` 指向限定於預設集的 README**。在預設集
   位於子目錄（例如 `presets/<id>/`）的 monorepo 中，請連結該目錄內的 README
   （`presets/<id>/README.md`），而不是儲存庫根目錄的 README。根目錄 README
   通常是行銷／概覽頁面；型錄應該呈現的是預設集的用法。關鍵
@@ -248,7 +248,7 @@ cd spec-kit
 
 編輯 `presets/catalog.community.json` 並加入你的預設集。
 
-> **⚠️ 項目必須依預設集 ID 的字母順序排序。**將你的預設集插入 `"presets"` 物件中的正確位置。
+> **⚠️ 項目必須依預設集 ID 的字母順序排序**。將你的預設集插入 `"presets"` 物件中的正確位置。
 
 ```json
 {
@@ -353,7 +353,7 @@ git push origin add-your-preset
 4. **安全性** — 沒有惡意內容，檔案操作安全
 5. **文件** — 從 `documentation` 連結的 README 說明如何使用*這個*預設集，並包含一條有效的 `specify preset add ...` 命令
 
-> **審查者註記：**工作流程可以機械式地檢查*結構*（所連結的 README
+> **審查者註記**：工作流程可以機械式地檢查*結構*（所連結的 README
 > 能解析，且包含有效的 `specify preset add ...` 片段；當該片段使用
 > `--from <url>` 形式時，其 URL 必須與提交的下載 URL 完全相符 — 其他被接受的
 > 形式如 `specify preset add <id>` 根本不會參照下載 URL）。至於

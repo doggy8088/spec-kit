@@ -34,7 +34,7 @@ specify init [<project_name>]
 
 設定啟動階層（`.specify` 與 `init-options.json`）在受信任的專案根目錄之下必須永遠不是符號連結，即使在允許模式下也是如此。說明、版本、檢查與無專案的工具／型錄操作不會因此取得專案需求。Init 使用其明確目標，不使用 `SPECIFY_INIT_DIR`。`check` 可以取用已安裝的專案整合：它在載入整合或檢查工具前，會在其選定的 cwd 或 `SPECIFY_INIT_DIR` 邊界驗證任何存在的原則。它在無 `.specify` 或 init 選項的無專案 cwd 中仍可運作。說明與版本不讀取專案原則。
 
-**遷移限制：**原則由 FileHelper 操作強制執行，目前包括 init-options 啟動 I/O。載入原則尚未將所有其他命令的檔案系統操作導向 FileHelper。共用基礎設施、註冊、受管理儲存、指令碼與執行時期操作，在遷移前仍保留其既有行為。邊界與交接合約請參見 [FileHelper 設計](../../design/file-helper.md)。
+**遷移限制**：原則由 FileHelper 操作強制執行，目前包括 init-options 啟動 I/O。載入原則尚未將所有其他命令的檔案系統操作導向 FileHelper。共用基礎設施、註冊、受管理儲存、指令碼與執行時期操作，在遷移前仍保留其既有行為。邊界與交接合約請參見 [FileHelper 設計](../../design/file-helper.md)。
 
 ### 範例
 
