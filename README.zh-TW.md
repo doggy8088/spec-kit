@@ -1,7 +1,7 @@
 <div align="center">
     <img src="https://raw.githubusercontent.com/github/spec-kit/main/media/logo_large.webp" alt="Spec Kit 標誌" width="200" height="200"/>
     <h1>🌱 Spec Kit</h1>
-    <h3><em>帶著規格來開發、修好一個錯誤，或評估一個想法——與你的程式代理一起。</em></h3>
+    <h3><em>帶著規格來開發、修復一個錯誤，或評估一個想法——與你的程式代理一起。</em></h3>
 </div>
 
 <p align="center">
@@ -19,9 +19,7 @@
     <a href="./README.ko.md">한국어</a>
 </p>
 
-Spec Kit 是一套開源工具組，為 AI 程式代理提供結構化的
-流程、可重用的範本，以及有記錄的成果。你可以從現成的
-流程開始，將它客製化，或帶來你自己的流程。
+Spec Kit 是一套開源工具組，為 AI 程式代理提供結構化的流程、可重用的範本，以及有完整記錄的成果。你可以從現成的流程開始，將它客製化，或改用你自己的流程。
 
 ## 選擇你的流程
 
@@ -29,12 +27,10 @@ Spec Kit 是一套開源工具組，為 AI 程式代理提供結構化的
 | --- | --- | --- |
 | 開發一個功能或應用程式 | [規格驅動開發](#spec-driven-development) | 一份貫穿規劃、實作與收斂的規格 |
 | 診斷並修復損壞的行為 | [錯誤修正](#bug-fixing) | 經評估的原因、範圍明確的修正，以及記錄下來的驗證 |
-| 決定一個想法是否值得投入 | [想法評估](#idea-assessment) | 有證據支持的 go、釐清或停止決定 |
-| 採用或建立一套不同的流程 | [你自己的流程](#capabilities) | 從可重用的原語調整或組裝而成的流程 |
+| 決定一個想法是否值得投入 | [想法評估](#idea-assessment) | 有證據支持的 `go`、`needs-clarification` 或 `kill` 決定 |
+| 採用或建立一套不同的流程 | [你自己的流程](#capabilities) | 從可重用的基礎構件調整或組裝而成的流程 |
 
-這些是各自獨立的入口，不是必經的階段。SDD 隨核心一同提供；
-錯誤修正與評估是套件組形式的擴充功能，需要時再安裝，而
-下方的原語能讓你採用或建立其他流程。
+這些是各自獨立的入口，不是必經的階段。SDD 隨核心一同提供；錯誤修正與評估是套件組形式的擴充功能，需要時再安裝，而下方的基礎構件能讓你採用或建立其他流程。
 
 ## 功能總覽
 
@@ -43,39 +39,35 @@ Spec Kit 把現成的流程與可組合的機制結合在一起：
 | 功能 | Spec Kit 機制 |
 | --- | --- |
 | 連接程式代理，或在它們之間切換 | [整合](https://github.github.io/spec-kit/integrations/index.html) |
-| 新增一個命令、品質關卡或完整的流程 | [擴充功能](https://github.github.io/spec-kit/reference/extensions.html) |
+| 新增一個命令、品質閘門或完整的流程 | [擴充功能](https://github.github.io/spec-kit/reference/extensions.html) |
 | 把流程連接到外部工具或服務 | [擴充功能](https://github.github.io/spec-kit/reference/extensions.html) |
 | 對程式代理的生命週期事件做出反應 | [擴充功能執行期事件](https://github.github.io/spec-kit/reference/extensions.html#extension-runtime-events) |
 | 在 Spec Kit 命令之前或之後執行擴充功能命令 | [擴充功能掛鉤](https://github.github.io/spec-kit/reference/extensions.html#project-extension-and-hook-configuration) |
 | 調整範本、命令、術語或方法論 | [預設集](https://github.github.io/spec-kit/reference/presets.html) |
 | 強制執行組織或法規標準 | [預設集](https://github.github.io/spec-kit/reference/presets.html) |
 | 為單一專案覆寫某個範本 | [專案本機覆寫](https://github.github.io/spec-kit/guides/customization.html#project-local-overrides-and-resolution) |
-| 自動化提示詞、命令、關卡與 shell 任務 | [工作流程](https://github.github.io/spec-kit/reference/workflows.html) |
-| 修改已安裝的工作流程而不 fork 它 | [工作流程覆疊](https://github.github.io/spec-kit/reference/workflows.html#workflow-overlays) |
+| 自動化提示詞、命令、閘門與 shell 任務 | [工作流程](https://github.github.io/spec-kit/reference/workflows.html) |
+| 修改已安裝的工作流程而不 fork 它 | [工作流程覆蓋層](https://github.github.io/spec-kit/reference/workflows.html#workflow-overlays) |
 | 為工作流程加入可重用的可執行行為 | [工作流程步驟](https://github.github.io/spec-kit/reference/workflows.html#custom-step-packages) |
 | 為某個角色或團隊安裝精選的設定 | [套件組](https://github.github.io/spec-kit/reference/bundles.html) |
-| 探索社群元件 | [目錄](https://github.github.io/spec-kit/reference/catalogs.html) |
-| 代管一份核准元件的私有目錄 | [目錄](https://github.github.io/spec-kit/reference/catalogs.html) |
-| 存取私有目錄與元件下載 | [驗證](https://github.github.io/spec-kit/reference/authentication.html) |
-| 在離線或防火牆後工作 | [本機來源與自架目錄](https://github.github.io/spec-kit/install/air-gapped.html) |
+| 探索社群元件 | [型錄](https://github.github.io/spec-kit/reference/catalogs.html) |
+| 託管一份核准元件的私有型錄 | [型錄](https://github.github.io/spec-kit/reference/catalogs.html) |
+| 存取私有型錄與元件下載 | [身分驗證](https://github.github.io/spec-kit/reference/authentication.html) |
+| 在離線或防火牆後工作 | [本機來源與自架型錄](https://github.github.io/spec-kit/install/air-gapped.html) |
 | 檢查某個命令、範本或指令碼是由哪一層提供的 | [資產清單](https://github.github.io/spec-kit/reference/artifacts.html) |
 
 用 `specify extension search`、
-`specify preset search`、`specify workflow search` 與 `specify bundle search` 等命令搜尋目前啟用的目錄。
-Spec Kit 內含社群目錄，組織也可以加入自己的
-精選來源。目錄中的列表不是稽核或背書，因此在安裝或執行社群原始碼之前，
-請先審查它。
+`specify preset search`、`specify workflow search` 與 `specify bundle search` 等命令搜尋目前啟用的型錄。
+Spec Kit 內含社群型錄，組織也可以加入自己的精選來源。型錄中的清單不是稽核或背書，因此在安裝或執行社群原始碼之前，請先審查它。
 
 <a id="-get-started"></a>
 <a id="-prerequisites"></a>
 
 ## 開始使用
 
-你需要 Python 3.11+、[uv](https://github.github.io/spec-kit/install/uv.html)，
-以及一個在 Linux、macOS 或 Windows 上受支援的 AI 程式代理。
+你需要 Python 3.11+、[uv](https://github.github.io/spec-kit/install/uv.html)，以及一個在 Linux、macOS 或 Windows 上受支援的 AI 程式代理。
 
-在終端機中執行這些命令來安裝 Spec Kit 並建立專案。
-這個範例使用 GitHub Copilot。
+在終端機中執行這些命令來安裝 Spec Kit 並建立專案。這個範例使用 GitHub Copilot。
 
 ```bash
 uv tool install specify-cli
@@ -85,14 +77,13 @@ cd my-project
 
 <a id="-supported-ai-coding-agent-integrations"></a>
 
-安裝 Specify CLI 並建立專案之後，在專案目錄中啟動你的程式
-代理，然後從下方選擇一個流程。
+安裝 Specify CLI 並建立專案之後，在專案目錄中啟動你的程式代理，然後從下方選擇一個流程。
 
 其他設定方式：
 
 - [安裝](https://github.github.io/spec-kit/installation.html)：釘選的版本、其他安裝方式、CI 與疑難排解。
 - [既有專案](https://github.github.io/spec-kit/guides/existing-projects.html)：從你已經擁有的程式碼開始。
-- [其他代理](https://github.github.io/spec-kit/integrations/index.html)：整合鍵與[叫用語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
+- [其他代理](https://github.github.io/spec-kit/integrations/index.html)：整合鍵與[呼叫語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
 - [升級](https://github.github.io/spec-kit/upgrade.html)：更新既有的安裝。
 
 <a id="-what-is-spec-driven-development"></a>
@@ -100,15 +91,11 @@ cd my-project
 
 ## 規格驅動開發
 
-先定義要開發什麼、為什麼，然後把規格轉化為計畫、任務，
-以及能運作的程式碼。
+先定義要開發什麼、為什麼，然後把規格轉化為計畫、任務，以及能運作的程式碼。
 
-最小流程如下所示。每個專案建立一次憲章，
-其餘步驟則為每個功能重複進行。這些技能要在代理的
-對話中執行，而不是在終端機中；一次執行一個，在繼續之前先審查每個結果。
+最小流程如下所示。每個專案建立一次憲章，其餘步驟則為每個功能重複進行。這些技能要在代理的對話中執行，而不是在終端機中；一次執行一個，在繼續之前先審查每個結果。
 
-這個範例使用 GitHub Copilot 的預設技能語法。若使用其他代理，
-請使用它[對等的叫用語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
+這個範例使用 GitHub Copilot 的預設技能語法。若使用其他代理，請使用它[對等的呼叫語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
 
 ```text
 /speckit-constitution Create principles focused on code quality, testing, and maintainability.
@@ -119,8 +106,7 @@ cd my-project
 /speckit-converge
 ```
 
-重複實作與收斂，直到收斂報告顯示 `Converged`。
-關於釐清、檢核清單與一致性分析，請參閱 SDD 導覽。
+重複實作與收斂，直到收斂報告顯示 `Converged`。關於釐清、檢核清單與一致性分析，請參閱 SDD 導覽。
 
 [SDD 導覽](https://github.github.io/spec-kit/quickstart.html) ·
 [命令參考](https://github.github.io/spec-kit/reference/agentic-sdd.html)
@@ -130,8 +116,7 @@ cd my-project
 
 ## 錯誤修正
 
-評估原因、修正錯誤，並驗證原始症狀已經解決。
-不需要先跑 SDD 功能工作流程。
+評估原因、修正錯誤，並驗證原始症狀已經解決。不需要先跑 SDD 功能工作流程。
 
 在終端機中、從專案目錄安裝錯誤修正擴充功能：
 
@@ -139,11 +124,9 @@ cd my-project
 specify extension add bug
 ```
 
-這些技能要在代理的對話中執行，而不是在終端機中；一次執行一個，
-在繼續之前先審查每個結果。
+這些技能要在代理的對話中執行，而不是在終端機中；一次執行一個，在繼續之前先審查每個結果。
 
-這個範例使用 GitHub Copilot 的預設技能語法。若使用其他代理，
-請使用它[對等的叫用語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
+這個範例使用 GitHub Copilot 的預設技能語法。若使用其他代理，請使用它[對等的呼叫語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
 
 ```text
 /speckit-bug-assess "Submitting an empty password crashes the login form." slug=login-crash
@@ -151,7 +134,7 @@ specify extension add bug
 /speckit-bug-test slug=login-crash
 ```
 
-審查 `.specify/bugs/login-crash/` 中的報告。最終裁決為
+審查 `.specify/bugs/login-crash/` 中的報告。最終判定為
 `verified`、`partial` 或 `failed`；只有 `verified` 才確認修正成功。
 
 [錯誤修正導覽](https://github.github.io/spec-kit/guides/bugfix.html) ·
@@ -162,8 +145,7 @@ specify extension add bug
 
 ## 想法評估
 
-蒐集證據，決定一個想法是否值得推進。
-不需要原始碼或 SDD 功能工作流程。
+蒐集證據，決定一個想法是否值得推進。不需要原始碼或 SDD 功能工作流程。
 
 在終端機中、從專案目錄安裝評估擴充功能：
 
@@ -171,11 +153,9 @@ specify extension add bug
 specify extension add assess
 ```
 
-這些技能要在代理的對話中執行，而不是在終端機中；一次執行一個，
-在繼續之前先審查每個結果。
+這些技能要在代理的對話中執行，而不是在終端機中；一次執行一個，在繼續之前先審查每個結果。
 
-這個範例使用 GitHub Copilot 的預設技能語法。若使用其他代理，
-請使用它[對等的叫用語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
+這個範例使用 GitHub Copilot 的預設技能語法。若使用其他代理，請使用它[對等的呼叫語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
 
 ```text
 /speckit-assess-intake "Let users work offline and sync when they reconnect." slug=offline-mode
@@ -185,13 +165,7 @@ specify extension add assess
 /speckit-assess-decide slug=offline-mode
 ```
 
-審查 `.specify/assessments/offline-mode/` 中的產出物與最終
-決定：`go`、`needs-clarification` 或 `kill`。遇到未知事項時，直接編輯
-既有的 Markdown 產出物來解決（親自編輯或與你的代理一起），而不是
-重跑整個階段。如果你決定以 `go` 決議來開發一個軟體想法，
-視需要先建立專案憲章，然後把 `decision.md` 中的交接摘要
-傳給 `/speckit-specify`。帶著有記錄的原因停下來，同樣是
-有用的成果。
+審查 `.specify/assessments/offline-mode/` 中的產出物與最終決定：`go`、`needs-clarification` 或 `kill`。遇到未知事項時，直接編輯既有的 Markdown 產出物來解決（親自編輯或與你的程式代理一起），而不是重跑整個階段。如果你決定以 `go` 開發一個軟體想法，視需要先建立專案憲章，然後把 `decision.md` 中的交接摘要傳給 `/speckit-specify`。帶著記錄清楚的原因停下來，同樣是有用的成果。
 
 [評估導覽](https://github.github.io/spec-kit/guides/assessment.html) ·
 [命令參考](https://github.github.io/spec-kit/reference/agentic-assessment.html)
@@ -200,19 +174,16 @@ specify extension add assess
 <a id="-bundles-role-based-setups"></a>
 <a id="-community"></a>
 
-## 客製化，或帶來你自己的流程
+## 客製化，或用你自己的流程
 
-把規格驅動開發、錯誤修正或想法評估客製化，以符合你
-團隊的標準。或者完全不採用它們，帶來你自己的流程。
-組合[上方的功能](#capabilities)來達成你的目標：
+把規格驅動開發、錯誤修正或想法評估客製化，以符合你團隊的標準。或者完全不採用它們，改用你自己的流程。組合[上方的功能](#capabilities)來達成你的目標：
 
 - 用預設集調整既有流程，例如要求計畫具備法規可追溯性。一次性的範本變更則使用專案本機覆寫。
-- 帶來你自己的流程：透過擴充功能加入它的命令，再透過整合把它們呈現給你的程式代理。
-- 在工作流程中自動化命令與檢查。使用覆疊來調整已安裝的工作流程而不 fork 它，或在內建類型不足時加入自訂的工作流程步驟。
-- 把可重用的設定分享出去：把它的擴充功能、預設集、工作流程與工作流程步驟打包成套件組。
+- 要用你自己的流程：先透過擴充功能加入該流程的命令，再透過整合把它們呈現給你的程式代理。
+- 在工作流程中自動化命令與檢查。使用覆蓋層來調整已安裝的工作流程而不 fork 它，或在內建步驟類型不足時加入客製化的工作流程步驟。
+- 把可重用的設定分享出去：把該流程的擴充功能、預設集、工作流程與工作流程步驟打包成套件組。
 
-從能滿足需求的最小變更開始；你不需要
-取代整個流程。
+從能滿足需求的最小變更開始；你不需要取代整個流程。
 
 [客製化指南](https://github.github.io/spec-kit/guides/customization.html) ·
 [社群元件與導覽](https://github.github.io/spec-kit/community/overview.html)
@@ -237,14 +208,14 @@ specify extension add assess
 - [Open Source Friday: Spec Kit Part 2](https://www.youtube.com/watch?v=8hHCpNVLhmI)（2026 年 10 月 16 日）——Manfred Riem 與 Nicole Haugen 討論 Spec Kit 1.0 與擴充後的工具組。
 - [Open Source Friday with Spec Kit](https://www.youtube.com/watch?v=2IArMAhkJcE)（2026 年 5 月 8 日）——與 Manfred Riem 一起介紹並示範 SDD。
 
-## 星星歷史
+## Star 歷史
 
 <p align="center">
     <a href="https://www.star-history.com/#github/spec-kit&Date">
         <picture>
             <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=github%2Fspec-kit&type=Date&theme=dark"/>
             <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=github%2Fspec-kit&type=Date"/>
-            <img src="https://api.star-history.com/svg?repos=github%2Fspec-kit&type=Date" alt="Spec Kit 星星歷史圖表"/>
+            <img src="https://api.star-history.com/svg?repos=github%2Fspec-kit&type=Date" alt="Spec Kit Star 歷史圖表"/>
         </picture>
     </a>
 </p>
@@ -257,7 +228,7 @@ specify extension add assess
 
 ## 支援與貢獻
 
-[回報錯誤或請求功能](https://github.com/github/spec-kit/issues/new) ·
+[回報錯誤或提出功能請求](https://github.com/github/spec-kit/issues/new) ·
 [貢獻指南](./CONTRIBUTING.md) · [行為準則](./CODE_OF_CONDUCT.md)
 
 <a id="-license"></a>
