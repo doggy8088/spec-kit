@@ -1,6 +1,6 @@
 # 預設集系統架構
 
-本文件說明預設集系統的內部架構 — 範本解析、命令註冊與目錄管理在幕後如何運作。
+本文件說明預設集系統的內部架構 — 範本解析、命令註冊與型錄管理在幕後如何運作。
 
 使用說明請參閱 [README.md](README.md)。
 
@@ -122,7 +122,7 @@ flowchart TD
 
 當呼叫 `specify preset remove` 時，會從註冊表中繼資料讀取已註冊的命令，並從每個代理目錄刪除對應檔案，包括 Copilot 的附屬 `.prompt.md` 檔案。
 
-## 目錄系統
+## 型錄系統
 
 ```mermaid
 flowchart TD
@@ -144,7 +144,7 @@ flowchart TD
     style K fill:#9e9e9e,color:#fff
 ```
 
-目錄以 1 小時快取擷取（依 URL 區分、經 SHA256 雜湊的快取檔案）。每個目錄項目都有一個 `priority`（用於合併排序）與 `install_allowed` 旗標。
+型錄以 1 小時快取擷取（依 URL 區分、經 SHA256 雜湊的快取檔案）。每個型錄項目都有一個 `priority`（用於合併排序）與 `install_allowed` 旗標。
 
 ## 儲存庫佈局
 

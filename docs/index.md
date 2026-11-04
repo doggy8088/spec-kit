@@ -86,7 +86,7 @@ Spec Kit 為程式代理提供結構化流程，讓意圖與證據優先於實�
 
 ### 整合至你的組織
 
-可在離線、防火牆後，以及 **Windows、macOS 與 Linux** 上運作。自行託管目錄，策展你的組織能探索與推薦的整合、擴充功能、預設集、工作流程與套件組。
+可在離線、防火牆後，以及 **Windows、macOS 與 Linux** 上運作。自行託管型錄，策展你的組織能探索與推薦的整合、擴充功能、預設集、工作流程與套件組。
 
 CI Guard 與 Architecture Guard 等社群擴充功能，加入符合團隊既有工作方式的合規關卡與治理。
 
@@ -171,7 +171,7 @@ CI Guard 與 Architecture Guard 等社群擴充功能，加入符合團隊既有
   </a>
   <a href="reference/overview.md" class="nav-card">
     <strong>參考</strong>
-    <span>核心命令、目錄、整合、擴充功能、預設集與工作流程</span>
+    <span>核心命令、型錄、整合、擴充功能、預設集與工作流程</span>
   </a>
   <a href="community/overview.md" class="nav-card">
     <strong>社群</strong>

@@ -1,12 +1,12 @@
 # 擴充功能發佈指南
 
-本指南說明如何將你的擴充功能發佈到 Spec Kit 擴充功能目錄，讓它能透過 `specify extension search` 被發現。
+本指南說明如何將你的擴充功能發佈到 Spec Kit 擴充功能型錄，讓它能透過 `specify extension search` 被發現。
 
 ## 目錄
 
 1. [必要條件](#必要條件)
 2. [準備你的擴充功能](#準備你的擴充功能)
-3. [提交到目錄](#提交到目錄)
+3. [提交到型錄](#提交到型錄)
 4. [發行工作流程](#發行工作流程)
 5. [最佳實務](#最佳實務)
 
@@ -126,17 +126,17 @@ specify extension add <extension-name> --from https://github.com/your-org/spec-k
 
 ---
 
-## 提交到目錄
+## 提交到型錄
 
-### 了解目錄
+### 了解型錄
 
-Spec Kit 使用雙目錄系統。目錄運作方式的詳細說明，請參閱主要的 [Extensions README](https://github.com/github/spec-kit/blob/main/extensions/README.md#extension-catalogs)。
+Spec Kit 使用雙型錄系統。型錄運作方式的詳細說明，請參閱主要的 [Extensions README](https://github.com/github/spec-kit/blob/main/extensions/README.md#extension-catalogs)。
 
-**關於擴充功能發佈**：所有社群擴充功能都列在 `extensions/catalog.community.json` 中。使用者瀏覽此目錄，並將信任的擴充功能複製到自己的 `catalog.json`。
+**關於擴充功能發佈**：所有社群擴充功能都列在 `extensions/catalog.community.json` 中。使用者瀏覽此型錄，並將信任的擴充功能複製到自己的 `catalog.json`。
 
 ### 如何提交
 
-若要將擴充功能提交到社群目錄，請使用 **[Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml)** 範本建立新 issue。該範本會收集所有必要的後設資料，包括：
+若要將擴充功能提交到社群型錄，請使用 **[Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml)** 範本建立新 issue。該範本會收集所有必要的後設資料，包括：
 
 - 擴充功能 ID、名稱與版本
 - 說明、作者與授權
@@ -152,14 +152,14 @@ Spec Kit 使用雙目錄系統。目錄運作方式的詳細說明，請參閱�
 ### 提交後會發生什麼
 
 1. 透過 Extension Submission 表單開啟 issue 時，GitHub 會套用 `triage-must-have` 判定。此進件自動化專屬於擴充功能提交，不會改變其他 issue 的手動分類標準。
-2. 維護者在 issue 分類期間審查該 issue，並套用獨立的 `extension-submission` 標籤，這會啟動自動化目錄驗證。在此公開儲存庫中，貢獻者無法自行套用該標籤，因此無需標記或重新請求——issue 只需在分類中等待。
+2. 維護者在 issue 分類期間審查該 issue，並套用獨立的 `extension-submission` 標籤，這會啟動自動化型錄驗證。在此公開儲存庫中，貢獻者無法自行套用該標籤，因此無需標記或重新請求——issue 只需在分類中等待。
 3. 自動化工作流程驗證提交內容，驗證通過時，會在 draft pull request 中更新 `extensions/catalog.community.json` 與 `docs/community/extensions.md`
 4. 維護者審查產生的 pull request，核准後合併
 5. 你的擴充功能即可透過 `specify extension search` 被發現
 
 ### 維護者檢查什麼
 
-- 目錄條目欄位完整且格式正確
+- 型錄條目欄位完整且格式正確
 - 下載 URL 可存取
 - 儲存庫存在且包含 `extension.yml` 資訊清單
 
@@ -172,7 +172,7 @@ Spec Kit 使用雙目錄系統。目錄運作方式的詳細說明，請參閱�
 
 ### 更新既有擴充功能
 
-若要更新已在目錄中的擴充功能（例如新版本），請使用 **[Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml)** 範本建立新 issue，填入更新後的版本、下載 URL 與其他變更欄位。並在 issue 中註明這是既有條目的更新。
+若要更新已在型錄中的擴充功能（例如新版本），請使用 **[Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml)** 範本建立新 issue，填入更新後的版本、下載 URL 與其他變更欄位。並在 issue 中註明這是既有條目的更新。
 
 ---
 
@@ -272,10 +272,10 @@ Spec Kit 使用雙目錄系統。目錄運作方式的詳細說明，請參閱�
 
 ### Q：我可以發佈私有／專有擴充功能嗎？
 
-A：主目錄僅供公開擴充功能。私有擴充功能請：
+A：主型錄僅供公開擴充功能。私有擴充功能請：
 
 - 自行託管 catalog.json 檔案
-- 在 Spec Kit 專案中，使用者加入你的目錄：`specify extension catalog add https://your-domain.com/catalog.json --name private-catalog`
+- 在 Spec Kit 專案中，使用者加入你的型錄：`specify extension catalog add https://your-domain.com/catalog.json --name private-catalog`
 
 ### Q：審查需要多久？
 
@@ -289,9 +289,9 @@ A：你會收到需要修正之處的回饋。修正後重新提交即可。
 
 A：可以，使用 [Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml) 範本建立新 issue，填入更新後的版本與下載 URL。並註明這是既有條目的更新。
 
-### Q：我需要通過驗證才能進入目錄嗎？
+### Q：我需要通過驗證才能進入型錄嗎？
 
-A：不需要。所有社群擴充功能在提交審查並接受後，都會列入目錄。
+A：不需要。所有社群擴充功能在提交審查並接受後，都會列入型錄。
 
 ### Q：擴充功能可以有付費功能嗎？
 
@@ -301,16 +301,16 @@ A：擴充功能應免費且開放原始碼。允許商業支援／服務，但�
 
 ## 支援
 
-- **目錄 Issue**：<https://github.com/statsperform/spec-kit/issues>
+- **型錄 Issue**：<https://github.com/statsperform/spec-kit/issues>
 - **擴充功能範本**：<https://github.com/statsperform/spec-kit-extension-template>（即將推出）
 - **開發指南**：參閱[開發擴充功能](developing.md)
 - **社群**：討論與問答
 
 ---
 
-## 附錄：目錄結構描述
+## 附錄：型錄結構描述
 
-### 完整目錄條目結構描述
+### 完整型錄條目結構描述
 
 ```json
 {
@@ -363,4 +363,4 @@ A：擴充功能應免費且開放原始碼。允許商業支援／服務，但�
 ---
 
 *最後更新：2026-01-28*
-*目錄格式版本：1.0*
+*型錄格式版本：1.0*

@@ -1,12 +1,12 @@
 # 預設集發佈指南
 
-本指南說明如何將你的預設集發佈到 Spec Kit 預設集目錄，讓它能被 `specify preset search` 發現。
+本指南說明如何將你的預設集發佈到 Spec Kit 預設集型錄，讓它能被 `specify preset search` 發現。
 
 ## 目錄
 
 1. [先決條件](#先決條件)
 2. [準備你的預設集](#準備你的預設集)
-3. [提交至目錄](#提交至目錄)
+3. [提交至型錄](#提交至型錄)
 4. [驗證流程](#驗證流程)
 5. [發行工作流程](#發行工作流程)
 6. [最佳實務](#最佳實務)
@@ -124,11 +124,11 @@ requires:
 - 這個欄位是選擇性的。什麼都不宣告的預設集，行為與以往完全相同。
 - 缺失、過舊、已停用或版本不符的相依性會產生**警告，而不是失敗** — 安裝仍會成功。
 - 已停用的擴充功能視為未滿足；其檔案被移除後註冊表項目仍殘留的擴充功能也是如此。解析會兩者都略過，因此預設集就如同擴充功能不存在時一樣不起作用。
-- 警告會針對缺失、過舊與已停用的情況指出確切的命令。對於版本不符，它會說明需要滿足的條件，而不是指出命令，因為 `specify extension update` 只能向前移到目錄發行版，無法滿足上限、釘選或降級。
+- 警告會針對缺失、過舊與已停用的情況指出確切的命令。對於版本不符，它會說明需要滿足的條件，而不是指出命令，因為 `specify extension update` 只能向前移到型錄發行版，無法滿足上限、釘選或降級。
 - 無法解析的已記錄版本會被視為不可比較，而不是不符，因此註冊表版本顯示為 `unknown` 的擴充功能，不會被回報為未通過一個它從未被評估過的條件。
 - 存在於磁碟上但不在註冊表中的擴充功能視為已滿足。解析會接納未註冊的目錄，因此預設集可以運作，為它發出警告會是誤報 — 不過由於沒有已記錄的版本，無法以 `version` 條件對它進行檢查。
 - `required: false` 表示這是增強功能但選擇性的擴充功能，永遠不會被警告。
-- 請在 `preset.yml` 中宣告它，而不只是寫在目錄項目裡。目錄在 `--dev` 與 `--from <url>` 安裝時不會被查詢，因此資訊清單是每條安裝路徑上都存在的唯一副本。
+- 請在 `preset.yml` 中宣告它，而不只是寫在型錄項目裡。型錄在 `--dev` 與 `--from <url>` 安裝時不會被查詢，因此資訊清單是每條安裝路徑上都存在的唯一副本。
 
 ### 3. 本機測試
 
@@ -186,7 +186,7 @@ specify preset add --from https://github.com/your-org/spec-kit-preset-your-prese
 
 ### 使用 README 要求
 
-目錄的 `documentation` 欄位必須指向一份說明如何使用
+型錄的 `documentation` 欄位必須指向一份說明如何使用
 **這個預設集**的 README — 而不是為更廣泛的框架或獨立 CLI 做的產品推銷。
 
 提交工作流程會**機械式地強制執行**：所連結的 README 必須是託管在 GitHub 的
@@ -198,13 +198,13 @@ URL，其路徑以 `README.md` 結尾、能解析到可讀的檔案，且包含�
 - **將 `documentation` 指向限定於預設集的 README。**在預設集
   位於子目錄（例如 `presets/<id>/`）的 monorepo 中，請連結該目錄內的 README
   （`presets/<id>/README.md`），而不是儲存庫根目錄的 README。根目錄 README
-  通常是行銷／概覽頁面；目錄應該呈現的是預設集的用法。關鍵
+  通常是行銷／概覽頁面；型錄應該呈現的是預設集的用法。關鍵
   要求是這份 README 能在 `documentation` URL 取得，讓使用者能在下載發行成品*之前*先
   閱讀它 — 同一個檔案也可以同時隨附在
   發行 ZIP 裡面，這沒有問題。
 - **包含一條有效的 Spec Kit CLI 安裝命令** *（強制執行）*。所連結的 README 必須
   包含至少一條 `specify preset add ...` 呼叫。最好使用
-  目錄安裝形式，其 URL 與你的下載 URL 相符：
+  型錄安裝形式，其 URL 與你的下載 URL 相符：
 
   ```bash
   # <download-url> is the same URL you submit as the catalog Download URL —
@@ -226,11 +226,11 @@ URL，其路徑以 `README.md` 結尾、能解析到可讀的檔案，且包含�
 
 ---
 
-## 提交至目錄
+## 提交至型錄
 
-### 了解目錄
+### 了解型錄
 
-Spec Kit 使用雙目錄系統：
+Spec Kit 使用雙型錄系統：
 
 - **`catalog.json`** — 官方、已驗證的預設集（預設允許安裝）
 - **`catalog.community.json`** — 社群貢獻的預設集（預設僅供發現）
@@ -244,7 +244,7 @@ git clone https://github.com/YOUR-USERNAME/spec-kit.git
 cd spec-kit
 ```
 
-### 2. 將預設集加入社群目錄
+### 2. 將預設集加入社群型錄
 
 編輯 `presets/catalog.community.json` 並加入你的預設集。
 
@@ -340,7 +340,7 @@ git push origin add-your-preset
 ### 提交後會發生什麼
 
 1. 當 issue 是透過預設集提交表單開啟時，GitHub 會套用 `triage-must-have` 判定。這個接收自動化專屬於預設集提交，不會改變其他 issue 的人工分類準則。
-2. 維護者在 issue 分類時審查該 issue，並套用獨立的 `preset-submission` 標籤，這會啟動自動化的目錄驗證。在這個公開儲存庫中，貢獻者無法自行套用該標籤，因此沒有什麼需要標記或重新請求的 — issue 只需在分類中等待。
+2. 維護者在 issue 分類時審查該 issue，並套用獨立的 `preset-submission` 標籤，這會啟動自動化的型錄驗證。在這個公開儲存庫中，貢獻者無法自行套用該標籤，因此沒有什麼需要標記或重新請求的 — issue 只需在分類中等待。
 3. 自動化工作流程會驗證提交，並在驗證通過時，於一份草稿 pull request 中更新 `presets/catalog.community.json` 與 `docs/community/presets.md`
 4. 維護者審查產生的 pull request，並在核准時合併
 5. 你的預設集變得可透過 `specify preset search` 被發現

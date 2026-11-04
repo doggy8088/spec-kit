@@ -134,4 +134,4 @@ specify extension enable assess
 
 ## 與其他擴充功能的關係
 
-`assess` 刻意設計為**通用、角色中立**的探索軌道——創辦人、PM、BA、工程師或設計師都能使用。社群目錄中更豐富或更專門的 SDD 前置流程（例如 product-lifecycle orchestrators、technical-discovery、intake-normalization、brownfield onboarding）可以疊加在它之上，或把成果餵給它；`assess` 的目標是成為最小、最有主張的漏斗，乾淨地止於 `/speckit-specify` 交接點。
+`assess` 刻意設計為**通用、角色中立**的探索軌道——創辦人、PM、BA、工程師或設計師都能使用。社群型錄中更豐富或更專門的 SDD 前置流程（例如 product-lifecycle orchestrators、technical-discovery、intake-normalization、brownfield onboarding）可以疊加在它之上，或把成果餵給它；`assess` 的目標是成為最小、最有主張的漏斗，乾淨地止於 `/speckit-specify` 交接點。

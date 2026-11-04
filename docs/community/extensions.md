@@ -1,7 +1,7 @@
 # 社群擴充功能
 
 > [!NOTE]
-> 社群擴充功能由各自作者獨立建立與維護。維護者僅確認目錄項目完整且格式正確，不審查、稽核、背書或支援擴充功能程式碼本身。Community Extensions 網站也是第三方資源。安裝前請先檢視擴充功能原始碼，並自行斟酌使用。
+> 社群擴充功能由各自作者獨立建立與維護。維護者僅確認型錄項目完整且格式正確，不審查、稽核、背書或支援擴充功能程式碼本身。Community Extensions 網站也是第三方資源。安裝前請先檢視擴充功能原始碼，並自行斟酌使用。
 
 🔍 **在 [Community Extensions 網站](https://speckit-community.github.io/extensions/)瀏覽與搜尋社群擴充功能。**
 
@@ -15,7 +15,7 @@
 - `integration` — 與外部平台同步
 - `visibility` — 回報專案健康狀況或進度
 
-**效果**（標準的 `extension.yml`／目錄值）：
+**效果**（標準的 `extension.yml`／型錄值）：
 
 - `read-only` — 產生報告而不修改檔案（在表格中顯示為 `Read-only`）
 - `read-write` — 修改檔案、建立產出物或更新規格（在表格中顯示為 `Read+Write`）
@@ -56,7 +56,7 @@
 | BrownKit — Brownfield Discovery for Spec-Kit | 針對既有程式碼庫的證據驅動能力探索、安全與 QA 風險評估。 | `process` | 讀寫 | [BrownKit](https://github.com/MaksimShevtsov/BrownKit) |
 | Bugfix Workflow | 結構化錯誤修正工作流程，捕捉錯誤、追蹤至規格產出物，並精準修補規格 | `process` | 讀寫 | [spec-kit-bugfix](https://github.com/Quratulain-bilal/spec-kit-bugfix) |
 | Canon | 加入以 canon 為驅動（以基線為驅動）的工作流程：spec-first、code-first、spec-drift。需要安裝 Canon Core 預設集。 | `process` | 讀寫 | [spec-kit-canon](https://github.com/maximiliamus/spec-kit-canon/tree/master/extension) |
-| Catalog CI | spec-kit 社群目錄項目的自動化驗證，包含結構、URL、差異與 linting | `process` | 唯讀 | [spec-kit-catalog-ci](https://github.com/Quratulain-bilal/spec-kit-catalog-ci) |
+| Catalog CI | spec-kit 社群型錄項目的自動化驗證，包含結構、URL、差異與 linting | `process` | 唯讀 | [spec-kit-catalog-ci](https://github.com/Quratulain-bilal/spec-kit-catalog-ci) |
 | Charter | 從共用片段登錄組合專案憲章 | `process` | 讀寫 | [spec-kit-charter](https://github.com/Fyloss/spec-kit-charter) |
 | CI Guard | CI/CD 的規格合規關卡，驗證規格存在、檢查漂移，並在有落差時封鎖合併 | `process` | 唯讀 | [spec-kit-ci-guard](https://github.com/Quratulain-bilal/spec-kit-ci-guard) |
 | Checkpoint Extension | 在實作中途提交變更，避免最後只留下一個非常大的提交 | `code` | 讀寫 | [spec-kit-checkpoint](https://github.com/aaronrsun/spec-kit-checkpoint) |
@@ -76,7 +76,7 @@
 | EARS Requirements Syntax | 使用 EARS 撰寫、lint 與轉換需求，EARS 是五種業界標準句型，用於無歧義、可測試的需求 | `docs` | 讀寫 | [spec-kit-ears](https://github.com/dhruv-15-03/spec-kit-ears) |
 | Epic | 將過大而無法以單一功能完成的工作拆解為多個功能，依序交付，並讓決策在各功能間保持一致。 | `process` | 讀寫 | [spec-kit-epic](https://github.com/pmckeown/spec-kit-epic) |
 | Evaluator Contract | 與服務提供者無關的評估器合約，涵蓋規格驅動開發各階段的證據、出處、不確定性與復原。 | `process` | 讀寫 | [spec-kit-evaluator](https://github.com/electrohire/spec-kit-evaluator) |
-| Extensify | 建立並驗證擴充功能與擴充功能目錄 | `process` | 讀寫 | [extensify](https://github.com/mnriem/spec-kit-extensions/tree/main/extensify) |
+| Extensify | 建立並驗證擴充功能與擴充功能型錄 | `process` | 讀寫 | [extensify](https://github.com/mnriem/spec-kit-extensions/tree/main/extensify) |
 | Figma Starter | 將 Figma 區段的畫面轉換為源自 Figma 的規格，並將 OpenAPI/Swagger 文件轉換為實體模型與各頁面的 UI 到 API 綁定，再交接至 /speckit.specify | `docs` | 讀寫 | [spec-kit-figma-starter](https://github.com/OmneWave/spec-kit-figma-starter) |
 | Fix Findings | 自動化的 analyze-fix-reanalyze 迴圈，解決規格發現事項直到乾淨為止 | `code` | 讀寫 | [spec-kit-fix-findings](https://github.com/Quratulain-bilal/spec-kit-fix-findings) |
 | FixIt Extension | 具規格意識的錯誤修正，將錯誤對應至規格產出物、提出計畫，並套用最小變更 | `code` | 讀寫 | [spec-kit-fixit](https://github.com/speckit-community/spec-kit-fixit) |
@@ -89,7 +89,7 @@
 | Guildwork: request, verdict, register | 在具名的人員核准書面請求之前，不撰寫任何程式碼，且每個判定都被保留。 | `process` | 讀寫 | [Guildwork](https://github.com/Simon-Pacifae-Dupont/Guildwork) |
 | Improve Extension | 以資深顧問身分稽核任何程式碼庫，並在 specs/ 之下撰寫優先排序、自包含的規格提示詞，供 spec-kit 生命週期處理 | `process` | 讀寫 | [spec-kit-improve](https://github.com/d0whc3r/spec-kit-improve) |
 | Intake | 將 PRD、設計、HTML SSOT 與測試案例證據正規化為可供 SDD 使用的 intake 產出物。 | `docs` | 讀寫 | [spec-kit-intake](https://github.com/bigsmartben/spec-kit-intake) |
-| Intelligent Agent Orchestrator | 跨目錄代理探索與智慧的提示詞到命令路由 | `process` | 讀寫 | [spec-kit-orchestrator](https://github.com/pragya247/spec-kit-orchestrator) |
+| Intelligent Agent Orchestrator | 跨型錄代理探索與智慧的提示詞到命令路由 | `process` | 讀寫 | [spec-kit-orchestrator](https://github.com/pragya247/spec-kit-orchestrator) |
 | Intent Reconciliation | 將實作過程中發現的決策，與已核准的功能意圖對帳 | `process` | 讀寫 | [spec-kit-reconcile](https://github.com/SuhaibAslam/spec-kit-reconcile) |
 | Iterate | 以兩階段的定義與套用工作流程迭代規格文件，在實作中途精修規格，並直接回到打造 | `docs` | 讀寫 | [spec-kit-iterate](https://github.com/imviancagrace/spec-kit-iterate) |
 | Jira Integration | 從 spec-kit 規格與任務拆解建立 Jira Epics、Stories 與 Issues，支援可設定的階層與自訂欄位 | `integration` | 讀寫 | [spec-kit-jira](https://github.com/mbachorik/spec-kit-jira) |
@@ -131,7 +131,7 @@
 | Plan Review Gate | 要求 spec.md 與 plan.md 先透過 MR/PR 合併，才允許產生任務 | `process` | 唯讀 | [spec-kit-plan-review-gate](https://github.com/luno/spec-kit-plan-review-gate) |
 | PR Bridge | 從規格產出物自動產生 pull request 說明、檢核清單與摘要 | `process` | 唯讀 | [spec-kit-pr-bridge-](https://github.com/Quratulain-bilal/spec-kit-pr-bridge-) |
 | Pre-Spec Cards | 以卡片為基礎的規格前思考：貼上構想，取得你的卡片與可能遺漏的路徑，再逐一推演，包含故事、障礙、取捨、難度與回報，然後才執行 /speckit.specify | `process` | 讀寫 | [pre-spec](https://github.com/bendlikeabamboo/pre-spec) |
-| Presetify | 建立並驗證預設集與預設集目錄 | `process` | 讀寫 | [presetify](https://github.com/mnriem/spec-kit-extensions/tree/main/presetify) |
+| Presetify | 建立並驗證預設集與預設集型錄 | `process` | 讀寫 | [presetify](https://github.com/mnriem/spec-kit-extensions/tree/main/presetify) |
 | Product Definition as Code (PDaC) | 將 Spec Kit 功能奠基於已接受的產品定義，再驗證交付產出物中的引用 | `process` | 讀寫 | [productshape](https://github.com/juangcarmona/productshape) |
 | Product Forge | Spec Kit 的完整產品生命週期協調器：research → product-spec → plan → tasks → implement → verify → test → release-readiness，橫跨 express/lite/standard/v-model 模式，具備人工介入關卡。 | `process` | 讀寫 | [speckit-product-forge](https://github.com/VaiYav/speckit-product-forge) |
 | Product Spec Extension | 從工程規格產生 PRFAQ、Lean PRD、利害關係人摘要與技術設計。 | `docs` | 讀寫 | [spec-kit-product](https://github.com/d0whc3r/spec-kit-product) |

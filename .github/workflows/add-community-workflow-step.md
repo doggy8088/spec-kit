@@ -1,5 +1,5 @@
 ---
-description: "處理社群工作流程步驟提交——驗證中繼資料並提出目錄更新"
+description: "處理社群工作流程步驟提交——驗證中繼資料並提出型錄更新"
 
 on:
   issues:
@@ -136,13 +136,13 @@ Additional Context 為選填。其他欄位皆必填；AI Disclosure 可為
 `N/A`。空值與 `_No response_` 視為欄位缺失。
 在將 Extra File URLs 與 Per-file SHA-256 Digests 解析為 JSON 物件前，
 先去除 Markdown 程式碼圍欄。額外檔案物件可以是 `{}`。從這些正規欄位
-建構目錄項目；不要要求重複的 Proposed Catalog Entry，也不要從
+建構型錄項目；不要要求重複的 Proposed Catalog Entry，也不要從
 Additional Context 複製任意 JSON 鍵。
 
 ## 2. 驗證每個必要檢查
 
 收集所有已完成檢查的結果。在每個必要檢查都完成並通過之前，
-不要編輯目錄／文件檔案。
+不要編輯型錄／文件檔案。
 
 ### 身分與發行
 
@@ -211,10 +211,10 @@ Additional Context 複製任意 JSON 鍵。
 - 在建構項目之前，將識別字、發行參照與對應證據記錄到驗證結果中。
   這是授權中繼資料驗證，不是法律意見、程式碼稽核或安全背書。
 
-### 目錄散佈
+### 型錄散佈
 
-步驟目錄安裝的是個別檔案。它的 `download_url` 是作者直接封存安裝測試
-的出處來源，不是目錄的擷取目標。從正規表單建構項目：
+步驟型錄安裝的是個別檔案。它的 `download_url` 是作者直接封存安裝測試
+的出處來源，不是型錄的擷取目標。從正規表單建構項目：
 
 - `id`、`name`、`version`、`description`、`author`、`repository`、
   `documentation`、`license` 與 `download_url`，與表單相符。提供時
@@ -234,7 +234,7 @@ Additional Context 複製任意 JSON 鍵。
 - `verified: false`。絕對不要將它設為 true。
 
 不要從 Additional Context 複製作者提供的 `releases` 或諸如
-`_install_allowed` 的內部欄位。歷史發行由既有目錄管理，不由提交者
+`_install_allowed` 的內部欄位。歷史發行由既有型錄管理，不由提交者
 提供。Number of Provided Step Types 必須是 `1`，且 Step Type Provided
 必須指名提交的類型鍵；相符的 Python 類別以 Required Attestations
 為準，不進行程式碼審查。
@@ -287,7 +287,7 @@ HTTP 404 與重新導向是提交失敗。絕對不要將非零結束視為下�
 使用 `yaml.safe_load` 將下載的 `step.yml` 解析為資料，絕對不要使用
 不安全的 YAML 載入。要求它是含有 `step` 對應的對應結構；
 `step.type_key`、`step.name`、`step.version`、`step.author` 與
-`step.description` 必須與表單相符。相容性、授權與出處是目錄／收件
+`step.description` 必須與表單相符。相容性、授權與出處是型錄／收件
 欄位，不是 `step.yml` 的必填欄位。輔助工具要求 `step.yml` 與
 `__init__.py` 兩者都不得為空；不要檢查或審查初始化程式的實作。
 額外檔案可以是二進位檔；對其確切位元組進行雜湊。
@@ -309,7 +309,7 @@ Markdown 檔案（`.md`，不區分大小寫）。它不一定要名為
 輸出、失敗行為與副作用，並包含有效的 `specify workflow step add <step-id> --from
 <archive-url>` 或 `--dev <directory>` 命令，以及含有
 `type: <step-id>` 的工作流程 YAML。單獨的 `step.yml` URL 不是可安裝的
-封存檔。內建的社群目錄僅供探索，正如 Spec Kit 自己的社群指南所述。
+封存檔。內建的社群型錄僅供探索，正如 Spec Kit 自己的社群指南所述。
 不要要求提交的文件重述該政策，也不要因為完整的使用文件省略該政策
 而判它失敗。
 
@@ -324,7 +324,7 @@ Runtime and Tool Dependencies 與 Step Type Provided 必須與該文件一致。
 讀取 `workflows/step-catalog.community.json`。缺少的 ID 新增；
 已存在的 ID 原地更新。拒絕降級。同版本的修復必須明確標示為中繼資料
 更正，且不得更改檔案 URL 或摘要。保留不相關的項目、最上層結構描述
-與目錄 URL、原始的 `created_at`，以及既有的 `releases`。
+與型錄 URL、原始的 `created_at`，以及既有的 `releases`。
 
 版本更新時，將先前目前發行的 `step_yml_url`（或
 `url`）、`init_url`、`extra_files`、`sha256`、`requires`、`provides`
@@ -332,13 +332,13 @@ Runtime and Tool Dependencies 與 Step Type Provided 必須與該文件一致。
 `version` 或 `releases` 複製到歷史紀錄中。每個歷史發行都需要自己完整
 的摘要；若舊項目缺少這些摘要，驗證屬於 Blocked，等待維護者修復，
 不是提交者的失敗。絕對不要虛構歷史雜湊值，也不要丟棄歷史。請參閱
-儲存庫擁有的目錄契約：
+儲存庫擁有的型錄契約：
 `src/specify_cli/workflows/step/catalog/_versions.py`。
 
-### 快照驗證過的目錄更新
+### 快照驗證過的型錄更新
 
-依循預設集提交驗證工具的快照／產生檔案檢查模式，在進行任何目錄
-編輯之前，先對原始目錄執行儲存庫擁有的驗證工具。在提交 JSON 中
+依循預設集提交驗證工具的快照／產生檔案檢查模式，在進行任何型錄
+編輯之前，先對原始型錄執行儲存庫擁有的驗證工具。在提交 JSON 中
 完成 `catalog_entry`，包含所有驗證過的中繼資料，包括 `id`、`version`
 與 `verified: false`。只有在作者明確要求同版本的中繼資料更正時，
 才將 `metadata_only` 設為 JSON 的 `true`；絕對不要從驗證失敗推斷
@@ -354,14 +354,14 @@ Runtime and Tool Dependencies 與 Step Type Provided 必須與該文件一致。
 python3 .github/scripts/validate_community_workflow_step.py snapshot --submission /tmp/gh-aw/step-submission.json
 ```
 
-驗證工具會讀取原始目錄與下載收據，驗證版本排序與歷史檔案摘要，
-並將確切的預期目錄寫入 `/tmp/gh-aw/step-catalog-snapshot.json`。
-既有歷史、原始 `created_at`、不相關的項目、結構描述／目錄 URL 與
+驗證工具會讀取原始型錄與下載收據，驗證版本排序與歷史檔案摘要，
+並將確切的預期型錄寫入 `/tmp/gh-aw/step-catalog-snapshot.json`。
+既有歷史、原始 `created_at`、不相關的項目、結構描述／型錄 URL 與
 選填的探索中繼資料都會保留。目前發行專屬的欄位會被取代，而非繼承。
 版本更新時，先前目前的檔案中繼資料會移入歷史。
 既有發行摘要缺失或格式錯誤屬於 Blocked（結束代碼 2）；降級，或未經
 核准／會更改內容的同版本更新，則失敗（結束代碼 1）。
-目錄變更後，不要編輯或重新產生快照。
+型錄變更後，不要編輯或重新產生快照。
 
 ## 3. 恰好套用一個結果
 
@@ -379,11 +379,11 @@ python3 .github/scripts/validate_community_workflow_step.py snapshot --submissio
 加上 `validation-failed`，並在需要作者提供資訊時加上 `needs-info`。
 停止，不進行編輯、不建立 PR。
 
-**Passed：** 所有必要檢查都成功完成。繼續進行目錄更新與草稿 PR。
+**Passed：** 所有必要檢查都成功完成。繼續進行型錄更新與草稿 PR。
 在 PR 發佈之前不要加上 `validation-passed`；conclusion job 只在
 安全輸出處理成功且 PR 建立之後，才套用它並移除過期的失敗／資訊標籤。
 
-## 4. 更新目錄與文件
+## 4. 更新型錄與文件
 
 只編輯 `workflows/step-catalog.community.json` 與
 `docs/community/workflow-steps.md`。
@@ -393,11 +393,11 @@ python3 .github/scripts/validate_community_workflow_step.py snapshot --submissio
 UTC 日期的午夜，`created_at` 只為新項目設定。以 Step ID 排序項目；
 使用兩個空格的 JSON 縮排與結尾換行。使用儲存庫擁有的 Python 驗證
 完整的 JSON，不要匯入提交的步驟。使用驗證工具的 `expected_catalog`
-快照執行目錄更新；不要憑記憶重建歷史或時間戳。
+快照執行型錄更新；不要憑記憶重建歷史或時間戳。
 
 在 Available Step Types 表格中新增或更新一列，依 Step Type Name 排序。
 與其他社群提交表格一樣，此表格不將套件作者與維護者混為一談，
-也不收集獨立的 Maintainer 欄位。Author 只保留在目錄與資訊清單
+也不收集獨立的 Maintainer 欄位。Author 只保留在型錄與資訊清單
 對應檢查中：
 
 ```text
@@ -412,21 +412,21 @@ UTC 日期的午夜，`created_at` 只為新項目設定。以 Step ID 排序項
 對於已列出且有版本專屬註記的步驟更新，依驗證過的發行文件更新
 那些註記。
 
-在發出 PR 安全輸出之前，驗證產生的目錄：
+在發出 PR 安全輸出之前，驗證產生的型錄：
 
 ```bash
 python3 .github/scripts/validate_community_workflow_step.py generated --submission /tmp/gh-aw/step-submission.json
 ```
 
-結束代碼為零表示完整目錄與快照相符，包括先前發行的移轉與未變更的
-歷史紀錄。結束代碼 3 是代理產生的目錄錯誤：修復目錄並使用原始
+結束代碼為零表示完整型錄與快照相符，包括先前發行的移轉與未變更的
+歷史紀錄。結束代碼 3 是代理產生的型錄錯誤：修復型錄並使用原始
 快照重新執行此檢查，這不是提交者的失敗。結束代碼 2 是 Blocked。
 此檢查未完成或失敗時，絕對不要建立 PR 或回報成功。
 
 ## 5. 建立一個草稿 PR
 
 這個由儲存庫擁有的 gh-aw 維護工作流程不執行貢獻者未結 PR 數量檢查，
-也不要求確認。驗證成功且允許的目錄／文件檔案更新完成後，無論提交者
+也不要求確認。驗證成功且允許的型錄／文件檔案更新完成後，無論提交者
 或提出帳號目前有多少未結 PR，一律發出已設定的草稿 `create_pull_request`
 安全輸出。
 
@@ -444,5 +444,5 @@ python3 .github/scripts/validate_community_workflow_step.py generated --submissi
 Assisted-by: GitHub Copilot (model: <name-if-known>, autonomous)
 ```
 
-絕對不要修改其他檔案、註冊伴隨目錄、更改目錄信任政策，或宣稱某個
+絕對不要修改其他檔案、註冊伴隨型錄、更改型錄信任政策，或宣稱某個
 列表項目是安全背書。

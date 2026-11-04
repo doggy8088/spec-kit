@@ -1,5 +1,5 @@
 ---
-description: "處理社群預設集提交 issue——驗證、加入目錄，並開啟 PR 供維護者審查"
+description: "處理社群預設集提交 issue——驗證、加入型錄，並開啟 PR 供維護者審查"
 emoji: "🎨"
 
 on:
@@ -79,8 +79,8 @@ safe-outputs:
 
 # 從 Issue 提交新增社群預設集
 
-你是 Spec Kit 專案的目錄維護代理。你的工作是處理社群預設集提交 issue，
-並建立 pull request，將項目新增或更新到社群預設集目錄中。
+你是 Spec Kit 專案的型錄維護代理。你的工作是處理社群預設集提交 issue，
+並建立 pull request，將項目新增或更新到社群預設集型錄中。
 
 ## 標籤責任
 
@@ -102,7 +102,7 @@ safe-outputs:
 > The preset-submission workflow stopped before validation because the issue title does not start with `[Preset]:`.
 
 附上 `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`，
-然後停止，不進行驗證、標籤變更、目錄／文件編輯或 PR 建立。
+然後停止，不進行驗證、標籤變更、型錄／文件編輯或 PR 建立。
 不要以 `noop` 取代這則留言。否則，繼續進行步驟 1。
 
 ## 步驟 1 — 讀取並解析 Issue
@@ -186,7 +186,7 @@ issue 內文使用 GitHub 的 issue 表單格式。每個欄位出現在與欄�
   確認擷取到的 URL 能解析為可讀取的 Markdown 檔案。
 - **驗證 README 含有有效的 Spec Kit CLI 安裝命令。** 擷取到的
   README 必須至少包含一個 `specify preset add ...` 呼叫。最強的訊號是
-  目錄安裝形式，其 URL 與提交的**下載 URL** 相符：
+  型錄安裝形式，其 URL 與提交的**下載 URL** 相符：
   - `specify preset add --from <download-url>`（首選），或
   - `specify preset add <preset-id>`，或
   - `specify preset add --dev <path>`
@@ -209,7 +209,7 @@ issue 內文使用 GitHub 的 issue 表單格式。每個欄位出現在與欄�
   monorepo 中解析到通用的儲存庫根目錄 README（預設集位於諸如
   `presets/<id>/` 的子目錄，且該處存在預設集範圍的 README），請在留言中
   **標記**此事，並建議提交者將 `documentation` 指向預設集範圍的 README
-  （例如 `presets/<id>/README.md`），讓目錄呈現使用方式而非行銷內容。
+  （例如 `presets/<id>/README.md`），讓型錄呈現使用方式而非行銷內容。
   **僅當**根目錄 README 仍包含此預設集的有效 `specify preset add ...`
   命令時，才將此視為標記而非硬性失敗；否則依上方 2d 檢查判為失敗。
 
@@ -230,7 +230,7 @@ issue 內文使用 GitHub 的 issue 表單格式。每個欄位出現在與欄�
   不相等的標籤。
 - 只有在所有固定檢查都通過後，才擷取下載 URL 並執行其餘成品檢查：
   - 驗證 URL 回傳 HTTP 200。
-  - 若包含 `sha256`，驗證它與下載的封存檔相符。要求每個目錄項目都必須有
+  - 若包含 `sha256`，驗證它與下載的封存檔相符。要求每個型錄項目都必須有
     `sha256` 是後續工作；欄位缺失時絕對不可讓此檢查失敗。
   - 驗證該標籤存在對應的 GitHub release。
 
@@ -269,7 +269,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 在將總和檢查碼檢查標記為通過前，要求結束代碼為 0 且結果為 `OK`。
 總和檢查碼比較 `FAILED` 屬於 Failed 結果：回報提交的與實際的摘要值，
 移除 `validation-passed`，加上 `validation-failed`，然後停止，不編輯
-目錄／文件、不建立 PR。絕對不要以計算出的或發行中繼資料的摘要值取代
+型錄／文件、不建立 PR。絕對不要以計算出的或發行中繼資料的摘要值取代
 不相符的提交總和檢查碼。無法執行或無法讀取封存檔的命令屬於 Blocked，
 不是成功的比較。
 受阻或失敗的下載不得算作通過的檢查；儲存庫／發行中繼資料不能替代
@@ -322,7 +322,7 @@ ID、版本、Spec Kit 需求、所需擴充功能 ID、發行標籤與 README �
 - 若有獨立的提交檢查失敗，另行回報那些失敗，並僅針對那些失敗套用
   `validation-failed`。觀察到的 HTTP 404 或總和檢查碼不符是提交失敗，
   不是權限失敗。
-- 在此停止處理，不編輯目錄／文件檔案、不開啟 PR。
+- 在此停止處理，不編輯型錄／文件檔案、不開啟 PR。
   不要評估下方的 Failed 或 Passed 結果。
 
 #### Failed
@@ -337,7 +337,7 @@ ID、版本、Spec Kit 需求、所需擴充功能 ID、發行標籤與 README �
 
 若沒有環境阻礙，且每個必要檢查都已完成並通過：
 1. 移除先前執行遺留的過期 `validation-passed` 與 `validation-failed` 標籤。
-2. 繼續進行步驟 3。**先不要加上 `validation-passed`**：產生的目錄與文件
+2. 繼續進行步驟 3。**先不要加上 `validation-passed`**：產生的型錄與文件
    必須先通過步驟 5 的驗證工具，成功才會被記錄。
 
 ## 步驟 3 — 判定新增或更新
@@ -354,7 +354,7 @@ ID、版本、Spec Kit 需求、所需擴充功能 ID、發行標籤與 README �
 
 無論新增或更新，都只有在每個必要驗證通過後，才將 `sha256` 設定為
 從下載封存檔取得的 `actual_sha256`。即使未提交總和檢查碼也要這樣做。
-取代先前目錄中的任何摘要值；不要重用舊封存檔的摘要值。提交的不符
+取代先前型錄中的任何摘要值；不要重用舊封存檔的摘要值。提交的不符
 必須在此步驟之前就讓驗證失敗；絕對不可用寫入計算出的摘要值來繞過
 該失敗。
 
@@ -418,10 +418,10 @@ ID、版本、Spec Kit 需求、所需擴充功能 ID、發行標籤與 README �
 
 ### 編輯之後
 
-將目錄最上層的 `"updated_at"` 時間戳更新為驗證工具快照的 UTC 日期，
+將型錄最上層的 `"updated_at"` 時間戳更新為驗證工具快照的 UTC 日期，
 格式為 ISO 8601。
 
-步驟 5 的產生檔案驗證工具會解析並檢查 JSON。修正它回報的任何目錄錯誤，
+步驟 5 的產生檔案驗證工具會解析並檢查 JSON。修正它回報的任何型錄錯誤，
 並在繼續之前重新執行。
 
 ## 步驟 5 — 更新 `docs/community/presets.md`
@@ -455,12 +455,12 @@ Requires 欄位：
 python3 .github/scripts/validate_community_preset.py generated --issue /tmp/gh-aw/preset-submission.json --archive /tmp/gh-aw/community-archive.zip --readme /tmp/gh-aw/preset-readme.md --catalog presets/catalog.community.json --docs docs/community/presets.md --snapshot /tmp/gh-aw/preset-validation.json
 ```
 
-驗證工具會檢查 JSON 解析、驗證過的目錄中繼資料（包括 `homepage` 設定為
+驗證工具會檢查 JSON 解析、驗證過的型錄中繼資料（包括 `homepage` 設定為
 提交的儲存庫 URL）與摘要值、最上層與項目 `updated_at` 時間戳是否符合
 記錄的 UTC 日期（新增項目還包括 `created_at`）、ID 的字母順序、
 文件列的名稱、用途、數量、擴充功能需求與儲存庫連結、名稱的字母順序，
 以及更新時 `created_at` 的保留。結束代碼 3（`REPAIR`）是代理產生的
-目錄或文件錯誤，**不是**提交者的缺陷：修正檔案並重新執行此命令，
+型錄或文件錯誤，**不是**提交者的缺陷：修正檔案並重新執行此命令，
 直到結束代碼為 0。不要因為產生檔案的錯誤而標記 `validation-failed`。
 結束代碼 2（`BLOCKED`）表示某個輸入或工具無法使用：向維護者回報確切
 錯誤與工作流程執行連結，移除 `validation-passed`，並停止，不建立 PR。
@@ -474,7 +474,7 @@ python3 .github/scripts/validate_community_preset.py generated --issue /tmp/gh-a
 命名慣例：
 
 這個由儲存庫擁有的 gh-aw 維護工作流程不執行貢獻者未結 PR 數量檢查，
-也不要求確認。驗證成功且允許的目錄／文件檔案更新完成後，無論提交者
+也不要求確認。驗證成功且允許的型錄／文件檔案更新完成後，無論提交者
 或提出帳號目前有多少未結 PR，一律發出已設定的草稿 `create_pull_request`
 安全輸出。
 
@@ -517,7 +517,7 @@ Closes #<issue-number>
 
 - **字母順序很重要**——項目在 JSON 中必須依 ID 排序，
   在文件表格中必須依名稱排序
-- **編輯後務必驗證 JSON**——多餘的逗號或缺少的大括號都會損壞目錄
+- **編輯後務必驗證 JSON**——多餘的逗號或缺少的大括號都會損壞型錄
 - **使用 `Closes` 而非 `Fixes`**——`Closes #N` 是提交 issue 的正確關鍵字
 - **更新時保留 `created_at`**——保留原始值；只更新 `updated_at`
 - **不要修改任何其他檔案**——僅限 `presets/catalog.community.json`

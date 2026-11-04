@@ -223,7 +223,7 @@ tests/specify_cli/integrations/test_command_search.py
 
 並非每個測試都是命令測試，即使它屬於對應的套件樹：
 
-- 領域模型、註冊表、管理員與目錄行為屬於父套件層級，而不是巢狀命令命名空間之下，也不在 `test_command_*.py` 中。既有的整合領域套件，例如 `tests/test_extensions.py`，可保留原位，直到另外重新組織。
+- 領域模型、註冊表、管理員與型錄行為屬於父套件層級，而不是巢狀命令命名空間之下，也不在 `test_command_*.py` 中。既有的整合領域套件，例如 `tests/test_extensions.py`，可保留原位，直到另外重新組織。
 - 跨領域 CLI 合約保留在更廣泛的整合測試中。
 - 共用固定資料屬於能服務其所有消費者的最窄 `conftest.py`。
 - 當命令與領域測試都依賴相同行為時，測試輔助工具應共用而非複製。

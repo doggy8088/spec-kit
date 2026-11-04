@@ -1,6 +1,6 @@
 # 工作流程系統架構
 
-本文件說明工作流程引擎的內部架構 — 定義如何被解析、步驟如何被分派、狀態如何被持久化，以及目錄如何被解析。
+本文件說明工作流程引擎的內部架構 — 定義如何被解析、步驟如何被分派、狀態如何被持久化，以及型錄如何被解析。
 
 使用說明請參閱 [README.md](README.md)。
 
@@ -250,7 +250,7 @@ condition: "{{ inputs.items | length }}"   # 0 -> False, any non-zero count -> T
 
 缺少必填輸入會拋出 `ValueError`。帶有 `default` 值的輸入在未提供時會使用預設值。
 
-## 目錄系統
+## 型錄系統
 
 ```mermaid
 flowchart TD
@@ -272,9 +272,9 @@ flowchart TD
     style K fill:#9e9e9e,color:#fff
 ```
 
-目錄以 1 小時快取擷取（依 URL 區分、經 SHA256 雜湊的快取檔案，位於 `.specify/workflows/.cache/`）。每個目錄項目都有一個 `priority`（用於合併排序）與 `install_allowed` 旗標。
+型錄以 1 小時快取擷取（依 URL 區分、經 SHA256 雜湊的快取檔案，位於 `.specify/workflows/.cache/`）。每個型錄項目都有一個 `priority`（用於合併排序）與 `install_allowed` 旗標。
 
-當 `specify workflow add <id>` 從目錄安裝時，它會從目錄項目的 `url` 欄位下載工作流程 YAML 到 `.specify/workflows/<id>/workflow.yml`。
+當 `specify workflow add <id>` 從型錄安裝時，它會從型錄項目的 `url` 欄位下載工作流程 YAML 到 `.specify/workflows/<id>/workflow.yml`。
 
 ## 狀態與設定位置
 
@@ -285,9 +285,9 @@ flowchart TD
 | 執行狀態 | `.specify/workflows/runs/{run_id}/state.json` | JSON | 持久化的執行狀態 |
 | 執行輸入 | `.specify/workflows/runs/{run_id}/inputs.json` | JSON | 已解析的輸入值 |
 | 執行日誌 | `.specify/workflows/runs/{run_id}/log.jsonl` | JSONL | 僅附加的事件日誌 |
-| 目錄快取 | `.specify/workflows/.cache/*.json` | JSON | 快取的目錄項目（1 小時 TTL） |
-| 專案目錄 | `.specify/workflow-catalogs.yml` | YAML | 專案層級的目錄來源 |
-| 使用者目錄 | `~/.specify/workflow-catalogs.yml` | YAML | 使用者層級的目錄來源 |
+| 型錄快取 | `.specify/workflows/.cache/*.json` | JSON | 快取的型錄項目（1 小時 TTL） |
+| 專案型錄 | `.specify/workflow-catalogs.yml` | YAML | 專案層級的型錄來源 |
+| 使用者型錄 | `~/.specify/workflow-catalogs.yml` | YAML | 使用者層級的型錄來源 |
 
 ## 模組結構
 

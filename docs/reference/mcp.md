@@ -42,7 +42,7 @@ specify mcp
 
 ## 已安裝工作流程清單
 
-`specify_workflow_list` 接受選用的絕對路徑 `project_directory`（預設：伺服器啟動目錄）與 `limit`（1–1000，預設 100）。它只讀取已安裝的工作流程登錄；絕不載入自訂步驟、取得目錄、修復檔案或執行工作流程。
+`specify_workflow_list` 接受選用的絕對路徑 `project_directory`（預設：伺服器啟動目錄）與 `limit`（1–1000，預設 100）。它只讀取已安裝的工作流程登錄；絕不載入自訂步驟、取得型錄、修復檔案或執行工作流程。
 
 結果包含依序排列的 `items` 與布林值 `truncated`。工作流程項目包含 `kind: "workflow"`、`id`、`name`、`version`、可為 null 的 `description` 與 `enabled`。格式錯誤的個別登錄項目會產生 `kind: "warning"` 項目，包含 `code: "invalid_registry_entry"`、`workflow_id` 與 `message`，並位於其原始位置。limit 同時計算工作流程與警告。`truncated: true` 明確表示有項目被省略；將 `limit` 調高以取得更多，最多 1000。沒有接續游標。CLI 保留其完整清單。
 

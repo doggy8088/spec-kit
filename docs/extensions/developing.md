@@ -241,7 +241,7 @@ Hook 物件：
 
 #### `tags`
 
-用於目錄探索的標籤陣列。
+用於型錄探索的標籤陣列。
 
 #### `defaults`
 
@@ -577,16 +577,16 @@ zip -r spec-kit-my-ext-1.0.0.zip extension.yml commands/ scripts/ docs/
 specify extension add <extension-name> --from https://github.com/.../spec-kit-my-ext-1.0.0.zip
 ```
 
-### 選項 3：社群參考目錄
+### 選項 3：社群參考型錄
 
-提交到社群目錄供公開探索：
+提交到社群型錄供公開探索：
 
 1. 為你的擴充功能**建立 GitHub 發行版本**
 2. 使用 [Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml) 範本**建立 issue**
-3. **審查後**，維護者會更新目錄，你的擴充功能即可用：
+3. **審查後**，維護者會更新型錄，你的擴充功能即可用：
    - 使用者可瀏覽 `catalog.community.json` 探索你的擴充功能
    - 使用者將條目複製到自己的 `catalog.json`
-   - 使用者安裝：`specify extension add my-ext`（從其目錄）
+   - 使用者安裝：`specify extension add my-ext`（從其型錄）
 
 詳細提交說明請參閱[擴充功能發佈指南](publishing.md)。
 
@@ -782,7 +782,7 @@ hooks:
 
 1. 依本指南**建立你的擴充功能**
 2. 以 `--dev` 旗標**在本機測試**
-3. **與社群分享**（GitHub、目錄）
+3. **與社群分享**（GitHub、型錄）
 4. 根據回饋**迭代**
 
 祝擴充愉快！🚀

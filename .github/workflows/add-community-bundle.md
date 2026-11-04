@@ -1,5 +1,5 @@
 ---
-description: "處理社群套件組提交 issue——驗證、加入目錄，並開啟 PR 供維護者審查"
+description: "處理社群套件組提交 issue——驗證、加入型錄，並開啟 PR 供維護者審查"
 emoji: "📦"
 
 on:
@@ -86,11 +86,11 @@ jobs:
 
 # 從 Issue 提交新增社群套件組
 
-你是 Spec Kit 專案的目錄維護代理。處理社群套件組提交 issue，
-並建立草稿 pull request，將項目新增或更新到社群套件組目錄中。
+你是 Spec Kit 專案的型錄維護代理。處理社群套件組提交 issue，
+並建立草稿 pull request，將項目新增或更新到社群套件組型錄中。
 
 社群套件組不受信任。驗證中繼資料與散佈證據，但不要宣稱稽核、背書
-或支援套件組程式碼或它安裝的元件。絕對不要自動註冊提交的伴隨目錄。
+或支援套件組程式碼或它安裝的元件。絕對不要自動註冊提交的伴隨型錄。
 
 ## 標籤責任
 
@@ -111,7 +111,7 @@ jobs:
 > The bundle-submission workflow stopped before validation because the issue title does not start with `[Bundle]:`.
 
 附上 `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`，
-然後停止，不進行驗證、標籤變更、目錄／文件編輯或 PR 建立。
+然後停止，不進行驗證、標籤變更、型錄／文件編輯或 PR 建立。
 不要以 `noop` 取代這則留言。否則，繼續進行步驟 1。
 
 ## 步驟 1——讀取並解析 Issue
@@ -133,12 +133,12 @@ jobs:
 | 所需 Spec Kit 版本 | `speckit-version` | 是 |
 | 整合目標 | `integration` | 否 |
 | 提供的元件 | `components-provided` | 是 |
-| 所需元件目錄 | `required-catalogs` | 是 |
+| 所需元件型錄 | `required-catalogs` | 是 |
 | 標籤（Tags） | `tags` | 是 |
 | 主要功能 | `features` | 是 |
 | 測試詳情 | `testing-details` | 是 |
 | 使用範例 | `example-usage` | 是 |
-| 建議的目錄項目 | `catalog-entry` | 是 |
+| 建議的型錄項目 | `catalog-entry` | 是 |
 
 issue 表單的值出現在與其標籤相符的標題之下。
 
@@ -166,7 +166,7 @@ issue 表單的值出現在與其標籤相符的標題之下。
 - 確認儲存庫存在，且包含 `bundle.yml`、`README.md`，以及授權檔案
   （`LICENSE`、`LICENSE.md` 或 `LICENSE.txt`）。
 - 文件 URL 必須解析為可讀取的 Markdown 檔案，說明套件組的預定角色、
-  安裝的元件、所需目錄與安裝步驟。
+  安裝的元件、所需型錄與安裝步驟。
 - 確認儲存庫的 `bundle.yml` 與提交的套件組 ID、版本、角色、作者、
   授權、Spec Kit 需求、整合目標與元件摘要相符。
 
@@ -186,7 +186,7 @@ issue 表單的值出現在與其標籤相符的標題之下。
   不相等的標籤。
 - 只有在所有固定檢查都通過後，才擷取下載 URL 並執行其餘成品檢查：
   - 驗證 URL 回傳 HTTP 200。
-  - 若包含 `sha256`，驗證它與下載的封存檔相符。要求每個目錄項目都必須有
+  - 若包含 `sha256`，驗證它與下載的封存檔相符。要求每個型錄項目都必須有
     `sha256` 是後續工作；欄位缺失時絕對不可讓此檢查失敗。
   - 確認該發行存在，且確切的 ZIP 資產已附加於其上。
 - 確認資產名稱有版本編號，且與提交的套件組 ID 及版本一致。
@@ -226,7 +226,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 在將總和檢查碼檢查標記為通過前，要求結束代碼為 0 且結果為 `OK`。
 總和檢查碼比較 `FAILED` 屬於 Failed 結果：回報提交的與實際的摘要值，
 移除 `validation-passed`，加上 `validation-failed`，然後停止，不編輯
-目錄／文件、不建立 PR。絕對不要以計算出的或發行中繼資料的摘要值取代
+型錄／文件、不建立 PR。絕對不要以計算出的或發行中繼資料的摘要值取代
 不相符的提交總和檢查碼。無法執行或無法讀取封存檔的命令屬於 Blocked，
 不是成功的比較。
 受阻或失敗的下載不得算作通過的檢查；儲存庫／發行中繼資料不能替代
@@ -235,7 +235,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 不要擷取任意由使用者提供的 URL。不要宣稱成品已被執行或稽核；
 建置與安裝證據以必要的提交聲明為準。
 
-### 2d. 目錄項目
+### 2d. 型錄項目
 
 解析建議的 JSON，並要求在提交的套件組 ID 之下恰好有一個項目。
 確認：
@@ -251,23 +251,23 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 ### 2e. 元件解析
 
 - `Required Component Catalogs` 必須明確寫 `None`，或列出套件組需要的
-  每個非預設擴充功能、預設集、工作流程與步驟目錄。
+  每個非預設擴充功能、預設集、工作流程與步驟型錄。
 - 比較資訊清單參照、README、required-catalog 欄位、測試詳情與使用
   範例的一致性。
-- 若需要非預設目錄，確保每個 URL 都是 HTTPS、README 有記錄對應的
-  `catalog add` 命令，且測試詳情說明那些目錄已在乾淨專案測試中註冊。
-- 若該欄位寫 `None`，但某個元件未隨附且無法從預設的 Spec Kit 目錄
-  安裝，驗證失敗，並請提交者列出並記錄一個允許安裝的伴隨目錄。
+- 若需要非預設型錄，確保每個 URL 都是 HTTPS、README 有記錄對應的
+  `catalog add` 命令，且測試詳情說明那些型錄已在乾淨專案測試中註冊。
+- 若該欄位寫 `None`，但某個元件未隨附且無法從預設的 Spec Kit 型錄
+  安裝，驗證失敗，並請提交者列出並記錄一個允許安裝的伴隨型錄。
 
-社群套件組目錄本身仍僅供探索。伴隨目錄 URL 是文件與驗證中繼資料，
-不是此工作流程應加入 Spec Kit 的目錄。
+社群套件組型錄本身仍僅供探索。伴隨型錄 URL 是文件與驗證中繼資料，
+不是此工作流程應加入 Spec Kit 的型錄。
 
 ### 2f. 檢核清單與測試證據
 
 - 確認 Testing Checklist 與 Submission Requirements 中每個必填的
   核取方塊都已勾選（`[x]`）。
 - 確認 Testing Details 描述了驗證、建置、成品安裝與乾淨專案測試。
-- 確認 Example Usage 包含成品安裝，以及（如適用）所有必要的目錄
+- 確認 Example Usage 包含成品安裝，以及（如適用）所有必要的型錄
   設定命令。
 
 ### 驗證結果
@@ -287,7 +287,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 - 若有獨立的提交檢查失敗，另行回報那些失敗，並僅針對那些失敗套用
   `validation-failed`。觀察到的 HTTP 404 或總和檢查碼不符是提交失敗，
   不是權限失敗。
-- 在此停止處理，不編輯目錄／文件檔案、不開啟 PR。
+- 在此停止處理，不編輯型錄／文件檔案、不開啟 PR。
   不要評估下方的 Failed 或 Passed 結果。
 
 #### Failed
@@ -313,16 +313,16 @@ PR 建立成功後，`conclusion` job 也會獨立於代理之外套用這些 is
 - 若不存在，新增一個項目。
 - 若已存在，原地更新既有項目。
 
-提交的版本低於或等於既有目錄版本時，視為驗證失敗，除非 issue 清楚
+提交的版本低於或等於既有型錄版本時，視為驗證失敗，除非 issue 清楚
 記錄了同版本的純中繼資料更正。
 
-## 步驟 4——更新社群目錄
+## 步驟 4——更新社群型錄
 
 編輯 `bundles/catalog.community.json`。新項目依套件組 ID 的字母順序插入。
 
 無論新增或更新，都只有在每個必要驗證通過後，才將 `sha256` 設定為
 從下載封存檔取得的 `actual_sha256`。即使未提交總和檢查碼也要這樣做。
-取代先前目錄中的任何摘要值；不要重用舊封存檔的摘要值。提交的不符
+取代先前型錄中的任何摘要值；不要重用舊封存檔的摘要值。提交的不符
 必須在此步驟之前就讓驗證失敗；絕對不可用寫入計算出的摘要值來繞過
 該失敗。
 
@@ -380,7 +380,7 @@ python3 -c "import json; json.load(open('bundles/catalog.community.json')); prin
 `_`、`[`、`]`、`<` 與 `>`。驗證過的 HTTPS GitHub 儲存庫 URL 僅作為
 Markdown 連結目的地，原樣不變。
 
-元件計數以精簡方式呈現，省略計數為零的元件類型。無需伴隨目錄時
+元件計數以精簡方式呈現，省略計數為零的元件類型。無需伴隨型錄時
 使用 `None`，否則使用 `Documented`；實際 URL 以儲存庫 README 為準。
 
 ## 步驟 6——建立草稿 Pull Request
@@ -388,7 +388,7 @@ Markdown 連結目的地，原樣不變。
 建立一個草稿 pull request。
 
 這個由儲存庫擁有的 gh-aw 維護工作流程不執行貢獻者未結 PR 數量檢查，
-也不要求確認。驗證成功且允許的目錄／文件檔案更新完成後，無論提交者
+也不要求確認。驗證成功且允許的型錄／文件檔案更新完成後，無論提交者
 或提出帳號目前有多少未結 PR，一律發出已設定的草稿 `create_pull_request`
 安全輸出。
 
@@ -399,7 +399,7 @@ Markdown 連結目的地，原樣不變。
 - 新標題：`Add <Bundle Name> bundle to community catalog`
 - 更新標題：`Update <Bundle Name> bundle to v<version>`
 
-提交訊息與 PR 說明必須摘要目錄與文件的變更、列出驗證結果、包含
+提交訊息與 PR 說明必須摘要型錄與文件的變更、列出驗證結果、包含
 `Closes #${{ github.event.issue.number }}`，並以 `cc @<issue-author>`
 提及提交者。
 
@@ -415,6 +415,6 @@ Assisted-by: GitHub Copilot (model: <name-if-known>, autonomous)
   `docs/community/bundles.md`。
 - JSON 項目依 ID 排序，文件列依名稱排序。
 - 絕對不要將社群套件組的 `verified` 欄位設為 true。
-- 絕對不要新增、啟用或更改提交目錄的政策。
+- 絕對不要新增、啟用或更改提交型錄的政策。
 - 絕對不要將驗證描述為安全稽核或背書。
 - 提交 issue 使用 `Closes`，不要用 `Fixes`。

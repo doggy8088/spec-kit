@@ -1,6 +1,6 @@
 # 整合 CLI 參考
 
-本參考文件記載共用的 `specify integration` 命令、目錄管理與生命週期行為。代理專屬的設定、安裝路徑、選項與限制，請從[整合指南](index.md)開始。
+本參考文件記載共用的 `specify integration` 命令、型錄管理與生命週期行為。代理專屬的設定、安裝路徑、選項與限制，請從[整合指南](index.md)開始。
 
 請在已以 `specify init` 初始化的專案內執行這些命令。若是新專案，請使用 `specify init <project> --integration <key>`。
 
@@ -19,7 +19,7 @@
 | Codex、Command Code、ZCode 技能 | `$speckit-specify` | `$speckit-bug-assess` |
 | Kimi 技能 | `/skill:speckit-specify` | `/skill:speckit-bug-assess` |
 
-請使用你的代理所公開的形式。GitHub Copilot 的技能與命令版式請參閱 [GitHub Copilot 指南](copilot.md)，或從[整合目錄](index.md)選擇另一個代理。
+請使用你的代理所公開的形式。GitHub Copilot 的技能與命令版式請參閱 [GitHub Copilot 指南](copilot.md)，或從[整合型錄](index.md)選擇另一個代理。
 
 ## 列出可用的整合
 
@@ -29,7 +29,7 @@ specify integration list
 
 | 選項 | 說明 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `--catalog` | 一併瀏覽目錄，包括未安裝在本專案中的外部整合。 |
+| `--catalog` | 一併瀏覽型錄，包括未安裝在本專案中的外部整合。 |
 
 顯示內建與受信任的已安裝外部整合、它們的設定要求，以及它們的多重安裝安全宣告。已安裝的整合與預設整合會分開標示。`CLI Required` 欄位回報的是 `config.requires_cli` 所宣告的代理 CLI 要求，而不是該整合是否僅限 IDE 使用。外部轉接器可以另外透過其描述檔的 `requires.tools` 要求執行檔；即使 `CLI Required` 是 `no`，安裝與 `specify check` 也會驗證那些工具要求。
 
@@ -44,7 +44,7 @@ specify integration search [query]
 | `--tag`    | 依標籤篩選 |
 | `--author` | 依作者篩選 |
 
-搜尋使用中的目錄堆疊。若未提供查詢，則列出所有可用的整合。
+搜尋使用中的型錄堆疊。若未提供查詢，則列出所有可用的整合。
 
 ## 整合資訊
 
@@ -53,7 +53,7 @@ specify integration info <integration_id>
 specify integration info <integration_id> --versions
 ```
 
-顯示某個整合的目錄中繼資料、來源目錄，以及它是否為使用中。`--versions` 會列出獲勝目錄所公布的目前與歷來版本，目前版本在前，較舊的版本依版本遞減排列。僅供探索的來源會標示為僅供探索。
+顯示某個整合的型錄中繼資料、來源型錄，以及它是否為使用中。`--versions` 會列出獲勝型錄所公布的目前與歷來版本，目前版本在前，較舊的版本依版本遞減排列。僅供探索的來源會標示為僅供探索。
 
 ## 安裝整合
 
@@ -70,15 +70,15 @@ specify integration install <key>
 
 將整合安裝到目前的專案中。只有當所有涉及的整合都宣告為安全時，多重安裝才會自動進行。否則，請使用 `switch` 取代預設整合，或以 `--force` 選擇多重安裝。設定失敗會觸發復原。
 
-**目錄歷程只是中繼資料。** `integration install` 仍會直接解析已註冊的內建實作，或從允許安裝的目錄取得目前的外部轉接器版本，而不是歷來目錄紀錄。沒有 `integration install --version`。預設的社群目錄仍僅供探索。
+**型錄歷程只是中繼資料。** `integration install` 仍會直接解析已註冊的內建實作，或從允許安裝的型錄取得目前的外部轉接器版本，而不是歷來型錄紀錄。沒有 `integration install --version`。預設的社群型錄仍僅供探索。
 
 安裝額外的整合不會變更預設整合。使用 `specify integration use <key>` 可變更預設值。
 
 擴充功能與預設集只跟隨預設整合。使用 `use <key>` 或 `switch <key>` 可啟用另一個整合，並為它註冊它們的命令。
 
-### 透過目錄安裝的外部轉接器
+### 透過型錄安裝的外部轉接器
 
-在已初始化的專案中註冊一個經過審查的目錄，然後安裝它的轉接器：
+在已初始化的專案中註冊一個經過審查的型錄，然後安裝它的轉接器：
 
 ```bash
 specify integration catalog add https://example.com/catalog.json --name samples
@@ -93,13 +93,13 @@ specify integration install sample-agent --trust-integration
 specify integration upgrade sample-agent --trust-integration
 ```
 
-來源必須具有 `install_allowed: true`。預設的社群目錄僅供探索；`--force` 與信任旗標都無法繞過該政策。目錄的列表／搜尋／資訊不會匯入目錄程式碼。必要的中繼資料與受支援的封存檔 URL 請參閱[目錄綱要](catalog.md#catalog-schema)。搜尋會為允許安裝的來源公布 `specify integration install <id>`；僅供探索的結果不會公布安裝方式。
+來源必須具有 `install_allowed: true`。預設的社群型錄僅供探索；`--force` 與信任旗標都無法繞過該政策。型錄的列表／搜尋／資訊不會匯入型錄程式碼。必要的中繼資料與受支援的封存檔 URL 請參閱[型錄綱要](catalog.md#catalog-schema)。搜尋會為允許安裝的來源公布 `specify integration install <id>`；僅供探索的結果不會公布安裝方式。
 
-`specify check` 會探查外部轉接器所要求的描述檔工具，而不是其目錄 ID。若未宣告任何必要工具，CLI 轉接器會以其執行階段執行檔進行檢查；選用工具不會產生缺少工具的錯誤。這些檢查不會執行該執行檔，也不會呼叫一般的版本探查。
+`specify check` 會探查外部轉接器所要求的描述檔工具，而不是其型錄 ID。若未宣告任何必要工具，CLI 轉接器會以其執行階段執行檔進行檢查；選用工具不會產生缺少工具的錯誤。這些檢查不會執行該執行檔，也不會呼叫一般的版本探查。
 
-已安裝的轉接器程式碼與產生的代理檔案分開保存。新的 CLI 行程會載入受信任的套件，不諮詢目錄。程式碼遺失、被修改或不相容都是錯誤，而不是無聲備援。升級會取得目錄的目前版本；解除安裝會移除套件，並預設保留已修改的產生檔案。僅中繼資料的 `workflow status` 與 `workflow info` 在不載入轉接器程式碼的情況下仍可使用，包括已安裝的轉接器受損時。工作流程的執行與繼續仍會明確回報轉接器載入失敗。
+已安裝的轉接器程式碼與產生的代理檔案分開保存。新的 CLI 行程會載入受信任的套件，不諮詢型錄。程式碼遺失、被修改或不相容都是錯誤，而不是無聲備援。升級會取得型錄的目前版本；解除安裝會移除套件，並預設保留已修改的產生檔案。僅中繼資料的 `workflow status` 與 `workflow info` 在不載入轉接器程式碼的情況下仍可使用，包括已安裝的轉接器受損時。工作流程的執行與繼續仍會明確回報轉接器載入失敗。
 
-執行同意是使用者本機的，並與專案、整合以及經驗證的套件內容綁定。複製專案中繼資料不會轉移同意。複製專案或變更使用者後，請審查轉接器，並從允許安裝的目錄重新授權：
+執行同意是使用者本機的，並與專案、整合以及經驗證的套件內容綁定。複製專案中繼資料不會轉移同意。複製專案或變更使用者後，請審查轉接器，並從允許安裝的型錄重新授權：
 
 ```bash
 specify integration upgrade sample-agent --force --trust-integration
@@ -107,7 +107,7 @@ specify integration upgrade sample-agent --force --trust-integration
 
 當套件程式碼不受信任或其整個目錄遺失時，強制解除安裝也能運作；它不會匯入該程式碼。
 
-在初始化時，專案／使用者目錄或 `SPECKIT_INTEGRATION_CATALOG_URL` 可以提供外部轉接器：
+在初始化時，專案／使用者型錄或 `SPECKIT_INTEGRATION_CATALOG_URL` 可以提供外部轉接器：
 
 ```bash
 specify init my-project --integration sample-agent --trust-integration
@@ -162,7 +162,7 @@ specify integration switch <key>
 specify integration switch sample-agent --trust-integration
 ```
 
-切換到已安裝的轉接器仍會驗證其既有的信任。此旗標不會繞過該驗證，也不會繞過目錄的僅供探索政策。信任要求請參閱[透過目錄安裝的外部轉接器](#catalog-installed-external-adapters)。
+切換到已安裝的轉接器仍會驗證其既有的信任。此旗標不會繞過該驗證，也不會繞過型錄的僅供探索政策。信任要求請參閱[透過型錄安裝的外部轉接器](#catalog-installed-external-adapters)。
 
 ## 使用已安裝的整合
 
@@ -199,7 +199,7 @@ specify integration upgrade [<key>]
 
 若某次升級會在已為某整合註冊預設集成品的情況下，將它在命令與技能版式之間變更，該升級會在變更檔案之前被拒絕。請先移除受影響的預設集，執行變更版式的升級，再重新安裝它們。
 
-對於外部轉接器，強制升級或解除安裝可以使用使用者本機的所有權紀錄，復原受損或無法載入的套件。若沒有該證明，僅屬於舊版的產生檔案會被保留，並附上手動清理警告。復原程序會保留共用的事件分派器與部分擁有的設定；在 `upgrade --force` 下，受信任的替代品仍可覆寫它宣告的目的地。復原不會繞過目錄政策或替代套件的信任。
+對於外部轉接器，強制升級或解除安裝可以使用使用者本機的所有權紀錄，復原受損或無法載入的套件。若沒有該證明，僅屬於舊版的產生檔案會被保留，並附上手動清理警告。復原程序會保留共用的事件分派器與部分擁有的設定；在 `upgrade --force` 下，受信任的替代品仍可覆寫它宣告的目的地。復原不會繞過型錄政策或替代套件的信任。
 
 失敗的操作會復原它們自己的變更，而不是無關的使用者檔案或工作流程進度。衝突的並行編輯會被回報，並保留復原快照。轉接器作者應遵循[儲存、載入與生命週期合約](https://github.com/github/spec-kit/blob/main/design/integration.md#storage-loading-and-lifecycle)中的所有權、記錄與復原要求。
 
@@ -212,21 +212,21 @@ specify integration status --json
 
 在不變更檔案的情況下回報目前專案的整合狀態。狀態報告包括預設整合、已安裝的整合、多重安裝安全性、遺失的受管理檔案、已修改的受管理檔案、無效的清單路徑、共用 Spec Kit 基礎設施的健康狀態、未檢查的清單，以及對預設值敏感的共用範本的目標整合。JSON 形式供需要穩定、可由機器讀取的狀態資料的 CI 與程式代理使用；當狀態修復的啟發式判斷與記錄的檔案不同時，它也會回報原始記錄的整合與已檢查的整合清單。當報告狀態為 `ok` 或 `warning` 時，命令以 0 結束；只有當報告狀態為 `error` 時才以 1 結束。在 JSON 輸出中，當沒有可評估的已安裝整合集合時（例如整合狀態遺失、無法讀取、缺少有效的已記錄整合清單，或未記錄任何已安裝的整合），`multi_install_safe` 為 `null`。
 
-## 目錄管理
+## 型錄管理
 
-整合目錄控制探索命令（`search` 與 `info`）尋找整合的位置。目錄會依優先順序檢查。
+整合型錄控制探索命令（`search` 與 `info`）尋找整合的位置。型錄會依優先順序檢查。
 
-目錄管理、`integration list --catalog` 與 `integration info` 不會執行轉接器程式碼。一般的整合列表、設定、選取、狀態、註冊與工作流程分派，則會載入受信任的已安裝實作。
+型錄管理、`integration list --catalog` 與 `integration info` 不會執行轉接器程式碼。一般的整合列表、設定、選取、狀態、註冊與工作流程分派，則會載入受信任的已安裝實作。
 
-### 列出目錄
+### 列出型錄
 
 ```bash
 specify integration catalog list
 ```
 
-顯示使用中的目錄來源。專案層級的來源（有設定時）可以依索引移除；否則使用中的來源會顯示為不可移除。
+顯示使用中的型錄來源。專案層級的來源（有設定時）可以依索引移除；否則使用中的來源會顯示為不可移除。
 
-### 加入目錄
+### 加入型錄
 
 ```bash
 specify integration catalog add <url>
@@ -234,28 +234,28 @@ specify integration catalog add <url>
 
 | 選項 | 說明 |
 | --------------- | ----------------------------- |
-| `--name <name>` | 目錄的選用名稱 |
+| `--name <name>` | 型錄的選用名稱 |
 
-將自訂目錄 URL 加入專案的 `.specify/integration-catalogs.yml`。URL 必須使用 HTTPS（供本機測試的 `http://localhost`、`http://127.0.0.1` 或 `http://[::1]` 除外）。
+將自訂型錄 URL 加入專案的 `.specify/integration-catalogs.yml`。URL 必須使用 HTTPS（供本機測試的 `http://localhost`、`http://127.0.0.1` 或 `http://[::1]` 除外）。
 
 以相同名稱重新加入相同的 URL 會成功，且不會變更設定；不同的名稱則會被拒絕。
 
-### 移除目錄
+### 移除型錄
 
 ```bash
 specify integration catalog remove <index>
 ```
 
-依其在 `catalog list` 中以 0 為起點的索引，移除一個專案目錄來源。
+依其在 `catalog list` 中以 0 為起點的索引，移除一個專案型錄來源。
 
-### 目錄解析順序
+### 型錄解析順序
 
 第一個設定的層級會取代較低的層級。在該層級內，數字較小的優先順序勝出：
 
-1. **環境變數**——`SPECKIT_INTEGRATION_CATALOG_URL` 覆寫所有目錄
+1. **環境變數**——`SPECKIT_INTEGRATION_CATALOG_URL` 覆寫所有型錄
 2. **專案設定**——`.specify/integration-catalogs.yml`
 3. **使用者設定**——`~/.specify/integration-catalogs.yml`
-4. **內建預設值**——官方目錄 + 社群目錄
+4. **內建預設值**——官方型錄 + 社群型錄
 
 ### 歷來整合中繼資料
 
@@ -279,7 +279,7 @@ specify integration catalog remove <index>
 
 最上層欄位對較舊的 client，以及未指定版本的 `search`、`info`、`list --catalog` 與 `install` 命令，保留其原始含義。歷來紀錄可以包含 `name`、`description`、`author`、`repository`、`license`、`tags`（字串清單）與 `requires`（對應）。共用的身分、名稱、作者與來源政策會被保留；僅屬於目前版本的中繼資料，例如說明、儲存庫、標籤與要求，**不會**被較舊版本繼承，除非在其紀錄中明確提供。版本紀錄不能覆寫 `id`、`version`、`releases` 或來源政策，也不能公布下載 URL 或封存檔。
 
-對於程式化的中繼資料查詢，`IntegrationCatalog.get_integration_info(id, version="1.0.0")` 會從獲勝來源中選出確切的歷來紀錄，若該版本不存在則回傳 `None`。`get_integration_versions(id)` 會回傳同一個來源所公布的版本。與 PEP 440 等價的寫法（例如 `v1.0` 與 `1.0.0`）會對應到同一個版本，同時保留其目錄寫法。目前版本不得在 `releases` 中重複；格式錯誤的紀錄與重複的等價版本會被拒絕。不存在的版本永遠不會穿透到優先順序較低的來源，也不會無聲地選取目前版本。這些查詢不會安裝整合。
+對於程式化的中繼資料查詢，`IntegrationCatalog.get_integration_info(id, version="1.0.0")` 會從獲勝來源中選出確切的歷來紀錄，若該版本不存在則回傳 `None`。`get_integration_versions(id)` 會回傳同一個來源所公布的版本。與 PEP 440 等價的寫法（例如 `v1.0` 與 `1.0.0`）會對應到同一個版本，同時保留其型錄寫法。目前版本不得在 `releases` 中重複；格式錯誤的紀錄與重複的等價版本會被拒絕。不存在的版本永遠不會穿透到優先順序較低的來源，也不會無聲地選取目前版本。這些查詢不會安裝整合。
 
 ## 整合專屬選項
 
@@ -292,7 +292,7 @@ specify integration catalog remove <index>
 | IBM Bob | [舊版命令與遷移](bob.md#legacy-commands-and-migration) |
 | Kimi Code | [舊版遷移](kimi.md#legacy-migration) |
 
-其他代理專屬的細節列於[整合目錄](index.md)中。
+其他代理專屬的細節列於[整合型錄](index.md)中。
 
 ## 執行階段事件
 
@@ -354,7 +354,7 @@ Spec Kit 在 `.specify/integration.json` 中追蹤一個預設整合（`default_
 
 ### 我要如何知道該使用哪個鍵？
 
-執行 `specify integration list` 可查看所有可用的整合及其鍵值，或查看[整合目錄](index.md#choose-an-integration)。
+執行 `specify integration list` 可查看所有可用的整合及其鍵值，或查看[整合型錄](index.md#choose-an-integration)。
 
 ### 使用整合是否需要安裝 AI 程式代理？
 

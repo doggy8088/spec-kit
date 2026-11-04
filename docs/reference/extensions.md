@@ -16,7 +16,7 @@ specify extension search [query]
 | `--author`   | 依作者篩選                     |
 | `--verified` | 只顯示已驗證的擴充功能        |
 
-搜尋所有啟用中的目錄，找出符合查詢的擴充功能。沒有查詢時，列出所有可用的擴充功能。
+搜尋所有啟用中的型錄，找出符合查詢的擴充功能。沒有查詢時，列出所有可用的擴充功能。
 
 ## 安裝擴充功能
 
@@ -27,16 +27,16 @@ specify extension add <name>
 | 選項 | 說明 |
 | --------------- | -------------------------------------------------------- |
 | `--dev`         | 從本機目錄安裝（供開發使用）         |
-| `--from <url>`  | 從自訂 URL 安裝，而非目錄         |
-| `--version <v>` | 安裝目錄公告的精確版本        |
+| `--from <url>`  | 從自訂 URL 安裝，而非型錄         |
+| `--version <v>` | 安裝型錄公告的精確版本        |
 | `--force`       | 若擴充功能已安裝則覆寫          |
 | `--priority <N>`| 解析優先順序（預設：10；數字越小優先程度越高） |
 
-從目錄、URL 或本機目錄安裝擴充功能。擴充功能命令會向啟用中的 AI 程式代理整合註冊。對於 `generic`，呼叫使用設定的 `--commands-dir`：預設為平面命令檔案，或以 `--skills` 使用 `speckit-<name>/SKILL.md`。
+從型錄、URL 或本機目錄安裝擴充功能。擴充功能命令會向啟用中的 AI 程式代理整合註冊。對於 `generic`，呼叫使用設定的 `--commands-dir`：預設為平面命令檔案，或以 `--skills` 使用 `speckit-<name>/SKILL.md`。
 
 若 generic 整合重新整理無法產生每個擴充功能呼叫（例如因為命令或技能被使用者修改，或其來源遺失），它會發出警告並還原該擴充功能先前註冊的成品。其他擴充功能仍可重新整理。
 
-未限定版本的目錄安裝仍會選取公告的目前版本。`--version` 只使用該擴充功能 ID 的勝出目錄來源；當所請求的版本缺席時，它不會退回較低優先順序來源。僅供探索的目錄仍不可安裝。`--version` 不能與 `--dev` 或直接 URL 的 `--from` 選項組合使用。下載封存檔的擴充功能 ID 與版本會在安裝前檢查。
+未限定版本的型錄安裝仍會選取公告的目前版本。`--version` 只使用該擴充功能 ID 的勝出型錄來源；當所請求的版本缺席時，它不會退回較低優先順序來源。僅供探索的型錄仍不可安裝。`--version` 不能與 `--dev` 或直接 URL 的 `--from` 選項組合使用。下載封存檔的擴充功能 ID 與版本會在安裝前檢查。
 
 > **注意：**所有擴充功能命令都需要已以 `specify init` 初始化的專案。
 
@@ -68,7 +68,7 @@ specify extension list --json
 
 列出已安裝的擴充功能，包含其狀態、版本與命令數量。
 
-`--json` 將 JSON 陣列寫入 stdout。每個項目都有鍵 `id`、`name`、`description`、`version`、`author`、`priority`、`enabled`、`source` 與 `provides`。`author` 在缺席時為 `null`；`source` 對於本機、舊版或格式錯誤的來源為 `{"kind":"local"}`，對於有效的目錄來源為 `{"kind":"catalog","catalog":"<catalog-name>"}`。擴充功能的 `provides` 包含 `commands`、`templates`、`scripts` 與 `hooks` 數量。`--available` 與 `--all` 不會將 JSON 輸出擴展到已安裝擴充功能之外。成功時，`--json` 恰好將一個陣列寫入 stdout 並以 0 結束。在選項解析後的執行時期失敗，會恰好將一個 `{"error":"..."}` 物件寫入 stderr 並以 1 結束。若解析引發使用錯誤且原始 `--json` 權杖存在，它會將該 JSON 錯誤物件寫入 stderr 並保留使用結束代碼（通常為 2）。沒有 `--json` 時，包括說明，現有的人類可讀行為不變。
+`--json` 將 JSON 陣列寫入 stdout。每個項目都有鍵 `id`、`name`、`description`、`version`、`author`、`priority`、`enabled`、`source` 與 `provides`。`author` 在缺席時為 `null`；`source` 對於本機、舊版或格式錯誤的來源為 `{"kind":"local"}`，對於有效的型錄來源為 `{"kind":"catalog","catalog":"<catalog-name>"}`。擴充功能的 `provides` 包含 `commands`、`templates`、`scripts` 與 `hooks` 數量。`--available` 與 `--all` 不會將 JSON 輸出擴展到已安裝擴充功能之外。成功時，`--json` 恰好將一個陣列寫入 stdout 並以 0 結束。在選項解析後的執行時期失敗，會恰好將一個 `{"error":"..."}` 物件寫入 stderr 並以 1 結束。若解析引發使用錯誤且原始 `--json` 權杖存在，它會將該 JSON 錯誤物件寫入 stderr 並保留使用結束代碼（通常為 2）。沒有 `--json` 時，包括說明，現有的人類可讀行為不變。
 
 ## 擴充功能資訊
 
@@ -78,9 +78,9 @@ specify extension info <name> --versions
 specify extension info <name> --json
 ```
 
-顯示已安裝或可用擴充功能的詳細資訊，包括其說明、版本、命令與設定。`--versions` 列出勝出目錄來源公告的目前與歷史版本；它會將僅供探索的來源標為不可安裝。等價的 PEP 440 版本拼寫（例如 `v1.0` 與 `1.0`）選取同一個版本；目錄公告的拼寫仍保持可見。
+顯示已安裝或可用擴充功能的詳細資訊，包括其說明、版本、命令與設定。`--versions` 列出勝出型錄來源公告的目前與歷史版本；它會將僅供探索的來源標為不可安裝。等價的 PEP 440 版本拼寫（例如 `v1.0` 與 `1.0`）選取同一個版本；型錄公告的拼寫仍保持可見。
 
-目錄可以將目前版本保留在既有的最上層欄位中，並在 `releases` 對應中新增歷史版本。較舊的單一版本目錄繼續原封不動地運作。每筆歷史版本都需要自己的下載 URL 與 SHA-256 摘要；版本專屬的需求或提供的功能，必須放在該版本的記錄中，而非從目前版本繼承。如同目前版本，摘要可以使用不分大小寫的 `sha256:` 前綴與周圍空白。
+型錄可以將目前版本保留在既有的最上層欄位中，並在 `releases` 對應中新增歷史版本。較舊的單一版本型錄繼續原封不動地運作。每筆歷史版本都需要自己的下載 URL 與 SHA-256 摘要；版本專屬的需求或提供的功能，必須放在該版本的記錄中，而非從目前版本繼承。如同目前版本，摘要可以使用不分大小寫的 `sha256:` 前綴與周圍空白。
 
 ```json
 {
@@ -101,7 +101,7 @@ specify extension info <name> --json
 }
 ```
 
-此範例為了簡潔省略了其他目錄中繼資料。目前版本不得在 `releases` 中重複；格式錯誤或重複的版本記錄會被拒絕。套件組釘選仍使用目前的目錄解析路徑，直到 [#4719](https://github.com/github/spec-kit/issues/4719) 中描述的獨立套件組工作新增精確版本的元件查詢為止。
+此範例為了簡潔省略了其他型錄中繼資料。目前版本不得在 `releases` 中重複；格式錯誤或重複的版本記錄會被拒絕。套件組釘選仍使用目前的型錄解析路徑，直到 [#4719](https://github.com/github/spec-kit/issues/4719) 中描述的獨立套件組工作新增精確版本的元件查詢為止。
 
 `--json` 描述一個已安裝的擴充功能，並將單一 JSON 物件寫入 stdout。`<name>` 的比對方式與沒有 `--json` 時相同：先是擴充功能 ID，然後是唯一的顯示名稱，不分大小寫。此物件具有與對應的 `specify extension list --json` 項目相同的 `id`、`name`、`description`、`version`、`author`、`priority`、`enabled` 與 `source` 鍵。它以 `commands`、`templates`、`scripts` 與 `hooks` 陣列取代 `provides` 數量。Command、template 與 script 項目有 `name`、`description`（缺席時為 `""`）、`source`（`{"layer": "extension", "extensionId": "<id>"}`，即提供它的擴充功能；最上層的 `source` 是它安裝的來源）與 `sourcePath`（資訊清單的 `file`，相對於擴充功能目錄）；script 項目在資訊清單宣告時還會有 `runtimes`。擴充功能項目不帶 `strategy`，因為擴充功能提供的檔案永遠取代。每個 hook 項目有 `trigger`（hook 事件，例如 `after_tasks`）、`targetCommand`、`optional`（預設 `true`）與 `priority`（預設 `10`）。當某個事件多次宣告相同命令時，最後一個宣告勝出，如同 hook 被註冊時一樣。`--json` 不能與 `--versions` 組合（使用錯誤，結束代碼 2）。未安裝的擴充功能、含糊的名稱或遺失的專案，會將一個 `{"error":"..."}` 物件寫入 stderr 並以 1 結束；使用錯誤保留其結束代碼（通常為 2），與 `list --json` 相同。
 
@@ -113,7 +113,7 @@ specify extension update [<name>]
 
 更新特定擴充功能，或在未給定名稱時更新所有已安裝的擴充功能。
 
-隨附的擴充功能（例如 `agent-context` 與 `git`）沒有下載 URL；它們的更新從執行中的 spec-kit 版本隨附的副本安裝。當目錄公告的版本比你的 spec-kit 版本隨附的更新時，更新會被回報為需要先升級 spec-kit。
+隨附的擴充功能（例如 `agent-context` 與 `git`）沒有下載 URL；它們的更新從執行中的 spec-kit 版本隨附的副本安裝。當型錄公告的版本比你的 spec-kit 版本隨附的更新時，更新會被回報為需要先升級 spec-kit。
 
 對於 `generic`，失敗的更新會從先前設定的 `--commands-dir` 位置以及目前位置，還原依雜湊擁有的呼叫，即使另一個整合現在已啟用也一樣。
 
@@ -136,40 +136,40 @@ specify extension set-priority <name> <priority>
 
 變更擴充功能的解析優先順序。當多個擴充功能提供同名命令時，優先順序數字最小的擴充功能優先。
 
-## 目錄管理
+## 型錄管理
 
-擴充功能目錄控制 `search` 與 `add` 尋找擴充功能的位置。目錄依優先順序檢查（數字越小優先程度越高）。
+擴充功能型錄控制 `search` 與 `add` 尋找擴充功能的位置。型錄依優先順序檢查（數字越小優先程度越高）。
 
 ### 信任模型：僅供探索 vs. 安裝來源
 
-目錄有兩種，區別是**安全邊界**，不是限制：
+型錄有兩種，區別是**安全邊界**，不是限制：
 
-- **安裝來源**（`install_allowed: true`）——你信任可從中安裝的目錄。內建的 `default`（官方）目錄是其中之一，你自己撰寫並審查的任何目錄也是。
-- **僅供探索**目錄（`install_allowed: false`）——用於*尋找*擴充功能的可搜尋介面，但不可安裝。內建的 `community` 目錄是僅供探索的，且開箱即可用於 `search`；你不需新增它。
+- **安裝來源**（`install_allowed: true`）——你信任可從中安裝的型錄。內建的 `default`（官方）型錄是其中之一，你自己撰寫並審查的任何型錄也是。
+- **僅供探索**型錄（`install_allowed: false`）——用於*尋找*擴充功能的可搜尋介面，但不可安裝。內建的 `community` 型錄是僅供探索的，且開箱即可用於 `search`；你不需新增它。
 
 `community` 被刻意設為僅供探索，因為它是開放、未經審查的清單。讓其中一切都能一鍵安裝，意味著在沒有審查的情況下引入任意第三方程式碼。
 
-> **不要將僅供探索的目錄翻轉為 `install_allowed`。**那會完全違背將探索與安裝分開的目的。從 `community` 找到的東西，有兩種正確的安裝方式：
+> **不要將僅供探索的型錄翻轉為 `install_allowed`。**那會完全違背將探索與安裝分開的目的。從 `community` 找到的東西，有兩種正確的安裝方式：
 >
-> 1. **直接安裝單一經審查的擴充功能**，使用 `--from`（不需撰寫目錄）。從 `specify extension info <name>` 取得候選封存檔 URL，對於僅供探索的項目，它會列印「Candidate archive」URL。檢視該版本封存檔，然後安裝它：
+> 1. **直接安裝單一經審查的擴充功能**，使用 `--from`（不需撰寫型錄）。從 `specify extension info <name>` 取得候選封存檔 URL，對於僅供探索的項目，它會列印「Candidate archive」URL。檢視該版本封存檔，然後安裝它：
 >
 >    ```bash
 >    specify extension info <name>          # shows the candidate archive URL
 >    specify extension add <name> --from <archive-url>
 >    ```
 >
->    在你審查前，將 URL 視為不受信任，它來自未經審查的目錄。
-> 2. **彙整你自己的目錄**，由你控制與審查，並將*該*目錄標為 `install_allowed: true`，適用於你想要受治理、可重用的安裝來源時（例如供組織使用）。
+>    在你審查前，將 URL 視為不受信任，它來自未經審查的型錄。
+> 2. **彙整你自己的型錄**，由你控制與審查，並將*該*型錄標為 `install_allowed: true`，適用於你想要受治理、可重用的安裝來源時（例如供組織使用）。
 
-### 列出目錄
+### 列出型錄
 
 ```bash
 specify extension catalog list
 ```
 
-顯示堆疊中所有啟用中的目錄，包含其優先順序與安裝權限。
+顯示堆疊中所有啟用中的型錄，包含其優先順序與安裝權限。
 
-### 新增目錄
+### 新增型錄
 
 ```bash
 specify extension catalog add <url>
@@ -177,33 +177,33 @@ specify extension catalog add <url>
 
 | 選項 | 說明 |
 | ------------------------------------ | -------------------------------------------------- |
-| `--name <name>`                      | 必要。目錄的唯一名稱              |
+| `--name <name>`                      | 必要。型錄的唯一名稱              |
 | `--priority <N>`                     | 優先順序（預設：10；數字越小優先程度越高）  |
-| `--install-allowed / --no-install-allowed` | 將目錄標為受信任的安裝來源。只對你擁有並審查的目錄啟用；對於僅供探索的來源保持關閉（預設）。絕不對未經審查的公開目錄啟用。 |
+| `--install-allowed / --no-install-allowed` | 將型錄標為受信任的安裝來源。只對你擁有並審查的型錄啟用；對於僅供探索的來源保持關閉（預設）。絕不對未經審查的公開型錄啟用。 |
 | `--description <text>`               | 選用的說明                               |
 
-將目錄新增到專案的 `.specify/extension-catalogs.yml`。
+將型錄新增到專案的 `.specify/extension-catalogs.yml`。
 
-以相同設定重新新增同名目錄會成功，且不變更設定；不同的設定會被拒絕。
+以相同設定重新新增同名型錄會成功，且不變更設定；不同的設定會被拒絕。
 
-### 移除目錄
+### 移除型錄
 
 ```bash
 specify extension catalog remove <name>
 ```
 
-從專案設定中移除目錄。
+從專案設定中移除型錄。
 
-### 目錄解析順序
+### 型錄解析順序
 
-目錄依此順序解析（第一個符合者勝出）：
+型錄依此順序解析（第一個符合者勝出）：
 
-1. **環境變數**——`SPECKIT_CATALOG_URL` 覆寫所有目錄
+1. **環境變數**——`SPECKIT_CATALOG_URL` 覆寫所有型錄
 2. **專案設定**——`.specify/extension-catalogs.yml`
 3. **使用者設定**——`~/.specify/extension-catalogs.yml`
-4. **內建預設值**——官方 `default` 目錄（允許安裝）+ `community` 目錄（僅供探索）
+4. **內建預設值**——官方 `default` 型錄（允許安裝）+ `community` 型錄（僅供探索）
 
-你擁有並審查的目錄的 `.specify/extension-catalogs.yml` 範例：
+你擁有並審查的型錄的 `.specify/extension-catalogs.yml` 範例：
 
 ```yaml
 catalogs:
@@ -321,7 +321,7 @@ Hook 事件名稱標識 hook 被呼叫的時機。它們通常使用 `before_<co
 
 ### 為什麼我用 `search` 找不到擴充功能？
 
-檢查擴充功能名稱的拼寫。該擴充功能可能尚未發佈，或位於你尚未新增的目錄中。使用 `specify extension catalog list` 查看哪些目錄處於啟用狀態。
+檢查擴充功能名稱的拼寫。該擴充功能可能尚未發佈，或位於你尚未新增的型錄中。使用 `specify extension catalog list` 查看哪些型錄處於啟用狀態。
 
 ### 為什麼擴充功能命令沒有出現在我的 AI 程式代理中？
 

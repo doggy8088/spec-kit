@@ -1,27 +1,27 @@
-# Spec Kit 整合目錄
+# Spec Kit 整合型錄
 
-整合目錄讓 Spec Kit 的 AI 代理整合可以被探索、版本化與散佈。
+整合型錄讓 Spec Kit 的 AI 代理整合可以被探索、版本化與散佈。
 
-## 目錄檔案
+## 型錄檔案
 
-### 內建目錄（`integrations/catalog.json`）
+### 內建型錄（`integrations/catalog.json`）
 
 包含隨 Spec Kit 一起提供的整合。這些由核心團隊維護，且永遠可以安裝。
 
-### 社群目錄（`integrations/catalog.community.json`）
+### 社群型錄（`integrations/catalog.community.json`）
 
-由社群貢獻的整合。預設的社群來源僅供探索：在目錄中列出某個轉接器，既不是安裝許可，也不是程式碼稽核。使用允許安裝的目錄之前，請先審查外部程式碼。
+由社群貢獻的整合。預設的社群來源僅供探索：在型錄中列出某個轉接器，既不是安裝許可，也不是程式碼稽核。使用允許安裝的型錄之前，請先審查外部程式碼。
 
-## 目錄設定
+## 型錄設定
 
 第一個設定的層級會取代較低的層級。在該層級內，數字較小的優先順序勝出：
 
-1. **環境變數**——`SPECKIT_INTEGRATION_CATALOG_URL` 以單一 URL 覆寫所有目錄
+1. **環境變數**——`SPECKIT_INTEGRATION_CATALOG_URL` 以單一 URL 覆寫所有型錄
 2. **專案設定**——專案根目錄中的 `.specify/integration-catalogs.yml`
 3. **使用者設定**——使用者主目錄中的 `~/.specify/integration-catalogs.yml`
 4. **內建預設值**——`catalog.json` + `catalog.community.json`
 
-加入第一個專案目錄會取代預設來源，除非你也在專案檔案中列出它們。共用的探索、信任與私有來源指引請參閱[目錄](../reference/catalogs.md)。
+加入第一個專案型錄會取代預設來源，除非你也在專案檔案中列出它們。共用的探索、信任與私有來源指引請參閱[型錄](../reference/catalogs.md)。
 
 `integration-catalogs.yml` 範例：
 
@@ -35,7 +35,7 @@ catalogs:
 
 ## CLI 命令
 
-使用 `specify integration list --catalog`、`search` 與 `info` 瀏覽。請參閱 CLI 參考中的[目錄管理](cli.md#catalog-management)與[外部轉接器安裝](cli.md#catalog-installed-external-adapters)。
+使用 `specify integration list --catalog`、`search` 與 `info` 瀏覽。請參閱 CLI 參考中的[型錄管理](cli.md#catalog-management)與[外部轉接器安裝](cli.md#catalog-installed-external-adapters)。
 
 ## 整合描述檔（`integration.yml`）
 
@@ -68,9 +68,9 @@ requires:
 
 `requires.tools` 是選用的；對於沒有必要執行檔的轉接器，可以省略它。選用的舊版 `provides` 中繼資料仍然有效，但不會提供主機命令。類別中繼資料、執行階段方法、工具與儲存要求請參閱[整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract)。
 
-## 目錄綱要
+## 型錄綱要
 
-兩個目錄檔案都遵循相同的 JSON 綱要：
+兩個型錄檔案都遵循相同的 JSON 綱要：
 
 ```json
 {
@@ -119,7 +119,7 @@ requires:
 
 ## 安裝政策與儲存
 
-以 `integration catalog add` 註冊目錄會建立一個允許安裝的專案來源。在其設定中將 `install_allowed: false` 設為僅允許探索。此政策無法以 `--trust-integration` 或 `--force` 覆寫。每次外部安裝／更新在下載／匯入 Python 之前都會先提示，除非以 `--trust-integration` 明確預先授權。需要驗證的 GitHub 成品會使用既有的 Spec Kit 驗證提供者。
+以 `integration catalog add` 註冊型錄會建立一個允許安裝的專案來源。在其設定中將 `install_allowed: false` 設為僅允許探索。此政策無法以 `--trust-integration` 或 `--force` 覆寫。每次外部安裝／更新在下載／匯入 Python 之前都會先提示，除非以 `--trust-integration` 明確預先授權。需要驗證的 GitHub 成品會使用既有的 Spec Kit 驗證提供者。
 
 已安裝的程式碼儲存在 `.specify/integrations/packages/<id>/`，出處與雜湊則在 `packages.json` 中；兩者都會被受管理的 `.specify/.gitignore` 排除。執行同意會另外儲存在 `~/.specify/integration-trust.json`，並與專案、整合 ID 以及經驗證的套件摘要綁定。產生的檔案有各自以雜湊追蹤的 `<id>.manifest.json`。
 
@@ -127,4 +127,4 @@ requires:
 
 ## 貢獻
 
-加入內建整合或提交外部整合目錄項目，請參閱[貢獻指南](contributing.md)。代理專屬的設定請從[整合目錄](index.md)開始。共用的使用者命令記載於[整合管理參考](cli.md)中。
+加入內建整合或提交外部整合型錄項目，請參閱[貢獻指南](contributing.md)。代理專屬的設定請從[整合目錄](index.md)開始。共用的使用者命令記載於[整合管理參考](cli.md)中。

@@ -71,4 +71,4 @@ user, and do not change the existing JSON API response.
 
 ## 既有專案範例
 
-[社群導覽](../community/walkthroughs.md)包含跨 .NET、Java 與 Go／React 程式碼庫的棕地範例。用於架構探索與棕地初始化的社群擴充功能，列在[擴充功能目錄](../community/extensions.md)。
+[社群導覽](../community/walkthroughs.md)包含跨 .NET、Java 與 Go／React 程式碼庫的棕地範例。用於架構探索與棕地初始化的社群擴充功能，列在[擴充功能型錄](../community/extensions.md)。

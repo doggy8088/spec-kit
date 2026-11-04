@@ -13,7 +13,7 @@ specify workflow run <source>
 | `-i` / `--input`    | 以 `key=value` 傳入輸入值（可重複使用）            |
 | `--json`            | 以單一 JSON 物件輸出執行結果             |
 
-從目錄 ID、URL 或本地檔案路徑執行工作流程。工作流程宣告的輸入可以透過 `--input` 提供，或在互動模式下提示輸入。
+從型錄 ID、URL 或本地檔案路徑執行工作流程。工作流程宣告的輸入可以透過 `--input` 提供，或在互動模式下提示輸入。
 
 範例：
 
@@ -159,9 +159,9 @@ specify workflow add <source>
 | --------------- | ------------------------------------------------------ |
 | `--dev`         | 從本地 YAML 檔案、套件目錄或封存檔安裝 |
 | `--from <url>`  | 從自訂 URL 安裝（`<source>` 命名預期的工作流程 ID） |
-| `--version <version>` | 安裝精確的已宣傳目錄發行版本（`<source>` 必須是工作流程 ID） |
+| `--version <version>` | 安裝精確的已宣傳型錄發行版本（`<source>` 必須是工作流程 ID） |
 
-從目錄、HTTPS URL、本地 YAML 檔案、包含 `workflow.yml` 的
+從型錄、HTTPS URL、本地 YAML 檔案、包含 `workflow.yml` 的
 目錄，或 `.zip`、`.tar.gz`、`.tgz`
 封存檔安裝工作流程。封存檔可以在根目錄或單一
 頂層目錄內包含 `workflow.yml`。
@@ -170,7 +170,7 @@ specify workflow add <source>
 包括指令碼與其他附屬檔案。ZIP、`.tar.gz` 與 `.tgz`
 封存檔遵循相同的驗證與安裝行為。
 
-目錄項目會在頂層保留目前發行版本的 `version`、`url`、可選的 `sha256`，
+型錄項目會在頂層保留目前發行版本的 `version`、`url`、可選的 `sha256`，
 以及可選的 `requires`。可選的 `releases` 對應
 會宣傳歷史版本，而不變更未限定版本的 `add`、
 `search`、`info` 或 `update` 所選取的內容：
@@ -194,7 +194,7 @@ specify workflow add <source>
 可選的，且若存在，必須與下載的工作流程定義相符。
 已宣傳的版本使用工作流程定義的 `X.Y.Z` 版本格式；
 選取已宣傳的 `1.0.0` 發行版本時，`--version` 也接受 `v1.0` 等等效拼寫。
-要求的版本必須存在於提供該工作流程的最高優先級目錄中。缺失的版本不會退到另一個來源，且僅供探索的目錄無法從中安裝。下載的工作流程 ID、
+要求的版本必須存在於提供該工作流程的最高優先級型錄中。缺失的版本不會退到另一個來源，且僅供探索的型錄無法從中安裝。下載的工作流程 ID、
 版本與宣告的摘要會在安裝前驗證。`--version` 並
 不適用於本地路徑、直接 URL 或 `--from` 安裝。
 
@@ -425,7 +425,7 @@ edits:
 specify workflow update [workflow_id]
 ```
 
-將一個已安裝的目錄工作流程（或未提供 ID 時的全部工作流程）更新到最新的目錄版本。會提示確認，若下載或驗證失敗，則保留已安裝的副本。
+將一個已安裝的型錄工作流程（或未提供 ID 時的全部工作流程）更新到最新的型錄版本。會提示確認，若下載或驗證失敗，則保留已安裝的副本。
 
 ## 啟用或停用工作流程
 
@@ -455,7 +455,7 @@ specify workflow search [query]
 | `--tag`    | 依標籤篩選     |
 | `--author` | 依作者篩選  |
 
-在所有作用中的目錄中搜尋符合查詢的工作流程。
+在所有作用中的型錄中搜尋符合查詢的工作流程。
 
 ## 工作流程資訊
 
@@ -465,33 +465,33 @@ specify workflow info <workflow_id> --versions
 ```
 
 顯示工作流程的詳細資訊，包括其步驟、輸入與要求。
-`--versions` 會列出目前目錄版本，接著是已宣傳的歷史
-版本，並指出勝出的目錄是允許安裝還是
+`--versions` 會列出目前型錄版本，接著是已宣傳的歷史
+版本，並指出勝出的型錄是允許安裝還是
 僅供探索（不可安裝）。當本地安裝的是不同版本時，它也能運作。
 
-## 目錄管理
+## 型錄管理
 
-工作流程目錄控制 `search` 與 `add` 尋找工作流程的位置。目錄會依優先順序檢查。
+工作流程型錄控制 `search` 與 `add` 尋找工作流程的位置。型錄會依優先順序檢查。
 
-工作流程與步驟目錄會將擷取的 JSON 與新鮮度中繼資料快取一
+工作流程與步驟型錄會將擷取的 JSON 與新鮮度中繼資料快取一
 小時，分別位於 `.specify/workflows/.cache/` 與 `.specify/workflows/steps/.cache/`。
 快取 I/O 不會跟隨符號連結的目錄元件或
 快取檔案。寫入會以原子方式取代快取檔案，而非截斷其
 參照目標，因此既有的快取檔案符號連結可以被取代，而不變更
 其目標。若快取無法安全寫入，會記錄警告，且
-探索會繼續使用擷取的目錄。
+探索會繼續使用擷取的型錄。
 
-> **專案的 `.specify/workflow-catalogs.yml` 可以將 `add` 與 `search` 指向您未選擇的目錄。** 在執行來自不熟悉專案的工作流程之前，請先執行 `specify workflow catalog list`（以及其步驟可能引入的步驟目錄對應的 `specify workflow step catalog list`）：專案提供該設定，並不表示其工作流程或步驟已經過審查。維護者不會稽核工作流程程式碼；請自行審查其 shell 步驟中的 `run` 與 `env`，包括嚴格步驟（參閱[審查 shell 執行](#reviewing-shell-execution)與[誰維護工作流程？](#who-maintains-workflows)）。
+> **專案的 `.specify/workflow-catalogs.yml` 可以將 `add` 與 `search` 指向您未選擇的型錄。** 在執行來自不熟悉專案的工作流程之前，請先執行 `specify workflow catalog list`（以及其步驟可能引入的步驟型錄對應的 `specify workflow step catalog list`）：專案提供該設定，並不表示其工作流程或步驟已經過審查。維護者不會稽核工作流程程式碼；請自行審查其 shell 步驟中的 `run` 與 `env`，包括嚴格步驟（參閱[審查 shell 執行](#reviewing-shell-execution)與[誰維護工作流程？](#who-maintains-workflows)）。
 
-### 列出目錄
+### 列出型錄
 
 ```bash
 specify workflow catalog list
 ```
 
-顯示所有作用中的目錄來源。
+顯示所有作用中的型錄來源。
 
-### 新增目錄
+### 新增型錄
 
 ```bash
 specify workflow catalog add <url>
@@ -499,30 +499,30 @@ specify workflow catalog add <url>
 
 | 選項          | 說明                      |
 | --------------- | -------------------------------- |
-| `--name <name>` | 目錄的可選名稱    |
+| `--name <name>` | 型錄的可選名稱    |
 
-將自訂目錄 URL 新增到專案的 `.specify/workflow-catalogs.yml`。
+將自訂型錄 URL 新增到專案的 `.specify/workflow-catalogs.yml`。
 
-以相同的名稱重新新增相同的工作流程或步驟目錄 URL 會成功且不變更設定；不同的名稱會被拒絕。
+以相同的名稱重新新增相同的工作流程或步驟型錄 URL 會成功且不變更設定；不同的名稱會被拒絕。
 
-### 移除目錄
+### 移除型錄
 
 ```bash
 specify workflow catalog remove <index>
 specify workflow step catalog remove <index>
 ```
 
-依其在對應優先順序 `catalog list` 中的索引，移除專案目錄。
+依其在對應優先順序 `catalog list` 中的索引，移除專案型錄。
 由 `SPECKIT_WORKFLOW_CATALOG_URL` 或 `SPECKIT_STEP_CATALOG_URL` 提供的來源無法以此方式移除；請取消設定該變數來管理專案來源。
 
-### 目錄解析順序
+### 型錄解析順序
 
-目錄依以下順序解析（第一個相符者勝出）：
+型錄依以下順序解析（第一個相符者勝出）：
 
-1. **環境變數** — `SPECKIT_WORKFLOW_CATALOG_URL` 覆寫所有目錄
+1. **環境變數** — `SPECKIT_WORKFLOW_CATALOG_URL` 覆寫所有型錄
 2. **專案設定** — `.specify/workflow-catalogs.yml`
 3. **使用者設定** — `~/.specify/workflow-catalogs.yml`
-4. **內建預設值** — 官方目錄 + 社群目錄
+4. **內建預設值** — 官方型錄 + 社群型錄
 
 ## 工作流程 YAML 結構描述
 
@@ -773,7 +773,7 @@ specify workflow resume <run-id> --input approval=approve
 對於跨平台指令碼，請在程式本身中讀取環境，例如 Python 中的 `os.environ["RESULT"]`。參閱
 [Shell 步驟環境變數](#shell-step-environment-variables) 了解繫結合約，以及[插值與 shell 安全](#interpolation-and-shell-safety) 了解其餘的信任邊界。
 
-> **安全注意：** `shell` 步驟會以**您**的權限執行本地命令。沒有能力沙箱：`requires` 是建議性的前置條件區塊（spec-kit 版本、整合），而非執行期關卡，因此它**不會**限制步驟可以做什麼。特別是，不存在 `requires.permissions` 能力關卡：它會在驗證時被拒絕，正是因為它會暗示一個不存在的沙箱。在執行任何目錄或下載的工作流程之前，請先審查它，並使用 `gate` 步驟，在敏感或破壞性的 shell 命令之前要求明確核准。
+> **安全注意：** `shell` 步驟會以**您**的權限執行本地命令。沒有能力沙箱：`requires` 是建議性的前置條件區塊（spec-kit 版本、整合），而非執行期關卡，因此它**不會**限制步驟可以做什麼。特別是，不存在 `requires.permissions` 能力關卡：它會在驗證時被拒絕，正是因為它會暗示一個不存在的沙箱。在執行任何型錄或下載的工作流程之前，請先審查它，並使用 `gate` 步驟，在敏感或破壞性的 shell 命令之前要求明確核准。
 
 ### GitHub 步驟
 
@@ -803,7 +803,7 @@ my-step/
 └── helpers.py      # optional nested modules and data files
 ```
 
-若要準備公開套件以供社群目錄受理，請參閱
+若要準備公開套件以供社群型錄受理，請參閱
 [社群工作流程步驟類型](../community/workflow-steps.md)。
 
 `step.yml` 宣告步驟的身分。`step.type_key` 必須與命令列傳入的 `<step_id>` 精確相符：ID 永遠不會從套件內容推斷：
@@ -836,7 +836,7 @@ class MyStep(StepBase):
 specify workflow step add my-step --dev /path/to/my-step
 ```
 
-`--dev` 接受的是**目錄**（不是封存檔，也不是裸的 `step.yml`），且該目錄是完整的套件。這不需要目錄、伺服器或網路，因此是受支援的本地撰寫循環：
+`--dev` 接受的是**目錄**（不是封存檔，也不是裸的 `step.yml`），且該目錄是完整的套件。這不需要型錄、伺服器或網路，因此是受支援的本地撰寫循環：
 
 ```bash
 specify workflow step add my-step --dev ./my-step
@@ -855,22 +855,22 @@ specify workflow step add my-step --from https://example.com/my-step.zip
 
 `--from` 接受 `.zip`、`.tar.gz` 或 `.tgz` 封存檔（裸的 `step.yml` URL **不是**套件）。封存檔可以將 `step.yml` 與 `__init__.py` 放在其根目錄，或恰好一個頂層目錄之下；無關的頂層同層項目會被拒絕。由於步驟套件包含可執行的 Python，直接 URL 安裝會在任何網路請求之前，顯示預設拒絕的信任確認；拒絕即取消，不發出請求，也不產生錯誤。需要 HTTPS（HTTP 僅允許用於 loopback 主機），重新導向必須保持安全，且下載有大小上限。
 
-#### 從目錄安裝
+#### 從型錄安裝
 
 ```bash
 specify workflow step add my-step
 ```
 
-目錄安裝會從作用中的步驟目錄解析個別檔案 URL，然後走與 `--dev` 和 `--from` 相同的驗證與提交路徑。僅供探索的目錄無法從中安裝。
+型錄安裝會從作用中的步驟型錄解析個別檔案 URL，然後走與 `--dev` 和 `--from` 相同的驗證與提交路徑。僅供探索的型錄無法從中安裝。
 
-若要將自訂步驟類型提交到僅供探索的社群目錄，請遵從
+若要將自訂步驟類型提交到僅供探索的社群型錄，請遵從
 [社群工作流程步驟](../community/workflow-steps.md)。提交使用以標籤釘選的個別檔案 URL 與逐檔案摘要；維護者驗證的是中繼資料與發佈證據，而非提交的程式碼。
 
-##### 目錄發行歷史
+##### 型錄發行歷史
 
-`specify workflow step info <id> --versions` 會列出勝出目錄中的目前與歷史發行版本。`specify workflow step add <id> --version <v>` 會選取精確的目錄發行版本；未加上 `--version` 時，`add` 會安裝已宣傳的目前發行版本。要求的版本永遠不會退到較低優先級的目錄，且僅供探索的來源仍不可安裝。`--version` 不能與直接的 `--dev` 或 `--from` 安裝組合使用。
+`specify workflow step info <id> --versions` 會列出勝出型錄中的目前與歷史發行版本。`specify workflow step add <id> --version <v>` 會選取精確的型錄發行版本；未加上 `--version` 時，`add` 會安裝已宣傳的目前發行版本。要求的版本永遠不會退到較低優先級的型錄，且僅供探索的來源仍不可安裝。`--version` 不能與直接的 `--dev` 或 `--from` 安裝組合使用。
 
-既有的單版本目錄項目會繼續運作。請將目前發行版本的 `version`、`step_yml_url`（或 `url`）、`init_url` 與可選檔案保留在頂層。可選的 `releases` 對應會新增歷史版本：
+既有的單版本型錄項目會繼續運作。請將目前發行版本的 `version`、`step_yml_url`（或 `url`）、`init_url` 與可選檔案保留在頂層。可選的 `releases` 對應會新增歷史版本：
 
 ```json
 {
@@ -895,7 +895,7 @@ specify workflow step add my-step
 }
 ```
 
-每個歷史發行版本都必須為每個下載的檔案提供自己的步驟 URL 與 SHA-256 摘要。當 `step_yml_url` 以 `step.yml` 結尾時，可以省略 `init_url`，由其推導。若要明確選取目前版本，其頂層項目同樣必須提供逐檔案的 `sha256` 對應。發行版本專屬的檔案與要求不會從目前發行版本繼承。重複或格式錯誤的版本會被拒絕；`v1.0` 與 `1.0` 等等效的 PEP 440 拼寫會選取同一個已宣傳的發行版本。下載的 `step.yml` 必須宣告所選的步驟 ID 與版本。未限定的舊目錄安裝不需要摘要或步驟版本。每個步驟 ID 一次只能安裝一個版本；請在審查所選套件後，使用 `--force` 取代先前的安裝。
+每個歷史發行版本都必須為每個下載的檔案提供自己的步驟 URL 與 SHA-256 摘要。當 `step_yml_url` 以 `step.yml` 結尾時，可以省略 `init_url`，由其推導。若要明確選取目前版本，其頂層項目同樣必須提供逐檔案的 `sha256` 對應。發行版本專屬的檔案與要求不會從目前發行版本繼承。重複或格式錯誤的版本會被拒絕；`v1.0` 與 `1.0` 等等效的 PEP 440 拼寫會選取同一個已宣傳的發行版本。下載的 `step.yml` 必須宣告所選的步驟 ID 與版本。未限定的舊型錄安裝不需要摘要或步驟版本。每個步驟 ID 一次只能安裝一個版本；請在審查所選套件後，使用 `--force` 取代先前的安裝。
 
 #### 取代與強制
 
@@ -914,7 +914,7 @@ specify workflow step add my-step --from https://example.com/my-step.zip --force
 - 套件樹會遞迴複製（支援相對匯入、巢狀輔助模組與資料檔案）。符號連結的套件根目錄、任何子孫符號連結，以及任何不是一般檔案或目錄的檔案系統物件都會被拒絕。
 - `.git`、`__pycache__` 與 `.DS_Store` 項目會在不檢查的情況下跳過：它們不會被複製，被排除的目錄不會進入，且不計入任何上限。
 - 已安裝套件原則最多允許 **512 個保留項目**（檔案與目錄合計）、最多 **32 層**目錄巢狀，以及 **50 MiB** 的保留內容。
-- 封存檔 URL 在套件驗證之前，還會通過傳輸／解壓縮安全上限：最多 512 個封存檔項目、50 MiB 的下載或解壓縮量，以及每個封存檔成員 10 MiB。目錄檔案的每個回應上限為 50 MiB。
+- 封存檔 URL 在套件驗證之前，還會通過傳輸／解壓縮安全上限：最多 512 個封存檔項目、50 MiB 的下載或解壓縮量，以及每個封存檔成員 10 MiB。型錄檔案的每個回應上限為 50 MiB。
 - 安裝會驗證並複製套件，但**不會**匯入或執行 `__init__.py`。已安裝的自訂步驟模組會在 `workflow add`、`workflow run` 與 `workflow resume` 啟動期間載入，在任何特定自訂步驟必然執行之前。
 
 > **安全注意：** 載入自訂步驟會以**您**的權限執行其 Python。只安裝並保留來自您信任來源的步驟套件。
@@ -929,11 +929,11 @@ specify workflow step remove my-step
 
 #### 註冊表溯源
 
-每個已安裝的步驟只記錄其來源的*種類*：`catalog`（可選地帶目錄名稱）、`local` 或 `url`。本地路徑與來源 URL 永遠不會保存。`specify workflow step info <id>` 會顯示來源。
+每個已安裝的步驟只記錄其來源的*種類*：`catalog`（可選地帶型錄名稱）、`local` 或 `url`。本地路徑與來源 URL 永遠不會保存。`specify workflow step info <id>` 會顯示來源。
 
 #### 套件組本地限制
 
-套件組的 `provides.steps` 仍僅透過作用中的步驟目錄解析。套件組本地的 `steps/<id>/` 酬載與相對的 `provides.steps[].source` 覆寫，在此發行版本中**不會**被解析，因此這類步驟無法離線安裝。參閱[套件組參考](bundles.md)。
+套件組的 `provides.steps` 仍僅透過作用中的步驟型錄解析。套件組本地的 `steps/<id>/` 酬載與相對的 `provides.steps[].source` 覆寫，在此發行版本中**不會**被解析，因此這類步驟無法離線安裝。參閱[套件組參考](bundles.md)。
 
 ### 逐步驟整合設定
 
@@ -1158,9 +1158,9 @@ Shell 步驟會自動接收以下環境變數：
 
 環境值可以控制執行，而非僅僅提供資料。例如，`PATH` 會選取可執行檔，`PYTHONPATH` 會影響 Python 匯入，`BASH_ENV` 可以選取 Bash 啟動程式碼，`NODE_OPTIONS` 可以變更 Node.js 啟動行為。原生載入器與其他程式有其自身的設定；這些範例並非詳盡清單。因此，即使使用 `strict: true` 且沒有 `eval`，固定的 `run` 仍可能執行不同的程式碼。嚴格模式既不會篩選控制執行的繫結，也不會清理繼承的環境。請讓那些設定保持字面且經作者審查，或將動態值約束到一組已核准的受信任路徑／選項。只將不受約束的輸入或代理輸出用於其取用者會將其視為資料的應用程式資料變數。
 
-當 shell 步驟自行叫用 Specify 時，諸如 `SPECKIT_WORKFLOW_CATALOG_URL` 的目錄覆寫，也可以變更子命令探索或安裝元件的位置。請將那些繫結與[作用中的目錄來源](catalogs.md#discovery-and-trust)一併審查。
+當 shell 步驟自行叫用 Specify 時，諸如 `SPECKIT_WORKFLOW_CATALOG_URL` 的型錄覆寫，也可以變更子命令探索或安裝元件的位置。請將那些繫結與[作用中的型錄來源](catalogs.md#discovery-and-trust)一併審查。
 
-工作流程驗證檢查的是設定，而非環境設定或命令是否安全。`specify workflow info` 會顯示中繼資料與步驟身分；`specify workflow resolve` 會顯示圖層與步驟歸屬。兩者都不會顯示完整的 `run`／`env` 設定，也無法取代閱讀貢獻來源檔案。目錄安裝權限、套件組安裝與嚴格模式都不是安全背書。
+工作流程驗證檢查的是設定，而非環境設定或命令是否安全。`specify workflow info` 會顯示中繼資料與步驟身分；`specify workflow resolve` 會顯示圖層與步驟歸屬。兩者都不會顯示完整的 `run`／`env` 設定，也無法取代閱讀貢獻來源檔案。型錄安裝權限、套件組安裝與嚴格模式都不是安全背書。
 
 ## 輸入類型
 

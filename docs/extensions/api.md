@@ -286,7 +286,7 @@ manager.check_compatibility(
 
 **模組**：`specify_cli.extensions`
 
-表示使用中目錄堆疊中的單一目錄。
+表示使用中型錄堆疊中的單一型錄。
 
 ```python
 from specify_cli.extensions import CatalogEntry
@@ -304,11 +304,11 @@ entry = CatalogEntry(
 
 | 欄位 | 類型 | 說明 |
 |-------|------|-------------|
-| `url` | `str` | 目錄 URL（必須使用 HTTPS，或 localhost 使用 HTTP） |
-| `name` | `str` | 方便閱讀的目錄名稱 |
+| `url` | `str` | 型錄 URL（必須使用 HTTPS，或 localhost 使用 HTTP） |
+| `name` | `str` | 方便閱讀的型錄名稱 |
 | `priority` | `int` | 排序順序（數字越小優先順序越高，衝突時勝出） |
-| `install_allowed` | `bool` | 是否可安裝此目錄的擴充功能 |
-| `description` | `str` | 目錄的選用說明（預設：空） |
+| `install_allowed` | `bool` | 是否可安裝此型錄的擴充功能 |
+| `description` | `str` | 型錄的選用說明（預設：空） |
 
 ### ExtensionCatalog
 
@@ -362,10 +362,10 @@ catalog.clear_cache()
 
 | 欄位 | 類型 | 說明 |
 |-------|------|-------------|
-| `_catalog_name` | `str` | 來源目錄的名稱 |
-| `_install_allowed` | `bool` | 是否允許從此目錄安裝 |
+| `_catalog_name` | `str` | 來源型錄的名稱 |
+| `_install_allowed` | `bool` | 是否允許從此型錄安裝 |
 
-**目錄設定檔**（`.specify/extension-catalogs.yml`）：
+**型錄設定檔**（`.specify/extension-catalogs.yml`）：
 
 ```yaml
 catalogs:
@@ -685,7 +685,7 @@ EXECUTE_COMMAND: {command}
 
 **選項**：
 
-- `--available`——顯示目錄中可用的擴充功能
+- `--available`——顯示型錄中可用的擴充功能
 - `--all`——同時顯示已安裝與可用的擴充功能
 
 **輸出**：已安裝擴充功能清單及後設資料
@@ -694,7 +694,7 @@ EXECUTE_COMMAND: {command}
 
 **用法**：`specify extension catalog list`
 
-列出目前目錄堆疊中所有使用中的目錄，顯示名稱、說明、URL、優先順序與 `install_allowed` 狀態。
+列出目前型錄堆疊中所有使用中的型錄，顯示名稱、說明、URL、優先順序與 `install_allowed` 狀態。
 
 ### extension catalog add
 
@@ -702,16 +702,16 @@ EXECUTE_COMMAND: {command}
 
 **選項**：
 
-- `--name NAME`——目錄名稱（必填）
+- `--name NAME`——型錄名稱（必填）
 - `--priority INT`——優先順序（數字越小優先順序越高，預設：10）
-- `--install-allowed / --no-install-allowed`——是否允許從此目錄安裝（預設：false）
-- `--description TEXT`——目錄的選用說明
+- `--install-allowed / --no-install-allowed`——是否允許從此型錄安裝（預設：false）
+- `--description TEXT`——型錄的選用說明
 
 **參數**：
 
-- `URL`——目錄 URL（必須使用 HTTPS）
+- `URL`——型錄 URL（必須使用 HTTPS）
 
-將目錄條目加入 `.specify/extension-catalogs.yml`。
+將型錄條目加入 `.specify/extension-catalogs.yml`。
 
 ### extension catalog remove
 
@@ -719,9 +719,9 @@ EXECUTE_COMMAND: {command}
 
 **參數**：
 
-- `NAME`——要移除的目錄名稱
+- `NAME`——要移除的型錄名稱
 
-從 `.specify/extension-catalogs.yml` 移除目錄條目。
+從 `.specify/extension-catalogs.yml` 移除型錄條目。
 
 ### extension add
 
@@ -736,7 +736,7 @@ EXECUTE_COMMAND: {command}
 
 - `EXTENSION`——擴充功能名稱或 URL
 
-**注意**：`install_allowed: false` 的目錄中的擴充功能無法透過此命令安裝。
+**注意**：`install_allowed: false` 的型錄中的擴充功能無法透過此命令安裝。
 
 ### extension remove
 
@@ -755,7 +755,7 @@ EXECUTE_COMMAND: {command}
 
 **用法**：`specify extension search [QUERY] [OPTIONS]`
 
-同時搜尋所有使用中的目錄。結果包含來源目錄名稱與 install_allowed 狀態。
+同時搜尋所有使用中的型錄。結果包含來源型錄名稱與 install_allowed 狀態。
 
 **選項**：
 
@@ -771,7 +771,7 @@ EXECUTE_COMMAND: {command}
 
 **用法**：`specify extension info EXTENSION`
 
-顯示來源目錄與 install_allowed 狀態。
+顯示來源型錄與 install_allowed 狀態。
 
 **參數**：
 

@@ -1,5 +1,5 @@
 ---
-description: "處理社群擴充功能提交議題——驗證、加入目錄，並開啟 PR 供維護者審查"
+description: "處理社群擴充功能提交議題——驗證、加入型錄，並開啟 PR 供維護者審查"
 emoji: "🧩"
 
 on:
@@ -69,7 +69,7 @@ safe-outputs:
 
 # 從議題提交新增社群擴充功能
 
-你是 Spec Kit 專案的目錄維護代理。你的工作是處理社群擴充功能提交議題，並建立將項目新增或更新到社群擴充功能目錄的拉取請求。
+你是 Spec Kit 專案的型錄維護代理。你的工作是處理社群擴充功能提交議題，並建立將項目新增或更新到社群擴充功能型錄的拉取請求。
 
 ## 標籤責任
 
@@ -81,7 +81,7 @@ safe-outputs:
 
 > The extension-submission workflow stopped before validation because the issue title does not start with `[Extension]:`.
 
-包含 `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`，然後停止，不進行驗證、標籤變更、目錄／文件編輯或 PR 建立。不要以 `noop` 取代此留言。否則，進行步驟 1。
+包含 `[Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`，然後停止，不進行驗證、標籤變更、型錄／文件編輯或 PR 建立。不要以 `noop` 取代此留言。否則，進行步驟 1。
 
 ## 步驟 1 — 閱讀並解析議題
 
@@ -140,7 +140,7 @@ safe-outputs:
 - URL 中的 `<tag>` 區段必須對應提交的版本。接受 `vX.Y.Z`、`X.Y.Z`，以及版本後綴相符的限定標籤（例如版本 `1.0.0` 的 `aide-v1.0.0`）。拒絕嵌入 semver 不等於提交版本的標籤。
 - 僅在所有固定檢查通過後，才取得下載 URL 並執行其餘產物檢查：
   - 驗證 URL 回傳 HTTP 200。
-  - 若包含 `sha256`，驗證其與下載的封存相符。要求每個目錄項目都含 `sha256` 是後續工作，當欄位缺失時此檢查絕不得因此失敗。
+  - 若包含 `sha256`，驗證其與下載的封存相符。要求每個型錄項目都含 `sha256` 是後續工作，當欄位缺失時此檢查絕不得因此失敗。
   - 驗證該標籤存在 GitHub 發行版本。
 
 使用 `curl` 下載二進位檔。URL 通過固定檢查後，要求整個 URL 符合 `^[A-Za-z0-9._~%/:-]+$`，不得有空白或控制字元。將不允許的字元作為提交失敗拒絕，不要取得 URL。不要解碼或重寫 URL 讓它通過。
@@ -163,7 +163,7 @@ EXPECTED_SHA256  /tmp/gh-aw/community-archive.zip
 sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 ```
 
-要求結束代碼 0 且結果為 `OK`，才能將總和檢查碼檢查標記為通過。`FAILED` 的總和檢查碼比對屬 Failed 結果：回報提交的與實際的摘要，移除 `validation-passed`，新增 `validation-failed`，並停止，不進行目錄／文件編輯或 PR。絕不要以計算出的或發行中繼資料的摘要取代不相符的提交總和檢查碼。無法執行或讀取封存的命令屬 Blocked，而不是成功的比對。受阻或失敗的下載不得算為通過的檢查；儲存庫／發行中繼資料不能取代取得封存。絕不要執行下載的內容。
+要求結束代碼 0 且結果為 `OK`，才能將總和檢查碼檢查標記為通過。`FAILED` 的總和檢查碼比對屬 Failed 結果：回報提交的與實際的摘要，移除 `validation-passed`，新增 `validation-failed`，並停止，不進行型錄／文件編輯或 PR。絕不要以計算出的或發行中繼資料的摘要取代不相符的提交總和檢查碼。無法執行或讀取封存的命令屬 Blocked，而不是成功的比對。受阻或失敗的下載不得算為通過的檢查；儲存庫／發行中繼資料不能取代取得封存。絕不要執行下載的內容。
 
 ### 2e. 提交檢核清單
 - 確認 Testing Checklist 與 Submission Requirements 章節中所有必填核取方塊都已勾選（`[x]`）
@@ -179,7 +179,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 - 不要僅因工作流程無法執行檢查，就要求提交者變更 URL 或重新提交。
 - 移除 `validation-passed`。不要僅因環境阻礙就新增 `validation-failed` 或 `needs-info`。不要將未執行的檢查描述為通過。
 - 若獨立的提交檢查失敗，分別回報它們，並僅針對那些失敗套用 `validation-failed`。觀察到的 HTTP 404 或總和檢查碼不符屬提交失敗，不是權限失敗。
-- 在此停止處理，不編輯目錄／文件檔案或開啟 PR。不要評估下方的 Failed 或 Passed 結果。
+- 在此停止處理，不編輯型錄／文件檔案或開啟 PR。不要評估下方的 Failed 或 Passed 結果。
 
 #### Failed
 
@@ -207,7 +207,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 
 編輯 `extensions/catalog.community.json` 以新增或更新擴充功能項目。
 
-對於新增項目與更新，都僅在每個必填驗證通過後，才將 `sha256` 設為從下載封存得到的 `actual_sha256`。即使未提交總和檢查碼也要這樣做。取代任何先前的目錄摘要；不要重用舊封存的摘要。提交不符必須在此步驟前使驗證失敗；寫入計算出的摘要絕不得用來繞過該失敗。
+對於新增項目與更新，都僅在每個必填驗證通過後，才將 `sha256` 設為從下載封存得到的 `actual_sha256`。即使未提交總和檢查碼也要這樣做。取代任何先前的型錄摘要；不要重用舊封存的摘要。提交不符必須在此步驟前使驗證失敗；寫入計算出的摘要絕不得用來繞過該失敗。
 
 ### 對於新增擴充功能
 
@@ -257,7 +257,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 
 ### 編輯後
 
-將目錄的**頂層 `"updated_at"` 時間戳記**更新為今天的日期，使用 ISO 8601 格式。
+將型錄的**頂層 `"updated_at"` 時間戳記**更新為今天的日期，使用 ISO 8601 格式。
 
 執行以下指令驗證 JSON：
 
@@ -298,7 +298,7 @@ python3 -c "import json; json.load(open('extensions/catalog.community.json')); p
 
 以這些變更建立拉取請求。使用此分支命名慣例：
 
-此儲存庫自有的 gh-aw 維護工作流程不執行貢獻者開啟中 PR 數量檢查，也不要求確認。在驗證成功且允許的目錄／文件檔案更新後，無論提交者或提交帳號的開啟中 PR 數量為何，都發出已設定的草稿 `create_pull_request` 安全輸出。
+此儲存庫自有的 gh-aw 維護工作流程不執行貢獻者開啟中 PR 數量檢查，也不要求確認。在驗證成功且允許的型錄／文件檔案更新後，無論提交者或提交帳號的開啟中 PR 數量為何，都發出已設定的草稿 `create_pull_request` 安全輸出。
 
 - **新增擴充功能：** `add-<extension-id>-extension`
 - **更新：** `update-<extension-id>-extension`
@@ -338,7 +338,7 @@ Closes #<issue-number>
 ## 重要規則
 
 - **字母順序很重要** — JSON 中的項目必須依 ID 排序，文件表格中的項目必須依名稱排序
-- **編輯後一律驗證 JSON** — 尾隨逗號或缺少大括號會破壞目錄
+- **編輯後一律驗證 JSON** — 尾隨逗號或缺少大括號會破壞型錄
 - **使用 `Closes` 而非 `Fixes`** — `Closes #N` 是提交議題的正確關鍵字
 - **比對建議項目但仍要驗證** — 議題可能包含建議的 JSON 區塊，但務必對照實際儲存庫狀態驗證欄位值，而不是盲目信任提交者的 JSON
 - **更新時保留 `created_at`** — 保留原始值；只更新 `updated_at`

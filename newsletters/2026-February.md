@@ -1,18 +1,18 @@
 # Spec Kit－2026 年 2 月電子報
 
-本期涵蓋 Spec Kit 在 2026 年 2 月的動態。本月發佈了 v0.1.7 至 v0.1.13，修復錯誤並新增功能，包括雙目錄擴充系統與更多代理整合。社群動態包括部落格文章、教學與聚會分享。下表為分類摘要，其後為詳細內容。
+本期涵蓋 Spec Kit 在 2026 年 2 月的動態。本月發佈了 v0.1.7 至 v0.1.13，修復錯誤並新增功能，包括雙型錄擴充系統與更多代理整合。社群動態包括部落格文章、教學與聚會分享。下表為分類摘要，其後為詳細內容。
 
 | **Spec Kit 核心（2026 年 2 月）** | **社群與內容** | **藍圖與下一步** |
 | --- | --- | --- |
-| 發佈了 **v0.1.7** 至 **v0.1.13**，包含錯誤修復與新功能，包括**雙目錄擴充系統**與新的代理整合。關閉了 300 多個 issue（共提出約 800 個）。儲存庫達到 71k 顆星與 6.4k 個 fork。 [\[github.com\]](https://github.com/github/spec-kit/releases) [\[github.com\]](https://github.com/github/spec-kit/issues) [\[rywalker.com\]](https://rywalker.com/research/github-spec-kit) | Eduardo Luz 在 LinkedIn 發表了關於 SDD 與 Spec Kit 的文章 [\[linkedin.com\]](https://www.linkedin.com/pulse/specification-driven-development-sdd-github-spec-kit-elevating-luz-tojmc?tl=en)。Erick Matsen 在部落格分享了用 Spec Kit 打造生物資訊管線的完整導覽 [\[matsen.fredhutch.org\]](https://matsen.fredhutch.org/general/2026/02/10/spec-kit-walkthrough.html)。Microsoft MVP [Eric Boyd](https://ericboyd.com/)（與同名的 Microsoft AI Platform 副總裁並非同一人）在 Cleveland .NET User Group 分享 [\[ericboyd.com\]](https://ericboyd.com/events/cleveland-csharp-user-group-february-25-2026-spec-driven-development-sdd-github-spec-kit)。 | **v0.2.0** 於 3 月初發佈，彙整了 2 月的工作成果。新增了 Jira 與 Azure DevOps 擴充功能、社群外掛支援，以及 Tabnine CLI 與 Kiro CLI 代理 [\[github.com\]](https://github.com/github/spec-kit/releases)。未來工作包括規格生命週期管理，以及邁向穩定的 1.0 版本 [\[martinfowler.com\]](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)。 |
+| 發佈了 **v0.1.7** 至 **v0.1.13**，包含錯誤修復與新功能，包括**雙型錄擴充系統**與新的代理整合。關閉了 300 多個 issue（共提出約 800 個）。儲存庫達到 71k 顆星與 6.4k 個 fork。 [\[github.com\]](https://github.com/github/spec-kit/releases) [\[github.com\]](https://github.com/github/spec-kit/issues) [\[rywalker.com\]](https://rywalker.com/research/github-spec-kit) | Eduardo Luz 在 LinkedIn 發表了關於 SDD 與 Spec Kit 的文章 [\[linkedin.com\]](https://www.linkedin.com/pulse/specification-driven-development-sdd-github-spec-kit-elevating-luz-tojmc?tl=en)。Erick Matsen 在部落格分享了用 Spec Kit 打造生物資訊管線的完整導覽 [\[matsen.fredhutch.org\]](https://matsen.fredhutch.org/general/2026/02/10/spec-kit-walkthrough.html)。Microsoft MVP [Eric Boyd](https://ericboyd.com/)（與同名的 Microsoft AI Platform 副總裁並非同一人）在 Cleveland .NET User Group 分享 [\[ericboyd.com\]](https://ericboyd.com/events/cleveland-csharp-user-group-february-25-2026-spec-driven-development-sdd-github-spec-kit)。 | **v0.2.0** 於 3 月初發佈，彙整了 2 月的工作成果。新增了 Jira 與 Azure DevOps 擴充功能、社群外掛支援，以及 Tabnine CLI 與 Kiro CLI 代理 [\[github.com\]](https://github.com/github/spec-kit/releases)。未來工作包括規格生命週期管理，以及邁向穩定的 1.0 版本 [\[martinfowler.com\]](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html)。 |
 
 ***
 
 ## Spec Kit 專案更新
 
-Spec Kit 在 2 月發佈了 **v0.1.7** 至 **v0.1.13**。0.1.7 版（2 月初）更新了新推出的**雙目錄擴充系統**文件，該系統讓核心與社群兩種擴充目錄能並存。後續修補版本（0.1.8、0.1.9 等）升級了 GitHub Actions 版本等相依套件，並解決了若干小問題。**v0.1.10** 修復了產生檔案中的 YAML front-matter 處理。到了 2 月下旬，**v0.1.12** 與 **v0.1.13** 發佈了更多修復，為下一次版本升級做準備。 [\[github.com\]](https://github.com/github/spec-kit/releases)
+Spec Kit 在 2 月發佈了 **v0.1.7** 至 **v0.1.13**。0.1.7 版（2 月初）更新了新推出的**雙型錄擴充系統**文件，該系統讓核心與社群兩種擴充型錄能並存。後續修補版本（0.1.8、0.1.9 等）升級了 GitHub Actions 版本等相依套件，並解決了若干小問題。**v0.1.10** 修復了產生檔案中的 YAML front-matter 處理。到了 2 月下旬，**v0.1.12** 與 **v0.1.13** 發佈了更多修復，為下一次版本升級做準備。 [\[github.com\]](https://github.com/github/spec-kit/releases)
 
-本月最主要的架構新增是**模組化擴充系統**，為第三方附加元件分別提供「core」與「community」擴充目錄。本月合併了多個社群貢獻的擴充功能，包括用於 issue 追蹤整合的 **Jira 擴充功能**、**Azure DevOps 擴充功能**，以及用於程式碼審查、回顧文件與 CI/CD 同步的工具型擴充功能。待發佈的 0.2.0 版變更記錄列出了十多項來自 2 月的變更，包括擴充功能的新增，以及同時支援**多個代理目錄**。 [\[github.com\]](https://github.com/github/spec-kit/releases)
+本月最主要的架構新增是**模組化擴充系統**，為第三方附加元件分別提供「core」與「community」擴充型錄。本月合併了多個社群貢獻的擴充功能，包括用於 issue 追蹤整合的 **Jira 擴充功能**、**Azure DevOps 擴充功能**，以及用於程式碼審查、回顧文件與 CI/CD 同步的工具型擴充功能。待發佈的 0.2.0 版變更記錄列出了十多項來自 2 月的變更，包括擴充功能的新增，以及同時支援**多個代理型錄**。 [\[github.com\]](https://github.com/github/spec-kit/releases)
 
 截至 2 月底，**GitHub 上已關閉超過 330 個 issue／功能請求**（迄今共提出約 870 個）。外部貢獻者提交了 pull request，其中包括 2 月下旬合併的 **Tabnine CLI 支援**。儲存庫達到約 71k 顆星，並突破 6,000 個 fork。 [\[github.com\]](https://github.com/github/spec-kit/issues) [\[github.com\]](https://github.com/github/spec-kit/releases) [\[rywalker.com\]](https://rywalker.com/research/github-spec-kit)
 
@@ -44,7 +44,7 @@ AWS **Kiro** 於 2 月 18 日發佈 0.10 版，帶來兩個新的規格工作流
 
 ## 藍圖
 
-**v0.2.0** 於 2026 年 3 月 10 日發佈，彙整了本月的工作成果。內容包括新擴充功能（Jira、Azure DevOps、review、sync）、對多個擴充目錄與社群外掛的支援，以及更多代理整合（Tabnine CLI、Kiro CLI）。 [\[github.com\]](https://github.com/github/spec-kit/releases)
+**v0.2.0** 於 2026 年 3 月 10 日發佈，彙整了本月的工作成果。內容包括新擴充功能（Jira、Azure DevOps、review、sync）、對多個擴充型錄與社群外掛的支援，以及更多代理整合（Tabnine CLI、Kiro CLI）。 [\[github.com\]](https://github.com/github/spec-kit/releases)
 
 未來開發中正在討論或進行中的領域：
 

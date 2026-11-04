@@ -38,7 +38,7 @@
 7. **發佈**（選用）：
    - 建立 GitHub 儲存庫
    - 建立 release
-   - 提交至目錄（請參閱[擴充功能發佈指南](https://github.github.com/spec-kit/extensions/publishing.html)）
+   - 提交至型錄（請參閱[擴充功能發佈指南](https://github.github.com/spec-kit/extensions/publishing.html)）
 
 ## 本範本中的檔案
 

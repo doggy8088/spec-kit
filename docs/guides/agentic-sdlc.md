@@ -56,7 +56,7 @@ flowchart LR
 
 &#128100; 貢獻者可以直接實作與修訂變更，或在代理的協助下進行。維護者審查產生的 PR 及其證據，即使提議的變更是由代理產出的。
 
-&#9733; 貢獻者可以使用自己的代理，獨立於儲存庫的工作流程之外。由於那份工作可能不會出現在差異中，[貢獻政策](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#ai-contributions-in-spec-kit)要求揭露工具、模型、設定或模式，以及 AI 協助的程度。由代理撰寫的提交與留言需要各自的歸屬標示；已知的錯誤修復與社群目錄工作流程不在此限，因為它們的代理身分是固有的。揭露提供的是出處，而不是較低的證據或審查門檻。
+&#9733; 貢獻者可以使用自己的代理，獨立於儲存庫的工作流程之外。由於那份工作可能不會出現在差異中，[貢獻政策](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#ai-contributions-in-spec-kit)要求揭露工具、模型、設定或模式，以及 AI 協助的程度。由代理撰寫的提交與留言需要各自的歸屬標示；已知的錯誤修復與社群型錄工作流程不在此限，因為它們的代理身分是固有的。揭露提供的是出處，而不是較低的證據或審查門檻。
 
 ### 5. 測試：同時驗證意圖與行為
 
@@ -86,11 +86,11 @@ Spec Kit 儲存庫使用一般的 GitHub Actions 進行交付。[手動派送的
 
 擴充性貫穿這個 SDLC：專案既建構與發行流程，也使用它們。團隊發布 [`assess` 套件組](https://github.com/github/spec-kit/tree/main/bundles/assess) 與 [`bugfix` 套件組](https://github.com/github/spec-kit/tree/main/bundles/bugfix)，每個都把一個擴充功能與一個可恢復的 *Spec Kit 工作流程* 以及一道人類審查關卡結合起來。它還發布 [`lean` 預設集](https://github.com/github/spec-kit/tree/main/presets/lean)，展示塑造核心 SDD 指引的另一種方式。這些是 Spec Kit 自己的[擴充功能、預設集、工作流程與套件組](customization.md)，不是儲存庫的 GitHub Actions 工作流程。
 
-&#9733; 除了核心功能交付之外，針對 [擴充功能](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-extension.md)、[預設集](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-preset.md)、[套件組](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-bundle.md) 與 [工作流程步驟](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-workflow-step.md) 的代理式社群提交工作流程，會驗證提交中繼資料，並在草稿 PR 中提議目錄變更，供維護者審查。
+&#9733; 除了核心功能交付之外，針對 [擴充功能](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-extension.md)、[預設集](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-preset.md)、[套件組](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-bundle.md) 與 [工作流程步驟](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-workflow-step.md) 的代理式社群提交工作流程，會驗證提交中繼資料，並在草稿 PR 中提議型錄變更，供維護者審查。
 
 擴充功能、預設集與套件組的提交標題，分別需要 `[Extension]:`、`[Preset]:` 與 `[Bundle]:` 前綴。不相符者會收到一則留言與執行連結，接著處理會停止，不做驗證或其他變更。
 
-目錄探索不會稽核或背書社群程式碼；使用者在使用第三方元件之前，必須自行檢視。
+型錄探索不會稽核或背書社群程式碼；使用者在使用第三方元件之前，必須自行檢視。
 
 ## 我們如何從 SDLC 走到代理式 SDLC
 
@@ -102,15 +102,15 @@ Spec Kit 儲存庫使用一般的 GitHub Actions 進行交付。[手動派送的
 | September 2025 | <ul><li>加入了 <a href="https://github.com/github/spec-kit/commit/4b98c20f">文件部署</a>。</li><li><a href="https://github.com/github/spec-kit/commit/6f3e450c">貢獻指南</a>開始要求揭露 AI 協助，包括貢獻者執行的代理。</li></ul> |
 | October 2025 | <ul><li><a href="https://github.com/github/spec-kit/commit/33a07969">Markdown linting</a> 加入 PR 與 <code>main</code> 檢查。</li></ul> |
 | February 2026 | <ul><li><a href="https://github.com/github/spec-kit/pull/1622">Dependabot</a> 開始提出每週的 pip 與 GitHub Actions 相依性更新 PR。</li><li>為程式碼掃描加入了 <a href="https://github.com/github/spec-kit/commit/9402ebd0">CodeQL 工作流程</a>。</li><li><a href="https://github.com/github/spec-kit/pull/1637">Pytest CI</a> 開始在 PR 與推送到 <code>main</code> 時執行測試。</li><li><a href="https://github.com/github/spec-kit/pull/1637">Ruff linting</a> 加入 Python CI 工作流程。</li></ul> |
-| May 2026 | <ul><li><a href="https://github.com/github/spec-kit/pull/2655">擴充功能提交</a>取得了目錄驗證與草稿 PR。 &#9733;</li><li><a href="https://github.com/github/spec-kit/pull/2655">預設集提交</a>取得了目錄驗證與草稿 PR。 &#9733;</li></ul> |
+| May 2026 | <ul><li><a href="https://github.com/github/spec-kit/pull/2655">擴充功能提交</a>取得了型錄驗證與草稿 PR。 &#9733;</li><li><a href="https://github.com/github/spec-kit/pull/2655">預設集提交</a>取得了型錄驗證與草稿 PR。 &#9733;</li></ul> |
 | June 2026 | <ul><li>加入了 <a href="https://github.com/github/spec-kit/pull/3023">代理式 bug-assess 工作流程</a>。 &#9733;</li><li><a href="https://github.com/github/spec-kit/commit/3fd1e54d4b237af6124bb967e2eae24c93685a89">bundler 功能</a>使用 Spec Kit 的 SDD 流程產出其規格、計畫與任務。 &#9733;</li><li><a href="https://github.com/github/spec-kit/pull/2915">PyPI 發布</a>取得了一個傳統工作流程。</li><li><a href="https://github.com/github/spec-kit/pull/3126">ShellCheck</a> 開始在 CI 中檢查 shell script。</li></ul> |
-| July 2026 | <ul><li><a href="https://github.com/github/spec-kit/pull/3258">Bug-fix</a> 以人類交接擴展了代理式 issue 工作流程。 &#9733;</li><li><a href="https://github.com/github/spec-kit/pull/3257">Bug-test</a> 加入了一個獨立的驗證階段。 &#9733;</li><li><a href="https://github.com/github/spec-kit/pull/3553">套件組提交</a>取得了目錄自動化。 &#9733;</li></ul> |
+| July 2026 | <ul><li><a href="https://github.com/github/spec-kit/pull/3258">Bug-fix</a> 以人類交接擴展了代理式 issue 工作流程。 &#9733;</li><li><a href="https://github.com/github/spec-kit/pull/3257">Bug-test</a> 加入了一個獨立的驗證階段。 &#9733;</li><li><a href="https://github.com/github/spec-kit/pull/3553">套件組提交</a>取得了型錄自動化。 &#9733;</li></ul> |
 | August 2026 | <ul><li><a href="https://github.com/github/spec-kit/pull/4186">feature-assess 工作流程</a>開始在功能請求上使用 Spec Kit 的 <code>assess</code> 擴充功能。 &#9733;</li></ul> |
 | September 2026 | <ul><li><a href="https://github.com/github/spec-kit/pull/4512">AI 揭露</a>開始要求代理、模型、設定與程度。</li><li><a href="https://github.com/github/spec-kit/pull/4752">貢獻指引</a>為由代理撰寫的提交與留言加入了歸屬標示。</li></ul> |
 
-這不是從傳統自動化到代理的交接。測試、lint、掃描與發布，把可重複的工作保留在 GitHub Actions 中，而揭露讓貢獻者執行的代理變得可見。專案為有邊界的任務加入了代理式目錄與錯誤工作流程，在一項重大功能上使用了 SDD，之後又讓功能評估取用 Spec Kit 的 `assess` 擴充功能。這些是分開加入的，不是每個 issue 都必須遵循的步驟。
+這不是從傳統自動化到代理的交接。測試、lint、掃描與發布，把可重複的工作保留在 GitHub Actions 中，而揭露讓貢獻者執行的代理變得可見。專案為有邊界的任務加入了代理式型錄與錯誤工作流程，在一項重大功能上使用了 SDD，之後又讓功能評估取用 Spec Kit 的 `assess` 擴充功能。這些是分開加入的，不是每個 issue 都必須遵循的步驟。
 
-它們合在一起，為專案提供了選擇。對於功能，`assess` 可以為人類對某項請求的決定提供資訊；重大的實作工作可以使用 SDD 來規格化並計畫它，一如 bundler 所做的。這些流程之間沒有自動的交接。一項小型變更可以留在 issue 與 PR 中，而一個錯誤可以走過人類把關的評估、修復與驗證。程式碼變更仍要面對傳統檢查與維護者審查；issue 判定與目錄提議有各自的人類關卡。
+它們合在一起，為專案提供了選擇。對於功能，`assess` 可以為人類對某項請求的決定提供資訊；重大的實作工作可以使用 SDD 來規格化並計畫它，一如 bundler 所做的。這些流程之間沒有自動的交接。一項小型變更可以留在 issue 與 PR 中，而一個錯誤可以走過人類把關的評估、修復與驗證。程式碼變更仍要面對傳統檢查與維護者審查；issue 判定與型錄提議有各自的人類關卡。
 
 ## 一種正式環境實務，不是一份規定的配方
 

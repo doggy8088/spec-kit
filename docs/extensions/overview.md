@@ -76,7 +76,7 @@ vim .specify/extensions/jira/jira-config.yml
 
 ## 尋找擴充功能
 
-`specify extension search` 會同時搜尋**所有使用中的目錄**，預設包含社群目錄。結果會註記來源目錄與安裝狀態。
+`specify extension search` 會同時搜尋**所有使用中的型錄**，預設包含社群型錄。結果會註記來源型錄與安裝狀態。
 
 ### 瀏覽所有擴充功能
 
@@ -84,7 +84,7 @@ vim .specify/extensions/jira/jira-config.yml
 specify extension search
 ```
 
-顯示所有使用中目錄（預設為預設目錄與社群目錄）中的全部擴充功能。
+顯示所有使用中型錄（預設為預設型錄與社群型錄）中的全部擴充功能。
 
 ### 依關鍵字搜尋
 
@@ -140,7 +140,7 @@ specify extension info jira
 
 ## 安裝擴充功能
 
-### 從目錄安裝
+### 從型錄安裝
 
 ```bash
 # By name (from catalog)
@@ -406,10 +406,10 @@ hooks:
 
 | 變數 | 說明 | 預設值 |
 |----------|-------------|---------|
-| `SPECKIT_CATALOG_URL`       | 以單一 URL 覆寫完整目錄堆疊（向後相容） | 內建預設堆疊 |
-| `GH_TOKEN` / `GITHUB_TOKEN` | 用於向 GitHub 託管 URL（`raw.githubusercontent.com`、`github.com`、`api.github.com`、`codeload.github.com`）發出已驗證請求的 GitHub 權杖。當你的目錄 JSON 或擴充功能 ZIP 託管在私有 GitHub 儲存庫時必填。 | 無 |
+| `SPECKIT_CATALOG_URL`       | 以單一 URL 覆寫完整型錄堆疊（向後相容） | 內建預設堆疊 |
+| `GH_TOKEN` / `GITHUB_TOKEN` | 用於向 GitHub 託管 URL（`raw.githubusercontent.com`、`github.com`、`api.github.com`、`codeload.github.com`）發出已驗證請求的 GitHub 權杖。當你的型錄 JSON 或擴充功能 ZIP 託管在私有 GitHub 儲存庫時必填。 | 無 |
 
-#### 範例：使用自訂目錄進行測試
+#### 範例：使用自訂型錄進行測試
 
 ```bash
 # Point to a local or alternative catalog (replaces the full stack)
@@ -419,7 +419,7 @@ export SPECKIT_CATALOG_URL="http://localhost:8000/catalog.json"
 export SPECKIT_CATALOG_URL="https://example.com/staging/catalog.json"
 ```
 
-#### 範例：使用私有 GitHub 託管目錄
+#### 範例：使用私有 GitHub 託管型錄
 
 ```bash
 # Authenticate with a token (gh CLI, PAT, or GITHUB_TOKEN in CI)
@@ -432,28 +432,28 @@ specify extension search jira
 specify extension add jira-sync
 ```
 
-權杖會自動附加到以 GitHub 網域為目標的請求。非 GitHub 目錄 URL 一律在不帶憑證的情況下擷取。
+權杖會自動附加到以 GitHub 網域為目標的請求。非 GitHub 型錄 URL 一律在不帶憑證的情況下擷取。
 
 ---
 
-## 擴充功能目錄
+## 擴充功能型錄
 
-Spec Kit 使用**目錄堆疊**——一份同時搜尋的有序目錄清單。預設有兩個目錄啟用中：
+Spec Kit 使用**型錄堆疊**——一份同時搜尋的有序型錄清單。預設有兩個型錄啟用中：
 
-| 優先順序 | 目錄 | 允許安裝 | 用途 |
+| 優先順序 | 型錄 | 允許安裝 | 用途 |
 |----------|---------|-----------------|---------|
 | 1 | `catalog.json`（預設） | ✅ 是 | 可安裝的精選擴充功能 |
 | 2 | `catalog.community.json`（社群） | ❌ 否（僅供探索） | 瀏覽社群擴充功能 |
 
-### 列出使用中的目錄
+### 列出使用中的型錄
 
 ```bash
 specify extension catalog list
 ```
 
-### 透過 CLI 管理目錄
+### 透過 CLI 管理型錄
 
-你可以使用 `--help` 查看主要的目錄管理命令：
+你可以使用 `--help` 查看主要的型錄管理命令：
 
 ```text
 specify extension catalog --help
@@ -471,7 +471,7 @@ specify extension catalog --help
 ╰──────────────────────────────────────────────────────────────────────────────────╯
 ```
 
-### 新增目錄（專案範疇）
+### 新增型錄（專案範疇）
 
 ```bash
 # Add an internal catalog that allows installs
@@ -490,7 +490,7 @@ specify extension catalog add \
 
 這會建立或更新 `.specify/extension-catalogs.yml`。
 
-### 移除目錄
+### 移除型錄
 
 ```bash
 specify extension catalog remove internal
@@ -521,22 +521,22 @@ catalogs:
     description: "Community-contributed extensions (discovery only)"
 ```
 
-使用者層級的對應檔案位於 `~/.specify/extension-catalogs.yml`。當專案層級設定包含一個以上目錄條目時，它具有完全優先權。空的 `catalogs: []` 清單會回退到內建預設值。
+使用者層級的對應檔案位於 `~/.specify/extension-catalogs.yml`。當專案層級設定包含一個以上型錄條目時，它具有完全優先權。空的 `catalogs: []` 清單會回退到內建預設值。
 
-## 組織目錄自訂
+## 組織型錄自訂
 
-### 為什麼自訂你的目錄
+### 為什麼自訂你的型錄
 
-組織自訂目錄是為了：
+組織自訂型錄是為了：
 
 - **控制可用的擴充功能**——精選團隊可安裝的擴充功能
 - **託管私有擴充功能**——不應公開的內部工具
 - **依合規自訂**——符合安全性／稽核要求
 - **支援氣隙環境**——在無網路存取的情況下運作
 
-### 設定自訂目錄
+### 設定自訂型錄
 
-#### 1. 建立你的目錄檔案
+#### 1. 建立你的型錄檔案
 
 建立包含你擴充功能的 `catalog.json` 檔案：
 
@@ -590,9 +590,9 @@ catalogs:
 }
 ```
 
-#### 2. 託管目錄
+#### 2. 託管型錄
 
-託管目錄的選項：
+託管型錄的選項：
 
 | 方法 | URL 範例 | 使用案例 |
 | ------ | ----------- | -------- |
@@ -605,7 +605,7 @@ catalogs:
 
 #### 3. 設定你的環境
 
-##### 選項 A：目錄堆疊設定檔（建議）
+##### 選項 A：型錄堆疊設定檔（建議）
 
 在你的專案中加入 `.specify/extension-catalogs.yml`：
 
@@ -626,7 +626,7 @@ specify extension catalog add \
   https://your-org.com/spec-kit/catalog.json
 ```
 
-##### 選項 B：環境變數（建議用於 CI/CD，單一目錄）
+##### 選項 B：環境變數（建議用於 CI/CD，單一型錄）
 
 ```bash
 # In ~/.bashrc, ~/.zshrc, or CI pipeline
@@ -646,7 +646,7 @@ specify extension search
 specify extension add jira
 ```
 
-### 目錄 JSON 結構描述
+### 型錄 JSON 結構描述
 
 每個擴充功能條目的必填欄位：
 
@@ -683,7 +683,7 @@ specify extension add jira
 }
 ```
 
-#### 精選團隊目錄
+#### 精選團隊型錄
 
 限制團隊可安裝的擴充功能：
 
@@ -703,8 +703,8 @@ specify extension add jira
 對於無網路存取的網路：
 
 1. 將擴充功能 ZIP 下載到內部檔案伺服器
-2. 建立指向內部 URL 的目錄
-3. 將目錄託管在內部網頁伺服器上
+2. 建立指向內部 URL 的型錄
+3. 將型錄託管在內部網頁伺服器上
 
 ```json
 {
@@ -731,7 +731,7 @@ specify extension add my-new-extension
 
 ### 與直接安裝並用
 
-你仍可使用 `--from` 安裝不在目錄中的擴充功能：
+你仍可使用 `--from` 安裝不在型錄中的擴充功能：
 
 ```bash
 # From catalog
@@ -744,7 +744,7 @@ specify extension add <extension-name> --from https://github.com/someone/spec-ki
 specify extension add --dev /path/to/extension
 ```
 
-**注意**：直接以 URL 安裝會顯示安全性警告，因為該擴充功能並非來自你設定的目錄。
+**注意**：直接以 URL 安裝會顯示安全性警告，因為該擴充功能並非來自你設定的型錄。
 
 ---
 
@@ -757,7 +757,7 @@ specify extension add --dev /path/to/extension
 **解決方法**：
 
 1. 檢查拼字：`specify extension search jira`
-2. 重新整理目錄：`specify extension search --help`
+2. 重新整理型錄：`specify extension search --help`
 3. 檢查網路連線
 4. 擴充功能可能尚未發佈
 
@@ -845,7 +845,7 @@ specify extension add --dev /path/to/extension
 
 **不應提交**：
 
-- `.specify/extensions/.cache/`（目錄快取）
+- `.specify/extensions/.cache/`（型錄快取）
 - `.specify/extensions/.backup/`（設定備份）
 - `.specify/extensions/*/local-config.yml`（本機覆寫）
 - `.specify/extensions/.registry`（安裝狀態）
@@ -964,7 +964,7 @@ After creating tasks, sync to Jira:
 
 ### Q：我可以建立私有擴充功能嗎？
 
-**A**：可以。使用 `--dev` 或 `--from` 安裝並保持私有。提交到公開目錄是選用的。
+**A**：可以。使用 `--dev` 或 `--from` 安裝並保持私有。提交到公開型錄是選用的。
 
 ### Q：我如何知道擴充功能是否安全？
 
@@ -1000,7 +1000,7 @@ After creating tasks, sync to Jira:
 
 - **擴充功能 Issue**：回報到擴充功能儲存庫（見 `specify extension info`）
 - **Spec Kit Issue**：<https://github.com/github/spec-kit/issues>
-- **擴充功能目錄**：<https://github.com/github/spec-kit/tree/main/extensions>
+- **擴充功能型錄**：<https://github.com/github/spec-kit/tree/main/extensions>
 - **文件**：參閱[開發擴充功能](developing.md)與[擴充功能發佈指南](publishing.md)
 
 ---

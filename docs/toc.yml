@@ -130,7 +130,7 @@
       href: integrations/zed.md
     - name: 通用（自備代理）
       href: integrations/generic.md
-    - name: 目錄與外部轉接器
+    - name: 型錄與外部轉接器
       href: integrations/catalog.md
     - name: 貢獻整合
       href: integrations/contributing.md
@@ -159,7 +159,7 @@
       href: reference/mcp.md
     - name: 整合管理
       href: integrations/cli.md
-    - name: 目錄
+    - name: 型錄
       href: reference/catalogs.md
     - name: 擴充功能
       href: reference/extensions.md

@@ -32,14 +32,14 @@
 - `guides/bugfix.md` - 錯誤修正導覽
 - `guides/assessment.md` - 構想評估導覽
 - `guides/customization.md` - 選擇與組合自訂建構區塊
-- `reference/catalogs.md` - 目錄探索、信任、私有來源與優先順序
+- `reference/catalogs.md` - 型錄探索、信任、私有來源與優先順序
 - `extensions/overview.md` - 擴充功能使用者指南
-- `extensions/publishing.md` - 擴充功能發佈與目錄提交指南
-- `integrations/index.md` - 整合目錄與共用設定指引
+- `extensions/publishing.md` - 擴充功能發佈與型錄提交指南
+- `integrations/index.md` - 整合型錄與共用設定指引
 - `integrations/cli.md` - 共用整合管理 CLI 參考
 - `integrations/<key>.md` - 代理專屬的設定、呼叫方式、選項與限制
-- `integrations/catalog.md` - 目錄結構描述與外部配接器中繼資料
-- `integrations/contributing.md` - 整合與目錄貢獻指南
+- `integrations/catalog.md` - 型錄結構描述與外部配接器中繼資料
+- `integrations/contributing.md` - 整合與型錄貢獻指南
 - `reference/agentic-*.md` - 詳細的流程命令參考
 - `_site/` - 產生的文件輸出（由 git 忽略）
 

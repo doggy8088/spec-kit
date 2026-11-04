@@ -103,8 +103,8 @@ specify integration switch none
 
 ## 共用管理與外部整合
 
-[整合 CLI 參考](cli.md)記載了共用的安裝、升級、移除、狀態、目錄與預設選取行為。這些規則跨整合適用，不會在每個頁面上重複。各指南也會指出是否支援工作流程 CLI 分派；不需要 CLI 的 IDE 設定，並不表示工作流程步驟可以在沒有 CLI 的情況下執行。
+[整合 CLI 參考](cli.md)記載了共用的安裝、升級、移除、狀態、型錄與預設選取行為。這些規則跨整合適用，不會在每個頁面上重複。各指南也會指出是否支援工作流程 CLI 分派；不需要 CLI 的 IDE 設定，並不表示工作流程步驟可以在沒有 CLI 的情況下執行。
 
-對於此處未列出的代理，請使用 [generic 整合](generic.md)或[探索外部轉接器](cli.md#search-available-integrations)。授權執行外部轉接器程式碼之前，請先審查它。目錄探索不是安全背書；預設的社群目錄僅供探索。信任與安裝要求請參閱[透過目錄安裝的外部轉接器](cli.md#catalog-installed-external-adapters)。
+對於此處未列出的代理，請使用 [generic 整合](generic.md)或[探索外部轉接器](cli.md#search-available-integrations)。授權執行外部轉接器程式碼之前，請先審查它。型錄探索不是安全背書；預設的社群型錄僅供探索。信任與安裝要求請參閱[透過型錄安裝的外部轉接器](cli.md#catalog-installed-external-adapters)。
 
-[目錄參考](catalog.md)說明了描述檔與目錄中繼資料。開發內建整合或發佈外部轉接器，請參閱[貢獻整合](contributing.md)。
+[型錄參考](catalog.md)說明了描述檔與型錄中繼資料。開發內建整合或發佈外部轉接器，請參閱[貢獻整合](contributing.md)。

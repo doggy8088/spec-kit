@@ -9,7 +9,7 @@
 | 內建 | `src/specify_cli/workflows/step/<package>/__init__.py` | 在 `src/specify_cli/workflows/__init__.py` 中明確匯入並呼叫 `_register_step()` |
 | 已安裝 | `.specify/workflows/steps/<id>/` 下的套件，內含 `step.yml` 與 `__init__.py` | `load_custom_steps(project_root)` 在工作流程執行／恢復時載入相符的 `StepBase` 子類別 |
 
-`STEP_REGISTRY` 將每個 `type_key` 對應到單一步驟執行個體。內建鍵會在載入專案步驟之前，先快照到 `BUILTIN_STEP_TYPES`；不要從可變的註冊表推斷是否為內建。已安裝的套件可透過步驟目錄找到，並以 `specify workflow step add <id>` 加入。預設的社群目錄僅供探索，不代表安裝或信任背書。安裝外部步驟程式碼前請先審查：載入套件會匯入並執行其 Python 模組。
+`STEP_REGISTRY` 將每個 `type_key` 對應到單一步驟執行個體。內建鍵會在載入專案步驟之前，先快照到 `BUILTIN_STEP_TYPES`；不要從可變的註冊表推斷是否為內建。已安裝的套件可透過步驟型錄找到，並以 `specify workflow step add <id>` 加入。預設的社群型錄僅供探索，不代表安裝或信任背書。安裝外部步驟程式碼前請先審查：載入套件會匯入並執行其 Python 模組。
 
 ## 步驟合約
 

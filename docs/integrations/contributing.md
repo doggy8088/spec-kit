@@ -1,6 +1,6 @@
 # 貢獻整合
 
-本指南涵蓋內建整合、外部轉接器開發，以及社群目錄投稿。
+本指南涵蓋內建整合、外部轉接器開發，以及社群型錄投稿。
 
 實作合約、所有權與交付要求，請從[代理整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md)開始。
 
@@ -16,20 +16,20 @@
 2. **實作整合類別**，遵循[加入代理](https://github.com/github/spec-kit/blob/main/design/integration.md#adding-an-agent)。
 3. **註冊整合**，位置在 `src/specify_cli/integrations/__init__.py`。
 4. **加入測試**，位置在 `tests/integrations/test_integration_<package_dir>.py`。
-5. **在 `integrations/catalog.json` 中加入目錄項目**。
-6. **更新文件：** 加入 `docs/integrations/<key>.md`，並從[整合索引](index.md)與[導覽](../toc.yml)連結到它。視需要更新[目錄參考](catalog.md)，若合約有變更，也更新[整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md)。
+5. **在 `integrations/catalog.json` 中加入型錄項目**。
+6. **更新文件：** 加入 `docs/integrations/<key>.md`，並從[整合索引](index.md)與[導覽](../toc.yml)連結到它。視需要更新[型錄參考](catalog.md)，若合約有變更，也更新[整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md)。
 
-內建項目的格式請使用[目錄綱要](catalog.md#catalog-schema)。
+內建項目的格式請使用[型錄綱要](catalog.md#catalog-schema)。
 
 ## 開發外部轉接器
 
-使用[外部轉接器合約](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract)實作並封裝你的轉接器。[描述檔參考](catalog.md#integration-descriptor-integrationyml)記載了套件中繼資料；[目錄綱要](catalog.md#catalog-schema)記載了發佈的項目。
+使用[外部轉接器合約](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract)實作並封裝你的轉接器。[描述檔參考](catalog.md#integration-descriptor-integrationyml)記載了套件中繼資料；[型錄綱要](catalog.md#catalog-schema)記載了發佈的項目。
 
-本機安裝與信任決策請遵循[透過目錄安裝的外部轉接器](cli.md#catalog-installed-external-adapters)。更新行為請參閱[升級整合](cli.md#upgrade-an-integration)。
+本機安裝與信任決策請遵循[透過型錄安裝的外部轉接器](cli.md#catalog-installed-external-adapters)。更新行為請參閱[升級整合](cli.md#upgrade-an-integration)。
 
 ### 驗證你的轉接器
 
-透過公開途徑測試你的套件：註冊一個本機 loopback 測試目錄，安裝其中立的轉接器，啟動新的 CLI 行程，註冊擴充功能／預設集貢獻，並以無害的行程替身行使命令／提示詞工作流程分派。
+透過公開途徑測試你的套件：註冊一個本機 loopback 測試型錄，安裝其中立的轉接器，啟動新的 CLI 行程，註冊擴充功能／預設集貢獻，並以無害的行程替身行使命令／提示詞工作流程分派。
 
 涵蓋[生命週期合約](https://github.com/github/spec-kit/blob/main/design/integration.md#storage-loading-and-lifecycle)，包括：
 
@@ -40,9 +40,9 @@
 - 重疊的專案分派與延遲相對匯入，會保留正確的轉接器，而不序列化獨立的代理行程。
 - 對於支援事件的轉接器，在新的 CLI 行程中僅針對事件進行擴充功能的加入／移除與啟用／停用，包括已安裝程式碼無法載入時的明確錯誤。
 
-## 投稿到社群目錄
+## 投稿到社群型錄
 
-外部開發者可以在 `integrations/catalog.community.json` 中列出整合，供他人探索。目錄維護者審查的是列表中繼資料，而不是轉接器實作；使用者必須自行審查程式碼。列表並不授予安裝許可。
+外部開發者可以在 `integrations/catalog.community.json` 中列出整合，供他人探索。型錄維護者審查的是列表中繼資料，而不是轉接器實作；使用者必須自行審查程式碼。列表並不授予安裝許可。
 
 ### 先決條件
 
@@ -51,7 +51,7 @@
 3. **文件**——附有使用說明的 README。
 4. **授權**——開放原始碼授權檔案。
 
-使用[目錄綱要](catalog.md#catalog-schema)準備你的項目。中繼資料必須與封裝的描述檔相符。請發佈釘選的封存檔 URL；建議附上封存檔的 SHA-256 摘要。
+使用[型錄綱要](catalog.md#catalog-schema)準備你的項目。中繼資料必須與封裝的描述檔相符。請發佈釘選的封存檔 URL；建議附上封存檔的 SHA-256 摘要。
 
 ### 投稿
 
@@ -77,13 +77,13 @@
    ```
 
 3. **開啟 pull request**，並附上：
-   - 你的目錄項目
+   - 你的型錄項目
    - 指向你的整合儲存庫的連結
    - 確認 `integration.yml` 有效
 
 ### 版本更新
 
-若要更新你在目錄中的整合版本：
+若要更新你在型錄中的整合版本：
 
 1. 發佈你的整合的新版本
 2. 開啟 PR，更新版本、釘選的封存檔 URL 與摘要（如有提供）

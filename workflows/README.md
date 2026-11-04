@@ -198,7 +198,7 @@ CLI 整合可以公開逐步的位置參數與具名執行期
 在安裝或執行不熟悉的工作流程之前，請審查 `run` 與
 `env`，包括覆蓋變更與被參照的程式碼。即使使用 `strict: true`，
 `PATH` 與 `PYTHONPATH` 等設定仍可能選到不同的可執行檔或模組。
-字串驗證與目錄或套件組安裝都不能建立信任。
+字串驗證與型錄或套件組安裝都不能建立信任。
 
 > ⚠️ **限制 `run` 欄位中的插值。**`run` 欄位是由
 > 系統 shell 執行的，而 `{{ ... }}` 運算式會以原始文字被替換，
@@ -561,12 +561,12 @@ specify workflow resume <run_id>
 
 執行狀態：`created` → `running` → `completed` | `paused` | `failed` | `aborted`
 
-## 目錄管理
+## 型錄管理
 
-工作流程是透過目錄被發現的。預設情況下，Spec Kit 使用官方與社群目錄：
+工作流程是透過型錄被發現的。預設情況下，Spec Kit 使用官方與社群型錄：
 
 > [!NOTE]
-> 社群工作流程由其各自的作者獨立建立與維護。GitHub 與 Spec Kit 維護者可能會審查將項目加入社群目錄的 pull request，檢查格式與結構，但他們**不會審查、稽核、背書或支援工作流程定義本身**。安裝前請先審查工作流程來源，並自行斟酌使用。
+> 社群工作流程由其各自的作者獨立建立與維護。GitHub 與 Spec Kit 維護者可能會審查將項目加入社群型錄的 pull request，檢查格式與結構，但他們**不會審查、稽核、背書或支援工作流程定義本身**。安裝前請先審查工作流程來源，並自行斟酌使用。
 
 ```bash
 # List active catalogs
@@ -586,21 +586,21 @@ specify workflow catalog remove <index>
 1. 依上方的結構描述建立一個 `workflow.yml`
 2. 以 `specify workflow run ./workflow.yml --input key=value` 在本機測試
 3. 以 `specify workflow info ./workflow.yml` 驗證
-4. 參閱 [PUBLISHING.md](PUBLISHING.md)，將它提交至目錄
+4. 參閱 [PUBLISHING.md](PUBLISHING.md)，將它提交至型錄
 
 ## 環境變數
 
 | 變數 | 說明 |
 |----------|-------------|
-| `SPECKIT_WORKFLOW_CATALOG_URL` | 覆寫目錄 URL（取代所有預設值） |
+| `SPECKIT_WORKFLOW_CATALOG_URL` | 覆寫型錄 URL（取代所有預設值） |
 | `SPECKIT_WORKFLOW_DIR` | 為 shell 步驟自動設定；包含工作流程來源目錄的已解析絕對路徑（與 `{{ context.workflow_dir }}` 相同的值）。當工作流程沒有來源路徑時（從字串載入的工作流程）不會設定。 |
 
 ## 設定檔
 
 | 檔案 | 範圍 | 說明 |
 |------|-------|-------------|
-| `.specify/workflow-catalogs.yml` | 專案 | 這個專案的自訂目錄堆疊 |
-| `~/.specify/workflow-catalogs.yml` | 使用者 | 所有專案的自訂目錄堆疊 |
+| `.specify/workflow-catalogs.yml` | 專案 | 這個專案的自訂型錄堆疊 |
+| `~/.specify/workflow-catalogs.yml` | 使用者 | 所有專案的自訂型錄堆疊 |
 
 ## 儲存庫佈局
 

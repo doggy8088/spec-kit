@@ -68,7 +68,7 @@ specify bundle info <bundle-id>
 specify bundle install <bundle-id>
 ```
 
-安裝前先查看 `info`，了解解析後的元件組合。請見[套件組參考](../reference/bundles.md)了解更新、移除、目錄政策、離線限制、驗證與發布方式，並見[範例資訊清單](https://github.com/github/spec-kit/tree/main/examples/bundles)了解產品經理、商業分析師、安全研究員與開發者的設定。
+安裝前先查看 `info`，了解解析後的元件組合。請見[套件組參考](../reference/bundles.md)了解更新、移除、型錄政策、離線限制、驗證與發布方式，並見[範例資訊清單](https://github.com/github/spec-kit/tree/main/examples/bundles)了解產品經理、商業分析師、安全研究員與開發者的設定。
 
 ## 分享你的自訂成果
 

@@ -1,12 +1,12 @@
 ---
 name: add-community-extension
-description: '從 GitHub 議題提交將社群擴充功能加入 Spec Kit 目錄。適用於：處理擴充功能提交議題、驗證目錄項目、更新 catalog.community.json 與 docs/community/extensions.md、建立 PR。不適用於：從零建立新的擴充功能，或第一方擴充功能工作。'
+description: '從 GitHub 議題提交將社群擴充功能加入 Spec Kit 型錄。適用於：處理擴充功能提交議題、驗證型錄項目、更新 catalog.community.json 與 docs/community/extensions.md、建立 PR。不適用於：從零建立新的擴充功能，或第一方擴充功能工作。'
 argument-hint: '擴充功能提交的 GitHub 議題 URL 或編號'
 ---
 
 # 新增社群擴充功能
 
-處理擴充功能提交議題，並在社群目錄中新增或更新該擴充功能。
+處理擴充功能提交議題，並在社群型錄中新增或更新該擴充功能。
 
 ## 使用時機
 
@@ -98,7 +98,7 @@ argument-hint: '擴充功能提交的 GitHub 議題 URL 或編號'
 "tools": [{ "name": "<tool>", "required": false }]
 ```
 
-同時更新目錄頂層的 `"updated_at"` 時間戳記。
+同時更新型錄頂層的 `"updated_at"` 時間戳記。
 
 編輯後，執行以下指令**驗證 JSON**：
 
@@ -166,8 +166,8 @@ git push origin <branch-name>
 ## 常見陷阱
 
 - **字母順序很重要** — JSON 中的項目必須依 ID 排序，文件表格中的項目必須依名稱排序。
-- **不要忘記目錄的 `updated_at`** — `catalog.community.json` 的頂層時間戳記必須更新。
-- **編輯後驗證 JSON** — 尾隨逗號或缺少大括號都會破壞目錄。
+- **不要忘記型錄的 `updated_at`** — `catalog.community.json` 的頂層時間戳記必須更新。
+- **編輯後驗證 JSON** — 尾隨逗號或缺少大括號都會破壞型錄。
 - **使用 `Closes` 而非 `Fixes`** — `Closes #N` 是提交議題的正確關鍵字。
 - **比對建議項目但仍要驗證** — 議題可能包含建議的 JSON 區塊，但務必對照實際儲存庫狀態驗證欄位值。
 - **更新時保留 `created_at`** — 保留原始的 `created_at` 值；只變更 `updated_at`。

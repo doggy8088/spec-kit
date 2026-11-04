@@ -38,7 +38,7 @@
 # 搜尋可用的預設集
 specify preset search
 
-# 從目錄安裝預設集
+# 從型錄安裝預設集
 specify preset add healthcare-compliance
 
 # 從本機目錄安裝（供開發使用）
@@ -102,21 +102,21 @@ provides:
 
 多個組成中的預設集會遞迴串連。例如，一個使用 `prepend` 的安全性預設集加上一個使用 `append` 的合規預設集，將產生：安全性標頭 + 核心內容 + 合規頁尾。
 
-## 目錄管理
+## 型錄管理
 
-預設集是透過目錄被發現的。預設情況下，Spec Kit 使用官方與社群目錄：
+預設集是透過型錄被發現的。預設情況下，Spec Kit 使用官方與社群型錄：
 
 > [!NOTE]
-> 社群預設集由其各自的作者獨立建立與維護。維護者只驗證目錄項目是否完整且格式正確 — 他們**不會審查、稽核、背書或支援預設集程式碼本身**。安裝前請先審查預設集原始碼，並自行斟酌使用。
+> 社群預設集由其各自的作者獨立建立與維護。維護者只驗證型錄項目是否完整且格式正確 — 他們**不會審查、稽核、背書或支援預設集程式碼本身**。安裝前請先審查預設集原始碼，並自行斟酌使用。
 
 ```bash
-# 列出使用中的目錄
+# 列出使用中的型錄
 specify preset catalog list
 
-# 新增自訂目錄
+# 新增自訂型錄
 specify preset catalog add https://example.com/catalog.json --name my-org --install-allowed
 
-# 移除目錄
+# 移除型錄
 specify preset catalog remove my-org
 ```
 
@@ -134,30 +134,30 @@ specify preset catalog remove my-org
 
 | 變數 | 說明 | 預設值 |
 |----------|-------------|---------|
-| `SPECKIT_PRESET_CATALOG_URL` | 以單一 URL 覆寫完整的目錄堆疊（取代所有預設值） | 內建預設堆疊 |
-| `GH_TOKEN` / `GITHUB_TOKEN` | 用於向 GitHub 託管 URL（`raw.githubusercontent.com`、`github.com`、`api.github.com`、`codeload.github.com`）發出已驗證請求的 GitHub 權杖。當你的目錄 JSON 或預設集 ZIP 託管在私人 GitHub 儲存庫時必填。 | 無 |
+| `SPECKIT_PRESET_CATALOG_URL` | 以單一 URL 覆寫完整的型錄堆疊（取代所有預設值） | 內建預設堆疊 |
+| `GH_TOKEN` / `GITHUB_TOKEN` | 用於向 GitHub 託管 URL（`raw.githubusercontent.com`、`github.com`、`api.github.com`、`codeload.github.com`）發出已驗證請求的 GitHub 權杖。當你的型錄 JSON 或預設集 ZIP 託管在私人 GitHub 儲存庫時必填。 | 無 |
 
-### 範例：使用私人 GitHub 託管的目錄
+### 範例：使用私人 GitHub 託管的型錄
 
 ```bash
 # 以權杖驗證（gh CLI、PAT，或 CI 中的 GITHUB_TOKEN）
 export GITHUB_TOKEN=<redacted>
 
-# 搜尋透過 `specify preset catalog add` 新增的私人目錄
+# 搜尋透過 `specify preset catalog add` 新增的私人型錄
 specify preset search my-template
 
-# 從私人目錄安裝
+# 從私人型錄安裝
 specify preset add my-template
 ```
 
-權杖會自動附加到以 GitHub 網域為目標的請求。非 GitHub 的目錄 URL 一律在不帶憑證的情況下擷取。
+權杖會自動附加到以 GitHub 網域為目標的請求。非 GitHub 的型錄 URL 一律在不帶憑證的情況下擷取。
 
 ## 設定檔
 
 | 檔案 | 範圍 | 說明 |
 |------|-------|-------------|
-| `.specify/preset-catalogs.yml` | 專案 | 這個專案的自訂目錄堆疊 |
-| `~/.specify/preset-catalogs.yml` | 使用者 | 所有專案的自訂目錄堆疊 |
+| `.specify/preset-catalogs.yml` | 專案 | 這個專案的自訂型錄堆疊 |
+| `~/.specify/preset-catalogs.yml` | 使用者 | 所有專案的自訂型錄堆疊 |
 
 ## 未來考量
 

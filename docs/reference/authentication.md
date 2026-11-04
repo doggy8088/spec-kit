@@ -1,6 +1,6 @@
 # 驗證
 
-Specify CLI 對目錄來源、擴充功能下載與版本檢查的 HTTP 請求，使用**主動啟用的驗證**。除非你明確設定，否則不會傳送任何憑證。
+Specify CLI 對型錄來源、擴充功能下載與版本檢查的 HTTP 請求，使用**主動啟用的驗證**。除非你明確設定，否則不會傳送任何憑證。
 
 ## 設定
 
@@ -89,13 +89,13 @@ Specify CLI 對目錄來源、擴充功能下載與版本檢查的 HTTP 請求�
 }
 ```
 
-使用此模式前，請安裝 [GitHub CLI](https://cli.github.com/) 並執行 `gh auth login`。Specify 會在不使用 shell 的情況下執行固定命令 `gh auth token --hostname github.com`，將結果快取在目前行程的記憶體中，絕不將權杖寫入磁碟。周圍的空白會被修剪；包含非 ASCII 字元、內嵌歸位字元或換行的權杖會被拒絕，且錯誤中不會包含權杖。憑證取得失敗會讓受影響的請求失敗，不會嘗試其他憑證或未經驗證的請求。它們使用既有的 URL 錯誤類別，因此呼叫者保留其正常的錯誤處理（例如警告並略過無法使用的目錄）。版本檢查與升級會保留驗證診斷，而非回報為網路中斷。線上套件組目錄取得與參照驗證會將驗證失敗視為錯誤，而不是可用性備援，退回封裝快照或未檢查的參照。
+使用此模式前，請安裝 [GitHub CLI](https://cli.github.com/) 並執行 `gh auth login`。Specify 會在不使用 shell 的情況下執行固定命令 `gh auth token --hostname github.com`，將結果快取在目前行程的記憶體中，絕不將權杖寫入磁碟。周圍的空白會被修剪；包含非 ASCII 字元、內嵌歸位字元或換行的權杖會被拒絕，且錯誤中不會包含權杖。憑證取得失敗會讓受影響的請求失敗，不會嘗試其他憑證或未經驗證的請求。它們使用既有的 URL 錯誤類別，因此呼叫者保留其正常的錯誤處理（例如警告並略過無法使用的型錄）。版本檢查與升級會保留驗證診斷，而非回報為網路中斷。線上套件組型錄取得與參照驗證會將驗證失敗視為錯誤，而不是可用性備援，退回封裝快照或未檢查的參照。
 
 僅對於 `github-cli`，**`hosts` 中的第一個主機名稱**會傳給 `gh auth token --hostname`。請將 `github.com` 或你的企業執行個體的 GitHub CLI 登入主機名稱放在第一位。它必須是精確主機名稱，不是萬用字元。所有列出的主機仍是獲授權接收該憑證的請求比對目的地；後續項目可以使用受支援的萬用字元。Specify 不會從服務前綴或所請求的 URL 推斷憑證主機名稱。記憶體快取以第一個主機名稱為鍵。對於需要不同憑證的主機，請使用獨立的提供者項目。主機順序對既有的驗證模式沒有影響。
 
 ### GitHub Enterprise Server（GHES）
 
-若要使用代管在 GitHub Enterprise Server 執行個體上的私人目錄或擴充功能，請新增列出你的 GHES 主機的 `github` 項目。同一個項目同時驗證目錄 JSON 取得**以及**私人版本資產下載，Specify 會將列出的主機辨識為 GitHub Enterprise，並透過 GHES REST API（`/api/v3`）解析版本下載。
+若要使用代管在 GitHub Enterprise Server 執行個體上的私人型錄或擴充功能，請新增列出你的 GHES 主機的 `github` 項目。同一個項目同時驗證型錄 JSON 取得**以及**私人版本資產下載，Specify 會將列出的主機辨識為 GitHub Enterprise，並透過 GHES REST API（`/api/v3`）解析版本下載。
 
 ```json
 {
@@ -110,7 +110,7 @@ Specify CLI 對目錄來源、擴充功能下載與版本檢查的 HTTP 請求�
 }
 ```
 
-列出**裸**網站主機（例如 `ghes.example.com`），版本下載 URL 位於該處。若你的執行個體使用子網域隔離，也請列出你的目錄／擴充功能 URL 使用的 `raw.` 與 `codeload.` 子網域。`*.ghes.example.com` 萬用字元符合子網域，但**不**符合裸主機，因此永遠要明確包含裸主機。
+列出**裸**網站主機（例如 `ghes.example.com`），版本下載 URL 位於該處。若你的執行個體使用子網域隔離，也請列出你的型錄／擴充功能 URL 使用的 `raw.` 與 `codeload.` 子網域。`*.ghes.example.com` 萬用字元符合子網域，但**不**符合裸主機，因此永遠要明確包含裸主機。
 
 使用 `auth: "github-cli"` 時，將你的企業執行個體的 GitHub CLI 登入主機名稱列在第一位，後面接著應接收相同憑證的任何請求主機或萬用字元模式：
 
@@ -199,7 +199,7 @@ GHE.com 租戶使用獨立的網站與 REST API 主機名稱。將兩個主機�
 | `bearer` | `Authorization: Bearer <token>` | 儲存庫／專案／工作區存取權杖，或不帶帳號電子郵件傳送的 Atlassian API 權杖（Bitbucket Cloud，**僅限 `api.bitbucket.org`**，見下方說明）；HTTP 存取權杖（Bitbucket Data Center） |
 | `basic` | `Authorization: Basic base64(<username>:<token>)` | 對 `api.bitbucket.org` 使用的 Atlassian API 權杖（username 為 Atlassian 帳號電子郵件）。Bitbucket Cloud 應用程式密碼已由 Atlassian 於 2026 年 7 月 28 日移除，請改用 API 權杖或存取權杖。 |
 
-> **主機說明：**Bitbucket Cloud 依主機區分其介面。`api.bitbucket.org` 接受儲存庫／專案／工作區存取權杖作為 Bearer，也接受 Atlassian API 權杖作為 Basic（以帳號電子郵件為使用者名稱）或 Bearer（不需電子郵件），適用於任何 REST 呼叫，包括透過 `GET /2.0/repositories/<workspace>/<repo>/src/<ref>/<path>` 取得目錄檔案。純 `bitbucket.org` 網站主機（瀏覽器頁面、`.../raw/...` 連結、透過 HTTPS 的 `git clone`）**不**接受這兩者，它以 HTTP Basic 驗證 git-over-HTTPS，使用字面使用者名稱 `x-token-auth` 與存取權杖作為密碼。請將目錄與 `download_url` 項目指向 `api.bitbucket.org`（見下），而非 `bitbucket.org/.../raw/...`，讓你的 `auth.json` 中的憑證真正生效。
+> **主機說明：**Bitbucket Cloud 依主機區分其介面。`api.bitbucket.org` 接受儲存庫／專案／工作區存取權杖作為 Bearer，也接受 Atlassian API 權杖作為 Basic（以帳號電子郵件為使用者名稱）或 Bearer（不需電子郵件），適用於任何 REST 呼叫，包括透過 `GET /2.0/repositories/<workspace>/<repo>/src/<ref>/<path>` 取得型錄檔案。純 `bitbucket.org` 網站主機（瀏覽器頁面、`.../raw/...` 連結、透過 HTTPS 的 `git clone`）**不**接受這兩者，它以 HTTP Basic 驗證 git-over-HTTPS，使用字面使用者名稱 `x-token-auth` 與存取權杖作為密碼。請將型錄與 `download_url` 項目指向 `api.bitbucket.org`（見下），而非 `bitbucket.org/.../raw/...`，讓你的 `auth.json` 中的憑證真正生效。
 
 **範例——Bitbucket Cloud 存取權杖（建議）：**
 
@@ -212,7 +212,7 @@ GHE.com 租戶使用獨立的網站與 REST API 主機名稱。將兩個主機�
 }
 ```
 
-在代管你的目錄與封存檔的儲存庫（或專案／工作區）上，以 **Repositories: Read** 範圍建立權杖。透過 `https://api.bitbucket.org/2.0/repositories/<workspace>/<repo>/src/<ref>/catalog.json` 以此憑證取得目錄檔案，而非 `bitbucket.org/.../raw/...` URL。
+在代管你的型錄與封存檔的儲存庫（或專案／工作區）上，以 **Repositories: Read** 範圍建立權杖。透過 `https://api.bitbucket.org/2.0/repositories/<workspace>/<repo>/src/<ref>/catalog.json` 以此憑證取得型錄檔案，而非 `bitbucket.org/.../raw/...` URL。
 
 **範例——Atlassian API 權杖（Basic 驗證）：**
 
@@ -237,7 +237,7 @@ GHE.com 租戶使用獨立的網站與 REST API 主機名稱。將兩個主機�
 }
 ```
 
-> **注意：**Bitbucket Cloud 透過重新導向到預先簽章的 Amazon S3 URL 提供檔案下載（儲存庫的 **Downloads** 區段）。Specify 會在該重新導向上移除 `Authorization` 標頭，因為目標離開了你宣告的主機，這是預期行為，且下載仍會成功，因為 S3 URL 本身即具授權。請在目錄項目中釘選 `sha256`，讓未經驗證的最後一跳保持完整性檢查。
+> **注意：**Bitbucket Cloud 透過重新導向到預先簽章的 Amazon S3 URL 提供檔案下載（儲存庫的 **Downloads** 區段）。Specify 會在該重新導向上移除 `Authorization` 標頭，因為目標離開了你宣告的主機，這是預期行為，且下載仍會成功，因為 S3 URL 本身即具授權。請在型錄項目中釘選 `sha256`，讓未經驗證的最後一跳保持完整性檢查。
 
 ## 多個項目
 

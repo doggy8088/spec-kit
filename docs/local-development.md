@@ -102,7 +102,7 @@ ls -l scripts | grep .sh
 
 ## 6. 開發內建整合
 
-請依[代理整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md#adding-an-agent)，了解實作契約、註冊與行為涵蓋範圍。目錄條目與提交指引請見[貢獻整合](integrations/contributing.md)。
+請依[代理整合設計](https://github.com/github/spec-kit/blob/main/design/integration.md#adding-an-agent)，了解實作契約、註冊與行為涵蓋範圍。型錄條目與提交指引請見[貢獻整合](integrations/contributing.md)。
 
 ## 7. 執行 Lint／基本檢查
 
