@@ -14,7 +14,7 @@
 ## 建議流程
 
 > [!TIP]
-> **脈絡感知**：Spec Kit 以 `.specify/feature.json` 中記錄的功能目錄來追蹤作用中的功能（可用 `SPECIFY_FEATURE_DIRECTORY` 環境變數覆寫）。命令從該狀態解析功能，**不是**從已簽出的 Git 分支解析——不需要 Git。選用的 **git** 擴充功能會加入有編號的功能分支（例如 `001-feature-name`），用來在版本控制中組織工作，但作用中的功能仍是該狀態指向的目錄；光是 `git checkout` 不會改變它。若要讓命令指向不同的功能，請更新 `.specify/feature.json`（或設定 `SPECIFY_FEATURE_DIRECTORY`）。
+> **脈絡感知**：Spec Kit 以 `.specify/feature.json` 中記錄的功能目錄來追蹤作用中的功能（可用 `SPECIFY_FEATURE_DIRECTORY` 環境變數覆寫）。命令從該狀態解析功能，**不是**從已簽出的 Git 分支解析——不需要 Git。選用的**git** 擴充功能會加入有編號的功能分支（例如 `001-feature-name`），用來在版本控制中組織工作，但作用中的功能仍是該狀態指向的目錄；光是 `git checkout` 不會改變它。若要讓命令指向不同的功能，請更新 `.specify/feature.json`（或設定 `SPECIFY_FEATURE_DIRECTORY`）。
 
 安裝 Spec Kit 後，下面的每個 skill 都是流程中的一個步驟。常見的有兩條路徑：
 

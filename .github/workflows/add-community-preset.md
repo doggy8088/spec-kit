@@ -85,7 +85,9 @@ safe-outputs:
 ## 標籤責任
 
 套用結果標籤是你的責任，不是給維護者的建議。請在來源 issue
-#${{ github.event.issue.number }} 上使用 `add_labels` 安全輸出，
+
+# ${{ github.event.issue.number }} 上使用 `add_labels` 安全輸出，
+
 其 `labels` 陣列使用純字串。絕對不要輸出帶有 `suggest: true` 的標籤物件，
 或僅供建議的輸出。結果為 Passed 時，輸出 `labels: ["validation-passed"]`；
 結果為 Failed 時，輸出 `labels: ["validation-failed"]`。時機、過期標籤的移除，
@@ -344,8 +346,8 @@ ID、版本、Spec Kit 需求、所需擴充功能 ID、發行標籤與 README �
 
 在 `presets/catalog.community.json` 中搜尋預設集 ID。
 
-- **找不到** → 這是**新增**
-- **找到** → 這是**更新**——原地取代既有項目；
+- **找不到**→ 這是**新增**
+- **找到**→ 這是**更新**——原地取代既有項目；
   保留既有項目的 `created_at`
 
 ## 步驟 4 — 更新 `presets/catalog.community.json`
@@ -484,6 +486,7 @@ python3 .github/scripts/validate_community_preset.py generated --issue /tmp/gh-a
 ### 提交訊息
 
 新增預設集：
+
 ```
 Add <Name> preset to community catalog
 
@@ -495,6 +498,7 @@ Closes #<issue-number>
 ```
 
 更新：
+
 ```
 Update <Name> preset to v<version>
 

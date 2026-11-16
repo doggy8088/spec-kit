@@ -153,12 +153,14 @@ specify extension set-priority <name> <priority>
 >
 > 1. **直接安裝單一經審查的擴充功能**，使用 `--from`（不需撰寫型錄）。從 `specify extension info <name>` 取得候選封存檔 URL，對於僅供探索的項目，它會列印「Candidate archive」URL。檢視該版本封存檔，然後安裝它：
 >
->    ```bash
+
+> ```bash
 >    specify extension info <name>          # shows the candidate archive URL
 >    specify extension add <name> --from <archive-url>
->    ```
+> ```
+
 >
->    在你審查前，將 URL 視為不受信任，它來自未經審查的型錄。
+> 在你審查前，將 URL 視為不受信任，它來自未經審查的型錄。
 > 2. **彙整你自己的型錄**，由你控制與審查，並將*該*型錄標為 `install_allowed: true`，適用於你想要受治理、可重用的安裝來源時（例如供組織使用）。
 
 ### 列出型錄

@@ -95,7 +95,9 @@ jobs:
 ## 標籤責任
 
 套用結果標籤是你的責任，不是給維護者的建議。請在來源 issue
-#${{ github.event.issue.number }} 上使用 `add_labels` 安全輸出，
+
+# ${{ github.event.issue.number }} 上使用 `add_labels` 安全輸出，
+
 其 `labels` 陣列使用純字串。絕對不要輸出帶有 `suggest: true` 的標籤物件，
 或僅供建議的輸出。結果為 Passed 時，輸出 `labels: ["validation-passed"]`；
 結果為 Failed 時，輸出 `labels: ["validation-failed"]`。時機、過期標籤的移除，

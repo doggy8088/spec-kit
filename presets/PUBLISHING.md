@@ -202,7 +202,7 @@ URL，其路徑以 `README.md` 結尾、能解析到可讀的檔案，且包含�
   要求是這份 README 能在 `documentation` URL 取得，讓使用者能在下載發行成品*之前*先
   閱讀它 — 同一個檔案也可以同時隨附在
   發行 ZIP 裡面，這沒有問題。
-- **包含一條有效的 Spec Kit CLI 安裝命令** *（強制執行）*。所連結的 README 必須
+- **包含一條有效的 Spec Kit CLI 安裝命令***（強制執行）*。所連結的 README 必須
   包含至少一條 `specify preset add ...` 呼叫。最好使用
   型錄安裝形式，其 URL 與你的下載 URL 相符：
 

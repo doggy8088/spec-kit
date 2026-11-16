@@ -1,6 +1,6 @@
 # 實作計畫：[FEATURE]
 
-**分支**：`[###-feature-name]` | **日期**：[DATE] | **規格**：[link]
+**分支**：`[###-feature-name]` | **日期**：[DATE] |**規格**：[link]
 
 **輸入**：功能規格，來自 `/specs/[###-feature-name]/spec.md`
 

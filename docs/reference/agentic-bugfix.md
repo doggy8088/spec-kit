@@ -35,7 +35,7 @@ specify extension add bug
 
 ## `/speckit.bug.fix`
 
-套用評估中描述的修復方式，並精確記錄變更內容。這是**唯一**會編輯原始碼的錯誤命令，且會限制在評估所列的檔案範圍內，除非新證據要求擴大範圍（記錄於 **Deviations from Assessment** 之下）。
+套用評估中描述的修復方式，並精確記錄變更內容。這是**唯一**會編輯原始碼的錯誤命令，且會限制在評估所列的檔案範圍內，除非新證據要求擴大範圍（記錄於**Deviations from Assessment** 之下）。
 
 ```text
 /speckit.bug.fix slug=callback-token

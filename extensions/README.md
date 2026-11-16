@@ -16,6 +16,7 @@ Spec Kit 提供兩個用途不同的型錄檔案：
 - **自訂**：把社群型錄中的條目複製到你的組織型錄，或直接加入你自己的擴充功能
 
 **覆寫範例：**
+
 ```bash
 # Override the default upstream catalog with your organization's catalog
 export SPECKIT_CATALOG_URL="https://your-org.com/spec-kit/catalog.json"
@@ -80,7 +81,6 @@ specify extension add <extension-name> --from https://github.com/org/spec-kit-ex
 
 原始型錄資料請見 [`catalog.community.json`](catalog.community.json)。
 
-
 ## 加入你的擴充功能
 
 ### 提交流程
@@ -106,6 +106,7 @@ specify extension add <extension-name> --from https://github.com/org/spec-kit-ex
 - ✅ 所有命令都如文件所述運作
 
 ## 安裝擴充功能
+
 擴充功能可供使用後（無論是在你的型錄中，或透過直接 URL），即可安裝：
 
 ```bash

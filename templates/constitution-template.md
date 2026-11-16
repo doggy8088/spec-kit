@@ -46,5 +46,5 @@
 [GOVERNANCE_RULES]
 <!-- 範例：All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
 
-**版本**：[CONSTITUTION_VERSION] | **批准日期**：[RATIFICATION_DATE] | **最後修訂**：[LAST_AMENDED_DATE]
+**版本**：[CONSTITUTION_VERSION] |**批准日期**：[RATIFICATION_DATE] |**最後修訂**：[LAST_AMENDED_DATE]
 <!-- 範例：Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->

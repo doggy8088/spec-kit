@@ -112,8 +112,8 @@ specify self check
 - ✅ **你的規格**（`specs/001-my-feature/spec.md` 等）- **確認安全**
 - ✅ **你的實作計畫**（`specs/001-my-feature/plan.md`、`tasks.md` 等）- **確認安全**
 - ✅ **你的憲章**（`.specify/memory/constitution.md`），當使用 `specify integration upgrade` 時
-- ✅ **你的原始碼** - **確認安全**
-- ✅ **你的 git 歷史** - **確認安全**
+- ✅ **你的原始碼**-**確認安全**
+- ✅ **你的 git 歷史**-**確認安全**
 
 `specs/` 目錄完全排除在範本套件之外，升級時絕不會被修改。
 

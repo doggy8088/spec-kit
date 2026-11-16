@@ -1,6 +1,6 @@
 # GitHub 整合擴充功能
 
-這個隨附的**選擇性啟用**擴充功能，是 Spec Kit 的 GitHub *平台*功能的所在之處。目前它提供一個命令 `speckit.github.taskstoissues`，可將某功能的 `tasks.md` 轉換為依相依順序排列的 GitHub issues。
+這個隨附的**選擇性啟用**擴充功能，是 Spec Kit 的 GitHub*平台*功能的所在之處。目前它提供一個命令 `speckit.github.taskstoissues`，可將某功能的 `tasks.md` 轉換為依相依順序排列的 GitHub issues。
 
 > 注意：`git` 與 `github` 是刻意分開的領域。[`git` 擴充功能](../git/README.md) 負責本機版本控制工作流程（功能分支、提交、遠端偵測）；本擴充功能負責與 GitHub 平台本身的互動。
 

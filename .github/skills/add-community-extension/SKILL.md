@@ -45,12 +45,12 @@ argument-hint: '擴充功能提交的 GitHub 議題 URL 或編號'
 
 在 `extensions/catalog.community.json` 中搜尋擴充功能 ID。
 
-- **未找到** → 這是**新增**。進行步驟 4。
-- **找到** → 這是**更新**。進行步驟 4，但以原地替換取代插入既有項目。
+- **未找到**→ 這是**新增**。進行步驟 4。
+- **找到**→ 這是**更新**。進行步驟 4，但以原地替換取代插入既有項目。
 
 ### 4. 新增或更新 `extensions/catalog.community.json`
 
-**新增擴充功能：** 依擴充功能 ID 的**字母順序**插入項目。
+**新增擴充功能：**依擴充功能 ID 的**字母順序**插入項目。
 
 **更新：** 原地替換既有項目。只更新有變更的欄位（通常為 `version`、`download_url`、`description`、`provides`、`requires`、`tags`、`updated_at`）。保留既有項目中的 `created_at` 與 `downloads`／`stars`。
 
@@ -108,7 +108,7 @@ python3 -c "import json; json.load(open('extensions/catalog.community.json')); p
 
 ### 5. 新增或更新 `docs/community/extensions.md` 的社群擴充功能表格
 
-**新增擴充功能：** 依擴充功能名稱的**字母順序**，將新的一列插入 `# Community Extensions` 表格。
+**新增擴充功能：**依擴充功能名稱的**字母順序**，將新的一列插入 `# Community Extensions` 表格。
 
 **更新：** 找到既有列並原地更新說明或其他變更欄位。
 

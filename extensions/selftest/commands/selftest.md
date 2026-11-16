@@ -52,6 +52,7 @@ cat .specify/extensions/.registry/$ARGUMENTS.json
 產生終端機風格的測試輸出格式，詳述探索、安裝與註冊的結果。直接將結果回傳給使用者。
 
 輸出格式範例：
+
 ```text
 ============================= test session starts ==============================
 collected 3 items

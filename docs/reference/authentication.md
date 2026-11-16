@@ -21,6 +21,7 @@ Specify CLI 對型錄來源、擴充功能下載與版本檢查的 HTTP 請求�
 
 > **安全性**：將檔案限制為僅擁有者可存取：
 >
+
 > ```bash
 > chmod 600 ~/.specify/auth.json
 > ```
@@ -237,7 +238,7 @@ GHE.com 租戶使用獨立的網站與 REST API 主機名稱。將兩個主機�
 }
 ```
 
-> **注意**：Bitbucket Cloud 透過重新導向到預先簽章的 Amazon S3 URL 提供檔案下載（儲存庫的 **Downloads** 區段）。Specify 會在該重新導向上移除 `Authorization` 標頭，因為目標離開了你宣告的主機，這是預期行為，且下載仍會成功，因為 S3 URL 本身即具授權。請在型錄項目中釘選 `sha256`，讓未經驗證的最後一跳保持完整性檢查。
+> **注意**：Bitbucket Cloud 透過重新導向到預先簽章的 Amazon S3 URL 提供檔案下載（儲存庫的**Downloads** 區段）。Specify 會在該重新導向上移除 `Authorization` 標頭，因為目標離開了你宣告的主機，這是預期行為，且下載仍會成功，因為 S3 URL 本身即具授權。請在型錄項目中釘選 `sha256`，讓未經驗證的最後一跳保持完整性檢查。
 
 ## 多個項目
 

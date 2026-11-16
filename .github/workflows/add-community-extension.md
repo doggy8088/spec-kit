@@ -200,8 +200,8 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 
 在 `extensions/catalog.community.json` 中搜尋擴充功能 ID。
 
-- **未找到** → 這是**新增**
-- **找到** → 這是**更新**——原地替換既有項目；保留既有項目中的 `created_at`、`downloads` 與 `stars`
+- **未找到**→ 這是**新增**
+- **找到**→ 這是**更新**——原地替換既有項目；保留既有項目中的 `created_at`、`downloads` 與 `stars`
 
 ## 步驟 4 — 更新 `extensions/catalog.community.json`
 
@@ -306,6 +306,7 @@ python3 -c "import json; json.load(open('extensions/catalog.community.json')); p
 ### 提交訊息
 
 對於新增擴充功能：
+
 ```
 Add <Name> extension to community catalog
 
@@ -317,6 +318,7 @@ Closes #<issue-number>
 ```
 
 對於更新：
+
 ```
 Update <Name> extension to v<version>
 

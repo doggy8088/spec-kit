@@ -67,7 +67,7 @@ safe-outputs:
   "**PR description assessment: not assessed.** This workflow assesses open PRs
   only. No description assessment was performed."
   **排入此留言後停止。不要新增或移除標籤。**
-- **無法讀取 PR 中繼資料。** 進行步驟 4 並給出**無法判定**的結果，說明讀取失敗。不要編造中繼資料或嘗試不同的議題／PR 編號。
+- **無法讀取 PR 中繼資料。**進行步驟 4 並給出**無法判定**的結果，說明讀取失敗。不要編造中繼資料或嘗試不同的議題／PR 編號。
 - **開啟中的 PR。** 進行步驟 2。
 
 每個由代理控制的路徑都必須在觸發項目上排入**一則留言**。不要以 `noop`、`missing_data` 或 `missing_tool` 取代該留言。絕不要因輸入為錯誤的項目類型或證據缺失而靜默停止。不要聲稱你已觀察到交付：安全輸出稍後才會發布。
