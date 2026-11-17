@@ -142,8 +142,8 @@ src/specify_cli/extensions/
 - `command_<name>.py` 是真實葉命令唯一的 CLI 適配器。
 - `mcp_<name>.py` 是同一邏輯操作唯一的 MCP 適配器。
 - `_mcp.py` 掌管某個命令群組明確的 MCP 註冊與清單。
-- 巢狀目錄持續對應到真實的 CLI 命名空間或有界的子網域，遵循 [CLI 設計](cli.md#nested-command-groups)。
-- 共用的操作與階段模組遵循[共用命名規則](shared.md#naming-and-layout)。
+- 巢狀目錄持續對應到真實的 CLI 命名空間或有界的子網域，遵循 [CLI 設計](cli.md#巢狀命令群組)。
+- 共用的操作與階段模組遵循[共用命名規則](shared.md#命名與版面)。
 - 測試在 `tests/specify_cli/` 下鏡像這些名稱。
 
 不要在 `mcp_server/commands/` 下建立整個 CLI 樹的頂層 MCP 鏡像。那會把命令合約與其所屬網域分離，讓無關的命令階層相依於一個中央套件。
@@ -201,7 +201,7 @@ network_access
 
 ## MCP 合約投射
 
-共用的請求、結果、警告、錯誤、驗證與合約版本規則，定義於 [Shared Command Application Architecture](shared.md#typed-request-contract)。MCP 適配器把該合約投射到 MCP 上：
+共用的請求、結果、警告、錯誤、驗證與合約版本規則，定義於 [Shared Command Application Architecture](shared.md#型別請求合約)。MCP 適配器把該合約投射到 MCP 上：
 
 - 其輸入結構描述是命令專屬的，並對應到共用的型別化請求。
 - 它執行通訊協定／結構描述驗證，但不做與狀態相關的語意工作。
@@ -247,7 +247,7 @@ MCP 操作一律為非互動式：
 
 ## 能力與網路中繼資料
 
-操作依[共用能力合約](shared.md#capability-declarations)宣告能力。這些是累積的描述，不是最高風險階層。例如：
+操作依[共用能力合約](shared.md#能力宣告)宣告能力。這些是累積的描述，不是最高風險階層。例如：
 
 ```text
 version       -> {local-read}
@@ -327,7 +327,7 @@ src/specify_cli/mcp_server/
 
 ## 測試結構
 
-共用操作、CLI 適配器與一致性涵蓋，遵循[共用測試結構](shared.md#testing-structure)與 [CLI 測試結構](cli.md#test-structure)。MCP 新增以下層次。
+共用操作、CLI 適配器與一致性涵蓋，遵循[共用測試結構](shared.md#測試結構)與 [CLI 測試結構](cli.md#測試結構)。MCP 新增以下層次。
 
 ### MCP 適配器測試
 
@@ -353,7 +353,7 @@ src/specify_cli/mcp_server/
 - 保留一項真實的 stdio initialize/list/call 測試，且 stdout 保持通訊協定純淨。
 - 把格式錯誤的輸入、無法使用的工具、內部失敗淨化與輸出上限，作為負面案例測試。
 
-行為變更遵循[測試確定性行為](../CONTRIBUTING.md#testing-deterministic-behavior)：需要正面與負面證據，錯誤修正需要前後對照的迴歸證據。
+行為變更遵循[測試確定性行為](../CONTRIBUTING.md#測試確定性行為)：需要正面與負面證據，錯誤修正需要前後對照的迴歸證據。
 
 ## 代表性操作版面
 

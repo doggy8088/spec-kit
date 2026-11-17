@@ -17,7 +17,8 @@
 發佈擴充功能之前，請確認你已具備：
 
 1. **有效的擴充功能**：可運作的擴充功能，附有效的 `extension.yml` 資訊清單
-2. **Git 儲存庫**：擴充功能託管在 GitHub（或其他公開 git 託管服務）
+2. **GitHub 儲存庫**：擴充功能託管於公開的 GitHub 儲存庫，
+   以提交至社群型錄
 3. **文件**：README.md，附安裝與使用說明
 4. **授權**：開放原始碼授權檔案（MIT、Apache 2.0 等）
 5. **版本管理**：語意化版本（例如 1.0.0）
@@ -83,9 +84,10 @@ tags:                             # 2-5 relevant tags
 
 **驗證檢核清單**：
 
-- ✅ `id` 為小寫加連字號（無底線、空格或特殊字元）
+- ✅ `id` 以小寫字母開頭，其餘僅包含小寫字母、
+  數字或連字號（社群提交時為 `^[a-z][a-z0-9-]*$`）
 - ✅ `version` 遵循語意化版本（X.Y.Z）
-- ✅ `description` 簡潔（少於 100 個字元）
+- ✅ `description` 簡潔（社群提交時少於 200 個字元）
 - ✅ `repository` URL 有效且公開
 - ✅ 所有命令檔案都存在於擴充功能目錄中
 - ✅ 標籤為小寫且具描述性
@@ -130,9 +132,9 @@ specify extension add <extension-name> --from https://github.com/your-org/spec-k
 
 ### 了解型錄
 
-Spec Kit 使用雙型錄系統。型錄運作方式的詳細說明，請參閱主要的 [Extensions README](https://github.com/github/spec-kit/blob/main/extensions/README.md#extension-catalogs)。
+Spec Kit 使用內建安裝與探索來源的型錄堆疊。設定、發行中繼資料與信任邊界，請參閱[擴充功能型錄](catalogs.md)。
 
-**關於擴充功能發佈**：所有社群擴充功能都列在 `extensions/catalog.community.json` 中。使用者瀏覽此型錄，並將信任的擴充功能複製到自己的 `catalog.json`。
+**擴充功能發佈方面**：所有社群擴充功能都列在 `extensions/catalog.community.json`。使用者在直接安裝或將其條目複製到自己信任的型錄之前，必須先審查版本。
 
 ### 如何提交
 
@@ -148,6 +150,23 @@ Spec Kit 使用雙型錄系統。型錄運作方式的詳細說明，請參閱�
 
 > [!IMPORTANT]
 > 請**不要**直接開啟 pull request 來編輯 `extensions/catalog.community.json`。所有社群擴充功能提交都必須透過 issue 範本。未使用 issue 範本的提交將被關閉，並要求你改用範本重新提交。
+
+### 提交驗證
+
+社群提交比一般擴充功能執行期更嚴格：
+
+- 擴充功能 ID 必須符合 `^[a-z][a-z0-9-]*$`。
+- 版本必須是僅含數字的 `X.Y.Z`，且不得有 `v` 前綴。發行
+  標籤可以包含 `v` 前綴或範圍，但其版本必須與提交的版本相符。
+- 儲存庫必須公開，並包含 `extension.yml`、`README.md` 與 `LICENSE`。
+- 下載 URL 必須屬於同一個 GitHub 儲存庫，並使用以下其中一種：
+  `https://github.com/<owner>/<repo>/archive/refs/tags/<tag>.zip` 或
+  `https://github.com/<owner>/<repo>/releases/download/<tag>/<asset>.zip`。
+  浮動的 `releases/latest/` URL 會被拒絕。
+- 封存檔必須可存取。若提交了 SHA-256 摘要，它必須與下載的封存檔相符。
+  自動化流程會將下載封存檔的摘要記錄在提議的型錄條目中，即使未提交摘要亦然。
+
+這些是中繼資料與封存檔來源檢查，而非擴充功能程式碼的審查。其他公開託管與私人發行版本可以搭配你控制的型錄使用，但不會透過此社群提交流程接受。
 
 ### 提交後會發生什麼
 
@@ -165,10 +184,6 @@ Spec Kit 使用雙型錄系統。型錄運作方式的詳細說明，請參閱�
 
 > [!NOTE]
 > 維護者**不會**審查、稽核或測試擴充功能程式碼本身。
-
-### 一般審查時程
-
-- **審查**：3～7 個工作天
 
 ### 更新既有擴充功能
 
@@ -254,7 +269,7 @@ Spec Kit 使用雙型錄系統。型錄運作方式的詳細說明，請參閱�
 
 ### 維護
 
-1. **回應 Issue**：在 1～2 週內處理 issue
+1. **回應 Issue**：在維護者能力許可的範圍內確認並調查回報
 2. **定期更新**：保持相依性為最新
 3. **變更紀錄**：維護詳細的變更紀錄
 4. **棄用**：為破壞性變更提前通知
@@ -275,11 +290,16 @@ Spec Kit 使用雙型錄系統。型錄運作方式的詳細說明，請參閱�
 A：主型錄僅供公開擴充功能。私有擴充功能請：
 
 - 自行託管 catalog.json 檔案
-- 在 Spec Kit 專案中，使用者加入你的型錄：`specify extension catalog add https://your-domain.com/catalog.json --name private-catalog`
+- 在審查其版本後，使用者會將你的型錄加入為安裝來源：
+
+  ```bash
+  specify extension catalog add https://your-domain.com/catalog.json \
+    --name private-catalog --install-allowed
+  ```
 
 ### Q：審查需要多久？
 
-A：一般為 3～7 個工作天。既有擴充功能的更新通常較快。
+答：提交需等待維護者分流、自動驗證，以及對產生的型錄拉取請求進行審查。沒有承諾的處理時程。
 
 ### Q：如果我的擴充功能被拒絕怎麼辦？
 
@@ -301,53 +321,16 @@ A：擴充功能應免費且開放原始碼。允許商業支援／服務，但�
 
 ## 支援
 
-- **型錄 Issue**：<https://github.com/statsperform/spec-kit/issues>
-- **擴充功能範本**：<https://github.com/statsperform/spec-kit-extension-template>（即將推出）
+- **型錄 Issue**：<https://github.com/github/spec-kit/issues>
+- **擴充功能提交**：[提交或更新社群擴充功能](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml)
 - **開發指南**：參閱[開發擴充功能](developing.md)
 - **社群**：討論與問答
 
 ---
 
-## 附錄：型錄結構描述
+## 型錄中繼資料
 
-### 完整型錄條目結構描述
-
-```json
-{
-  "name": "string (required)",
-  "id": "string (required, unique)",
-  "description": "string (required, <200 chars)",
-  "author": "string (required)",
-  "version": "string (required, semver)",
-  "download_url": "string (required, valid URL)",
-  "sha256": "string (optional, SHA-256 hex digest of the archive at download_url; verified before install)",
-  "repository": "string (required, valid URL)",
-  "homepage": "string (optional, valid URL)",
-  "documentation": "string (optional, valid URL)",
-  "changelog": "string (optional, valid URL)",
-  "license": "string (required)",
-  "requires": {
-    "speckit_version": "string (required, version specifier)",
-    "tools": [
-      {
-        "name": "string (required)",
-        "version": "string (optional, version specifier)",
-        "required": "boolean (default: false)"
-      }
-    ]
-  },
-  "provides": {
-    "commands": "integer (optional)",
-    "hooks": "integer (optional)"
-  },
-  "tags": ["array of strings (2-10 tags)"],
-  "verified": "boolean (default: false, set by maintainers)",
-  "downloads": "integer (auto-updated)",
-  "stars": "integer (auto-updated)",
-  "created_at": "string (ISO 8601 datetime)",
-  "updated_at": "string (ISO 8601 datetime)"
-}
-```
+請使用正式的[型錄條目結構描述](catalogs.md#型錄條目結構描述)，宣傳舊版本時包含[歷史版本記錄](catalogs.md#歷史發行版本)。社群提交時，請提供 issue 表單收集的所有描述性欄位。
 
 ### 有效標籤
 
@@ -364,3 +347,11 @@ A：擴充功能應免費且開放原始碼。允許商業支援／服務，但�
 
 *最後更新：2026-01-28*
 *型錄格式版本：1.0*
+
+## 另請參閱
+
+- [開發擴充功能](developing.md)
+- [擴充功能 API 參考](api.md)
+- [擴充功能型錄](catalogs.md)
+- [擴充功能 CLI 參考](cli.md)
+- [社群擴充功能](../community/extensions.md)

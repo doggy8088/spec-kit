@@ -21,7 +21,22 @@
 - `config`：代理名稱、資料夾、命令子目錄、安裝 URL 與 `requires_cli`。
 - `registrar_config`：輸出目錄、格式、參數佔位符與副檔名。
 
-在 `src/specify_cli/integrations/__init__.py` 中匯入該類別並呼叫 `_register()`（兩個清單皆按字母順序）。此註冊表是內建 Python 整合行為的來源。若代理支援非互動式工作流程，請以完整的基底簽章實作 `build_exec_args()`；`options()` 宣告的是安裝期的 `--integration-options`，而非每個工作流程的執行期選項。代理專屬的原生事件可宣告在整合上。僅當整合不產生任何檔案，或使用靜態、不重疊的代理根目錄與命令目錄時，才設定 `multi_install_safe = True`；共用的動態路徑預設並不安全。
+請在 `src/specify_cli/integrations/__init__.py` 中匯入並 `_register()` 該類別（兩個列表皆按字母順序）。此註冊表是內建 Python 整合行為的來源。若代理支援非互動式工作流程，請以完整的基底簽章實作 `build_exec_args()`。`reasoning_effort` 與 `context_size` 關鍵字，僅在該設定為其所轉譯的設定時才需要；對於未轉譯的設定，僅可接受它以便透過 `check_dispatch_settings()` 拒絕（見[逐步驟派送設定](#逐步驟派送設定)）。`options()` 宣告的是安裝階段的 `--integration-options`，而非每個工作流程的執行期選項。代理專屬的原生事件可在整合上宣告。僅當整合不發出檔案，或使用靜態且不重疊的代理根目錄與命令目錄時，才設定 `multi_install_safe = True`；共用的動態路徑預設並不安全。
+
+### 逐步驟派送設定
+
+工作流程的 `command` 與 `prompt` 步驟，可為一次 CLI 呼叫請求 `DISPATCH_SETTINGS` 中的設定（先是 `reasoning_effort`，再是 `context_size`）。值是不透明字串，其意義屬於代理的 CLI。提示詞步驟會將請求的設定傳給 `build_exec_args()`。命令步驟會將其傳給 `dispatch_command()`，其基底實作僅將請求的關鍵字轉發給 `build_exec_args()`。因此，接收方法就是 `build_exec_args()`；若整合覆寫了 `dispatch_command()`，命令步驟的接收方法就是 `dispatch_command()`。
+
+內建整合與外部適配器可透過以下 `specify_cli.integrations.base` API，依設定逐項加入：
+
+- `supported_dispatch_settings`：整合所轉譯設定的 `frozenset`。請在實作接收方法的類別上宣告它。`effective_dispatch_settings()` 僅讀取該類別的宣告：繼承方法的子類別會繼承支援，但覆寫方法的子類別必須重新宣告支援。在任何其他類別上的宣告，或非 set 或 frozenset 的宣告，皆不代表任何支援。
+- `reasoning_effort` 與 `context_size` 關鍵字：接收方法會為每個已宣告的設定接受一個關鍵字，預設為 `None`。主機僅在步驟設定該設定時才傳遞關鍵字，因此沒有設定的呼叫維持不變。請將任何非 `None` 的值視為已請求；主機絕不會傳遞 `""`。請將值轉譯為 CLI 引數，置於來自 `SPECKIT_INTEGRATION_<KEY>_EXTRA_ARGS` 的引數之後，且不要繼續傳遞：`IntegrationBase.build_exec_args()` 與格式基底建構器皆不轉譯任一設定，而是提出 `DispatchSettingsError`，而非捨棄值。
+- `validate_dispatch_setting(name, value)`：選用的逐設定掛鉤，閘門會在執行任何動作前呼叫。預設接受每個值；請提出 `ValueError` 以拒絕 CLI 會忽略或誤讀的值，主機會將失敗歸因於該設定。若接收方法本身必須拒絕某設定，請提出帶有 `setting` 的 `DispatchSettingsError`；若無該屬性，步驟錯誤會列出每個請求設定的來源。請勿將值寫入任一錯誤的訊息：值可能來自擷取的輸出，Spec Kit 不會將其列印到終端機或寫入 `log.jsonl`。
+- `dispatch_setting_hint(setting)`：選用的補救文字，例如建議改用的另一個步驟欄位，主機會將其附加到不支援設定的錯誤中。預設回傳 `None`。
+
+主機閘門 `check_dispatch_settings(integration, settings, *, via)` 無法被整合覆寫。步驟會在可執行檔偵測前執行它，命令步驟的 `via` 為 `"dispatch_command"`，提示詞步驟則為 `"build_exec_args"`；基底 `dispatch_command()` 會以 `"build_exec_args"` 執行它。對於每個請求的設定，依 `DISPATCH_SETTINGS` 順序，閘門要求一個 1 至 64 個字母、數字、`.`、`_` 或 `-` 組成的字串，以字母或數字開頭，且符合上述擁有權規則的支援，以及接收方法接受該關鍵字或 `**kwargs`。接著它會呼叫 `validate_dispatch_setting()`。每次失敗都會提出 `DispatchSettingsError`，這是一種 `ValueError`，其 `setting` 屬性會指明該設定，讓步驟能回報其值的來源。不支援設定的錯誤會列出支援該設定的整合，格式錯誤值的錯誤僅回報其型別與長度，絕不回報值。轉譯方法也可以自行執行閘門，並以 `via` 指明該方法，讓直接呼叫也受到檢查。
+
+主機無法觀察接收方法如何處理已宣告的設定。宣告支援卻忽略值的整合，例如以 `**kwargs` 吸收值，會靜默捨棄它：宣告就是承諾轉譯該設定。
 
 ## 輸出風格
 
@@ -89,7 +104,7 @@ class SampleIntegration(SkillsIntegration):
 
 `config.name` 必須與描述檔相符。選用的類別 `version` 若有，則必須與其版本相符。顯示名稱在探索與生命週期輸出中以純文字算繪；括號與類似 Rich 的標籤是有效的名稱內容，不是主控台格式。`config` 與 `registrar_config` 必須提供上述欄位；註冊目錄必須與 `folder/commands_subdir` 相符。輸出路徑必須是標準形式、位於專案本機，且在 `.git` 與 `.specify` 之外。註冊副檔名必須是單純的點分隔檔名後綴（例如 `.md`），或 Markdown 技能用的 `/SKILL.md`；不允許路徑穿越。公開的類別屬性 `invoke_separator` 必須是非空字串；`dev_no_symlink` 與 `multi_install_safe` 必須是布林值，包括註冊器設定提供自身選用值時也是如此。明確的 `registrar_config.invoke_separator` 優先於類別預設值。只要類別或註冊器設定任一啟用，`dev_no_symlink` 即視為啟用。健全的註冊與保存下來的復原中繼資料使用同一套解析後的設定。選用的 `registrar_config.legacy_dir` 必須是非空、標準形式的專案相對目錄，且受相同的保留根目錄與符號連結限制；外部適配器不支援以主目錄為相對基準的目的地。適配器的主要根目錄與選用的舊版目的地不得重疊，無論其是否支援多重安裝。支援多重安裝的適配器也不能與其他整合的代理根目錄或舊版目的地重疊。比較時在所有平台上都使用大小寫摺疊後的路徑元件，讓套件在大小寫不敏感的檔案系統上保持安全。自訂 setup 必須把產生的代理檔案保持在其宣告的根目錄之下，以 `IntegrationManifest` 追蹤寫入，並把共用基礎設施的所有權留給主機。請使用主機的格式基底，不要複製核心範本。
 
-CLI 適配器會視需要覆寫 `build_exec_args(prompt, *, model=None, output_json=True, integration_args=None, integration_options=None, project_root=None)`。每個明確宣告的主機關鍵字參數都必須有預設值；透過 `**kwargs` 接受省略的關鍵字也受支援。驗證會同時檢查僅含 prompt 的呼叫與完整的主機呼叫。只使用主機 API 與標準函式庫的適配器，不需要 pip 安裝，也不需要編輯來源註冊表。以匯入副作用進行的註冊會被拒絕。
+CLI 適配器會視需要覆寫 `build_exec_args(prompt, *, model=None, output_json=True, integration_args=None, integration_options=None, project_root=None)`。每個明確宣告的主機關鍵字參數都必須有預設值；透過 `**kwargs` 接受省略的關鍵字也受支援。驗證會同時檢查僅提示詞的主機呼叫與完整的主機呼叫。此必要簽章不會因[逐步驟派送設定](#逐步驟派送設定)而改變，安裝也不檢查派送設定宣告。未宣告支援的適配器絕不會收到 `reasoning_effort` 或 `context_size`：請求任一設定的步驟會在適配器的 CLI 執行前失敗。適配器與內建整合一樣加入支援，主機閘門會在步驟請求設定時，檢查宣告與接收方法的簽章。僅使用主機 API 與標準程式庫的適配器，不需要 pip 安裝或來源註冊表編輯。具匯入副作用的註冊會被拒絕。
 
 型錄項目要求身分、名稱、版本與說明相符，外加 `download_url`。型錄中若有選用的描述檔中繼資料與 `requires`，也必須相符。`sha256` 是選用的 64 字元十六進位摘要，針對封存檔的位元組計算；建議發佈固定的 URL 與摘要。下載會使用主機的驗證設定，包括經驗證的 GitHub release 資產。除迴路 HTTP 開發伺服器外，一律強制使用 HTTPS。重新導向、封存格式宣告、穿越、符號連結，以及有界的下載／解壓限制都會被強制執行。
 
@@ -121,7 +136,7 @@ CLI 適配器會視需要覆寫 `build_exec_args(prompt, *, model=None, output_j
 
 若交付需要變更共用執行期行為、整合基底類別、算繪、生命週期管理、CLI 行為，或核心範本或指令碼，則至少需要兩個 PR：一個獨立的共用行為前置 PR，以及整合本身的 PR。共用變更必須有獨立的理由與行為涵蓋，包括錯誤修正的迴歸證據，且必須在沒有新整合的情況下也能運作並可測試。代理專屬的變通做法，不足以構成變更核心行為的理由。
 
-整合 PR 必須標明其前置 PR，且在它們合併之前不得合併。詳見[整合 PR 提交要求](../CONTRIBUTING.md#integration-pull-requests)。
+整合 PR 必須標明其前置 PR，且在它們合併之前不得合併。詳見[整合 PR 提交要求](../CONTRIBUTING.md#整合的拉取請求)。
 
 ## 新增代理
 

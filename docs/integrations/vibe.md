@@ -4,7 +4,7 @@
 
 ## 多重安裝安全性
 
-本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#我可以在同一個專案中安裝多個整合嗎)。
 
 ## 設定
 
@@ -36,7 +36,7 @@ specify init my-project --integration vibe --integration-options="--no-model-inv
 
 ## 執行階段事件
 
-原生事件使用 `.vibe/hooks.toml`。Vibe 只支援 `pre_tool_use`、`post_tool_use` 與 `stop`，分別對應到 `pre_tool`、`post_tool` 與 `post_agent`。Vibe 不會發出工作階段開始、工作階段結束與提示詞提交事件；不受支援的處理常式會被略過並發出警告。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#runtime-events)。
+原生事件使用 `.vibe/hooks.toml`。Vibe 只支援 `pre_tool_use`、`post_tool_use` 與 `stop`，分別對應到 `pre_tool`、`post_tool` 與 `post_agent`。Vibe 不會發出工作階段開始、工作階段結束與提示詞提交事件；不受支援的處理常式會被略過並發出警告。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#執行階段事件)。
 
 Spec Kit 只會重新整理與移除它自己寫入的 `[[hooks]]` 項目，這些項目帶有 `speckit_marker = true`。每個項目在其最後一行 TOML 以及緊接其後的空白行處結束，因此跟在 Spec Kit 項目後面的註解（例如你自己的 hook 上方的說明）會留在檔案中。若移除 Spec Kit 的項目後只剩下註解與空白行，Spec Kit 會刪除 `.vibe/hooks.toml`，那些註解也會一併被刪除。Spec Kit 對 Codex 的 `.codex/config.toml` 也套用相同規則。
 

@@ -46,7 +46,7 @@ flowchart LR
 
 ### 3. 設計：在適當的規模選擇方法
 
-&#128100; 功能表單中提議的解決方案與替代方案，可以為設計討論提供種子；貢獻者與維護者可以在 PR 審查期間精煉方法。每個 issue 不都需要獨立的 SDD 計畫。較大的變更需要事先與維護者討論並達成共識，如[貢獻指南](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#submitting-a-pull-request)所述。當決策應該在多次變更之間保持有用時，儲存庫會保留 [CLI](https://github.com/github/spec-kit/blob/main/design/cli.md)、[整合](https://github.com/github/spec-kit/blob/main/design/integration.md)與 [workflow-step](https://github.com/github/spec-kit/blob/main/design/workflow-step.md) 設計文件。
+&#128100; 功能表單中提議的解法與替代方案可以播下設計討論的種子；貢獻者與維護者可以在 PR 審查期間精煉做法。並非每個 issue 都需要一份獨立的 SDD 計畫。較大的變更需要事先與維護者討論並取得共識，如[貢獻指南](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md#submitting-a-pull-request)所說明。當決策應在多次變更中持續有用時，儲存庫會為貢獻者保留內部設計文件。受支援的[整合](../integrations/api.md)與[工作流程步驟](../workflow-steps/api.md)撰寫契約另見本站文件。
 
 &#9733; [bundler SDD 快照](https://github.com/github/spec-kit/commit/3fd1e54d4b237af6124bb967e2eae24c93685a89)說明了更深的路徑：它的計畫、研究、資料模型、契約與任務，透過 `/speckit.plan` 與 `/speckit.tasks` 讓設計變得可執行。這展示了 Spec Kit 本身被使用的地方，但不把那種細節程度呈現為每項變更的預設。
 
@@ -84,7 +84,7 @@ Spec Kit 儲存庫使用一般的 GitHub Actions 進行交付。[手動派送的
 
 ## 擴充性與社群實務
 
-擴充性貫穿這個 SDLC：專案既建構與發行流程，也使用它們。團隊發布 [`assess` 套件組](https://github.com/github/spec-kit/tree/main/bundles/assess) 與 [`bugfix` 套件組](https://github.com/github/spec-kit/tree/main/bundles/bugfix)，每個都把一個擴充功能與一個可恢復的 *Spec Kit 工作流程* 以及一道人類審查關卡結合起來。它還發布 [`lean` 預設集](https://github.com/github/spec-kit/tree/main/presets/lean)，展示塑造核心 SDD 指引的另一種方式。這些是 Spec Kit 自己的[擴充功能、預設集、工作流程與套件組](customization.md)，不是儲存庫的 GitHub Actions 工作流程。
+擴充性貫穿整個 SDLC：專案不只使用流程，也建置並散佈流程。團隊隨附 [`assess` 套件組](https://github.com/github/spec-kit/tree/main/bundles/assess)與 [`bugfix` 套件組](https://github.com/github/spec-kit/tree/main/bundles/bugfix)，兩者各結合一個擴充功能、一個可續跑的 *Spec Kit 工作流程*與一個人工審查閘門。團隊也隨附 [`lean` 預設集](https://github.com/github/spec-kit/tree/main/presets/lean)，示範另一種形塑核心 SDD 指引的方式。這些是 Spec Kit 自身的[擴充功能、預設集、工作流程與套件組](../how-to/customization.md)，不是儲存庫的 GitHub Actions 工作流程。
 
 &#9733; 除了核心功能交付之外，針對 [擴充功能](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-extension.md)、[預設集](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-preset.md)、[套件組](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-bundle.md) 與 [工作流程步驟](https://github.com/github/spec-kit/blob/main/.github/workflows/add-community-workflow-step.md) 的代理式社群提交工作流程，會驗證提交中繼資料，並在草稿 PR 中提議型錄變更，供維護者審查。
 

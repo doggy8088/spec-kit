@@ -12,19 +12,19 @@ CLI 的先決條件與安裝方式請參閱[安裝指南](../installation.md)，
 specify init my-project --integration <key>
 ```
 
-請在你的程式代理內呼叫流程命令，不要在終端機中呼叫。文件通常使用 `/speckit.*` 記法，但你的代理可能使用連字號技能、`$` 技能或其他原生形式。請參閱你所用整合的頁面與[命令呼叫方式比較](cli.md#command-invocation)。
+請在你的程式代理內呼叫流程命令，不要在終端機中呼叫。文件通常使用 `/speckit.*` 記法，但你的代理可能使用連字號技能、`$` 技能或其他原生形式。請參閱你所用整合的頁面與[命令呼叫方式比較](cli.md#命令呼叫方式)。
 
 ## 加入另一個代理
 
-在已初始化的專案中，使用 [`specify integration install <key>`](cli.md#install-an-integration)。請查看該代理指南中的多重安裝安全性狀態，並遵循[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
+在已初始化的專案中，使用 [`specify integration install <key>`](cli.md#安裝整合)。請查看該代理指南中的多重安裝安全性狀態，並遵循[共用的多重安裝規則](cli.md#我可以在同一個專案中安裝多個整合嗎)。
 
-安裝另一個整合不會變更預設值。使用 [`specify integration use <key>`](cli.md#use-an-installed-integration) 將它啟用。
+安裝另一個整合不會變更預設值。使用 [`specify integration use <key>`](cli.md#使用已安裝的整合) 將它啟用。
 
 ## 移除代理
 
-使用 [`specify integration uninstall <key>`](cli.md#uninstall-an-integration) 移除某個代理的 Spec Kit 整合，而不是代理應用程式本身。已修改檔案的處理方式與清理例外請參閱解除安裝參考。
+使用 [`specify integration uninstall <key>`](cli.md#解除安裝整合) 移除某個代理的 Spec Kit 整合，而不是代理應用程式本身。已修改檔案的處理方式與清理例外請參閱解除安裝參考。
 
-若要改為取代某個整合，請使用 [`specify integration switch <key>`](cli.md#switch-to-a-different-integration)。
+若要改為取代某個整合，請使用 [`specify integration switch <key>`](cli.md#切換到不同的整合)。
 
 ## 在團隊中工作
 
@@ -47,7 +47,8 @@ specify integration switch none
 ```
 
 > [!IMPORTANT]
-> 不要手動編輯 Spec Kit 產生的代理命令或技能。請將自訂內容維護在經過審查的[預設集](../reference/presets.md)或[專案本機覆寫](../guides/customization.md#project-local-overrides-and-resolution)中。提交之前，請使用 [`specify integration status`](cli.md#report-integration-status) 驗證 `none` 是唯一已安裝且為預設的整合。請檢視 Git 差異與任何保留的代理檔案。
+> 請勿手動編輯 Spec Kit 產生的代理命令或技能。請在經過審查的[預設集](../presets/overview.md)或[專案本機覆寫](../how-to/customization.md#專案本地覆寫與解析)中維護自訂內容。
+> 提交前，請使用 [`specify integration status`](cli.md#回報整合狀態) 確認 `none` 是唯一已安裝且為預設的整合。請檢查 Git 差異與任何保留的代理檔案。
 
 團隊可以為已提交的基線加入 CI 檢查，也可以選擇性地為暫存檔案加入預先提交檢查。
 
@@ -105,6 +106,10 @@ specify integration switch none
 
 [整合 CLI 參考](cli.md)記載了共用的安裝、升級、移除、狀態、型錄與預設選取行為。這些規則跨整合適用，不會在每個頁面上重複。各指南也會指出是否支援工作流程 CLI 分派；不需要 CLI 的 IDE 設定，並不表示工作流程步驟可以在沒有 CLI 的情況下執行。
 
-對於此處未列出的代理，請使用 [generic 整合](generic.md)或[探索外部轉接器](cli.md#search-available-integrations)。授權執行外部轉接器程式碼之前，請先審查它。型錄探索不是安全背書；預設的社群型錄僅供探索。信任與安裝要求請參閱[透過型錄安裝的外部轉接器](cli.md#catalog-installed-external-adapters)。
+對於此處未列出的代理，請使用 [generic 整合](generic.md)或[探索外部轉接器](cli.md#搜尋可用的整合)。授權執行外部轉接器程式碼之前，請先審查它。型錄探索不是安全背書；預設的社群型錄僅供探索。信任與安裝要求請參閱[透過型錄安裝的外部轉接器](cli.md#透過型錄安裝的外部轉接器)。
 
-[型錄參考](catalog.md)說明了描述檔與型錄中繼資料。開發內建整合或發佈外部轉接器，請參閱[貢獻整合](contributing.md)。
+[API 參考](api.md)記載受支援的 Python 轉接器契約。[型錄參考](catalog.md)說明描述檔與型錄中繼資料。開發內建整合或發布外部轉接器，請參閱[貢獻整合](contributing.md)。
+
+## 另請參閱
+
+- [Community integrations](../community/integrations.md)

@@ -36,15 +36,15 @@
 > 如果你的拉取請求引入了對 CLI 或儲存庫其餘部分的工作有實質影響的大型變更（例如你引入了新的範本、參數或其他重大變更），請確保它已事先經過專案維護者的**討論並達成共識**。未經事先對話與同意的大型變更拉取請求將被關閉。
 
 1. Fork 並複製這個儲存庫
-1. 設定並安裝相依性：`uv sync --extra test`
-1. 確認 CLI 在你的機器上能運作：`uv run specify --help`
-1. 建立一個新分支（見下方的[分支命名](#branch-naming)）
+1. 依照[本地開發指南](https://github.github.io/spec-kit/how-to/local-development.html)設定此 checkout 的 `.venv` 與可編輯安裝
+1. 確認 CLI 可以運作：`.venv/bin/specify --help`（Windows PowerShell：`.\.venv\Scripts\specify.exe --help`）
+1. 建立一個新分支（見下方的[分支命名](#分支命名)）
 1. 進行你的變更、新增測試，並確保一切仍然運作
 1. 如有相關，用一個範例專案測試 CLI 功能
 1. 推送到你的 fork 並提交拉取請求
 1. 等待你的拉取請求被審查並合併。
 
-啟用專案的虛擬環境（見下方的[測試設定](#testing-setup)），然後從你的工作樹安裝 CLI（在 `uv sync --extra test` 之後執行 `uv pip install -e .`），或以其他方式確保 shell 使用本機的 `specify` 執行檔，再執行下方所述的手動斜線命令測試。
+每個 checkout 或 worktree 使用各自獨立的 `.venv`，並透過該環境明確的可執行檔路徑執行 CLI 與測試。在執行下方所述的手動斜線命令測試之前，請先遵循[測試設定](#測試設定)。
 
 以下幾件事能提高你的拉取請求被接受的可能性：
 
@@ -55,11 +55,11 @@
 - 撰寫一則[好的提交訊息](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)。
 - 用規格驅動開發工作流程測試你的變更，確保相容性。
 
-擁有三個開啟中拉取請求的帳號仍可繼續提交變更，但額外的提交在審查佇列中，可能會被排在其他作者的貢獻之後。程式代理在開啟另一個拉取請求之前，必須遵循[由代理撰寫的 PR 規則](#agent-authored-git-and-review-activity)。
+擁有三個開啟中拉取請求的帳號仍可繼續提交變更，但額外的提交在審查佇列中，可能會被排在其他作者的貢獻之後。程式代理在開啟另一個拉取請求之前，必須遵循[由代理撰寫的 PR 規則](#由代理撰寫的-git-與審查活動)。
 
 ### 整合的拉取請求
 
-新增或更新整合時，請遵循[整合交付邊界](design/integration.md#integration-delivery-boundary)。
+新增或更新整合時，請遵循[整合交付邊界](design/integration.md#整合交付邊界)。
 把整合專屬的行為保留在
 它自己的套件中；註冊表接線、型錄中繼資料、整合專屬的測試、
 文件，以及代理專屬的 devcontainer 工具，都可以在同一個
@@ -68,8 +68,8 @@ PR 中隨它一起提交，即使這些檔案位於整合套件之外。
 如果整合需要變更共用的執行期行為、整合
 基底類別、渲染、生命週期管理、CLI 行為，或核心範本
 或指令碼，請提交**至少兩個 PR**：一個給前置的共用行為，
-一個給整合本身。前置 PR 必須在[證據關卡](#evidence-gate)之下獨立為該共用變更提出理由，並遵循
-[測試確定性行為](#testing-deterministic-behavior)，包括
+一個給整合本身。前置 PR 必須在[證據關卡](#證據關卡)之下獨立為該共用變更提出理由，並遵循
+[測試確定性行為](#測試確定性行為)，包括
 錯誤修正的迴歸證據。它必須在沒有新整合的情況下也能運作並可測試
 ；把代理專屬的變通做法搬進核心，並不能為它提供理由。
 
@@ -81,20 +81,20 @@ PR 中隨它一起提交，即使這些檔案位於整合套件之外。
 
 一份貢獻的評價取決於它所攜帶的證據，而不是它的推理聽起來多有道理。同一套標準適用於所有人——人類與 AI 協助的貢獻受到完全相同的評判。
 
-一個有效且在範圍內的變更，即使沒有證據也不會被直接拒絕。它可能被標記為 [`triage-can-wait`](#triage-and-author-labels)，並排在已證明的工作之後，直到證據補齊為止，屆時它可以被重新排定優先順序。
+一個有效且在範圍內的變更，即使沒有證據也不會被直接拒絕。它可能被標記為 [`triage-can-wait`](#分類與作者標籤)，並排在已證明的工作之後，直到證據補齊為止，屆時它可以被重新排定優先順序。
 
 什麼算作證據：
 
 - **一份重現步驟或連結的真實世界回報**——一個失敗案例、一段堆疊追蹤，或一個問題實際發生過的議題連結。僅憑「理論上這可能會失敗」的推理，無法通過這道關卡。
 - **一個在 `main` 上失敗、套用你的變更後通過的迴歸測試**——這同時證明了問題是真的，以及你的變更修好了它。
-- **範圍紀律**——每個拉取請求只處理一個關注點。把不相關的變更拆成各自獨立的 PR（見上方[聚焦變更的指引](#submitting-a-pull-request)）；龐雜蔓延的批次差異難以審查，也很慢才能落地。
-- **揭露 AI 協助**——如果有任何 AI 工具參與，依 [Spec Kit 中的 AI 貢獻](#ai-contributions-in-spec-kit)揭露它與其參與程度。
+- **範圍紀律**——每個拉取請求只處理一個關注點。把不相關的變更拆成各自獨立的 PR（見上方[聚焦變更的指引](#提交拉取請求)）；龐雜蔓延的批次差異難以審查，也很慢才能落地。
+- **揭露 AI 協助**——如果有任何 AI 工具參與，依 [Spec Kit 中的 AI 貢獻](#spec-kit-中的-ai-貢獻)揭露它與其參與程度。
 
 臆測性的強化很受歡迎，但它排在已證明、有證據支持的工作之後。如果你能附上一份重現步驟和一個失敗的測試，你的變更會移到最前面；如果還不行，就明說，它會被排入佇列而不是被關閉。
 
 ### 審查評分標準
 
-經過分類的項目會在七個維度上衡量，每個維度計 `0`–`2` 分（`0` 缺席、`1` 部分、`2` 明顯展示），最高分為 14 分。這個分數引導**優先順序**——它不是一道硬性的通過／不通過關卡。唯一堅定的規則是上方的[證據關卡](#evidence-gate)：只有理論、沒有證據的變更會被降低優先順序。
+經過分類的項目會在七個維度上衡量，每個維度計 `0`–`2` 分（`0` 缺席、`1` 部分、`2` 明顯展示），最高分為 14 分。這個分數引導**優先順序**——它不是一道硬性的通過／不通過關卡。唯一堅定的規則是上方的[證據關卡](#證據關卡)：只有理論、沒有證據的變更會被降低優先順序。
 
 | 維度 | 它衡量的內容 |
 |---|---|
@@ -170,7 +170,7 @@ PR 中隨它一起提交，即使這些檔案位於整合套件之外。
 它釘選的封存 URL，最好再附上它的 SHA-256。註冊一個
 型錄只會啟用探索／下載；匯入可執行的轉接器程式碼
 需要使用者的信任決定，以及一個啟用安裝的來源。請遵循
-[整合 API 與生命週期設計](design/integration.md#external-adapter-package-contract)
+[整合 API 與生命週期設計](design/integration.md#外部適配器套件合約)
 與[整合型錄貢獻指南](docs/integrations/contributing.md)。
 加上走公開路徑的正向與負向測試，而不是把測試類別直接注入
 註冊表；並附上新行程載入與回滾的證據。
@@ -249,35 +249,40 @@ API、編碼，以及行程／執行期行為。
 
 為了獲得最順暢的審查體驗，請依這個順序驗證變更：
 
-1. **先執行聚焦的自動化檢查**——使用[下方](#automated-checks)的快速驗證命令，及早捕捉鷹架與設定的迴歸。
-2. **再執行手動工作流程測試**——如果你的變更影響斜線命令或開發者工作流程，依[手動測試](#manual-testing)區段選擇正確的命令，在代理中執行它們，並把結果擷取下來放進你的 PR。
+1. **先執行聚焦的自動化檢查**——使用[下方](#自動化檢查)的快速驗證命令，及早捕捉鷹架與設定的迴歸。
+2. **再執行手動工作流程測試**——如果你的變更影響斜線命令或開發者工作流程，依[手動測試](#手動測試)區段選擇正確的命令，在代理中執行它們，並把結果擷取下來放進你的 PR。
 
 ### 自動化檢查
 
 #### 代理設定與接線一致性
 
 ```bash
-uv run python -m pytest tests/test_agent_config_consistency.py -q
+.venv/bin/python -m pytest tests/test_agent_config_consistency.py -q
 ```
 
 當你變更代理中繼資料、上下文更新指令碼或整合接線時，執行這個檢查。
+在 Windows PowerShell 上，請改用 `.\.venv\Scripts\python.exe`，而非 `.venv/bin/python`。
+請先完成[本地環境設定](https://github.github.io/spec-kit/how-to/local-development.html#1-prepare-the-checkout)。
 
 #### 執行完整的測試套件
 
-把測試相依性安裝到專案自己的虛擬環境中，並
-透過那個解譯器執行 `pytest`：
+請先完成[本地環境設定](https://github.github.io/spec-kit/how-to/local-development.html#1-prepare-the-checkout)，再透過此 checkout 的直譯器執行 `pytest`：
 
 ```bash
-uv pip install -e ".[test]"
-.venv/bin/python -m pytest tests -q   # Windows: .venv\Scripts\python -m pytest tests -q
+.venv/bin/python -m pytest tests -q
 ```
 
-> **注意：** 請優先使用 `.venv/bin/python -m pytest`，而不是直接執行 `uv run pytest`。
-> 如果另一個 Spec Kit 簽出版本在共用／全域環境中註冊了一個可編輯（`-e`）安裝，
-> `uv run pytest` 可能會把 `specify_cli` 解析到那個
-> *另一個*工作樹，讓它變成一個不完整的命名空間套件，無法
-> 匯入新加入的子套件。透過專案的 `.venv` 執行，會把
-> `specify_cli` 解析到這個簽出版本的 `src/`。這與 `AGENTS.md`（常見陷阱）中記錄的注意事項一致。
+在 Windows PowerShell 上：
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+在 macOS 上，請使用 `LC_ALL=en_US.UTF-8 .venv/bin/python -m pytest tests -q`，讓 Bash 的 Unicode 處理使用 UTF-8 地區設定。
+
+明確的環境路徑可避免測試匯入另一個 checkout 的可編輯安裝。先從受影響的測試檔案開始；當變更需要更廣泛的迴歸覆蓋時，再執行完整套件。
+
+例行與完整排程／手動 CI 矩陣、相容性政策與最低版本生命週期，請參閱[Python 版本支援](SUPPORT.md#python-版本支援)。
 
 #### 安全性檢查
 
@@ -294,10 +299,9 @@ uvx --from pip-audit==2.10.0 pip-audit --disable-pip --require-hashes -r .github
 uv pip compile pyproject.toml --extra test --universal --upgrade --generate-hashes --quiet --no-header --output-file .github/security-audit-requirements.txt
 ```
 
-排程中的 CI 稽核會在受支援的 Python 與作業系統矩陣上，解析執行期與 `test` 額外相依性集合，以捕捉新發布的資安公告。
-上游套件的版本會隨時間漂移，因此即使是一個不相關、但觸及
-`pyproject.toml` 的 PR，也可能讓 `dependency-audit` 檢查失敗，直到已提交的檔案
-用上方命令重新產生並重新提交為止。
+排程中的 CI 稽核會在受支援的 Python 與作業系統矩陣上，解析執行期與 `test` 額外相依性集合，以捕捉新發布的資安公告。上游套件的版本會隨時間漂移，因此即使是一個不相關、但觸及 `pyproject.toml` 的 PR，也可能讓 `Lint & dependency audit` 檢查失敗，直到已提交的檔案用上方命令重新產生並重新提交為止。
+
+`lint.yml` 工作流程在一個 job 中執行 Ruff、文件 lint、shell 檢查與已提交的相依性稽核，共用 checkout 與工具設定。各項檢查即使在另一項檢查失敗後仍會繼續執行，任何一項失敗都會讓整個 job 失敗。排程的相依性稽核矩陣則單獨執行。
 
 #### Shell 指令碼
 
@@ -305,38 +309,31 @@ uv pip compile pyproject.toml --extra test --universal --upgrade --generate-hash
 git ls-files -z -- '*.sh' | xargs -0 shellcheck --severity=error
 ```
 
-CI 的 `lint.yml` 中的 `shellcheck` 工作目前只回報並阻擋
-error 嚴重程度的發現。像 SC2155 這類的警告刻意不在
-這個工作的範圍內，直到後續的清理工作把門檻收緊為止。
+CI 的 `lint.yml` ShellCheck 步驟目前只會回報並阻擋錯誤嚴重程度的發現。
+像 SC2155 這類的警告刻意不在此檢查範圍內，直到後續清理收緊門檻為止。
 
 ### 手動測試
 
 #### 測試設定
 
+請依照[本地開發指南](https://github.github.io/spec-kit/how-to/local-development.html#1-prepare-the-checkout)建立此 checkout 的 `.venv` 並以可編輯模式安裝。接著從 Spec Kit 儲存庫根目錄，使用該 CLI 初始化一個獨立的測試專案：
+
 ```bash
-# Install the project and test dependencies from your local branch
-cd <spec-kit-repo>
-uv sync --extra test
-source .venv/bin/activate  # On Windows (CMD): .venv\Scripts\activate  |  (PowerShell): .venv\Scripts\Activate.ps1
-uv pip install -e .
-# Ensure the `specify` binary in this environment points at your working tree so the agent runs the branch you're testing.
-
-# Initialize a test project using your local changes
-uv run specify init <temp-dir>/speckit-test --integration <agent>
+.venv/bin/specify init <temp-dir>/speckit-test --integration <agent>
 cd <temp-dir>/speckit-test
-
-# Open in your agent
 ```
+
+在 Windows PowerShell 上，請改用 `.\.venv\Scripts\specify.exe`，而非 `.venv/bin/specify`。在你的代理中開啟產生的專案。若還需要從該目錄執行其他 CLI 命令，請使用原始 checkout 的 `.venv` 可執行檔絕對路徑，而非全域安裝的 `specify`。
 
 #### 手動測試流程
 
 任何影響斜線命令行為的變更，都需要透過程式代理手動測試該命令，並隨 PR 一起提交結果。
 
-1. **找出受影響的命令**——使用[下方的提示詞](#determining-which-tests-to-run)，讓你的代理分析你變更的檔案，判斷哪些命令需要測試。
-2. **設定一個測試專案**——從你的本機分支建立鷹架（見[測試設定](#testing-setup)）。
+1. **找出受影響的命令**——使用[下方的提示詞](#判斷要執行哪些測試)，讓你的代理分析你變更的檔案，判斷哪些命令需要測試。
+2. **設定一個測試專案**——從你的本機分支建立鷹架（見[測試設定](#測試設定)）。
 3. **執行每個受影響的命令**——在你的代理中叫用它，驗證它成功完成，並確認它產生預期的輸出（建立的檔案、執行的指令碼、填入的產出物）。
 4. **先執行先決條件**——相依於更早命令的命令（例如 `/speckit.tasks` 需要 `/speckit.plan`，而 `/speckit.plan` 需要 `/speckit.specify`）必須依序執行。
-5. **回報結果**——把[回報範本](#reporting-results)貼進你的 PR，為每個測試過的命令填上通過／失敗。
+5. **回報結果**——把[回報範本](#回報結果)貼進你的 PR，為每個測試過的命令填上通過／失敗。
 
 #### 回報結果
 

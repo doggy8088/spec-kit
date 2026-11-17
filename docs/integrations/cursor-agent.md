@@ -4,7 +4,7 @@
 
 ## 多重安裝安全性
 
-本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#我可以在同一個專案中安裝多個整合嗎)。
 
 ## 設定
 
@@ -20,6 +20,6 @@ specify init my-project --integration cursor-agent
 
 ## 選項與工作流程權限
 
-選用的 `--integration-options="--skills"` 旗標只是重述預設值；本整合一律產生技能。原生事件使用 `.cursor/hooks.json`；`--events false` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#runtime-events)。
+選用的 `--integration-options="--skills"` 旗標只是重述預設值；本整合一律產生技能。原生事件使用 `.cursor/hooks.json`；`--events false` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#執行階段事件)。
 
 工作流程的命令與提示詞步驟另外需要 `cursor-agent` CLI。分派使用 `-p --trust --approve-mcps --force`：這些旗標會繞過工作區信任提示，並核准 MCP 載入與工具動作。請只在你打算授予這些權限的專案中執行工作流程。已設定的 `--model` 與要求的 `--output-format json` 都會被轉傳。

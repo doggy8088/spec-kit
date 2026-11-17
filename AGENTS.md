@@ -39,7 +39,7 @@
 ## 測試可執行行為
 
 在變更不經 LLM 就能執行或控制執行的程式碼或設定之前，請先閱讀
-[Testing deterministic behavior](CONTRIBUTING.md#testing-deterministic-behavior)。
+[Testing deterministic behavior](CONTRIBUTING.md#測試確定性行為)。
 行為變更需要正向與負向的涵蓋範圍；錯誤修正需要修正前後的迴歸證據。
 
 ## PowerShell 相容性
@@ -53,9 +53,9 @@
 
 ## 分支與代理貢獻
 
-建立分支時，請遵循 [分支命名](CONTRIBUTING.md#branch-naming)。
+建立分支時，請遵循 [分支命名](CONTRIBUTING.md#分支命名)。
 在撰寫提交、開啟 PR 或發表審查意見之前，請先閱讀
-[由代理撰寫的 Git 與審查活動](CONTRIBUTING.md#agent-authored-git-and-review-activity)。
+[由代理撰寫的 Git 與審查活動](CONTRIBUTING.md#由代理撰寫的-git-與審查活動)。
 由代理撰寫的提交，以及 AI 產生的 PR 與留言，各自都需要
 揭露；僅在 PR 內文揭露並不足以涵蓋後續活動。
 

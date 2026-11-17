@@ -56,7 +56,7 @@ my-step/
 - 套件須維持在目前安裝程式的限制內：保留項目上限 512 個（檔案與目錄合計）、目錄深度 32 層、保留內容 50 MiB。提交下載另有每檔 10 MiB 的限制。
 - `.git`、`__pycache__` 與 `.DS_Store` 會在安裝時排除；提交自動化會拒絕這些元件的不分大小寫別名。
 
-完整的安裝、驗證與執行時期行為，請參閱 [Custom step packages](../reference/workflows.md#custom-step-packages)。
+關於套件驗證與執行時期行為，請參閱[自訂步驟套件](../workflow-steps/developing.md#自訂步驟套件)；安裝方式請參閱[步驟安裝參考](../workflow-steps/cli.md#步驟管理)。
 
 ## 提交合約
 

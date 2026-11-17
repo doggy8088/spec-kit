@@ -5,6 +5,8 @@
 
 擴展、視覺化或以 Spec Kit 為基礎的社群專案：
 
+- **[Project Room](https://github.com/OpenProjectRoom/desktop)** — 一款開放原始碼 Mac 應用程式，可在同一儲存庫的本機服務、測試、API、MCP 伺服器與資料旁邊，顯示 Spec Kit 計畫與任務進度。開發者繼續在慣用的編輯器中寫程式，而 Project Room 讓執行中的應用程式可檢視、可操控。
+
 - **[cc-spex](https://github.com/rhuss/cc-spex)** — Claude Code 外掛，在 Spec Kit 之上加入可組合的特性，並提供以 [Superpowers](https://github.com/obra/superpowers) 為基礎的品質關卡、規格／程式碼審查、git worktree 隔離，以及透過代理團隊進行的平行實作。
 
 - **[VS Code Spec Kit Assistant](https://marketplace.visualstudio.com/items?itemName=rfsales.speckit-assistant)** — VS Code 擴充功能，為完整的 SDD 工作流程（constitution → specification → planning → tasks → implementation）提供視覺化協調器，具備階段狀態視覺化、互動式任務檢核清單、DAG 視覺化，並支援 Claude、Gemini、GitHub Copilot 與 OpenAI 後端。需要在 PATH 中提供 `specify` CLI。

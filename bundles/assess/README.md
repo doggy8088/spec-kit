@@ -38,3 +38,8 @@ specify bundle remove assess
 ```
 
 移除套件組會解除安裝其帶來的工作流程與擴充功能，除非它們仍被其他已安裝的套件組相依（FR-022）。您自行獨立安裝的元件不會歸屬於這個套件組，移除後仍會保留。
+
+## 另請參閱
+
+- [套件組總覽](https://github.github.io/spec-kit/bundles/overview.html)
+- [套件組 CLI 參考](https://github.github.io/spec-kit/bundles/cli.html)

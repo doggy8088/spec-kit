@@ -9,7 +9,7 @@ Spec Kit 擴充功能系統 API 與資訊清單結構描述的技術參考。
 3. [命令檔案格式](#命令檔案格式)
 4. [設定結構描述](#設定結構描述)
 5. [Hook 系統](#hook-系統)
-6. [CLI 命令](#cli-命令)
+6. [擴充功能執行時期事件](#擴充功能執行時期事件)
 
 ---
 
@@ -25,12 +25,12 @@ schema_version: "1.0"  # Required
 extension:
   id: string           # Required, pattern: ^[a-z0-9-]+$
   name: string         # Required, human-readable name
-  version: string      # Required, semantic version (X.Y.Z)
-  description: string  # Required, brief description (<200 chars)
-  author: string       # Required
-  repository: string   # Required, valid URL
-  license: string      # Required (e.g., "MIT", "Apache-2.0")
-  homepage: string     # Optional, valid URL
+  version: string      # Required, PEP 440 version; SemVer recommended
+  description: string  # Required, brief description
+  author: string       # Optional
+  repository: string   # Optional, source URL
+  license: string      # Optional (e.g., "MIT", "Apache-2.0")
+  homepage: string     # Optional, homepage URL
 
 requires:
   speckit_version: string  # Required, version specifier (>=X.Y.Z)
@@ -43,7 +43,7 @@ provides:
   commands:              # At least one of commands/templates/scripts/hooks/events required
     - name: string       # Required, pattern: ^speckit\.[a-z0-9-]+\.[a-z0-9-]+$
       file: string       # Required, relative path to command file
-      description: string # Required
+      description: string # Optional
 
   templates:             # Optional, array of declared templates. Always resolve
                           # as "replace" -- 'strategy' is not an authorable field here.
@@ -67,7 +67,7 @@ provides:
 hooks:                   # Optional, event hooks. Each event accepts either form below.
   event_name:            # e.g., "after_specify", "after_plan", "after_tasks", "after_implement"
     command: string      # Command to execute
-    priority: integer    # Optional, >= 1, default 10 (lower runs first)
+    priority: integer    # Optional, >= 1, default 10 (HookExecutor sort metadata)
     optional: boolean    # Default: true
     prompt: string       # Prompt text for optional hooks
     description: string  # Hook description
@@ -78,11 +78,19 @@ hooks:                   # Optional, event hooks. Each event accepts either form
     - command: string
       priority: integer
 
+events:                  # Optional, coding-agent lifecycle events
+  session_start:
+    command: string      # Command template with a runnable scripts entry
+
 tags:                    # Optional, array of tags (2-10 recommended)
   - string
 
 defaults:                # Optional, default configuration values
   key: value             # Any YAML structure
+
+config:                  # Optional, separate from provides.config
+  defaults:              # Merged over top-level defaults
+    key: value
 ```
 
 ### 欄位規格
@@ -98,10 +106,11 @@ defaults:                # Optional, default configuration values
 #### `extension.version`
 
 - **類型**：string
-- **格式**：語意化版本（X.Y.Z）
+- **格式**：PEP 440；發行版本建議使用 `MAJOR.MINOR.PATCH`
 - **說明**：擴充功能版本
 - **範例**：`1.0.0`、`0.9.5`、`2.1.3`
-- **無效**：`v1.0`、`1.0`、`1.0.0-beta`
+- **亦接受**：`v1.0`、`1.0`、`1.0.0-beta`
+- **無效**：`latest`、`not-a-version`
 
 #### `requires.speckit_version`
 
@@ -112,7 +121,10 @@ defaults:                # Optional, default configuration values
   - `>=0.1.0`——0.1.0 或更高版本
   - `>=0.1.0,<2.0.0`——0.1.x 或 1.x 版本
   - `==0.1.0`——恰好 0.1.0
-- **無效**：`0.1.0`、`>= 0.1.0`（空格）、`latest`
+- **亦接受**：`>= 0.1.0`（運算子後有空白）
+- **無效**：`0.1.0`、`latest`
+
+資訊清單載入時，此處必須是非空字串；相容性檢查會將它解析為 `packaging.specifiers.SpecifierSet`，並檢查已安裝的 Spec Kit 版本。
 
 #### `provides.commands[].name`
 
@@ -121,7 +133,9 @@ defaults:                # Optional, default configuration values
 - **說明**：具命名空間的命令名稱
 - **格式**：`speckit.{extension-id}.{command-name}`
 - **範例**：`speckit.jira.specstoissues`、`speckit.linear.sync`
-- **無效**：`jira.specstoissues`、`speckit.command`、`speckit.jira.CreateIssues`
+- **Invalid**: `another-extension.command`, `speckit.jira.CreateIssues`
+
+舊版的雙段名稱 `speckit.command` 與 `<extension-id>.command` 會正規化為 `speckit.<extension-id>.command`，並發出警告。作者應使用正式名稱，而非依賴此相容性行為。安裝時也會檢查主要名稱屬於擴充功能的命名空間，並拒絕與已安裝擴充功能完全相同的命令名稱或別名衝突，以及與核心命令正規化輸出名稱的衝突。
 
 #### `provides.templates[].name` / `provides.scripts[].name`
 
@@ -147,7 +161,16 @@ defaults:                # Optional, default configuration values
 - **值**：單一 hook 對應，或 hook 對應清單（在一個事件上註冊多個命令）
 - **說明**：在生命週期事件執行的 hook
 - **事件**：由核心 spec-kit 命令定義
-- **順序**：在一個事件內，hook 依 `priority` 遞增執行（整數 ≥ 1，預設 10；數字越小越先執行；優先順序相同時透過穩定排序保留撰寫順序）
+- **排序**：目前的命令範本會依設定的 YAML 順序呈現 hook。
+  `HookExecutor.get_hooks_for_event()` 則改為依 `priority` 遞增回傳（整數 ≥ 1，預設為 10），相同時以穩定的撰寫順序排列。執行限制請參閱[掛鉤設定](#hook-設定)。
+
+#### `events`
+
+- **類型**：object
+- **鍵**：正式的程式代理事件名稱
+- **值**：參照可執行命令的事件對應
+- **說明**：與整合無關的宣告，會翻譯為
+  已安裝程式代理的原生事件設定；請參閱[擴充功能執行時期事件](#擴充功能執行時期事件)。
 
 ---
 
@@ -227,15 +250,21 @@ is_installed = registry.is_installed(extension_id: str)  # bool
   "extensions": {
     "jira": {
       "version": "1.0.0",
-      "source": "catalog",
+      "source": {"kind": "catalog", "catalog": "my-org"},
       "manifest_hash": "sha256...",
       "enabled": true,
-      "registered_commands": ["speckit.jira.specstoissues", ...],
-      "installed_at": "2026-01-28T..."
+      "priority": 10,
+      "registered_commands": {
+        "claude": ["speckit.jira.specstoissues"]
+      },
+      "registered_skills": [],
+      "installed_at": "2026-01-28T00:00:00"
     }
   }
 }
 ```
+
+`registered_commands` 將整合鍵對應至已註冊的命令名稱；`registered_skills` 記錄補充的技能名稱。安裝程式將 `"local"` 儲存為原始的本機來源，或如上所示的型錄物件。CLI 正規化的 `--json` 輸出使用另一種[公開來源格式](cli.md#列出已安裝的擴充功能)。
 
 ### ExtensionManager
 
@@ -304,7 +333,7 @@ entry = CatalogEntry(
 
 | 欄位 | 類型 | 說明 |
 |-------|------|-------------|
-| `url` | `str` | 型錄 URL（必須使用 HTTPS，或 localhost 使用 HTTP） |
+| `url` | `str` | 型錄 URL（必須使用 HTTPS，包含 localhost） |
 | `name` | `str` | 方便閱讀的型錄名稱 |
 | `priority` | `int` | 排序順序（數字越小優先順序越高，衝突時勝出） |
 | `install_allowed` | `bool` | 是否可安裝此型錄的擴充功能 |
@@ -501,19 +530,21 @@ Additional notes and tips.
 ### Frontmatter 欄位
 
 ```yaml
-description: string   # Required, brief command description
+description: string   # Recommended, brief command description
 tools: [string]       # Optional, MCP tools required
 ```
 
 ### 特殊變數
 
 - `$ARGUMENTS`——使用者提供參數的佔位符
-- 自動注入的擴充功能上下文：
+- Markdown 命令輸出包含擴充功能上下文註解：
 
   ```markdown
   <!-- Extension: {extension-id} -->
   <!-- Config: .specify/extensions/{extension-id}/ -->
   ```
+
+產生的技能則在 frontmatter 的 `metadata.source` 中帶有來源資訊，且不會自動包含這些 HTML 註解。其他輸出格式使用各自整合專屬的渲染器。
 
 ---
 
@@ -553,14 +584,19 @@ field_mappings:
 
 ### 設定層級
 
-1. **擴充功能預設值**（來自 `extension.yml` 的 `defaults` 區段）
+1. **擴充功能預設值**（頂層 `defaults` 與 `config.defaults` 合併，
+   衝突時以 `config.defaults` 為準）
 2. **專案設定**（`{extension-id}-config.yml`）
-3. **本機覆寫**（`{extension-id}-config.local.yml`，已加入 gitignore）
+3. **本機覆寫**（`local-config.yml`，gitignored）
 4. **環境變數**（`SPECKIT_{EXTENSION}_*`）
+
+`ConfigManager` 在呼叫時執行此合併；擴充功能命令與指令稿必須使用它或自行實作載入。它不會內插 YAML 中的 `${...}` 字串，也不會驗證 `config_schema` 欄位。設定驗證屬於擴充功能命令或指令稿的責任。
 
 ### 環境變數模式
 
 格式：`SPECKIT_{EXTENSION}_{KEY}`
+
+擴充功能 ID 會轉為大寫，連字號改為底線。該前綴之後每個以底線分隔的組成部分會成為巢狀小寫鍵：`SPECKIT_JIRA_PROJECT_KEY` 設定的是 `project.key`，而非 `project_key`。環境變數值維持字串。當已安裝擴充功能 ID 的正規化前綴重疊時，較長的相符擴充功能 ID 擁有該變數。
 
 範例：
 
@@ -626,6 +662,8 @@ hooks:
 - `after_clarify`——規格釐清之後
 - `before_constitution`——憲章更新之前
 - `after_constitution`——憲章更新之後
+- `before_converge`——收斂評估之前
+- `after_converge`——收斂評估之後
 
 #### 內建 `bug` 擴充功能事件（安裝該擴充功能時可用）
 
@@ -640,19 +678,52 @@ Hook 是在同一工作階段中執行的提示詞；它們重用從對話中解
 
 ### Hook 設定
 
-**在 `.specify/extensions.yml` 中**：
+Spec Kit 將專案層級的擴充功能註冊與掛鉤設定儲存在 `.specify/extensions.yml`。`installed` 清單記錄已安裝的擴充功能 ID，`settings` 儲存專案範圍的擴充功能設定，`hooks` 依事件分組已註冊的掛鉤。
 
 ```yaml
+installed:
+  - git
+  - my-extension
+
+settings:
+  auto_execute_hooks: true
+
 hooks:
-  after_tasks:
-    - extension: jira
-      command: speckit.jira.specstoissues
+  before_implement:
+    - extension: git
+      command: speckit.git.commit
       enabled: true
       optional: true
-      prompt: "Create Jira issues from tasks?"
-      description: "..."
+      priority: 10
+      prompt: "Commit outstanding changes before implementation?"
+      description: "Auto-commit before implementation"
       condition: null
+
+  after_implement:
+    - extension: my-extension
+      command: speckit.my-extension.verify
+      enabled: true
+      optional: false
+      priority: 5
+      description: "Run verification after implementation"
 ```
+
+`auto_execute_hooks` 預設為 `true`，但屬於保留設定，在呈現或呼叫掛鉤時不會被參考。
+
+| 欄位 | 說明 |
+| --- | --- |
+| `extension` | 註冊 hook 的擴充功能 ID。 |
+| `command` | 與 hook 關聯的擴充功能命令。 |
+| `enabled` | Hook 是否啟用。`enabled: false` 的 hook 會被略過。 |
+| `optional` | 若為 `true`，掛鉤會連同其 `prompt` 一起呈現，且可以跳過。若為 `false`，則會以帶有 `EXECUTE_COMMAND` 標記的自動掛鉤形式發出。 |
+| `priority` | 整數中繼資料 ≥ 1，預設為 `10`。目前的命令範本使用設定的 YAML 順序，而非依優先順序排序。 |
+| `prompt` | 詢問是否執行選用 hook 時顯示的訊息。 |
+| `description` | 掛鉤的人類可讀說明。 |
+| `condition` | 由 `HookExecutor` 求值的選用運算式：`config.<path>` 或 `env.<VAR>`，搭配 `is set`、`==` 或 `!=`。目前的命令範本不會求值條件，並會跳過條件非空的掛鉤。 |
+
+掛鉤事件名稱用來識別掛鉤被呼叫的時機，一般使用 `before_<command>` 或 `after_<command>`，例如 `before_implement`、`after_implement`、`before_tasks` 與 `after_tasks`。
+
+擴充功能資訊清單會在安裝期間拒絕無效的掛鉤優先順序。對於既有的註冊，`HookExecutor.get_hooks_for_event()` 會使用 `normalize_priority()` 排序：缺少的值、布林值、`int()` 拒絕的值（包含非有限浮點數）以及小於 `1` 的值會退回 `10`。數值字串與有限浮點數會以 `int()` 強制轉型。較小的值會先回傳，相同時以穩定的撰寫順序排列。目前的命令範本會直接讀取掛鉤清單，而非使用該 Python API，因此會依設定的 YAML 順序呈現掛鉤。
 
 ### Hook 訊息格式
 
@@ -677,129 +748,21 @@ EXECUTE_COMMAND: {command}
 
 ---
 
-## CLI 命令
+## 擴充功能執行時期事件
 
-### extension list
+擴充功能可以透過在 `extension.yml` 中宣告最上層的 `events` 對應，來回應程式代理的生命週期事件：
 
-**用法**：`specify extension list [OPTIONS]`
+```yaml
+events:
+  session_start:
+    command: speckit.my-extension.initialize
+  pre_tool_use:
+    command: speckit.my-extension.validate
+```
 
-**選項**：
+事件宣告與整合無關。Spec Kit 會重新整理每一個已安裝且支援事件的整合，各整合會將正式事件名稱翻譯為其程式代理的原生事件設定。支援的正式事件為 `session_start`、`pre_tool_use`、`post_tool_use`、`user_prompt_submit`、`stop` 與 `session_end`；整合可能只支援其中一部分。
 
-- `--available`——顯示型錄中可用的擴充功能
-- `--all`——同時顯示已安裝與可用的擴充功能
-
-**輸出**：已安裝擴充功能清單及後設資料
-
-### extension catalog list
-
-**用法**：`specify extension catalog list`
-
-列出目前型錄堆疊中所有使用中的型錄，顯示名稱、說明、URL、優先順序與 `install_allowed` 狀態。
-
-### extension catalog add
-
-**用法**：`specify extension catalog add URL [OPTIONS]`
-
-**選項**：
-
-- `--name NAME`——型錄名稱（必填）
-- `--priority INT`——優先順序（數字越小優先順序越高，預設：10）
-- `--install-allowed / --no-install-allowed`——是否允許從此型錄安裝（預設：false）
-- `--description TEXT`——型錄的選用說明
-
-**參數**：
-
-- `URL`——型錄 URL（必須使用 HTTPS）
-
-將型錄條目加入 `.specify/extension-catalogs.yml`。
-
-### extension catalog remove
-
-**用法**：`specify extension catalog remove NAME`
-
-**參數**：
-
-- `NAME`——要移除的型錄名稱
-
-從 `.specify/extension-catalogs.yml` 移除型錄條目。
-
-### extension add
-
-**用法**：`specify extension add EXTENSION [OPTIONS]`
-
-**選項**：
-
-- `--from URL`——從自訂 URL 安裝
-- `--dev PATH`——從本機目錄安裝
-
-**參數**：
-
-- `EXTENSION`——擴充功能名稱或 URL
-
-**注意**：`install_allowed: false` 的型錄中的擴充功能無法透過此命令安裝。
-
-### extension remove
-
-**用法**：`specify extension remove EXTENSION [OPTIONS]`
-
-**選項**：
-
-- `--keep-config`——保留設定檔
-- `--force`——跳過確認
-
-**參數**：
-
-- `EXTENSION`——擴充功能 ID
-
-### extension search
-
-**用法**：`specify extension search [QUERY] [OPTIONS]`
-
-同時搜尋所有使用中的型錄。結果包含來源型錄名稱與 install_allowed 狀態。
-
-**選項**：
-
-- `--tag TAG`——依標籤篩選
-- `--author AUTHOR`——依作者篩選
-- `--verified`——僅顯示已驗證的擴充功能
-
-**參數**：
-
-- `QUERY`——選用的搜尋查詢
-
-### extension info
-
-**用法**：`specify extension info EXTENSION`
-
-顯示來源型錄與 install_allowed 狀態。
-
-**參數**：
-
-- `EXTENSION`——擴充功能 ID
-
-### extension update
-
-**用法**：`specify extension update [EXTENSION]`
-
-**參數**：
-
-- `EXTENSION`——選用，擴充功能 ID（預設：全部）
-
-### extension enable
-
-**用法**：`specify extension enable EXTENSION`
-
-**參數**：
-
-- `EXTENSION`——擴充功能 ID
-
-### extension disable
-
-**用法**：`specify extension disable EXTENSION`
-
-**參數**：
-
-- `EXTENSION`——擴充功能 ID
+執行時期事件與擴充功能 hook 不同。事件回應程式代理的生命週期，並直接執行被參照命令範本的 `scripts` 項目。因此，被參照的命令必須提供可執行的指令碼；其 Markdown 指示不會傳送給程式代理。Hook 則是在 Spec Kit 命令（例如 `plan`、`tasks` 與 `implement`）之前或之後呈現擴充功能命令。
 
 ---
 
@@ -875,7 +838,7 @@ satisfied = version_satisfies("1.2.3", ">=1.0.0,<2.0.0")  # bool
 │   ├── {extension-id}/         # Extension directory
 │   │   ├── extension.yml       # Manifest
 │   │   ├── {ext}-config.yml    # User config
-│   │   ├── {ext}-config.local.yml  # Local overrides (gitignored)
+│   │   ├── local-config.yml    # Local overrides (gitignored)
 │   │   ├── {ext}-config.template.yml  # Template
 │   │   ├── commands/           # Command files
 │   │   │   └── *.md
@@ -883,7 +846,7 @@ satisfied = version_satisfies("1.2.3", ">=1.0.0,<2.0.0")  # bool
 │   │   │   └── *.sh
 │   │   ├── docs/               # Documentation
 │   │   └── README.md
-│   └── extensions.yml          # Project extension config
+├── extensions.yml              # Project extension config
 └── scripts/                    # (existing spec-kit)
 
 .claude/
@@ -896,3 +859,11 @@ satisfied = version_satisfies("1.2.3", ">=1.0.0,<2.0.0")  # bool
 *最後更新：2026-01-28*
 *API 版本：1.0*
 *Spec Kit 版本：0.1.0*
+
+## 另請參閱
+
+- [開發擴充功能](developing.md)
+- [擴充功能 CLI 參考](cli.md)
+- [擴充功能型錄](catalogs.md)
+- [擴充功能使用者指南](overview.md)
+- [發佈擴充功能](publishing.md)

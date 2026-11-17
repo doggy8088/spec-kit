@@ -8,7 +8,7 @@
 specify extension add assess
 ```
 
-以下命令使用 `/speckit.assess.*` 記法。GitHub Copilot 的預設 skills 模式使用 `/speckit-assess-*`；其他整合可能使用不同的前綴。請參見[命令呼叫方式](../integrations/cli.md#command-invocation)。
+以下命令使用 `/speckit.assess.*` 記法。GitHub Copilot 的預設 skills 模式使用 `/speckit-assess-*`；其他整合可能使用不同的前綴。請參見[命令呼叫方式](../integrations/cli.md#命令呼叫方式)。
 
 ## 命令與成品
 
@@ -62,7 +62,7 @@ Slug 標識單一想法的目錄。使用者提供的 slug 會正規化為小寫
 
 在通常的流程中，每個階段執行一次。若要解決釐清標記或 `needs-clarification` 判定，請直接編輯受影響的 Markdown，或在自由形式的對話中請代理納入缺少的事實。保留來源與信心標籤，然後檢視相依的成品，並視需要修訂 `decision.md`。這是成品精修，不是重複執行命令。
 
-重新執行較早的命令只保留給例外情況，例如 slug 錯誤或草稿被捨棄。請參見[引導式釐清範例](../guides/assessment.md#resolve-unknowns-by-refining-the-artifacts)。
+重新執行較早的命令只保留給例外情況，例如 slug 錯誤或草稿被捨棄。請參見[引導式釐清範例](../guides/assessment.md#透過精煉產出物來釐清未知事項)。
 
 ## 交接與防護措施
 

@@ -6,7 +6,7 @@
 
 ## 支援的 AI 程式代理
 
-[整合目錄](index.md#choose-an-integration)列出了受支援的代理及其確切鍵值，每個整合都有一份專屬指南。執行 `specify integration list` 可查看本機可用性。
+[整合目錄](index.md#選擇整合)列出了受支援的代理及其確切鍵值，每個整合都有一份專屬指南。執行 `specify integration list` 可查看本機可用性。
 
 ## 命令呼叫方式
 
@@ -93,7 +93,7 @@ specify integration install sample-agent --trust-integration
 specify integration upgrade sample-agent --trust-integration
 ```
 
-來源必須具有 `install_allowed: true`。預設的社群型錄僅供探索；`--force` 與信任旗標都無法繞過該政策。型錄的列表／搜尋／資訊不會匯入型錄程式碼。必要的中繼資料與受支援的封存檔 URL 請參閱[型錄綱要](catalog.md#catalog-schema)。搜尋會為允許安裝的來源公布 `specify integration install <id>`；僅供探索的結果不會公布安裝方式。
+來源必須具有 `install_allowed: true`。預設的社群型錄僅供探索；`--force` 與信任旗標都無法繞過該政策。型錄的列表／搜尋／資訊不會匯入型錄程式碼。必要的中繼資料與受支援的封存檔 URL 請參閱[型錄綱要](catalog.md#型錄綱要)。搜尋會為允許安裝的來源公布 `specify integration install <id>`；僅供探索的結果不會公布安裝方式。
 
 `specify check` 會探查外部轉接器所要求的描述檔工具，而不是其型錄 ID。若未宣告任何必要工具，CLI 轉接器會以其執行階段執行檔進行檢查；選用工具不會產生缺少工具的錯誤。這些檢查不會執行該執行檔，也不會呼叫一般的版本探查。
 
@@ -113,7 +113,7 @@ specify integration upgrade sample-agent --force --trust-integration
 specify init my-project --integration sample-agent --trust-integration
 ```
 
-發佈套件之前，請先檢視[外部轉接器 API](https://github.com/github/spec-kit/blob/main/design/integration.md#external-adapter-package-contract)。使用主機 API 與標準函式庫的轉接器，不需要 pip 安裝，也不需要編輯原始碼登錄。
+發布套件前，請先參閱[外部轉接器 API](api.md)。使用主機 API 與標準程式庫的轉接器，不需要 pip 安裝或來源登錄編輯。
 
 若你的 CLI 拒絕多重安裝，請檢查 `specify version` 並遵循[升級指南](../upgrade.md)。一次性的 `uvx` 呼叫不會更新你 `PATH` 上持續存在的 `specify` 執行檔。
 
@@ -133,7 +133,7 @@ specify integration uninstall [<key>]
 - **已修改的檔案**（你曾手動編輯的檔案）會被保留，讓你的自訂內容不會遺失。
 - 使用 `--force` 也可移除已修改的追蹤檔案。
 
-以上是由清單追蹤的產生檔案的規則。整合專屬的清理方式可能不同：[Hermes 全域技能](hermes.md#global-ownership-and-removal)與 [Kimi 舊版技能](kimi.md#legacy-cleanup-on-uninstall)可以在沒有已修改檔案保護的情況下被移除。解除安裝或切離之前，請先查看代理指南。
+以上是由清單追蹤的產生檔案的規則。整合專屬的清理方式可能不同：[Hermes 全域技能](hermes.md#全域所有權與移除)與 [Kimi 舊版技能](kimi.md#解除安裝時的舊版清理)可以在沒有已修改檔案保護的情況下被移除。解除安裝或切離之前，請先查看代理指南。
 
 解除安裝也會移除該整合已註冊的擴充功能與預設集成品；擴充功能與預設集本身仍保持安裝。移除預設整合會選取一個其餘的整合，並為它註冊已啟用的貢獻。移除最後一個整合不會自動安裝 `none`。
 
@@ -146,15 +146,17 @@ specify integration switch <key>
 | 選項 | 說明 |
 | ------------------------ | ------------------------------------------------------------------------ |
 | `--script sh\|ps\|py`    | 指令稿類型：`sh`（bash/zsh）、`ps`（PowerShell）或 `py`（Python） |
-| `--force`                | 在解除安裝期間強制移除已修改的檔案；當目標已安裝時，在變更預設值的同時覆寫受管理的共用範本 |
-| `--refresh-shared-infra` | 即使你已自訂，也一併覆寫共用基礎設施檔案（否則自訂內容會被保留） |
+| `--force` | 在解除安裝期間強制移除已修改的檔案；目標已安裝時，覆寫自訂的共用基礎設施 |
+| `--refresh-shared-infra` | 覆寫自訂的共用指令碼、頁面範本與 `.specify/.gitignore`，包括已安裝的目標與目前的預設值 |
 | `--integration-options`  | 當目標尚未安裝時，提供給目標整合的選項 |
 | `--trust-integration` | 授權下載並執行經過審查的外部轉接器，跳過互動式信任提示 |
 
 - **目標未安裝：** 移除目前的預設整合，安裝目標，並將它設為預設。其他已安裝的整合會保留。
 - **目標已安裝：** 在不移除任何整合的情況下變更預設值，如同 `use`。若要變更它的設定選項，請先執行 `upgrade <key> --integration-options ...`，再執行 `use <key>`；`switch` 會拒絕已安裝目標的設定選項。
 
-兩條路徑都會為新的預設整合註冊已啟用的擴充功能與預設集。`--force` 的不同含義請參閱選項表。
+兩條路徑都會為新的預設值註冊已啟用的擴充功能與預設集。若目標已是目前的預設值，不帶旗標的呼叫不會有任何作用；`--refresh-shared-infra` 或 `--force` 只會重新整理共用基礎設施，不會重新安裝整合或重新註冊擴充功能與預設集。
+
+對於未安裝的目標，`--force` 控制移除離任整合的編輯過檔案；只有 `--refresh-shared-infra` 允許覆寫共用自訂內容。對於已安裝的目標，任一旗標都允許該共用覆寫。符號連結的共用路徑在任一旗標下仍受保護。
 
 切換到必須下載並安裝的外部轉接器時，只有在審查其程式碼後才使用 `--trust-integration`：
 
@@ -162,7 +164,7 @@ specify integration switch <key>
 specify integration switch sample-agent --trust-integration
 ```
 
-切換到已安裝的轉接器仍會驗證其既有的信任。此旗標不會繞過該驗證，也不會繞過型錄的僅供探索政策。信任要求請參閱[透過型錄安裝的外部轉接器](#catalog-installed-external-adapters)。
+切換到已安裝的轉接器仍會驗證其既有的信任。此旗標不會繞過該驗證，也不會繞過型錄的僅供探索政策。信任要求請參閱[透過型錄安裝的外部轉接器](#透過型錄安裝的外部轉接器)。
 
 ## 使用已安裝的整合
 
@@ -201,7 +203,7 @@ specify integration upgrade [<key>]
 
 對於外部轉接器，強制升級或解除安裝可以使用使用者本機的所有權紀錄，復原受損或無法載入的套件。若沒有該證明，僅屬於舊版的產生檔案會被保留，並附上手動清理警告。復原程序會保留共用的事件分派器與部分擁有的設定；在 `upgrade --force` 下，受信任的替代品仍可覆寫它宣告的目的地。復原不會繞過型錄政策或替代套件的信任。
 
-失敗的操作會復原它們自己的變更，而不是無關的使用者檔案或工作流程進度。衝突的並行編輯會被回報，並保留復原快照。轉接器作者應遵循[儲存、載入與生命週期合約](https://github.com/github/spec-kit/blob/main/design/integration.md#storage-loading-and-lifecycle)中的所有權、記錄與復原要求。
+失敗的操作會復原自身的變更，不會動到無關的使用者檔案或工作流程進度。衝突的並行編輯會連同保留的復原快照一併回報。轉接器作者應遵循[設定與檔案擁有權契約](api.md#設定與檔案擁有權)與[生命週期保證](api.md#外部轉接器生命週期保證)，以安全寫入並復原。
 
 ## 回報整合狀態
 
@@ -236,7 +238,7 @@ specify integration catalog add <url>
 | --------------- | ----------------------------- |
 | `--name <name>` | 型錄的選用名稱 |
 
-將自訂型錄 URL 加入專案的 `.specify/integration-catalogs.yml`。URL 必須使用 HTTPS（供本機測試的 `http://localhost`、`http://127.0.0.1` 或 `http://[::1]` 除外）。
+將自訂型錄 URL 加入專案的 `.specify/integration-catalogs.yml`。URL 必須使用 HTTPS，包括本機測試。純 HTTP 會在連網前被拒絕，包括 localhost 與 loopback 位址。
 
 以相同名稱重新加入相同的 URL 會成功，且不會變更設定；不同的名稱則會被拒絕。
 
@@ -287,10 +289,11 @@ specify integration catalog remove <index>
 
 | 整合 | 指南 |
 | --- | --- |
-| Generic | [輸出目錄與技能模式](generic.md#output-options-and-invocation) |
-| GitHub Copilot | [技能與命令版式](copilot.md#commands-layout) |
-| IBM Bob | [舊版命令與遷移](bob.md#legacy-commands-and-migration) |
-| Kimi Code | [舊版遷移](kimi.md#legacy-migration) |
+| Generic | [輸出目錄與技能模式](generic.md#輸出選項與呼叫方式) |
+| GitHub Copilot | [技能與命令版式](copilot.md#命令版式) |
+| IBM Bob | [舊版命令與遷移](bob.md#舊版命令與遷移) |
+| Kimi Code | [舊版遷移](kimi.md#舊版遷移) |
+| opencode | [隱藏的 Spec Kit 檔案](opencode.md#隱藏的-spec-kit-檔案) |
 
 其他代理專屬的細節列於[整合型錄](index.md)中。
 
@@ -330,7 +333,9 @@ specify integration upgrade <key> --integration-options="--events false"
 
 支援 CLI 的轉接器支援以 `SPECKIT_INTEGRATION_<KEY>_EXECUTABLE` 選取執行檔，並以 `SPECKIT_INTEGRATION_<KEY>_EXTRA_ARGS` 提供額外的 CLI 參數，其中 `<KEY>` 為大寫，連字號換成底線。額外參數使用 POSIX shell 引號規則解析。參數的放置位置與重複旗標行為因轉接器而異；請參閱代理指南，特別是 Docker Agent 與 Goose。
 
-設定用的 `--integration-options` 與工作流程的 [`integration_args` 與 `integration_options`](../reference/workflows.md#per-step-integration-configuration)不同。轉接器會拒絕非空的逐步設定，除非它有實作該功能；Docker Agent 目前公開了結構化的代理／安全設定。無頭核准旗標、模型轉傳與結構化輸出支援同樣因轉接器而異，不是普遍保證。
+設定用的 `--integration-options` 與工作流程的 [`integration_args` 與 `integration_options`](../workflow-steps/types.md#每個步驟的整合設定) 是分開的。轉接器會拒絕非空的逐步驟設定，除非它有實作；Docker Agent 目前提供結構化的代理／安全設定。無頭核准旗標、模型轉傳與結構化輸出支援同樣是轉接器專屬的，不是通用保證。
+
+`command` 與 `prompt` 步驟的 [`reasoning_effort` 與 `context_size`](../workflow-steps/types.md#推理強度與上下文大小) 設定則遵循同一份共用契約。Spec Kit 會檢查每個值，只將其傳給宣告並轉譯該設定的整合；搭配其他整合時，步驟會在 CLI 執行前失敗。GitHub Copilot 與 Codex CLI 會轉譯兩項設定，Claude Code 會轉譯 `reasoning_effort`；各代理指南說明了各自的對映。轉接器作者可依[整合 API 參考](api.md#逐步驟分派設定)中的說明選擇加入。
 
 ## 常見問題
 
@@ -350,11 +355,11 @@ Spec Kit 在 `.specify/integration.json` 中追蹤一個預設整合（`default_
 
 ### 當我解除安裝或切換時，我的變更會如何？
 
-你修改過的、由清單追蹤的檔案會自動被保留。只有未修改的追蹤檔案（與其原始 SHA-256 雜湊相符）會被移除。使用 `--force` 可覆寫此行為。整合專屬的清理例外請參閱[解除安裝](#uninstall-an-integration)。
+你修改過的、由清單追蹤的檔案會自動被保留。只有未修改的追蹤檔案（與其原始 SHA-256 雜湊相符）會被移除。使用 `--force` 可覆寫此行為。整合專屬的清理例外請參閱[解除安裝](#解除安裝整合)。
 
 ### 我要如何知道該使用哪個鍵？
 
-執行 `specify integration list` 可查看所有可用的整合及其鍵值，或查看[整合型錄](index.md#choose-an-integration)。
+執行 `specify integration list` 可查看所有可用的整合及其鍵值，或查看[整合型錄](index.md#選擇整合)。
 
 ### 使用整合是否需要安裝 AI 程式代理？
 

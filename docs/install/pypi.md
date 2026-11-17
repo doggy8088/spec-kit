@@ -1,6 +1,6 @@
 # 從 PyPI 安裝
 
-Spec Kit 以 [`specify-cli`](https://pypi.org/project/specify-cli/) 的名稱發佈到 PyPI，由 Spec Kit 維護者維護。從 PyPI 安裝是受支援的安裝途徑之一，另一條是從 [GitHub 原始碼](../installation.md#install-from-source--persistent-installation-recommended)安裝。請依你的工作流程擇一使用，兩者提供的 `specify` CLI 相同。
+Spec Kit 以 [`specify-cli`](https://pypi.org/project/specify-cli/) 的名稱發佈到 PyPI，由 Spec Kit 維護者維護。從 PyPI 安裝是受支援的安裝途徑之一，另一條是從 [GitHub 原始碼](../installation.md#從原始碼安裝持久安裝建議)安裝。請依你的工作流程擇一使用，兩者提供的 `specify` CLI 相同。
 
 > [!NOTE]
 > PyPI 的發行版本與 GitHub 的發行標籤對應（例如 PyPI 的 `0.12.11` 對應 `v0.12.11` 標籤）。`specify version` 只是本機的版本與執行環境健全檢查，它會回報已安裝的版本，但不會顯示 `specify` 執行檔的來源，因此無法區分安裝是來自 PyPI 還是 Git。若要確認安裝來源，請查看套件管理工具記錄的來源中繼資料：`pipx list --json` 會回報每個工具的確切安裝規格；若是 uv/pip 安裝，則可檢查套件 `*.dist-info` 目錄內的 [PEP 610](https://peps.python.org/pep-0610/) `direct_url.json`（Git 或 URL 安裝會在該檔案中記錄儲存庫或封存檔 URL，一般的 PyPI 索引安裝則不會產生該檔案）。請注意，`pip show specify-cli` 只會印出套件中繼資料，且無法從主機解譯器看到 uv/pipx 管理的環境。
@@ -20,7 +20,7 @@ pipx install specify-cli
 pip install specify-cli
 ```
 
-若你以 uv 安裝 Spec Kit，重複執行 `uv tool install specify-cli` 會保留已安裝的版本，不會升級。請將 `specify version` 顯示的版本與 [PyPI 上的最新版本](https://pypi.org/project/specify-cli/)比較。若版本較舊，請先依下方的[升級](#upgrade)說明，使用原本安裝時的同一個工具（uv、pipx 或 pip）完成升級，再執行 `specify init`。不要為了升級而更換安裝工具：那樣可能會產生第二份安裝，而舊的 `specify` 仍排在 `PATH` 的最前面。
+若你以 uv 安裝 Spec Kit，重複執行 `uv tool install specify-cli` 會保留已安裝的版本，不會升級。請將 `specify version` 顯示的版本與 [PyPI 上的最新版本](https://pypi.org/project/specify-cli/)比較。若版本較舊，請先依下方的[升級](#升級)說明，使用原本安裝時的同一個工具（uv、pipx 或 pip）完成升級，再執行 `specify init`。不要為了升級而更換安裝工具：那樣可能會產生第二份安裝，而舊的 `specify` 仍排在 `PATH` 的最前面。
 
 ### 安裝特定發行版本
 

@@ -2,6 +2,156 @@
 
 <!-- 在此註解下方插入新的變更記錄 -->
 
+## [1.4.1] - 2026-11-16
+
+### 變更
+
+- 將 Elephant-Goldfish Model 擴充功能加入社群型錄 (#5444)
+- 將 Spec Kit lifecycle for Jira 擴充功能加入社群型錄 (#5438)
+- [preset] 將 OKR Bet Spec Section 預設集加入社群型錄 (#5439)
+- 將 Multi-Repo Workspace Orchestration 擴充功能加入社群型錄 (#5436)
+- fix(powershell)：在 git 擴充功能中將含括號的專案路徑視為字面路徑 (#5404)
+- fix(powershell)：在 create-new-feature 中將含括號的專案路徑視為字面路徑 (#5399)
+- fix(powershell)：將專案與預設集範本路徑視為字面路徑 (#5396)
+- docs(extensions)：列出 converge 掛鉤事件 (#5328)
+- [extension] 將 OKR Bets 擴充功能加入社群型錄 (#5412)
+- 將 T-Shirt Sizing Gate 擴充功能更新至 v0.2.0 (#5407)
+- 將 Intake Sequencing Governance 預設集更新至 v0.2.13 (#5406)
+- fix(workflows)：公開套件組內建的審查判定輸入 (#5392)
+- 將 Intake Review Governance 預設集更新至 v0.2.8 (#5388)
+- fix(integrations)：為已安裝的目標遵循共用重新整理 (#5377)
+- 將 ado-lifecycle 更新至 0.3.2 (#5345)
+- 在 FileHelper 中使用以控制代碼為基礎的刪除 (#5352)
+- [extension] 將 A·I·DID·IT — Agile Expansion Pack 擴充功能加入社群型錄 (#5375)
+- 將 DocGuard — CDD Enforcement 更新至 v0.47.0 (#5374)
+- 將 Intake Authoring Governance 預設集更新至 v0.3.12 (#5372)
+- chore：發行 1.4.0，開始 1.4.1.dev0 開發 (#5371)
+
+## [1.4.0] - 2026-11-10
+
+### 變更
+
+- 在 FileHelper 中使用以控制代碼為基礎的讀取 (#5351)
+- chore：將自動 Python 3.11 測試限制在 Linux 上執行 (#5367)
+- 強化 HTTP 輔助函式中的初始 URL 驗證 (#5350)
+- 將 SpecKit Companion 擴充功能更新至 v0.26.0 (#5365)
+- 在 FileHelper 中使用以控制代碼為基礎的文字覆寫 (#5353)
+- 一律要求型錄來源使用 HTTPS (#5355)
+- feat(workflows)：工作流程函式——專案安裝的自訂管道篩選器 (#5303)
+- feat(integrations)：為 Copilot、Codex 與 Claude Code 對應推理強度與上下文大小 (#5249)
+- [bundle] 將 Spec Kit for Azure DevOps 套件組更新至 v0.3.2 (#5346)
+- [extension] 將 T-Shirt Sizing Gate 擴充功能加入社群型錄 (#5332)
+- fix(scripts)：在 create-new-feature.sh 中將貌似選項的功能描述視為文字 (#5245)
+- fix(self-upgrade)：不再將 .dev0/.post0 組建的基底標籤作為可回復版本提供 (#5358)
+- fix：在安裝／重新整理套件組時保留登錄檔中既有的優先順序 (#5331)
+- test(workflows)：對擷取到的 shell 標準輸出以尾端換行釘選數值相等性 (#5357)
+- fix(extensions)：顯示缺少名稱、版本或說明的型錄條目 (#5308)
+- 在 FileHelper 中使用以控制代碼為基礎的獨佔建立 (#5354)
+- 在執行發行步驟前驗證發行標籤 (#5356)
+- feat(omp)：在 build_exec_args 中支援整合參數與選項 (#4876)
+- 將 Spec Kit for Azure DevOps — human-gated lifecycle 擴充功能加入社群型錄 (#5348)
+- chore：發行 1.3.3，開始 1.3.4.dev0 開發 (#5349)
+
+## [1.3.3] - 2026-11-09
+
+### 變更
+
+- test：讓指令稿說明斷言不受換行影響 (#5347)
+- 將 Spec Kit for Azure DevOps 套件組加入社群型錄 (#5335)
+- fix(workflows)：拒絕 shell 輸出中的非標準 JSON (#5330)
+- fix(presets)：移除預設集技能時保留使用者檔案 (#5233)
+- 將 ado-lifecycle 加入社群工作流程型錄 (#5312)
+- fix(presets)：將缺少的預設集 ID 呈現為字面文字 (#5314)
+- fix(presets)：在移除後回報型錄備援順序 (#5313)
+- fix(workflows)：讓 == 與 != 像排序運算子一樣強制轉型數值字串 (#5310)
+- 將 Model Routing Governance 預設集更新至 v0.2.8 (#5341)
+- ci：整併 lint 與相依性稽核工作 (#5301)
+- feat(workflows)：新增每個步驟的推理強度與上下文大小設定 (#5248)
+- [extension] 將 Quality Gates (Enforcement Layer) 擴充功能更新至 v0.6.1 (#5264)
+- ci：將預設 Python 矩陣聚焦於最低與仍維護的版本 (#5302)
+- [extension] 將 Sanduq Progress Report 擴充功能加入社群型錄 (#5300)
+- docs：記錄共用的整合與工作流程步驟 API (#5296)
+- docs：新增僅憲章的持久化與獨立的演進指引 (#5299)
+- fix：功能描述改用 printf 而非 echo，避免 -n/-e/-E 被解讀為選項 (#5247)
+- 將 User Manual 擴充功能加入社群型錄 (#5295)
+- docs：將 Project Room 加入社群好友 (#5298)
+- chore：發行 1.3.2，開始 1.3.3.dev0 開發 (#5297)
+
+## [1.3.2] - 2026-11-06
+
+### 變更
+
+- [extension] 將 Assure 擴充功能加入社群型錄 (#5293)
+- 將 Sanduq Workflow 更新至 v2.3.2 (#5292)
+- docs：釐清 uvx 環境快取 (#5291)
+- ci：精簡例行的 Python 測試矩陣 (#5290)
+- docs：讓既有專案範例與 Copilot 技能一致 (#5288)
+- docs：將安裝先決條件連結至整合目錄 (#5287)
+- chore(deps)：將 astral-sh/setup-uv 從 10.0.1 升級至 10.3.3 (#5280)
+- community：將 Model Routing Governance 更新至 v0.2.6 (#5279)
+- chore(deps)：將 actions/setup-dotnet 從 6.0.0 升級至 6.1.0 (#5281)
+- docs：修正離線 Windows PowerShell 先決條件 (#5277)
+- ci：將 Python 3.15 加入測試與稽核矩陣 (#5278)
+- docs：將本地開發標準化為使用 checkout 虛擬環境 (#5276)
+- fix(integrations)：在解除安裝時重新整理備援的資訊清單雜湊 (#5274)
+- 將 deja-vu session recall 擴充功能加入社群型錄 (#5255)
+- docs：讓安裝驗證與 Copilot 技能一致 (#5275)
+- 將 Illustrate 擴充功能加入社群型錄 (#5273)
+- 將 Pull Request Workflow 擴充功能加入社群型錄 (#5268)
+- 將 Sanduq Workflow 擴充功能加入社群型錄 (#5266)
+- 將 GitHub Project Lifecycle Sync 擴充功能加入社群型錄 (#5265)
+- chore：發行 1.3.1，開始 1.3.2.dev0 開發 (#5271)
+
+## [1.3.1] - 2026-11-05
+
+### 變更
+
+- 將 Quality Gates (Enforcement Layer) 擴充功能更新至 v0.6.0 (#5253)
+- fix(catalogs)：為無配置的型錄 URL 具名，而非回報「got ://」(#5251)
+- fix(extensions)：避免 git 警告導致 initialize-repo.ps1 在 Windows PowerShell 5.1 上失敗 (#5252)
+- fix(workflows)：拒絕 from_json 中的非 JSON 常數 (#5250)
+- docs：為工作流程步驟設立專屬分類 (#5243)
+- docs：更新首頁資料與社群範例 (#5242)
+- 將 DocGuard — CDD Enforcement 更新至 v0.46.0 (#5238)
+- 將 Agent Parity Governance 預設集更新至 v0.4.5 (#5236)
+- docs：整併總覽導覽與來源頁面 (#5234)
+- fix(agent-context)：跳過非檔案的計畫候選項目 (#5222)
+- docs：新增 2026 年 10 月電子報 (#5235)
+- docs：將使用指南整理到 How to 底下 (#5230)
+- docs：將專案歷史延伸至 2026 年 11 月初 (#5231)
+- docs：簡化整合導覽下拉式選單 (#5229)
+- 將 Quality Gates (Enforcement Layer) 擴充功能更新至 v0.5.1 (#5228)
+- docs：整併套件組文件並移除無法使用的範例 (#5226)
+- 將 Cross-Platform Governance 預設集更新至 v0.2.5 (#5218)
+- docs：整併並修正工作流程文件 (#5225)
+- fix(cli)：在 Windows 上不要自行升級 uv 工具安裝 (#5149)
+- chore：發行 1.3.0，開始 1.3.1.dev0 開發 (#5224)
+
+## [1.3.0] - 2026-11-03
+
+### 變更
+
+- docs：整併並修正預設集文件 (#5223)
+- [bug-fix] 修正 oversized-number-crash：限制 Python --number 解析 (#5200)
+- docs：整併並修正擴充功能文件 (#5221)
+- fix：偵測已搬移的 uv 與 pipx 工具安裝 (#5103)
+- chore(ci)：測試 Python 3.11 與 3.12 (#5220)
+- fix：已註冊的命令掛鉤只呼叫一次 (#5219)
+- [Copilot Dreams] 避免拒絕受支援的擴充功能提交 (#5216)
+- fix(cline)：在命令主體中保留 speckit.* 檔案名稱的 .md 副檔名 (#5168)
+- feat(integrations)：新增附 source_id 的 process_registered_command 掛鉤 (#5215)
+- [preset] 將 A11Y Governance 預設集更新至 v0.4.6 (#5212)
+- feat!：從核心移除 taskstoissues (#5053)
+- 將 Guildwork: request, verdict, register 擴充功能加入社群型錄 (#5214)
+- fix(extensions)：讓 git 擴充功能的 fetch 不再等待憑證提示 (#5201)
+- fix(workflows)：在 Python 的 UTF-8 模式下解碼代碼頁 shell 輸出 (#5209)
+- feat(workflows)：以 Lark LALR 文法解析工作流程運算式 (#5171)
+- feat(copilot)：新增 --no-model-invocation 整合選項 (#5118)
+- fix：保留套件組型錄設定中的 Windows 磁碟機路徑 (#5205)
+- fix(extensions)：在更新時跳過沒有版本的型錄條目 (#5108)
+- feat(integrations)：新增在共用寫入前執行的 preflight_setup() 掛鉤 (#5198)
+- chore：發行 1.2.6，開始 1.2.7.dev0 開發 (#5211)
+
 ## [1.2.6] - 2026-11-02
 
 ### 變更

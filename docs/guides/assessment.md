@@ -6,13 +6,14 @@
 
 ## 安裝設定
 
-[安裝 Spec Kit 並初始化專案](../installation.md)。一個空專案就足夠；或者當構想與某個儲存庫的程式碼相關時，也可以使用[既有儲存庫](existing-projects.md)。在已初始化專案根目錄的終端機中，安裝擴充功能：
+[安裝 Spec Kit 並初始化專案](../installation.md)。空專案就已足夠；若構想與既有程式碼相關，也可以使用[既有儲存庫](../how-to/existing-projects.md)。
+在已初始化專案根目錄的終端機中，安裝擴充功能：
 
 ```bash
 specify extension add assess
 ```
 
-接著在該目錄中啟動你的程式代理。以下範例使用 GitHub Copilot 的預設 skills 模式（`--integration copilot`）。其他代理會使用各自的[命令呼叫語法](../integrations/cli.md#command-invocation)。請在代理的聊天中分別呼叫每個 `/speckit-assess-*` skill，在往下走之前先檢視產出物。這些是代理 skill，不是終端機命令；上面的終端機命令只是安裝擴充功能。
+接著在該目錄中啟動你的程式代理。以下範例使用 GitHub Copilot 的預設 skills 模式（`--integration copilot`）。其他代理會使用各自的[命令呼叫語法](../integrations/cli.md#命令呼叫方式)。請在代理的聊天中分別呼叫每個 `/speckit-assess-*` skill，在往下走之前先檢視產出物。這些是代理 skill，不是終端機命令；上面的終端機命令只是安裝擴充功能。
 
 ## 1. 記錄構想
 

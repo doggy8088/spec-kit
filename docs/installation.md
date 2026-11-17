@@ -3,7 +3,7 @@
 ## 前置條件
 
 - **Linux／macOS**（或 Windows；PowerShell script 現在不需 WSL 即可支援）
-- AI 程式代理：[Claude Code](https://www.anthropic.com/claude-code)、[GitHub Copilot](https://code.visualstudio.com/)、[CodeBuddy CLI](https://www.codebuddy.cn/docs/cli/installation)、[Gemini CLI](https://github.com/google-gemini/gemini-cli)、[Pi Coding Agent](https://pi.dev)，或 [Oh My Pi](https://www.npmjs.com/package/@oh-my-pi/pi-coding-agent)
+- 一個[受支援的 AI 程式代理](integrations/index.md#選擇整合)。安裝需求請參閱你的整合頁面，或使用 [`none`](integrations/none.md) 建立與代理無關的鷹架。
 - [uv](https://docs.astral.sh/uv/) 用於套件管理（建議），或 [pipx](https://pipx.pypa.io/) 用於持久安裝
 - [Python 3.11+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads) *（選用——只有在啟用 git 擴充功能時才需要）*
@@ -52,7 +52,7 @@ pip install specify-cli
 
 若 `specify-cli` 已經安裝，即使有較新的 release，這些命令仍會保留已安裝的版本。把 `specify version` 顯示的版本與 [PyPI 上的最新版本](https://pypi.org/project/specify-cli/) 比較。若要取代較舊的安裝，請使用與原始安裝相同的工具：`uv tool install --force specify-cli`、`pipx install --force specify-cli` 或 `pip install --upgrade specify-cli`。不同的工具可能安裝第二份副本，而讓舊的 `specify` 仍排在 `PATH` 的前面。舊的 CLI 無法從目前的 release 設定專案：例如在 0.1.6，`specify init --integration ...` 會以 `No such option: --integration` 失敗，而 `specify init --ai ...` 會以 `No matching release asset found` 失敗。
 
-若要安裝特定 release，請釘住版本——例如 `uv tool install specify-cli==0.12.11`。詳情請見 [PyPI 安裝指南](install/pypi.md)，包括如何升級，以及如何[從自訂或私有套件索引安裝](install/pypi.md#install-from-a-custom-or-private-package-index)。
+若要安裝特定 release，請釘住版本——例如 `uv tool install specify-cli==0.12.11`。詳情請見 [PyPI 安裝指南](install/pypi.md)，包括如何升級，以及如何[從自訂或私有套件索引安裝](install/pypi.md#從自訂或私有套件索引安裝)。
 
 ### 一次性使用
 
@@ -79,7 +79,7 @@ specify init <project_name> --integration pi
 specify init <project_name> --integration omp
 ```
 
-README 範例使用 GitHub Copilot 的預設 skills 模式。若要使用其他受支援的代理，把 `copilot` 換成它的[整合鍵](integrations/index.md)。每個代理與模式所使用的語法，請見[命令呼叫](integrations/cli.md#command-invocation)。
+README 範例使用 GitHub Copilot 的預設 skills 模式。若要使用其他受支援的代理，把 `copilot` 換成它的[整合鍵](integrations/index.md)。每個代理與模式所使用的語法，請見[命令呼叫](integrations/cli.md#命令呼叫方式)。
 
 ### 指定 Script 類型（Shell、PowerShell 或 Python）
 
@@ -109,7 +109,7 @@ specify init my-project --non-interactive --ignore-agent-tools
 
 `--ignore-agent-tools` 會在代理將在其他地方執行時，略過代理可執行檔檢查；若你想要那項檢查，就省略它。非互動式初始化預設為 Copilot，除非你明確選擇其他整合。
 
-對於非空目錄，`--force` 表示確認合併警告。在初始化之前，請檢視[既有專案指南](guides/existing-projects.md)，並提交或備份本地變更：
+對於非空目錄，`--force` 表示確認合併警告。初始化之前，請檢閱[既有專案指南](how-to/existing-projects.md)，並提交或備份本機變更：
 
 ```bash
 specify init --here --force --non-interactive --integration claude
@@ -135,17 +135,17 @@ specify version
 
 **保持最新**：定期執行 `specify self check`，了解是否有較新的 release 可用——它是唯讀的，永遠不會修改你的安裝。當你準備好升級時，請依[升級指南](./upgrade.md)。
 
-初始化之後，你應該會在程式代理中看到下列命令可用：
+使用 GitHub Copilot 的預設 skills 模式初始化後，應該會有以下 skills 可用。請在代理的對話中呼叫它們，不要在終端機中執行：
 
-- `/speckit.specify` - 建立規格
-- `/speckit.plan` - 產生成實作計畫
-- `/speckit.tasks` - 拆解為可執行的任務
-- `/speckit.implement` - 執行實作任務
-- `/speckit.analyze` - 驗證跨產出物的一致性
-- `/speckit.clarify` - 找出並釐清模糊之處
-- `/speckit.checklist` - 產生品質檢核清單
-- `/speckit.constitution` - 建立或更新專案原則
-- `/speckit.converge` - 對照產出物評估程式碼庫，並追加剩餘任務
+- `/speckit-specify` - 建立規格
+- `/speckit-plan` - 產生實作計畫
+- `/speckit-tasks` - 拆解為可執行的任務
+- `/speckit-implement` - 執行實作任務
+- `/speckit-analyze` - 驗證跨產出物的一致性
+- `/speckit-clarify` - 識別並釐清模糊之處
+- `/speckit-checklist` - 產生品質檢核清單
+- `/speckit-constitution` - 建立或更新專案原則
+- `/speckit-converge` - 對照產出物評估程式碼庫，並補上剩餘任務
 
 Script 會安裝到與所選 script 類型相符的變體子目錄中：
 
@@ -165,4 +165,6 @@ Script 會安裝到與所選 script 類型相符的變體子目錄中：
 
 ### Linux 上的 Git Credential Manager
 
-若你在 Linux 上遇到 Git 驗證問題，請見[氣隙安裝指南](install/air-gapped.md#git-credential-manager-on-linux)了解 Git Credential Manager 的設定說明。
+若你在 Linux 上遇到 Git 驗證問題，請見[氣隙安裝指南](install/air-gapped.md#linux-上的-git-credential-manager)了解 Git Credential Manager 的設定說明。
+
+> 本頁的代理呼叫範例使用 GitHub Copilot 的預設 skills 語法（`/speckit-*`）。其他整合與模式，請參閱[命令呼叫](integrations/cli.md#命令呼叫方式)。

@@ -4,7 +4,7 @@
 
 ## 多重安裝安全性
 
-本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
+本整合未宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#我可以在同一個專案中安裝多個整合嗎)。
 
 ## 設定
 
@@ -43,7 +43,7 @@ specify init my-project --integration copilot --integration-options="--commands"
 
 這會在 `.github/agents/` 之下安裝 `.agent.md` 檔案，在 `.github/prompts/` 之下安裝配套的 `.prompt.md` 檔案，並合併 `.vscode/settings.json`。在此版式中，Copilot CLI 可以透過 `/agents` 選取代理，或在提示詞中直接點名它。
 
-在以 `specify integration upgrade copilot` 遷移既有的命令安裝時，使用 `--integration-options="--skills"` 可明確選取預設的技能版式。傳入它會取代所有已儲存的選項，因此請列出你想保留的選項：例如，若該值中沒有 `--no-model-invocation`，遷移後的技能會被寫成可由模型呼叫。請參閱[共用的升級規則](cli.md#upgrade-an-integration)，包括在預設集成品已註冊時變更版式的限制。
+在以 `specify integration upgrade copilot` 遷移既有的命令安裝時，使用 `--integration-options="--skills"` 可明確選取預設的技能版式。傳入它會取代所有已儲存的選項，因此請列出你想保留的選項：例如，若該值中沒有 `--no-model-invocation`，遷移後的技能會被寫成可由模型呼叫。請參閱[共用的升級規則](cli.md#升級整合)，包括在預設集成品已註冊時變更版式的限制。
 
 `--skills` 與 `--commands` 互斥。在沒有明確版式旗標的情況下，既有的受管理命令安裝在升級或啟用時會保留其版式；全新安裝則預設使用技能。
 
@@ -51,8 +51,19 @@ specify init my-project --integration copilot --integration-options="--commands"
 
 ## 執行階段事件與工作流程權限
 
-原生事件使用 `.github/hooks/speckit.json`。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#runtime-events)。
+原生事件使用 `.github/hooks/speckit.json`。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#執行階段事件)。
 
 工作流程步驟另外需要 Copilot CLI，與 IDE 設定分開。在技能模式中，命令步驟會在提示詞中傳入 `/speckit-<command>`。在命令模式中，它們會選取 `--agent speckit.<command>`，並將使用者的參數作為提示詞傳入，而不是把代理檔案當作斜線命令。
 
 無頭分派預設會加上 `--yolo`，允許工具、路徑與 URL 在沒有互動核准的情況下執行。將 `SPECKIT_COPILOT_ALLOW_ALL_TOOLS=0` 設為可阻止 Spec Kit 加上此旗標。已淘汰的 `SPECKIT_ALLOW_ALL_TOOLS` 只作為備援被接受。已設定的 `--model` 與要求的 `--output-format json` 都會被轉傳。
+
+## 工作流程分派設定
+
+命令與提示詞步驟可設定 [`reasoning_effort` 與 `context_size`](../workflow-steps/types.md#推理強度與上下文大小)。Copilot CLI 分派時會在 `--model` 之後以原生旗標傳入，在技能與命令兩種版式中皆然：
+
+| 步驟設定 | Copilot CLI 旗標 | Copilot CLI 1.0.106 中的值 |
+|---|---|---|
+| `reasoning_effort` | `--reasoning-effort <value>` | `none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max` |
+| `context_size` | `--context <value>` | `default`、`long_context` |
+
+Spec Kit 只接受這些值。其他值會在 Copilot CLI 啟動前使步驟失敗，因為 Copilot CLI 會在其錯誤中重複被拒絕的值，而該值可能來自擷取到的輸出。若要傳入新版 Copilot CLI 新增的值，請改設 `SPECKIT_INTEGRATION_COPILOT_EXTRA_ARGS="--reasoning-effort <value>"` 或 `SPECKIT_INTEGRATION_COPILOT_EXTRA_ARGS="--context <value>"`，不要使用步驟設定。

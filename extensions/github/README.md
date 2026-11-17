@@ -43,7 +43,7 @@ specify extension remove github
 3. 列出儲存庫中既有的 issues——開啟中*與*已關閉的皆然——並將它們的標題與 `tasks.md` 中的任務 ID 比對（`\bT\d{3,}\b`，因此四位數及更長的 ID 也能處理）。
 4. 只為尚未有對應 issue 的任務 ID，在遠端所指明的儲存庫中建立標題為 `T001: <description>` 的 issues。
 
-## Hooks
+## 掛鉤
 
 本擴充功能使用既有的 `before_taskstoissues` 與 `after_taskstoissues` hook 點，它們在執行時從 `.specify/extensions.yml` 讀取。Hook 鍵與核心命令相同，因此其他擴充功能註冊的 hooks——例如 `git` 擴充功能的自動提交 hooks——會一如以往確實觸發。
 

@@ -33,6 +33,7 @@
 | AgentPay Pre-Pay Audit — Grade an endpoint before your agent pays it | 在資金移動前稽核付費 API：評級端點的 402 條款、查看即時市場實際收費，並確認錢包此刻能完成付款。 | `visibility` | 唯讀 | [spec-kit-prepay-audit](https://github.com/shawnhvac/spec-kit-prepay-audit) |
 | AgentPay x402 — Spend Controls for Spec Kit Agents | 設定 USDC 支出上限、在付款前檢查交易對手的信用，並在規格實作期間支付支援 x402 的 API。在 Base 或 Solana 上結算。 | `integration` | 讀寫 | [spec-kit-pay-x402](https://github.com/shawnhvac/spec-kit-pay-x402) |
 | Agentstandards Architecture Council | 在 Spec Kit 規劃與任務產生之間，執行有界的多廠商架構委員會。 | `process` | 讀寫 | [agentstandards](https://github.com/bbjwz/agentstandards) |
+| A·I·DID·IT — Agile Expansion Pack | 讓每個工作項目依序經過 Assemble、Ideate、Draft、Iterate、Deliver、Investigate 與 Tidy，由模擬的敏捷團隊與引用網路資料的實務專家小組取代人類關卡。 | `process` | 讀寫 | [ai-did-it](https://github.com/RubberDuckEngineering/ai-did-it) |
 | AI-Driven Engineering (AIDE) | 以 AI 助理從零開始打造新專案的結構化 7 步驟工作流程，從願景到實作 | `process` | 讀寫 | [aide](https://github.com/mnriem/spec-kit-extensions/tree/main/aide) |
 | Analytics | 測量 AI 打造的成果，以及它為你節省多少時間 | `visibility` | 讀寫 | [spec-kit-analytics](https://github.com/Fyloss/spec-kit-analytics) |
 | API Evolve | 受管理的 API 合約演進，包含破壞性變更偵測、semver 強制、棄用協調，以及橫跨 REST、GraphQL 與 gRPC 的生命週期關卡 | `process` | 讀寫 | [spec-kit-api-evolve](https://github.com/Quratulain-bilal/spec-kit-api-evolve) |
@@ -43,6 +44,7 @@
 | Architecture Workflow | 以各觀點與完整工作流程命令，產生或反向產生專案層級的 4+1 架構觀點 | `docs` | 讀寫 | [spec-kit-arch](https://github.com/bigsmartben/spec-kit-arch) |
 | Archive Extension | 將已合併的功能封存至專案主要記憶中，解決落差與衝突。 | `docs` | 讀寫 | [spec-kit-archive](https://github.com/stn1slv/spec-kit-archive) |
 | ASCII Diagram Renderer | 呈現 spec/plan/tasks/analyze 已述內容的手繪 ASCII/Unicode 圖表（狀態機、架構、流程、涵蓋地圖），純文字，無需 Mermaid 呈現器 | `docs` | 讀寫 | [spec-kit-ascii-diagram](https://github.com/MRZHUH/spec-kit-ascii-diagram) |
+| Assure | 讓 QA 成為 Spec Kit 生命週期的一部分：初始化專案政策、在實作前要求功能測試整備分析，並在建立 pull request 前產生最新的 QA 測試手冊。 | `process` | 讀寫 | [sanduq](https://github.com/samykabu/sanduq) |
 | Atlas | 將 spec-kit 規格綜合成忠實、互動的架構故事書與文件入口網站。 | `docs` | 唯讀 | [spec-kit-atlas](https://github.com/ashbrener/spec-kit-atlas) |
 | AttackTree — Attack Tree Modeling & Control Simulation | 攻擊樹，具備攻擊者設定檔、AND/OR 路徑模擬、控制藍圖與控制到測試的可追蹤性 | `process` | 讀寫 | [spec-kit-attacktree](https://github.com/hupe1980/spec-kit-attacktree) |
 | Axi Extension | Spec Kit 擴充功能，將功能的 Markdown 呈現在本機瀏覽器審查介面上供人工註解，再將排入佇列的註記交回代理套用。 | `docs` | 讀寫 | [spec-kit-axi](https://github.com/d0whc3r/spec-kit-axi) |
@@ -69,11 +71,13 @@
 | Cost Tracker | 追蹤 SDD 工作流程中的真實 LLM 美元成本，包含各功能預算、各整合比較與可供財務使用的匯出 | `visibility` | 讀寫 | [spec-kit-cost](https://github.com/Quratulain-bilal/spec-kit-cost) |
 | CSDD — Controlled Spec-Driven Development | 將治理規範、門禁、範本安裝至已有儲存庫；第三方擴充功能依清單選擇性安裝，預設不安裝。 | `process` | 讀寫 | [csdd](https://github.com/yuansanche/csdd) |
 | Data Model Diagram | 在規劃後，從 Spec Kit 資料模型產生 Mermaid ER 圖表 | `docs` | 讀寫 | [spec-kit-data-model-diagram](https://github.com/benizzio/spec-kit-data-model-diagram) |
+| deja-vu session recall | 搜尋你過去為某功能執行過的程式代理工作階段：嘗試過什麼、決定了什麼或失敗了什麼。 | `process` | 唯讀 | [deja-vu](https://github.com/vshulcz/deja-vu) |
 | DocGuard — CDD Enforcement | AI 輔助儲存庫的文件完整性：生命週期登錄、漂移驗證、可追蹤性、安全封存、SARIF/JUnit、MCP、GitHub Actions 與 Spec Kit 掛鉤。 | `docs` | 讀寫 | [spec-kit-docguard](https://github.com/raccioly/docguard) |
 | Domain Spec Maintenance | 維護各領域的標準規格：在 specify/plan 前讀取，在 implement 後更新 | `docs` | 讀寫 | [spec-kit-domain-spec](https://github.com/jinaparkdev/spec-kit-domain-spec) |
 | Dotdog | 將 GitHub Spec Kit 產出物匯入本機知識圖譜，以進行驗證、分析、搜尋與 MCP 查詢。 | `docs` | 讀寫 | [dotdog](https://github.com/specdog/dotdog) |
 | DUBSAR Memory | Spec Kit 的本機專案記憶，具備明確檢查點、跨工作階段恢復，以及已記錄規格、計畫與任務參照的 SHA-256 新鮮度。 | `visibility` | 讀寫 | [dubsar-memory](https://github.com/kotnisofiane-bit/dubsar-memory) |
 | EARS Requirements Syntax | 使用 EARS 撰寫、lint 與轉換需求，EARS 是五種業界標準句型，用於無歧義、可測試的需求 | `docs` | 讀寫 | [spec-kit-ears](https://github.com/dhruv-15-03/spec-kit-ears) |
+| Elephant-Goldfish Model | 以大象設計。以金魚審查。 | `process` | 讀寫 | [spec-kit-extensions](https://github.com/ksachdeva/spec-kit-extensions) |
 | Epic | 將過大而無法以單一功能完成的工作拆解為多個功能，依序交付，並讓決策在各功能間保持一致。 | `process` | 讀寫 | [spec-kit-epic](https://github.com/pmckeown/spec-kit-epic) |
 | Evaluator Contract | 與服務提供者無關的評估器合約，涵蓋規格驅動開發各階段的證據、出處、不確定性與復原。 | `process` | 讀寫 | [spec-kit-evaluator](https://github.com/electrohire/spec-kit-evaluator) |
 | Extensify | 建立並驗證擴充功能與擴充功能型錄 | `process` | 讀寫 | [extensify](https://github.com/mnriem/spec-kit-extensions/tree/main/extensify) |
@@ -85,8 +89,10 @@
 | GitHub Issue Triage | 擷取開啟中的 GitHub issues，將每個分類為 bug、feature 或 chore，再委派至正確的工作流程，不將 bugs 或 chores 存為規格。 | `integration` | 讀寫 | [speckit-extensions](https://github.com/arrrrny/speckit-extensions) |
 | GitHub Issues Integration 1 | 從 GitHub Issues 產生規格產出物，匯入 issues、同步更新，並維持雙向可追蹤性 | `integration` | 讀寫 | [spec-kit-github-issues](https://github.com/Fatima367/spec-kit-github-issues) |
 | GitHub Issues Integration 2 | 從既有 GitHub issue 建立並同步本機規格 | `integration` | 讀寫 | [spec-kit-issue](https://github.com/aaronrsun/spec-kit-issue) |
+| GitHub Project Lifecycle Sync | 將每個 Spec Kit 功能鏡像至 GitHub Project (v2)：建立父層功能 issue、隨 Spec Kit 生命週期推進其 Status 欄位，並為獨立任務追蹤建立／關閉原生的子 issue。 | `integration` | 讀寫 | [sanduq](https://github.com/samykabu/sanduq) |
 | Golden Demo | 確定性行為漂移預言器。擷取驗收標準、產生模糊測試向量（seed=42）、以任何語言將黃金 Python 實作與真實程式碼比較。CI/CD 守門員，具備 warn/strict 模式。 | `docs` | 讀寫 | [spec-kit-golden-demo](https://github.com/jasstt/spec-kit-golden-demo) |
 | Guildwork: request, verdict, register | 在具名的人員核准書面請求之前，不撰寫任何程式碼，且每個判定都被保留。 | `process` | 讀寫 | [Guildwork](https://github.com/Simon-Pacifae-Dupont/Guildwork) |
+| Illustrate | 產生、匯入與匯出 44 種技術、產品、架構、流程與量化插圖類型，並追蹤專案層級的淺色／深色色彩與字型主題。 | `docs` | 讀寫 | [sanduq](https://github.com/samykabu/sanduq) |
 | Improve Extension | 以資深顧問身分稽核任何程式碼庫，並在 specs/ 之下撰寫優先排序、自包含的規格提示詞，供 spec-kit 生命週期處理 | `process` | 讀寫 | [spec-kit-improve](https://github.com/d0whc3r/spec-kit-improve) |
 | Intake | 將 PRD、設計、HTML SSOT 與測試案例證據正規化為可供 SDD 使用的 intake 產出物。 | `docs` | 讀寫 | [spec-kit-intake](https://github.com/bigsmartben/spec-kit-intake) |
 | Intelligent Agent Orchestrator | 跨型錄代理探索與智慧的提示詞到命令路由 | `process` | 讀寫 | [spec-kit-orchestrator](https://github.com/pragya247/spec-kit-orchestrator) |
@@ -117,9 +123,11 @@
 | Microsoft 365 Integration | 擷取 Teams 訊息、會議逐字稿與 SharePoint/OneDrive 檔案為本機 Markdown，以產生規格 | `integration` | 讀寫 | [spec-kit-m365](https://github.com/BenBtg/spec-kit-m365) |
 | Multi-Model Review | 跨模型的 Spec Kit 交接，用於規格撰寫、實作路由與審查。 | `process` | 讀寫 | [multi-model-review](https://github.com/formin/multi-model-review) |
 | Multi-Repo Branch Sync | 透過 plan/tasks 掛鉤，在受影響的子儲存庫與 git 子模組中建立功能分支 | `process` | 讀寫 | [multi-repo-sync](https://github.com/fyloss/spec-kit-multi-repo-sync) |
+| Multi-Repo Workspace Orchestration | 跨工作區協調規格驅動實作：中央規格儲存庫將實作分派至成員儲存庫。 | `process` | 讀寫 | [speckit-multirepo](https://github.com/joaopaschuino/speckit-multirepo) |
 | Multi-Sites Spec Kit | 具多站點意識的 specify 命令，具備各站點規格資料夾、自動遞增與 Drupal 支援 | `process` | 讀寫 | [spec-kit-multi-sites](https://github.com/teeyo/spec-kit-multi-sites) |
 | .NET Framework to Modern .NET Migration | 協調橫跨 7 個階段的端到端 .NET Framework 到現代 .NET 遷移，並整合 SDD 生命週期 | `process` | 讀寫 | [spec-kit-fx-to-net](https://github.com/RogerBestMsft/spec-kit-FxToNet) |
 | OKF Knowledge Bundle Generator | 從原始碼儲存庫產生並維護 Open Knowledge Format（OKF v0.1）知識套件組。挖掘 git 歷史以找出程式碼背後的理由，將無法確立的內容停放為開放問題而不是猜測，並驗證套件組的主張確實受儲存庫支持。 | `docs` | 讀寫 | [catalogify](https://github.com/alexcpn/catalogify) |
+| OKR Bets | 將每個規格視為一項 Key Result 押注：在 /speckit.specify 之前定義假設與驗證合約、規劃量測方式，並在上線後、擴大規模前評估結果。公司層級的 OKR 保持唯讀。 | `process` | 讀寫 | [spec-kit-okr](https://github.com/juanl/spec-kit-okr) |
 | Onboard | 為 spec-kit 專案新手開發者提供脈絡化入門與漸進成長。說明規格、對應相依性、驗證理解，並指引下一步 | `process` | 讀寫 | [spec-kit-onboard](https://github.com/dmux/spec-kit-onboard) |
 | OpenProject Integration | 透過 MCP 在 spec-kit 與 OpenProject 之間同步欄位、狀態、文件、版本與時間 | `integration` | 讀寫 | [speckit-openproject](https://github.com/Nachklang-io/speckit-openproject) |
 | OpenSpec | 為 Spec Kit 專案加入規格驅動的變更管理工作流程（propose → implement → verify → archive），讓規格、設計與程式碼保持同步 | `process` | 讀寫 | [spec-kit-openspec](https://github.com/aaronrsun/spec-kit-openspec) |
@@ -138,6 +146,7 @@
 | ProductShape PRODUCT workflows | 在獨立的 Spec Kit 通道中，撰寫、精修、驗證、套用、封存與復原 ProductShape 產品意涵。 | `process` | 讀寫 | [productshape](https://github.com/juangcarmona/productshape) |
 | Project Health Check | 診斷 Spec Kit 專案，並回報橫跨結構、代理、功能、指令碼、擴充功能與 git 的健康問題 | `visibility` | 唯讀 | [spec-kit-doctor](https://github.com/KhawarHabibKhan/spec-kit-doctor) |
 | Project Status | 顯示目前的 SDD 工作流程進度，包含作用中功能、產出物狀態、任務完成度、工作流程階段與擴充功能摘要 | `visibility` | 唯讀 | [spec-kit-status](https://github.com/KhawarHabibKhan/spec-kit-status) |
+| Pull Request Workflow | 根據 Spec Kit 產出物產生或更新 pull request、強制執行已安裝的 QA 與 User Manual 時效政策，再透過經核准才執行的修正與回覆工作流程處理審查回饋。 | `process` | 讀寫 | [sanduq](https://github.com/samykabu/sanduq) |
 | QA Testing Extension | 系統化 QA 測試，以瀏覽器驅動或 CLI 型方式驗證規格中的驗收標準 | `code` | 唯讀 | [spec-kit-qa](https://github.com/arunt14/spec-kit-qa) |
 | Quality Gates (Enforcement Layer) | Spec Kit 專案的確定性品質強制，在三個邊界執行：代理邊界（Claude Code PreToolUse/PostToolUse/Stop 掛鉤）、git 邊界（pre-commit / pre-merge-commit / commit-msg），以及 CI 邊界（投射的 GitHub Actions / GitLab CI / Jenkins 管線）。一份政策檔案、一個驗證進入點；CI 執行整份政策，較早的邊界僅略過政策以名稱宣告的項目。 | `process` | 讀寫 | [spec-gates](https://github.com/schwichtgit/spec-gates) |
 | RAG Azure Builder | Spec Kit 擴充功能，以引導式工作流程入門並操作 Azure RAG 堆疊。 | `process` | 讀寫 | [spec-kit-extension-rag-azure-builder](https://github.com/Sertxito/spec-kit-extension-rag-azure-builder) |
@@ -152,6 +161,8 @@
 | Retrospective Extension | 實作後回顧，具備規格遵循評分、漂移分析與人工關卡的規格更新 | `docs` | 讀寫 | [spec-kit-retrospective](https://github.com/emi-dm/spec-kit-retrospective) |
 | Review Extension | 實作後全面程式碼審查，具備專門代理，涵蓋程式碼品質、註解、測試、錯誤處理、型別設計與簡化 | `code` | 唯讀 | [spec-kit-review](https://github.com/ismaelJimenez/spec-kit-review) |
 | Ripple | 偵測測試無法捕捉的實作後副作用，呈現橫跨 9 個分析類別的隱藏漣漪效應 | `code` | 讀寫 | [spec-kit-ripple](https://github.com/chordpli/spec-kit-ripple) |
+| Sanduq Progress Report | 針對 Spec Kit 功能提供即時、確定性的進度報告：各階段歷程、工作串流、執行紀錄、阻礙與決策，取自主機的原生掛鉤與功能檔案，無需耗費代理心力維護。 | `process` | 讀寫 | [sanduq](https://github.com/samykabu/sanduq) |
+| Sanduq Workflow | GitHub issue 決策與可續跑的 Scope-to-PR 編排，可選用模型感知的委派、QA、User Manual 與工作流程證據 CI。 | `process` | 讀寫 | [sanduq](https://github.com/samykabu/sanduq) |
 | SDD Utilities | 恢復中斷的工作流程、驗證專案健康，並驗證規格到任務的可追蹤性 | `process` | 讀寫 | [speckit-utils](https://github.com/mvanhorn/speckit-utils) |
 | Security Review | 全專案的安全預設安全稽核，以及分階段、分支/PR、計畫、任務、後續與套用審查 | `code` | 讀寫 | [security-review](https://github.com/DyanGalih/security-review) |
 | SFSpeckit | 企業級規格驅動開發（SDD）框架，適用於 Salesforce。 | `process` | 讀寫 | [spec-kit-sf](https://github.com/Evernorth/spec-kit-sf) |
@@ -164,6 +175,8 @@
 | Spec Kit Design System | 給它一份 RFC。它會執行 Spec Kit 工作流程，並使用你的設計系統實作變更。 | `integration` | 讀寫 | [spec-kit-design-system](https://github.com/artursopelnik/spec-kit-design-system) |
 | Spec Kit Discovery Extension | 執行技術探索命令，涵蓋可行性、技術選擇、情境專屬技術決策、既有程式碼庫評估、實作理解與概念驗證 | `process` | 讀寫 | [spec-kit-discovery](https://github.com/bigsmartben/spec-kit-discovery) |
 | Spec Kit Figma | 透過 REST 或 MCP，將 SpecKit spec/plan/tasks 奠基於 Figma 設計脈絡，支援 macOS/Linux/Windows。 | `integration` | 讀寫 | [spec-kit-figma](https://github.com/Fyloss/spec-kit-figma) |
+| Spec Kit for Azure DevOps — human-gated lifecycle | 透過 Spec Kit 將 Azure DevOps story 推向 Done，每次看板變更前都需人類簽核。 | `integration` | 讀寫 | [spec-kit-ado](https://github.com/praveenlavu/spec-kit-ado) |
+| Spec Kit lifecycle for Jira | 透過 Spec Kit 將 Jira story 推向 Done，每次 Jira 或 PR 寫入前都需人類簽核。 | `integration` | 讀寫 | [spec-kit-jira](https://github.com/praveenlavu/spec-kit-jira) |
 | Spec Kit Memory | 在 SDLC 各階段前，從可設定的記憶工具（如 memsearch）回想先前的規格與決策，讓規劃與規格制定從專案已知的內容出發 | `docs` | 讀寫 | [spec-kit-memory](https://github.com/zaytsevand/spec-kit-memory) |
 | Spec Kit Preview | 從 Spec Kit 產出物產生具證據支持的低、中或高保真預覽，格式為 Markdown 或自包含 HTML | `docs` | 讀寫 | [spec-kit-preview](https://github.com/bigsmartben/spec-kit-preview) |
 | Spec Kit Schedule — parallel subagent rounds | 零設定規劃器，將 tasks.md 轉換為子代理的最佳平行輪次（CP-SAT、關鍵路徑意識、檔案衝突安全），並提供 implement 命令逐輪執行，以 tasks.md 核取方塊為進度的單一來源。 | `process` | 讀寫 | [spec-kit-schedule](https://github.com/jfranc38/spec-kit-schedule) |
@@ -181,6 +194,7 @@
 | SpecJudge — right-size the model before you implement | 推薦適合你任務的模型，並引用每個等級背後的規格片段。 | `process` | 唯讀 | [SpecJudge](https://github.com/JoaquinRuiz/SpecJudge) |
 | SpecKit Companion | 即時記錄你的 spec-kit 執行：狀態、恢復，以及實際發生情況的健康檢查。 | `process` | 讀寫 | [speckit-companion](https://github.com/alfredoperez/speckit-companion) |
 | SpecKit Grill Me | 詳盡釐清規格，並可選擇性地同步標準領域知識 | `process` | 讀寫 | [speckit-grill-me](https://github.com/yoshi1220/speckit-grill-me) |
+| Spec Status | 代理技能會讀取 `spec status` 輸出並轉為下一步行動，包含角色專屬的審查檢視、診斷說明、相依性解除阻礙，以及在標記工作為已驗證前的整備檢查。 | `visibility` | 讀寫 | [spec-status](https://github.com/tosin2013/spec-status) |
 | SpecTest | 從規格標準自動產生測試鷹架、對應涵蓋範圍，並找出未測試的需求 | `code` | 讀寫 | [spec-kit-spectest](https://github.com/Quratulain-bilal/spec-kit-spectest) |
 | Squad Bridge | 從你的 Speckit 規格與任務啟動並同步 Squad 代理團隊。 | `process` | 讀寫 | [spec-kit-squad](https://github.com/jwill824/spec-kit-squad) |
 | Staff Review Extension | 資深工程師層級的程式碼審查，對照規格驗證實作、檢查安全、效能與測試涵蓋範圍 | `code` | 唯讀 | [spec-kit-staff-review](https://github.com/arunt14/spec-kit-staff-review) |
@@ -188,6 +202,7 @@
 | Superpowers Bridge | 將選定的 Superpowers 紀律橋接至 Spec Kit，作為代理工作流程中證據優先的信任關卡。 | `process` | 讀寫 | [superpowers-bridge](https://github.com/RbBtSn0w/spec-kit-extensions/tree/main/superpowers-bridge) |
 | Superpowers Implementation Bridge | Spec Kit 設計產出物與 Superpowers 實作紀律之間的輕量協調器。跨代理；已針對 Codex 與 Claude Code 驗證。 | `process` | 讀寫 | [speckit-superpowers-bridge](https://github.com/lihan3238/speckit-superpowers-bridge) |
 | Superspec | 將 spec-kit 與 obra/superpowers（腦力激盪、TDD、子代理、程式碼審查）橋接為統一、可恢復的工作流程，具備優雅降級與工作階段進度追蹤 | `process` | 讀寫 | [superspec](https://github.com/WangX0111/superspec) |
+| T-Shirt Sizing Gate | 根據變更說明提供初步的 XS–XL 估算，加上已規劃功能的規模估算，以及在 Spec Kit 工作流程內的明確核准，並以 SHA-256 檢查計畫變更。 | `process` | 讀寫 | [spec-kit-sizing](https://github.com/mauriziopinotti/spec-kit-sizing) |
 | Taco Review | 將 Spec Kit 功能打包供人工審查，並將編輯與留言同步回來。 | `integration` | 讀寫 | [taco](https://github.com/Arcadia822/taco) |
 | Tasks to GitHub Project | 將 Spec Kit 任務發佈並同步為 GitHub Project（v2）看板上的卡片，並在 spec.md/tasks.md 與看板之間同步優先順序與狀態。 | `integration` | 讀寫 | [spec-kit-tasks-to-project](https://github.com/mancioshell/spec-kit-tasks-to-project) |
 | TDD Extension | 以測試驅動 spec-kit 實作：與語言無關的 red-green-refactor 迴圈，具備各功能測試清單、記錄的 red 與 green 證據，以及經突變檢查的測試強度。 | `process` | 讀寫 | [spec-kit-tdd](https://github.com/d0whc3r/spec-kit-tdd) |
@@ -200,6 +215,7 @@
 | Token Budget | 降低 Spec Kit 工作流程中的 LLM 權杖消耗：就地精簡產出物、限定各階段讀取範圍、抑制散文填充，並回報權杖用量 | `process` | 讀寫 | [spec-kit-token-budget](https://github.com/tinesoft/spec-kit-token-budget) |
 | Token Consumption Analyzer | 捕捉、分析並比較 SDD 工作流程中的權杖消耗 | `visibility` | 唯讀 | [spec-kit-token-analyzer](https://github.com/coderandhiker/spec-kit-token-analyzer) |
 | Token Economy | 權杖路由、測得的節省與脈絡稽核工作流程 | `process` | 讀寫 | [spec-kit-token-economy](https://github.com/formin/spec-kit-token-economy) |
+| User Manual | 建立並逐步維護可雙語化、針對受眾的應用程式手冊，以在 GitHub 上正確顯示的 Markdown 撰寫，並渲染為 Markdown，透過你自己的範本與工具，或以… | `docs` | 讀寫 | [sanduq](https://github.com/samykabu/sanduq) |
 | V-Model Extension Pack | 強制 V-Model 配對產生開發規格與測試規格，具備完整可追蹤性 | `docs` | 讀寫 | [spec-kit-v-model](https://github.com/leocamello/spec-kit-v-model) |
 | Verify Extension | 實作後的品質關卡，對照規格產出物驗證已實作的程式碼 | `code` | 唯讀 | [spec-kit-verify](https://github.com/ismaelJimenez/spec-kit-verify) |
 | Verify Review Ship | 收斂後的操作驗證、技術審查、學習治理與交易式交付。 | `process` | 讀寫 | [spec-kit-verify-review-ship](https://github.com/cadugevaerd/spec-kit-verify-review-ship) |

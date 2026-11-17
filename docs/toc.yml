@@ -1,12 +1,21 @@
-# 首頁
+# Project overview and shared reference
 - name: 首頁
   href: index.md
+  items:
+    - name: 首頁
+      href: index.md
+    - name: 專案歷史
+      href: overview/history.md
+    - name: 核心命令
+      href: overview/core.md
+    - name: MCP 伺服器
+      href: overview/mcp.md
+    - name: 成品
+      href: overview/artifacts.md
+    - name: 型錄
+      href: overview/catalogs.md
 
-# 專案歷史
-- name: 專案歷史
-  href: history.md
-
-# 入門指南
+# Getting started section
 - name: 入門指南
   items:
     - name: 安裝
@@ -15,14 +24,16 @@
       href: guides/agentic-sdlc.md
     - name: 規格驅動開發
       href: quickstart.md
+    - name: 代理式 SDD
+      href: reference/agentic-sdd.md
     - name: 錯誤修正
       href: guides/bugfix.md
+    - name: 代理式錯誤修復
+      href: reference/agentic-bugfix.md
     - name: 構想評估
       href: guides/assessment.md
-    - name: 既有專案
-      href: guides/existing-projects.md
-    - name: 自訂或自帶流程
-      href: guides/customization.md
+    - name: 代理式想法評估
+      href: reference/agentic-assessment.md
     - name: 升級
       href: upgrade.md
     - name: 安裝 uv
@@ -36,111 +47,58 @@
     - name: 企業／氣隙環境
       href: install/air-gapped.md
 
-# 代理整合
-- name: 整合
+# How-to guides
+- name: 操作指南
+  href: how-to/index.md
+  items:
+    - name: 了解規格驅動開發
+      href: how-to/sdd.md
+    - name: 在既有專案中採用 Spec Kit
+      href: how-to/existing-projects.md
+    - name: 在 monorepo 中工作
+      href: how-to/monorepo.md
+    - name: 定義與演進合約
+      href: how-to/contract-driven-development.md
+    - name: 實作複雜功能
+      href: how-to/complex-features.md
+    - name: 拆解大型功能
+      href: how-to/spec-of-specs.md
+    - name: 保存規格
+      href: how-to/persisting-specs.md
+    - name: 演進規格
+      href: how-to/evolving-specs.md
+    - name: 自訂或自帶流程
+      href: how-to/customization.md
+    - name: 驗證
+      href: reference/authentication.md
+    - name: 本地開發
+      href: how-to/local-development.md
+
+# Agent integrations
+- name: 總覽
   href: integrations/index.md
   items:
     - name: 總覽
       href: integrations/index.md
-    - name: 整合 CLI 參考
+    - name: 整合管理
       href: integrations/cli.md
-    - name: Alquimia AI
-      href: integrations/alquimia.md
-    - name: Amp
-      href: integrations/amp.md
-    - name: Antigravity
-      href: integrations/agy.md
-    - name: Auggie CLI
-      href: integrations/auggie.md
-    - name: Claude Code
-      href: integrations/claude.md
-    - name: Cline
-      href: integrations/cline.md
-    - name: CodeBuddy CLI
-      href: integrations/codebuddy.md
-    - name: Codex CLI
-      href: integrations/codex.md
-    - name: Command Code
-      href: integrations/command-code.md
-    - name: Cursor
-      href: integrations/cursor-agent.md
-    - name: DeepSeek Harness
-      href: integrations/dsh.md
-    - name: Devin for Terminal
-      href: integrations/devin.md
-    - name: Docker Agent
-      href: integrations/docker-agent.md
-    - name: Factory Droid
-      href: integrations/droid.md
-    - name: Firebender
-      href: integrations/firebender.md
-    - name: Forge
-      href: integrations/forge.md
-    - name: Gemini CLI
-      href: integrations/gemini.md
-    - name: GitHub Copilot
-      href: integrations/copilot.md
-    - name: Goose
-      href: integrations/goose.md
-    - name: Grok Build
-      href: integrations/grok.md
-    - name: Hermes
-      href: integrations/hermes.md
-    - name: IBM Bob
-      href: integrations/bob.md
-    - name: Junie
-      href: integrations/junie.md
-    - name: Kilo Code
-      href: integrations/kilocode.md
-    - name: Kimi Code
-      href: integrations/kimi.md
-    - name: Kiro CLI
-      href: integrations/kiro-cli.md
-    - name: Lingma
-      href: integrations/lingma.md
-    - name: MiniMax Code
-      href: integrations/mcode.md
-    - name: Mistral Vibe
-      href: integrations/vibe.md
-    - name: Muse Code
-      href: integrations/muse.md
-    - name: 無（僅共用骨架）
-      href: integrations/none.md
-    - name: Oh My Pi
-      href: integrations/omp.md
-    - name: opencode
-      href: integrations/opencode.md
-    - name: Pi Coding Agent
-      href: integrations/pi.md
-    - name: Qoder CLI
-      href: integrations/qodercli.md
-    - name: Qwen Code
-      href: integrations/qwen.md
-    - name: RovoDev
-      href: integrations/rovodev.md
-    - name: SHAI (OVHcloud)
-      href: integrations/shai.md
-    - name: Tabnine CLI
-      href: integrations/tabnine.md
-    - name: Trae
-      href: integrations/trae.md
-    - name: ZCode
-      href: integrations/zcode.md
-    - name: Zed
-      href: integrations/zed.md
-    - name: 通用（自備代理）
-      href: integrations/generic.md
+    - name: 擴充功能 API 參考
+      href: integrations/api.md
     - name: 型錄與外部轉接器
       href: integrations/catalog.md
     - name: 貢獻整合
       href: integrations/contributing.md
 
-# 擴充功能
-- name: 擴充功能
+# Extensions
+- name: 總覽
   href: extensions/overview.md
   items:
     - name: 總覽
       href: extensions/overview.md
+    - name: 整合 CLI 參考
+      href: extensions/cli.md
+    - name: 型錄
+      href: extensions/catalogs.md
     - name: 開發擴充功能
       href: extensions/developing.md
     - name: 擴充功能 API 參考
@@ -148,76 +106,100 @@
     - name: 擴充功能發佈指南
       href: extensions/publishing.md
 
-# 參考
-- name: 參考
+# Presets
+- name: 預設集
+  href: presets/overview.md
   items:
     - name: 總覽
-      href: reference/overview.md
-    - name: 核心命令
-      href: reference/core.md
-    - name: MCP 伺服器
-      href: reference/mcp.md
-    - name: 整合管理
-      href: integrations/cli.md
+      href: presets/overview.md
+    - name: 整合 CLI 參考
+      href: presets/cli.md
+    - name: 開發擴充功能
+      href: presets/developing.md
+    - name: 擴充功能 API 參考
+      href: presets/api.md
     - name: 型錄
-      href: reference/catalogs.md
-    - name: 擴充功能
-      href: reference/extensions.md
-    - name: 預設集
-      href: reference/presets.md
-    - name: 成品
-      href: reference/artifacts.md
-    - name: 工作流程
-      href: reference/workflows.md
-    - name: 套件組
-      href: reference/bundles.md
-    - name: 代理式 SDD
-      href: reference/agentic-sdd.md
-    - name: 代理式錯誤修復
-      href: reference/agentic-bugfix.md
-    - name: 代理式想法評估
-      href: reference/agentic-assessment.md
-    - name: 驗證
-      href: reference/authentication.md
+      href: presets/catalogs.md
+    - name: 擴充功能發佈指南
+      href: presets/publishing.md
 
-# 概念
-- name: 概念
+# Workflows
+- name: 工作流程
+  href: workflows/overview.md
   items:
-    - name: 什麼是 SDD？
-      href: concepts/sdd.md
-    - name: 規格保存模型
-      href: concepts/spec-persistence.md
-    - name: 處理複雜功能
-      href: concepts/complex-features.md
-    - name: 規格的規格
-      href: concepts/spec-of-specs.md
+    - name: 總覽
+      href: workflows/overview.md
+    - name: 整合 CLI 參考
+      href: workflows/cli.md
+    - name: 開發擴充功能
+      href: workflows/developing.md
+    - name: 擴充功能 API 參考
+      href: workflows/api.md
+    - name: 運算式
+      href: workflows/expressions.md
+    - name: 工作流程函式
+      href: workflows/functions.md
+    - name: 覆蓋層
+      href: workflows/overlays.md
+    - name: 型錄
+      href: workflows/catalogs.md
+    - name: 擴充功能發佈指南
+      href: workflows/publishing.md
 
-# 開發工作流程
-- name: 開發
+# Workflow Steps
+- name: 工作流程步驟
+  href: workflow-steps/overview.md
   items:
-    - name: 本地開發
-      href: local-development.md
-    - name: 規格演進
-      href: guides/evolving-specs.md
-    - name: 契約驅動開發
-      href: guides/contract-driven-development.md
-    - name: Monorepo
-      href: guides/monorepo.md
+    - name: 總覽
+      href: workflow-steps/overview.md
+    - name: 整合 CLI 參考
+      href: workflow-steps/cli.md
+    - name: 開發擴充功能
+      href: workflow-steps/developing.md
+    - name: 擴充功能 API 參考
+      href: workflow-steps/api.md
+    - name: 內建步驟類型
+      href: workflow-steps/types.md
+    - name: 型錄
+      href: workflow-steps/catalogs.md
+    - name: 擴充功能發佈指南
+      href: workflow-steps/publishing.md
 
-# 社群
-- name: 社群
+# Bundles
+- name: 套件組
+  href: bundles/overview.md
+  items:
+    - name: 總覽
+      href: bundles/overview.md
+    - name: 整合 CLI 參考
+      href: bundles/cli.md
+    - name: 開發擴充功能
+      href: bundles/developing.md
+    - name: 擴充功能 API 參考
+      href: bundles/api.md
+    - name: 型錄
+      href: bundles/catalogs.md
+    - name: 擴充功能發佈指南
+      href: bundles/publishing.md
+
+# Community
+- name: 總覽
   href: community/overview.md
   items:
     - name: 總覽
       href: community/overview.md
+    - name: 整合
+      href: community/integrations.md
     - name: 社群擴充功能
       href: community/extensions.md
     - name: 社群預設集
       href: community/presets.md
-    - name: 社群套件組
-      href: community/bundles.md
+    - name: 工作流程
+      href: community/workflows.md
     - name: 工作流程步驟類型
       href: community/workflow-steps.md
+    - name: 社群套件組
+      href: community/bundles.md
     - name: 實作導覽
       href: community/walkthroughs.md
     - name: Friends

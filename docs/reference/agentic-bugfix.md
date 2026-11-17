@@ -5,7 +5,7 @@
 如需引導式範例，請參閱[錯誤修復快速入門](../guides/bugfix.md)。修復錯誤不需先進行 SDD 功能流程。若要評估想法而非修復損壞的行為，請參見[想法評估](agentic-assessment.md)。
 
 > [!NOTE]
-> 本頁的命令一律以 `/speckit.bug.*` 形式撰寫。GitHub Copilot 的預設 skills 模式使用 `/speckit-bug-*`；部分其他代理使用 `$speckit-bug-*`（例如 Codex、ZCode）或 `/skill:speckit-bug-*`（例如 Kimi）。請參見[命令呼叫方式](../integrations/cli.md#command-invocation)。
+> 本頁的命令一律以 `/speckit.bug.*` 形式撰寫。GitHub Copilot 的預設 skills 模式使用 `/speckit-bug-*`；部分其他代理使用 `$speckit-bug-*`（例如 Codex、ZCode）或 `/skill:speckit-bug-*`（例如 Kimi）。請參見[命令呼叫方式](../integrations/cli.md#命令呼叫方式)。
 
 bug 擴充功能是隨附、需主動啟用的擴充功能。使用這些命令前請先安裝：
 

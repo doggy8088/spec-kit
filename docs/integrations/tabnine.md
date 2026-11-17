@@ -4,7 +4,7 @@
 
 ## 多重安裝安全性
 
-本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#我可以在同一個專案中安裝多個整合嗎)。
 
 ## 設定
 
@@ -20,6 +20,6 @@ TOML 命令會安裝為 `.tabnine/agent/commands/speckit.<command>.toml`。在�
 
 ## 執行階段事件與工作流程分派
 
-原生事件使用 `.tabnine/agent/settings.json`，會將提示詞提交與停止事件對應到 `BeforeAgent` 與 `AfterAgent`。Hook 逾時會轉換為毫秒。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#runtime-events)。
+原生事件使用 `.tabnine/agent/settings.json`，會將提示詞提交與停止事件對應到 `BeforeAgent` 與 `AfterAgent`。Hook 逾時會轉換為毫秒。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#執行階段事件)。
 
 工作流程步驟使用 `tabnine -p <prompt>`，並在已設定模型時傳入 `-m`、在要求結構化輸出時傳入 `--output-format json`。

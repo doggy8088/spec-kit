@@ -20,7 +20,7 @@
 
 ### 1.0.0 里程碑：一致性，而非永久性
 
-8 月的頭條是 **v1.0.0**（#4246），於 8 月 21 日發布——Spec Kit 首次 commit 滿一年當日——並緊接著 v1.0.1。其框架比數字更重要：1.0.0 明確**不是功能版本，也不是穩定性承諾**。專案新的[歷史頁面](https://github.com/github/spec-kit/blob/main/docs/history.md)闡述的論點是，主版本號過去是對抗破壞性變更成本的保險——而代理已讓該成本崩解，因為你能將代理指向 diff，它就會更新呼叫端。這個版本標誌的是**五個基本元件之間的一致性**，而非永久性；README 仍將專案的抱負歸於「Experimental Goals」之下，刻意不改名。
+8 月的頭條是 **v1.0.0**（#4246），於 8 月 21 日發布——Spec Kit 首次 commit 滿一年當日——並緊接著推出 v1.0.1。這種詮釋比版本號本身更重要：1.0.0 明確**不是功能版本，也不是穩定性承諾**。專案新的[歷史頁面](https://github.github.io/spec-kit/overview/history.html)所闡述的論點是，主版本號過去是對抗破壞性變更成本的保險——而代理已讓這項成本大幅降低，因為你只要將代理指向 diff，它就會更新呼叫端。這個版本標誌的是**五個基本元件之間的一致性**，而非永久性；README 仍將專案的抱負歸於「Experimental Goals」之下，刻意不改名。
 
 融合成形的，是工具的形狀。Spec Kit 在 2026 年 2 月起初是線性管線——`/speckit.specify`、`/speckit.plan`、`/speckit.tasks`、`/speckit.implement`——程式代理由旗標選擇。到了 1.0.0，它建立在**五個可組合的基本元件**之上：**整合**（代理成為受登錄支援的外掛，寫入經雜湊追蹤的檔案）、**擴充功能**（透過 `extension.yml` 資訊清單提供命令、範本、指令碼與 hook）、**預設集**（對既有核心內容進行 prepend／append／wrap／replace 組合）、**工作流程**（specify 至 implement 的序列現在是可替換的 YAML 定義，而非寫死的控制流程），以及**工作流程步驟**（任何社群步驟類型都能實作的小型介面）。其下是單一具優先順序的**型錄**系統——環境變數 → 專案設定 → 使用者設定 → 內建——統一治理全部五者的探索與安裝政策，內建的 `community` 型錄在設計上僅供探索：維護者驗證條目格式正確，而非其程式碼安全。在基本元件之上，核心迴圈於 6 月以 `/speckit.converge` 封閉，它對照規格、計畫與任務評估已發布的程式碼，並附加缺少的工作——這是對該工具最常被引用批評「誰來驗證規格？」的回答。1.0.0 的核心序列現在是 constitution → specify → clarify → plan → checklist → tasks → analyze → implement → converge，其中 clarify／checklist／analyze 為選擇性閘門。 [\[medium.com\]](https://stn1slv.medium.com/spec-kit-reaches-1-0-from-one-pipeline-to-five-primitives-f7bb6359e501)
 

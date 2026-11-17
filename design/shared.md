@@ -303,7 +303,7 @@ tests/specify_cli/artifacts/test_mcp_list.py
 
 同等性測試會針對同一個操作固定資料，呼叫 CLI 與 MCP 配接器，並比較語意請求、結果、警告、錯誤與副作用行為。同等性不要求逐位元相同的呈現。
 
-行為變更遵循[測試確定性行為](../CONTRIBUTING.md#testing-deterministic-behavior)：需要正面與負面證據，錯誤修正需要前後對照的迴歸證據。
+行為變更遵循[測試確定性行為](../CONTRIBUTING.md#測試確定性行為)：需要正面與負面證據，錯誤修正需要前後對照的迴歸證據。
 
 ## 反模式
 

@@ -39,7 +39,7 @@ specify init my-project --integration copilot
 
 > **注意：** 需要 Python 3.11 以上版本。
 >
-> **Windows 注意事項：** 離線建置專案骨架需要 PowerShell 7 以上版本（`pwsh`），而非 Windows PowerShell 5.x（`powershell.exe`）。請從 <https://aka.ms/powershell> 安裝。
+> **Windows 注意事項：** PowerShell 指令碼以 Windows 內建的 Windows PowerShell 5.1（`powershell.exe`）為目標；離線搭建不需要 PowerShell 7（`pwsh`）。傳入 `--script ps` 可明確選用 PowerShell 指令碼；Windows 上的非互動式初始化預設即選用它們。
 
 ## 元件型錄與來源
 
@@ -49,9 +49,9 @@ specify init my-project --integration copilot
 
 外部整合轉接器是例外。`specify integration install` 沒有直接或本機來源選項：它必須透過允許安裝的整合型錄解析轉接器並下載其封存檔。若要在隔離環境中加入外部轉接器，請讓核准的內部型錄與其轉接器封存檔在該環境中都能連線取得，或在目標斷網前先安裝轉接器。僅傳輸封存檔本身並不足夠。
 
-套件組要分開處理：傳輸的套件組目錄或 ZIP 提供的是套件組清單，而不是它所命名的元件承載內容。斷網前，請先另外安裝相符的非套件組元件。帶有明確型錄 `source` 的元件即使已安裝，仍需要網路驗證；工作流程步驟的承載內容目前只能透過步驟型錄解析。在依賴 `specify bundle install --offline` 之前，請先檢視[套件組離線限制](../reference/bundles.md#install-a-bundle)。
+套件組需另行處理：傳輸過來的套件組目錄或 ZIP 只提供套件組資訊清單，不提供其指名的元件承載內容。斷網前，請先另外安裝相符的非套件組元件。具有明確型錄 `source` 的元件即使已安裝，仍需透過網路驗證；工作流程步驟承載內容目前僅能透過步驟型錄解析。仰賴 `specify bundle install --offline` 之前，請先參閱[套件組離線限制](../bundles/cli.md#離線限制)。
 
-型錄類型、信任政策與來源優先順序請參閱[型錄參考](../reference/catalogs.md)。若內部端點需要憑證，也請設定[驗證](../reference/authentication.md)。
+型錄類型、信任政策與來源優先順序，請參閱[型錄參考](../overview/catalogs.md)。若內部端點需要憑證，另請設定[身分驗證](../reference/authentication.md)。
 
 ## Linux 上的 Git Credential Manager
 

@@ -21,7 +21,7 @@ schema_version: "1.0"
 extension:
   id: "my-ext"                          # Lowercase, alphanumeric + hyphens only
   name: "My Extension"
-  version: "1.0.0"                      # Semantic versioning
+  version: "1.0.0"                      # SemVer recommended; PEP 440 accepted
   description: "My custom extension"
   author: "Your Name"
   repository: "https://github.com/you/spec-kit-my-ext"
@@ -93,8 +93,10 @@ $ARGUMENTS
 2. Show extension is working
 
 ```bash
+
 echo "Hello from my extension!"
 echo "Arguments: $ARGUMENTS"
+
 ```
 
 ## Extension Configuration
@@ -110,7 +112,7 @@ specify integration install copilot --integration-options="--skills"
 specify extension add --dev /path/to/my-extension
 ```
 
-對於新專案，請以 `specify init my-project --integration copilot --integration-options="--skills"` 初始化。如果 Copilot 已以 commands 配置安裝，請遵循 [Copilot 遷移指南](../integrations/copilot.md#commands-layout)，不要再次安裝。
+對於新專案，請以 `specify init my-project --integration copilot --integration-options="--skills"` 初始化。如果 Copilot 已以 commands 配置安裝，請遵循 [Copilot 遷移指南](../integrations/copilot.md#命令版式)，不要再次安裝。
 
 ### 6. 驗證安裝
 
@@ -151,7 +153,7 @@ specify extension list
 
 - `id`：擴充功能識別碼（小寫、英數字元、連字號）
 - `name`：方便閱讀的名稱
-- `version`：語意化版本（例如 "1.0.0"）
+- `version`：PEP 440 版本（建議使用 SemVer，例如 "1.0.0"）
 - `description`：簡短說明
 
 **選用子欄位**：
@@ -224,6 +226,7 @@ specify extension list
 - `before_checklist` / `after_checklist`：檢核清單產生之前／之後
 - `before_clarify` / `after_clarify`：規格釐清之前／之後
 - `before_constitution` / `after_constitution`：憲章更新之前／之後
+- `before_converge` / `after_converge`：收斂評估之前／之後
 - `before_bug_assess` / `after_bug_assess`：錯誤評估之前／之後（內建 `bug` 擴充功能）
 - `before_bug_fix` / `after_bug_fix`：錯誤修復之前／之後（內建 `bug` 擴充功能）
 - `before_bug_test` / `after_bug_test`：錯誤驗證之前／之後（內建 `bug` 擴充功能）
@@ -233,11 +236,36 @@ specify extension list
 Hook 物件：
 
 - `command`：要執行的命令（通常來自 `provides.commands`，但可引用任何已註冊命令）
-- `priority`：事件內的執行順序（整數 ≥ 1，預設 10；數字越小越先執行；優先順序相同時保留撰寫順序）
+- `priority`：`HookExecutor` 的排序中繼資料（整數 ≥ 1，預設為 10）；目前的命令範本改為依設定的 YAML 順序呈現 hook
 - `optional`：若為 true，執行前提示使用者
 - `prompt`：選用 hook 的提示文字
 - `description`：Hook 說明
-- `condition`：執行條件（未來功能）
+- `condition`：由 `HookExecutor` 求值的運算式；目前的命令範本會跳過條件非空的 hook，而非求值它們
+
+所有欄位，以及 Python API 與命令範本行為之間的區別，請參閱[掛鉤設定合約](api.md#hook-設定)。
+
+#### `events`
+
+執行時期事件會回應程式代理的生命週期，而非 Spec Kit 命令。請在頂層宣告正式名稱，並參照帶有可執行 `scripts` 項目的命令範本：
+
+```yaml
+events:
+  session_start:
+    command: speckit.my-ext.initialize
+```
+
+例如，`commands/initialize.md` 可以宣告：
+
+```yaml
+---
+description: "Initialize the extension session"
+scripts:
+  sh: scripts/initialize.sh
+  ps: scripts/initialize.ps1
+---
+```
+
+請將該命令納入 `provides.commands`，並在你的擴充功能中提供指令稿。執行時期事件會直接執行指令稿；它們不會將命令的 Markdown 主體傳送給程式代理。每個整合支援正式事件的子集。請參閱[執行時期事件合約](api.md#擴充功能執行時期事件)。
 
 #### `tags`
 
@@ -247,10 +275,6 @@ Hook 物件：
 
 擴充功能的預設設定值。
 
-#### `config_schema`
-
-用於驗證擴充功能設定的 JSON Schema。
-
 ---
 
 ## 命令檔案格式
@@ -259,7 +283,7 @@ Hook 物件：
 
 ```yaml
 ---
-description: "Command description"          # Required
+description: "Command description"          # Recommended
 tools:                                      # Optional
   - 'tool-name/function'
 scripts:                                    # Optional
@@ -285,8 +309,10 @@ scripts:                                    # Optional
 2. Execute logic
 
 ```bash
+
 args="$ARGUMENTS"
 echo "Running with args: $args"
+
 ```
 ````
 
@@ -315,11 +341,12 @@ Once the assessment exists, the next step is `__SPECKIT_COMMAND_BUG_FIX__ slug=<
 
 在 Copilot 聊天中，這會轉譯為 `/speckit-bug-fix slug=<slug>`。第一方的 `bug` 與 `git` 擴充功能專門使用此權杖；實際範例見 `extensions/bug/commands/`。
 
-其他整合的呼叫格式，請參閱共用的[命令呼叫參考](../integrations/cli.md#command-invocation)。
+其他整合的呼叫格式，請參閱共用的[命令呼叫參考](../integrations/cli.md#命令呼叫方式)。
 
 ### 指令碼路徑重寫
 
-擴充功能命令使用相對路徑，註冊時會被重寫：
+登錄器在渲染命令時會正規化輔助程式路徑。
+含有兩個以上 `../` 區段的儲存庫根目錄參照，指向專案的核心指令稿。
 
 **在擴充功能中**：
 
@@ -328,14 +355,13 @@ scripts:
   sh: ../../scripts/bash/helper.sh
 ```
 
-**註冊後**：
+在命令主體中使用 `{SCRIPT}` 來呼叫選取的指令稿變體。對於此範例，產生的呼叫如下：
 
-```yaml
-scripts:
-  sh: .specify/scripts/bash/helper.sh
+```bash
+.specify/scripts/bash/helper.sh
 ```
 
-這讓指令碼能引用核心 spec-kit 指令碼。
+裸寫的 `scripts/helper.sh` 則指向擴充功能自有指令稿 `.specify/extensions/<extension-id>/scripts/helper.sh`。產生的輸出格式可能在解析 `{SCRIPT}` 後省略原始的 `scripts` frontmatter；請勿依賴該中繼資料在已安裝的命令或技能中留存。
 
 ---
 
@@ -353,42 +379,35 @@ scripts:
 api:
   endpoint: "https://api.example.com"
   timeout: 30
+  key: ""  # Set with SPECKIT_MY_EXT_API_KEY; do not commit credentials
 
 features:
   feature_a: true
   feature_b: false
-
-credentials:
-  # DO NOT commit credentials!
-  # Use environment variables instead
-  api_key: "${MY_EXT_API_KEY}"
 ```
 
 ### 設定載入
 
 在你的命令中，以分層優先順序載入設定：
 
-1. 擴充功能預設值（`extension.yml` → `defaults`）
+1. 擴充功能預設值（`extension.yml` → `defaults`，再取 `config.defaults` 處理任何衝突的鍵）
 2. 專案設定（`.specify/extensions/my-ext/my-ext-config.yml`）
-3. 本機覆寫（`.specify/extensions/my-ext/my-ext-config.local.yml`——已加入 gitignore）
+3. 本機覆寫（`.specify/extensions/my-ext/local-config.yml`——gitignored）
 4. 環境變數（`SPECKIT_MY_EXT_*`）
 
-**載入指令碼範例**：
+對於在已安裝 `specify-cli` 的環境中執行的 Python 程式碼，請使用既有的載入器，而非重複實作合併：
 
-```bash
-#!/usr/bin/env bash
-EXT_DIR=".specify/extensions/my-ext"
+```python
+from pathlib import Path
+from specify_cli.extensions import ConfigManager
 
-# Load and merge config
-config=$(yq eval '.' "$EXT_DIR/my-ext-config.yml" -o=json)
-
-# Apply env overrides
-if [ -n "${SPECKIT_MY_EXT_API_KEY:-}" ]; then
-  config=$(echo "$config" | jq ".api.api_key = \"$SPECKIT_MY_EXT_API_KEY\"")
-fi
-
-echo "$config"
+config = ConfigManager(Path.cwd(), "my-ext").get_config()
+endpoint = config.get("api", {}).get("endpoint")
 ```
+
+請從專案根目錄執行，或明確傳入該根目錄。環境變數的組成部分會成為巢狀鍵：`SPECKIT_MY_EXT_API_KEY` 會覆寫 `api.key`。值維持字串；YAML `${...}` 佔位符不會被展開。以其他語言實作的命令若需要此分層，必須自行提供載入。
+
+Spec Kit 不會使用 `config_schema` 來驗證設定。請在你的擴充功能命令或指令稿中驗證必要的值與類型。
 
 ---
 
@@ -463,15 +482,20 @@ CONTRIBUTING.md
 
 ### 擴充功能版本
 
-- **格式**：語意化版本（MAJOR.MINOR.PATCH）
+- **格式**：PEP 440；發行版本建議使用 SemVer（`MAJOR.MINOR.PATCH`）
 - **有效**：`1.0.0`、`0.1.0`、`2.5.3`
-- **無效**：`1.0`、`v1.0.0`、`1.0.0-beta`
+- **CLI 亦接受**：`1.0`、`v1.0.0`、`1.0.0-beta`
+- **無效**：`latest`、`not-a-version`
+
+社群提交對發行版本有更嚴格的要求；請參閱[提交驗證](publishing.md#提交驗證)。
 
 ### 命令名稱
 
 - **模式**：`^speckit\.[a-z0-9-]+\.[a-z0-9-]+$`
 - **有效**：`speckit.my-ext.hello`、`speckit.tool.cmd`
-- **無效**：`my-ext.hello`（缺少前綴）、`speckit.hello`（無擴充功能命名空間）
+- **無效**：`other-ext.hello`（錯誤的命名空間）、`speckit.my-ext.Create`（大寫）
+
+舊版的 `my-ext.hello` 與 `speckit.hello` 會正規化為 `speckit.my-ext.hello`，並發出警告。請在新的資訊清單中使用正式名稱。
 
 ### 命令檔案路徑
 
@@ -485,7 +509,7 @@ CONTRIBUTING.md
 
 ### 手動測試
 
-1. 在已設定 [Copilot skills](../integrations/copilot.md#setup) 的專案中**建立測試擴充功能**。
+1. 在已設定 [Copilot skills](../integrations/copilot.md#設定) 的專案中**建立測試擴充功能**。
 2. **在本機安裝**：
 
    ```bash
@@ -563,7 +587,7 @@ def test_command_files_exist():
    specify extension add --dev spec-kit-my-ext/
    ```
 
-### 選項 2：ZIP 封存檔（未來功能）
+### 選項 2：ZIP 封存檔
 
 建立 ZIP 封存檔並託管在 GitHub Releases：
 
@@ -585,8 +609,8 @@ specify extension add <extension-name> --from https://github.com/.../spec-kit-my
 2. 使用 [Extension Submission](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml) 範本**建立 issue**
 3. **審查後**，維護者會更新型錄，你的擴充功能即可用：
    - 使用者可瀏覽 `catalog.community.json` 探索你的擴充功能
-   - 使用者將條目複製到自己的 `catalog.json`
-   - 使用者安裝：`specify extension add my-ext`（從其型錄）
+   - 使用者在直接安裝或加入自己信任的型錄之前，會先審查發行封存檔
+   - 使用者以 `--from <archive-url>` 安裝，或從他們審查過的型錄安裝
 
 詳細提交說明請參閱[擴充功能發佈指南](publishing.md)。
 
@@ -660,7 +684,9 @@ description: "Hello command"
 # Hello World
 
 ```bash
+
 echo "Hello, $ARGUMENTS!"
+
 ```
 ````
 
@@ -690,9 +716,11 @@ timeout: 30
 
 Load config:
 ```bash
+
 config_file=".specify/extensions/tool/tool-config.yml"
 endpoint=$(yq eval '.api_endpoint' "$config_file")
 echo "Using endpoint: $endpoint"
+
 ```
 ````
 
@@ -709,7 +737,7 @@ hooks:
     description: "Analyze tasks after generation"
 ```
 
-一個事件多個命令，依 `priority` 排序（數字越小越先執行）：
+一個事件多個命令，依目前命令範本的 YAML 順序呈現（`HookExecutor` 則改為依 `priority` 排序，數字越小越先）：
 
 ```yaml
 # extension.yml
@@ -738,7 +766,7 @@ hooks:
 
 **錯誤**：`Extension requires spec-kit >=0.2.0`
 
-- **修正**：使用[升級指南](../upgrade.md)升級 Spec Kit。`uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git` 仍可作為從原始碼安裝的備援方式。如果你是從 PyPI 安裝並希望沿用該路徑，請遵循 [PyPI 升級指南](../install/pypi.md#upgrade)。
+- **修正**：使用[升級指南](../upgrade.md)升級 Spec Kit。`uv tool install specify-cli --force --from git+https://github.com/github/spec-kit.git` 仍可作為從原始碼安裝的備援方式。如果你是從 PyPI 安裝並希望沿用該路徑，請遵循 [PyPI 升級指南](../install/pypi.md#升級)。
 
 **錯誤**：`Command file not found`
 
@@ -758,7 +786,7 @@ hooks:
    cat .specify/extensions/.registry
    ```
 
-**修正**：確認 Copilot 已設定為 [skills 配置](../integrations/copilot.md#default-skills-layout)，然後重新安裝擴充功能以觸發註冊。
+**修正**：確認 Copilot 已設定為 [skills 配置](../integrations/copilot.md#預設技能版式)，然後重新安裝擴充功能以觸發註冊。
 
 ### 設定未載入
 
@@ -774,7 +802,7 @@ hooks:
 
 - **Issue**：在 GitHub 儲存庫回報錯誤
 - **討論**：在 GitHub Discussions 提問
-- **範例**：參閱 `spec-kit-jira` 完整功能範例（Phase B）
+- **範例**：請參閱內建的 [GitHub](https://github.com/github/spec-kit/tree/main/extensions/github) 與 [bug](https://github.com/github/spec-kit/tree/main/extensions/bug) 擴充功能
 
 ---
 
@@ -787,4 +815,12 @@ hooks:
 
 祝擴充愉快！🚀
 
-> 本頁的代理呼叫範例使用 GitHub Copilot 的預設 skills 語法（`/speckit-*`）。其他整合與模式，請參閱[命令呼叫](../integrations/cli.md#command-invocation)。
+> 本頁的代理呼叫範例使用 GitHub Copilot 的預設 skills 語法（`/speckit-*`）。其他整合與模式，請參閱[命令呼叫](../integrations/cli.md#命令呼叫方式)。
+
+## 另請參閱
+
+- [擴充功能 API 參考](api.md)
+- [擴充功能 CLI 參考](cli.md)
+- [擴充功能型錄](catalogs.md)
+- [發佈擴充功能](publishing.md)
+- [擴充功能使用者指南](overview.md)

@@ -6,7 +6,7 @@
 
 ## 安裝設定
 
-先[安裝 Spec Kit](../installation.md)，並初始化包含該錯誤的儲存庫。若儲存庫已有程式碼，請依循[在既有專案中採用 Spec Kit](existing-projects.md)。
+請先[安裝 Spec Kit](../installation.md)，並初始化含有該錯誤的儲存庫。若其中已有程式碼，請參閱[在既有專案中採用 Spec Kit](../how-to/existing-projects.md)。
 
 在已初始化專案根目錄的終端機中，安裝擴充功能：
 
@@ -14,7 +14,7 @@
 specify extension add bug
 ```
 
-接著在該目錄中啟動你的程式代理。以下範例使用 GitHub Copilot 的預設 skills 模式（`--integration copilot`）。其他代理會以各自的[命令呼叫語法](../integrations/cli.md#command-invocation)提供相同步驟。請在代理的聊天中分別呼叫每個 `/speckit-bug-*` skill，並在繼續之前檢視其輸出。這些是代理 skill，不是終端機命令；上面的終端機命令只是安裝擴充功能。
+接著在該目錄中啟動你的程式代理。以下範例使用 GitHub Copilot 的預設 skills 模式（`--integration copilot`）。其他代理會以各自的[命令呼叫語法](../integrations/cli.md#命令呼叫方式)提供相同步驟。請在代理的聊天中分別呼叫每個 `/speckit-bug-*` skill，並在繼續之前檢視其輸出。這些是代理 skill，不是終端機命令；上面的終端機命令只是安裝擴充功能。
 
 ## 1. 評估錯誤
 

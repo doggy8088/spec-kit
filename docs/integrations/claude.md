@@ -4,7 +4,7 @@
 
 ## 多重安裝安全性
 
-本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
+本整合已宣告為多重安裝安全。請參閱[共用的多重安裝規則](cli.md#我可以在同一個專案中安裝多個整合嗎)。
 
 ## 設定
 
@@ -34,6 +34,12 @@ specify init my-project --integration claude --integration-options="--no-model-i
 
 ## 執行階段事件與工作流程分派
 
-本整合透過 `.claude/settings.json` 支援原生事件。使用 `--integration-options="--events false"` 可停用 Spec Kit 事件處理常式；若兩項設定都需要，可將它與 `--no-model-invocation` 併用。請參閱[執行階段事件](cli.md#runtime-events)。
+本整合透過 `.claude/settings.json` 支援原生事件。使用 `--integration-options="--events false"` 可停用 Spec Kit 事件處理常式；若兩項設定都需要，可將它與 `--no-model-invocation` 併用。請參閱[執行階段事件](cli.md#執行階段事件)。
 
 工作流程步驟使用 `claude -p <prompt>`，並在已設定時傳入 `--model`、在要求結構化輸出時傳入 `--output-format json`。此轉接器本身不會加上略過權限的旗標。
+
+## 工作流程分派設定
+
+命令與提示詞步驟可設定 [`reasoning_effort`](../workflow-steps/types.md#推理強度與上下文大小)，Claude Code 分派時會將其以 `--effort <value>` 傳入。Claude Code 2.1.318 接受 `low`、`medium`、`high`、`xhigh` 與 `max`。其他值只會收到警告而被忽略，因此 Spec Kit 會在 Claude Code 啟動前拒絕其他值。若要傳入新版 Claude Code 新增的層級，請改設 `SPECKIT_INTEGRATION_CLAUDE_EXTRA_ARGS="--effort <value>"`，不要使用 `reasoning_effort`；此環境變數會套用到每一次 Claude Code 呼叫，而不只是一個步驟。
+
+Spec Kit 不會為 Claude Code 對映 `context_size`，因此設定它的步驟會失敗。請改用步驟的 `model` 欄位選擇長上下文模型。

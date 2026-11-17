@@ -39,7 +39,7 @@
 
 ## 發佈
 
-詳情請參閱[預設集發佈指南](../PUBLISHING.md)，說明如何提交至型錄。
+提交至型錄的詳情請參閱[預設集發佈指南](https://github.github.io/spec-kit/presets/publishing.html)。
 
 ## 授權
 

@@ -4,7 +4,7 @@
 
 ## 多重安裝安全性
 
-本整合未宣告為多重安裝安全，因為它的技能目錄與其他整合共用。請參閱[共用的多重安裝規則](cli.md#can-i-install-multiple-integrations-in-the-same-project)。
+本整合未宣告為多重安裝安全，因為它的技能目錄與其他整合共用。請參閱[共用的多重安裝規則](cli.md#我可以在同一個專案中安裝多個整合嗎)。
 
 ## 設定
 
@@ -40,4 +40,4 @@ specify init my-project --integration docker-agent
 
 `integration_args` 最多接受一個非空參照，且不得以 `-` 開頭；Docker Agent 會驗證所參照的本機檔案或登錄項目。支援的 `integration_options` 為 `agent` 與 `safety`；safety 必須是 `strict`、`balanced`、`restricted` 或 `autonomous`。設定模型請使用步驟最上層的 `model`，而不是 `integration_options.model`。未知或格式錯誤的執行階段選項會明確失敗。
 
-當未提供逐步參照時，舊版的 `SPECKIT_INTEGRATION_DOCKER_AGENT_EXTRA_ARGS=./agent.yaml` 環境變數仍受支援。逐步參照會覆寫整個舊版值，包括其中包含的任何旗標。分派使用 `run --exec`，會加上要求的 `--json` 與 `--model` 旗標，並將提示詞放在 `--` 之後，讓提示詞文字不會變成 CLI 選項。請參閱[逐步整合設定](../reference/workflows.md#per-step-integration-configuration)。
+舊版 `SPECKIT_INTEGRATION_DOCKER_AGENT_EXTRA_ARGS=./agent.yaml` 環境變數在未提供逐步驟參照時仍受支援。逐步驟參照會覆寫整個舊版值，包括其中包含的任何旗標。分派時使用 `run --exec`，加上要求的 `--json` 與 `--model` 旗標，並將提示詞置於 `--` 之後，使提示詞文字不會變成 CLI 選項。請參閱[逐步驟整合設定](../workflow-steps/types.md#每個步驟的整合設定)。

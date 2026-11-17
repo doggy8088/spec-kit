@@ -9,7 +9,7 @@
 > [!NOTE]
 > 自動化 script 提供 Bash（`.sh`）、PowerShell（`.ps1`）與 Python（`.py`）三種變體。互動式 `specify init` 會提示你選擇一種；非互動執行（沒有 TTY，或 `--non-interactive`）預設使用你作業系統的 shell 變體。傳入 `--script sh|ps|py` 可明確選擇。
 
-這裡的流程步驟使用 GitHub Copilot 的預設 skills 模式（`/speckit-*`）。其他代理或模式，請見[命令呼叫](integrations/cli.md#command-invocation)。請在代理的聊天中分別呼叫每個 `/speckit-*` skill，並在進到下一步之前檢視結果。這些是代理 skill，不是終端機命令；只有 CLI 安裝與專案設定使用終端機。
+這裡的流程步驟使用 GitHub Copilot 的預設 skills 模式（`/speckit-*`）。其他代理或模式，請見[命令呼叫](integrations/cli.md#命令呼叫方式)。請在代理的聊天中分別呼叫每個 `/speckit-*` skill，並在進到下一步之前檢視結果。這些是代理 skill，不是終端機命令；只有 CLI 安裝與專案設定使用終端機。
 
 ## 建議流程
 
@@ -53,8 +53,8 @@ cd taskify
 `init` 讓你以互動方式挑選程式代理，或用 `--integration` 明確傳入（例如 `--integration copilot`）。對於 CI 與 AI 代理框架，加入 `--non-interactive`，讓未指定的選項使用文件記載的預設值，而不是卡在方向鍵選擇器上。
 
 > [!NOTE]
-> 偏好 `pipx`、一次性的 `uvx` 執行、釘住的版本，或離線／氣隙設定？請見[安裝指南](installation.md)了解所有支援的方法。
-> 要把 Spec Kit 加入已有程式碼的儲存庫？在開始下面的工作流程之前，先依[在既有專案中採用 Spec Kit](guides/existing-projects.md)。
+> 偏好 `pipx`、單次 `uvx` 執行、固定的發行版本，或離線／隔離環境設定？所有支援的方法請參閱[安裝指南](installation.md)。
+> 要把 Spec Kit 加入已有程式碼的儲存庫？請先遵循[在既有專案中採用 Spec Kit](how-to/existing-projects.md)，再開始以下工作流程。
 
 在專案目錄中啟動你的程式代理。在它的聊天中逐一呼叫下列 skill。
 
@@ -161,8 +161,8 @@ cd taskify
 
 ## 後續步驟
 
-- 請見[代理式 SDD](reference/agentic-sdd.md)參考，了解每個命令的完整細節
-- 了解如何用擴充功能、預設集、工作流程與套件組[自訂流程](guides/customization.md)
+- 每個命令的完整細節，請參閱 [Agentic SDD](reference/agentic-sdd.md) 參考
+- 了解如何透過擴充功能、預設集、工作流程與套件組[自訂流程](how-to/customization.md)
 - 閱讀[完整方法論](https://github.com/github/spec-kit/blob/main/spec-driven.md)，取得深入指引
-- 比較[核心範本](https://github.com/github/spec-kit/tree/main/templates)與[社群導覽](community/walkthroughs.md)，了解規格驅動開發在真實專案中的使用方式
-- 探索 [GitHub 上的原始碼](https://github.com/github/spec-kit)
+- 比較[核心範本](https://github.com/github/spec-kit/tree/main/templates)與[社群導覽](community/walkthroughs.md)，看看規格驅動開發在實際專案中的應用
+- 探索 GitHub 上的[原始碼](https://github.com/github/spec-kit)

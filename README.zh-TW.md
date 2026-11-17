@@ -25,10 +25,10 @@ Spec Kit 是一套開源工具組，為 AI 程式代理提供結構化的流程�
 
 | 你的需求 | 流程 | 成果 |
 | --- | --- | --- |
-| 開發一個功能或應用程式 | [規格驅動開發](#spec-driven-development) | 一份貫穿規劃、實作與收斂的規格 |
-| 診斷並修復損壞的行為 | [錯誤修正](#bug-fixing) | 經評估的原因、範圍明確的修正，以及記錄下來的驗證 |
-| 決定一個想法是否值得投入 | [想法評估](#idea-assessment) | 有證據支持的 `go`、`needs-clarification` 或 `kill` 決定 |
-| 採用或建立一套不同的流程 | [你自己的流程](#capabilities) | 從可重用的基礎構件調整或組裝而成的流程 |
+| 開發一個功能或應用程式 | [規格驅動開發](#規格驅動開發) | 一份貫穿規劃、實作與收斂的規格 |
+| 診斷並修復損壞的行為 | [錯誤修正](#錯誤修正) | 經評估的原因、範圍明確的修正，以及記錄下來的驗證 |
+| 決定一個想法是否值得投入 | [想法評估](#想法評估) | 有證據支持的 `go`、`needs-clarification` 或 `kill` 決定 |
+| 採用或建立一套不同的流程 | [你自己的流程](#功能總覽) | 從可重用的基礎構件調整或組裝而成的流程 |
 
 這些是各自獨立的入口，不是必經的階段。SDD 隨核心一同提供；錯誤修正與評估是套件組形式的擴充功能，需要時再安裝，而下方的基礎構件能讓你採用或建立其他流程。
 
@@ -39,22 +39,22 @@ Spec Kit 把現成的流程與可組合的機制結合在一起：
 | 功能 | Spec Kit 機制 |
 | --- | --- |
 | 連接程式代理，或在它們之間切換 | [整合](https://github.github.io/spec-kit/integrations/index.html) |
-| 新增一個命令、品質閘門或完整的流程 | [擴充功能](https://github.github.io/spec-kit/reference/extensions.html) |
-| 把流程連接到外部工具或服務 | [擴充功能](https://github.github.io/spec-kit/reference/extensions.html) |
-| 對程式代理的生命週期事件做出反應 | [擴充功能執行期事件](https://github.github.io/spec-kit/reference/extensions.html#extension-runtime-events) |
-| 在 Spec Kit 命令之前或之後執行擴充功能命令 | [擴充功能掛鉤](https://github.github.io/spec-kit/reference/extensions.html#project-extension-and-hook-configuration) |
-| 調整範本、命令、術語或方法論 | [預設集](https://github.github.io/spec-kit/reference/presets.html) |
-| 強制執行組織或法規標準 | [預設集](https://github.github.io/spec-kit/reference/presets.html) |
-| 為單一專案覆寫某個範本 | [專案本機覆寫](https://github.github.io/spec-kit/guides/customization.html#project-local-overrides-and-resolution) |
-| 自動化提示詞、命令、閘門與 shell 任務 | [工作流程](https://github.github.io/spec-kit/reference/workflows.html) |
-| 修改已安裝的工作流程而不 fork 它 | [工作流程覆蓋層](https://github.github.io/spec-kit/reference/workflows.html#workflow-overlays) |
-| 為工作流程加入可重用的可執行行為 | [工作流程步驟](https://github.github.io/spec-kit/reference/workflows.html#custom-step-packages) |
-| 為某個角色或團隊安裝精選的設定 | [套件組](https://github.github.io/spec-kit/reference/bundles.html) |
-| 探索社群元件 | [型錄](https://github.github.io/spec-kit/reference/catalogs.html) |
-| 託管一份核准元件的私有型錄 | [型錄](https://github.github.io/spec-kit/reference/catalogs.html) |
+| 新增命令、品質閘門或完整流程 | [擴充功能](https://github.github.io/spec-kit/extensions/overview.html) |
+| 將流程連接至外部工具或服務 | [擴充功能](https://github.github.io/spec-kit/extensions/overview.html) |
+| 回應程式代理生命週期事件 | [擴充功能執行時期事件](https://github.github.io/spec-kit/extensions/api.html#擴充功能執行時期事件) |
+| 在 Spec Kit 命令之前或之後執行擴充功能命令 | [擴充功能掛鉤](https://github.github.io/spec-kit/extensions/api.html#hook-configuration) |
+| 調整範本、命令、術語或方法論 | [預設集](https://github.github.io/spec-kit/presets/overview.html) |
+| 執行組織或法規標準 | [預設集](https://github.github.io/spec-kit/presets/overview.html) |
+| 為單一專案覆寫範本 | [專案本機覆寫](https://github.github.io/spec-kit/how-to/customization.html#project-local-overrides-and-resolution) |
+| 自動化提示詞、命令、閘門與 shell 任務 | [工作流程](https://github.github.io/spec-kit/workflows/overview.html) |
+| 不 fork 已安裝的工作流程即可修改它 | [工作流程覆蓋層](https://github.github.io/spec-kit/workflows/overlays.html) |
+| 為工作流程加入可重用的可執行行為 | [工作流程步驟](https://github.github.io/spec-kit/workflow-steps/developing.html#custom-step-packages) |
+| 為角色或團隊安裝精選設定 | [套件組](https://github.github.io/spec-kit/bundles/overview.html) |
+| 探索社群元件 | [型錄](https://github.github.io/spec-kit/overview/catalogs.html) |
+| 託管經核准元件的私人型錄 | [型錄](https://github.github.io/spec-kit/overview/catalogs.html) |
 | 存取私有型錄與元件下載 | [身分驗證](https://github.github.io/spec-kit/reference/authentication.html) |
 | 在離線或防火牆後工作 | [本機來源與自架型錄](https://github.github.io/spec-kit/install/air-gapped.html) |
-| 檢查某個命令、範本或指令碼是由哪一層提供的 | [資產清單](https://github.github.io/spec-kit/reference/artifacts.html) |
+| 檢查由哪一層提供命令、範本或指令稿 | [成品清單](https://github.github.io/spec-kit/overview/artifacts.html) |
 
 用 `specify extension search`、
 `specify preset search`、`specify workflow search` 與 `specify bundle search` 等命令搜尋目前啟用的型錄。
@@ -82,7 +82,7 @@ cd my-project
 其他設定方式：
 
 - [安裝](https://github.github.io/spec-kit/installation.html)：釘選的版本、其他安裝方式、CI 與疑難排解。
-- [既有專案](https://github.github.io/spec-kit/guides/existing-projects.html)：從你已經擁有的程式碼開始。
+- [既有專案](https://github.github.io/spec-kit/how-to/existing-projects.html)：從你已有的程式碼開始。
 - [其他代理](https://github.github.io/spec-kit/integrations/index.html)：整合鍵與[呼叫語法](https://github.github.io/spec-kit/integrations/cli.html#command-invocation)。
 - [升級](https://github.github.io/spec-kit/upgrade.html)：更新既有的安裝。
 
@@ -176,7 +176,7 @@ specify extension add assess
 
 ## 客製化，或用你自己的流程
 
-把規格驅動開發、錯誤修正或想法評估客製化，以符合你團隊的標準。或者完全不採用它們，改用你自己的流程。組合[上方的功能](#capabilities)來達成你的目標：
+把規格驅動開發、錯誤修正或想法評估客製化，以符合你團隊的標準。或者完全不採用它們，改用你自己的流程。組合[上方的功能](#功能總覽)來達成你的目標：
 
 - 用預設集調整既有流程，例如要求計畫具備法規可追溯性。一次性的範本變更則使用專案本機覆寫。
 - 要用你自己的流程：先透過擴充功能加入該流程的命令，再透過整合把它們呈現給你的程式代理。
@@ -185,7 +185,7 @@ specify extension add assess
 
 從能滿足需求的最小變更開始；你不需要取代整個流程。
 
-[客製化指南](https://github.github.io/spec-kit/guides/customization.html) ·
+[Customization guide](https://github.github.io/spec-kit/how-to/customization.html) ·
 [社群元件與導覽](https://github.github.io/spec-kit/community/overview.html)
 
 <a id="-specify-cli-reference"></a>
@@ -198,14 +198,18 @@ specify extension add assess
 
 ## 文件
 
-- [CLI 參考](https://github.github.io/spec-kit/reference/overview.html) 與 [流程命令](https://github.github.io/spec-kit/reference/agentic-sdd.html#command-overview)
-- [SDD 哲學](https://github.github.io/spec-kit/concepts/sdd.html)、[完整方法論](./spec-driven.md)，以及[演進既有規格](https://github.github.io/spec-kit/guides/evolving-specs.html)
-- [專案歷史](https://github.github.io/spec-kit/history.html)
-- [Spec Kit 如何使用 Spec Kit](./CONTRIBUTING.md#does-spec-kit-use-spec-kit)
+- [CLI 參考](https://github.github.io/spec-kit/index.html#specify-cli)與[流程命令](https://github.github.io/spec-kit/reference/agentic-sdd.html#command-overview)
+- [操作指南](https://github.github.io/spec-kit/how-to/index.html)：將 Spec Kit 應用於你的專案工作
+- [SDD 理念](https://github.github.io/spec-kit/how-to/sdd.html)、[完整方法論](./spec-driven.md)與[演進既有規格](https://github.github.io/spec-kit/how-to/evolving-specs.html)
+- [專案歷史](https://github.github.io/spec-kit/overview/history.html)
+- [Spec Kit 如何使用 Spec Kit](./CONTRIBUTING.md#spec-kit-有使用-spec-kit-嗎)
 
 ## 媒體報導
 
 - [Open Source Friday: Spec Kit Part 2](https://www.youtube.com/watch?v=8hHCpNVLhmI)（2026 年 10 月 16 日）——Manfred Riem 與 Nicole Haugen 討論 Spec Kit 1.0 與擴充後的工具組。
+- [Living Specs in SpecKit](https://www.alfredo-perez.dev/blog/2026-10-15-living-specs)（2026 年 10 月 15 日）——Alfredo Perez 探討如何在專案演進過程中維護能力層級的規格。
+- [Spec Kit Customization Series](https://jesseliberty.com/2026/10/08/4-solutions-to-spec-kit-issues/)（2026 年 10 月 8–10 日）——Jesse Liberty 逐步介紹預設集與擴充功能撰寫，包含測試與發佈。
+- [From Spec-First to Enterprise-Ready: Extending GitHub Spec Kit](https://developer.microsoft.com/blog/from-spec-first-to-enterprise-ready-extending-github-spec-kit/)（2026 年 10 月 7 日）——Apoorv Gupta 說明如何透過預設集、擴充功能、套件組、工作流程與受管型錄進行企業自訂。
 - [Open Source Friday with Spec Kit](https://www.youtube.com/watch?v=2IArMAhkJcE)（2026 年 5 月 8 日）——與 Manfred Riem 一起介紹並示範 SDD。
 
 ## Star 歷史

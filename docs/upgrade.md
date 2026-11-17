@@ -22,7 +22,7 @@
 CLI 工具（`specify`）與專案檔案各自獨立。升級 CLI 可取得最新功能與錯誤修正。
 
 若你是從 PyPI 安裝並想維持該安裝途徑，請依循
-[PyPI 升級說明](install/pypi.md#upgrade)。重複執行
+[PyPI 升級說明](install/pypi.md#升級)。重複執行
 `uv tool install specify-cli` 不會升級既有安裝。
 
 ### 建議方式：`specify self upgrade`
@@ -43,7 +43,11 @@ specify self upgrade
 specify self upgrade --tag vX.Y.Z[suffix]
 ```
 
-直接執行 `specify self upgrade` 會立即執行，與 `pip install -U`、`npm update` 等命令的免提示行為一致。CLI 會將你的執行環境分類為以下之一：`uv tool`、`pipx`、`uvx (ephemeral)`、原始碼簽出或不受支援。只有 `uv tool` 與 `pipx` 會自動升級；對於 `uv tool` 安裝，底層會執行 `uv tool install specify-cli --force --from <git ref>`，以便固定的 release 標籤也能運作。其他路徑會印出路徑專屬的指引並以 0 結束，不更動任何內容。
+直接執行 `specify self upgrade` 會立即執行，與 `pip install -U`、`npm update` 等命令的免提示行為一致。CLI 會將你的執行環境分類為以下之一：`uv tool`、`pipx`、`uvx (ephemeral)`、原始碼簽出或不受支援。只有 `uv tool` 與 `pipx` 會自動升級；對於 `uv tool` 安裝，底層會執行 `uv tool install specify-cli --force --from <git ref>`，以便固定的 release 標籤也能運作。在 Windows 上，`uv` 無法替換 `specify` 正在執行的工具環境，因此對於 `uv tool` 安裝，`specify self upgrade` 會印出該命令供你在它結束後執行，並以 0 結束、不更動任何內容。請先停止任何其他從該環境執行的行程，例如 `specify mcp` 伺服器，否則 uv 仍可能中途失敗。其他路徑會印出路徑專屬的指引並以 0 結束，不更動任何內容。
+
+工具偵測能識別目前與舊版的預設安裝目錄，以及透過 `UV_TOOL_DIR`、`PIPX_HOME` 或 `XDG_DATA_HOME` 設定的目錄。升級已搬移的安裝時，請保持設定相同的目錄環境變數，讓安裝程式也以該位置為目標。
+
+`PIPX_HOME` 會把開頭的 `~` 展開為你的家目錄。`UV_TOOL_DIR` 則將其視為工作目錄下相對路徑的一部分。`XDG_DATA_HOME` 必須是絕對路徑；相對值，包括以 `~` 開頭的值，都會被忽略。
 
 固定的標籤必須以 `vMAJOR.MINOR.PATCH` 開頭。選用的後綴限於 dev、alpha/beta/rc 及／或建置中繼資料形式，例如 `v1.0.0-rc1`、`v0.8.0.dev0`、`v0.8.0+build.42`，或組合形式 `v1.0.0-rc1+build.42`；分支名稱、雜湊參照、`latest` 與不含 `v` 的裸版本會被拒絕。
 
@@ -144,7 +148,7 @@ specify integration upgrade claude
 specify integration upgrade codex
 ```
 
-`--script`、`--integration-options` 與 `--force` 等選項請參閱[整合參考](integrations/cli.md#upgrade-an-integration)。
+`--script`、`--integration-options` 與 `--force` 等選項請參閱[整合參考](integrations/cli.md#升級整合)。
 
 ### 3. 更新已安裝的擴充功能
 
@@ -154,7 +158,7 @@ specify integration upgrade codex
 specify extension update
 ```
 
-不帶擴充功能參數時，此命令會更新所有已安裝的擴充功能。使用 `specify extension update <extension-id-or-name>` 可只更新一個擴充功能。詳細資訊請參閱[擴充功能參考](reference/extensions.md#update-extensions)。
+不帶擴充功能參數時，此命令會更新所有已安裝的擴充功能。使用 `specify extension update <extension-id-or-name>` 可只更新一個擴充功能。詳細資訊請參閱[擴充功能 CLI 參考](extensions/cli.md#更新擴充功能)。
 
 ### 備援方式：重新執行 init
 

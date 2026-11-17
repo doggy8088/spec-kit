@@ -1,11 +1,17 @@
 # 社群
 
-Spec Kit 社群打造了擴充功能、預設集、套件組、工作流程步驟、實作導覽與配套專案，擴展規格驅動開發的應用範圍。所有社群貢獻皆由各自作者獨立建立與維護。
+Spec Kit 社群打造整合、擴充功能、預設集、工作流程、工作流程步驟、套件組、實作導覽與配套專案，擴展 Spec Kit 的應用範圍。所有社群貢獻皆由各自作者獨立建立與維護。
 
 > [!NOTE]
 > 安裝前請先檢視社群原始碼，並自行斟酌使用。型錄收錄不等同於稽核或背書。
 
-關於僅供探索的社群來源與經核准的私有來源如何搭配使用，請參閱[型錄參考](../reference/catalogs.md)。
+了解僅供探索的社群來源與經核准的私有來源如何搭配使用，請參閱[型錄參考](../overview/catalogs.md)。
+
+## 整合
+
+整合將 Spec Kit 連接至程式代理。社群外部配接器有自己的套件與型錄合約，與內建代理分開。
+
+[瀏覽社群整合 →](integrations.md)
 
 ## 擴充功能
 
@@ -19,17 +25,23 @@ Spec Kit 社群打造了擴充功能、預設集、套件組、工作流程步�
 
 [瀏覽社群預設集 →](presets.md)
 
-## 套件組
+## 工作流程
 
-套件組將擴充功能、預設集、工作流程與步驟組合成可一同安裝的角色或團隊組合。
+工作流程將可重複使用的步驟組合成可重複、可續跑的流程，其輸入、控制流程與審查關卡由作者決定。
 
-[瀏覽社群套件組 →](bundles.md)
+[瀏覽社群工作流程 →](workflows.md)
 
 ## 工作流程步驟類型
 
 工作流程步驟類型加入可重複使用的可執行行為，工作流程可透過 `type:` 選用。社群型錄僅供探索；安裝或執行步驟前，請先審查其來源。
 
-[提交社群工作流程步驟類型 →](workflow-steps.md)
+[瀏覽社群工作流程步驟類型 →](workflow-steps.md)
+
+## 套件組
+
+套件組將擴充功能、預設集、工作流程與步驟組合成可一同安裝的角色或團隊組合。
+
+[瀏覽社群套件組 →](bundles.md)
 
 ## 實作導覽
 
@@ -45,8 +57,9 @@ Spec Kit 社群打造了擴充功能、預設集、套件組、工作流程步�
 
 ## 貢獻元件
 
-若要發佈自己的作品，請依循
-[擴充功能發佈指南](../extensions/publishing.md)、
-[預設集發佈指南](https://github.com/github/spec-kit/blob/main/presets/PUBLISHING.md)、
-[社群套件組指南](bundles.md)或
-[社群工作流程步驟類型指南](workflow-steps.md)。如需協助選擇元件類型，請參閱[自訂 Spec Kit](../guides/customization.md)。
+若要發佈自己的作品，請依循[整合貢獻指南](../integrations/contributing.md)、[擴充功能發佈指南](../extensions/publishing.md)、[預設集發佈指南](../presets/publishing.md)、[工作流程發佈指南](../workflows/publishing.md)、[社群工作流程步驟類型指南](workflow-steps.md)或[套件組發佈指南](../bundles/publishing.md)。
+
+## 另請參閱
+
+- [依流程調整 Spec Kit](../how-to/customization.md)
+- [型錄探索與信任](../overview/catalogs.md)

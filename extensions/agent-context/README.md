@@ -58,6 +58,6 @@ pip install pyyaml
 /path/to/speckit-python -m pip install pyyaml
 ```
 
-## Issues
+## 問題回報
 
 如有其他問題，請在 [GitHub 官方儲存庫](https://github.com/github/spec-kit/issues)建立 issue。
