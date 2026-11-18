@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-11-16T00:00:00Z",
+  "updated_at": "2026-11-17T00:00:00Z",
   "catalog_url": "https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json",
   "extensions": {
     "ado": {
@@ -8,13 +8,13 @@
       "id": "ado",
       "description": "Azure DevOps story to Done through Spec Kit, with a human sign-off before every board change.",
       "author": "praveenlavu",
-      "version": "0.3.2",
-      "download_url": "https://github.com/praveenlavu/spec-kit-ado/archive/refs/tags/v0.3.2.zip",
-      "sha256": "1f6806c67de462a3a5e34e818c070dd49bd689bf0cb22a0fdc6078467b2fae4c",
+      "version": "0.4.0",
+      "download_url": "https://github.com/praveenlavu/spec-kit-ado/archive/refs/tags/v0.4.0.zip",
+      "sha256": "f869ea60786c8687e37172428fc327b3ca08e54b7111f7db915351fd490bb6e9",
       "repository": "https://github.com/praveenlavu/spec-kit-ado",
       "homepage": "https://github.com/praveenlavu/spec-kit-ado",
-      "documentation": "https://github.com/praveenlavu/spec-kit-ado/blob/v0.3.2/README.md",
-      "changelog": "https://github.com/praveenlavu/spec-kit-ado/blob/v0.3.2/CHANGELOG.md",
+      "documentation": "https://github.com/praveenlavu/spec-kit-ado/blob/v0.4.0/README.md",
+      "changelog": "https://github.com/praveenlavu/spec-kit-ado/blob/v0.4.0/CHANGELOG.md",
       "license": "MIT",
       "category": "integration",
       "effect": "read-write",
@@ -23,7 +23,7 @@
         "tools": [
           {
             "name": "ado",
-            "version": ">=0.3.0",
+            "version": ">=0.4.0",
             "required": true
           },
           {
@@ -37,7 +37,7 @@
         ]
       },
       "provides": {
-        "commands": 13,
+        "commands": 14,
         "hooks": 2
       },
       "tags": [
@@ -51,7 +51,7 @@
       "downloads": 0,
       "stars": 0,
       "created_at": "2026-11-09T00:00:00Z",
-      "updated_at": "2026-11-09T00:00:00Z"
+      "updated_at": "2026-11-16T00:00:00Z"
     },
     "adrkit": {
       "name": "adrkit — decision memory for spec-driven development",
@@ -203,13 +203,13 @@
       "id": "aididit",
       "description": "Runs every work item through Assemble, Ideate, Draft, Iterate, Deliver, Investigate and Tidy, with a simulated agile team and a web-cited practitioner panel in place of human gates.",
       "author": "Rubber Duck Engineering",
-      "version": "0.2.1",
-      "download_url": "https://github.com/RubberDuckEngineering/ai-did-it/releases/download/v0.2.1/aididit-v0.2.1.zip",
-      "sha256": "32fd832e46e0972e2f06bab8723dc981ee41a3d0d0bb18daff0a0cb7da97993f",
+      "version": "0.2.4",
+      "download_url": "https://github.com/RubberDuckEngineering/ai-did-it/releases/download/v0.2.4/aididit-v0.2.4.zip",
+      "sha256": "f52b17a2b53d0dd3a0d1f9cd4810811a48b716ecb8247f86e4a389a37aef7d4f",
       "repository": "https://github.com/RubberDuckEngineering/ai-did-it",
       "homepage": "https://github.com/RubberDuckEngineering/ai-did-it",
-      "documentation": "https://github.com/RubberDuckEngineering/ai-did-it/blob/v0.2.1/README.md",
-      "changelog": "https://github.com/RubberDuckEngineering/ai-did-it/blob/v0.2.1/CHANGELOG.md",
+      "documentation": "https://github.com/RubberDuckEngineering/ai-did-it/blob/v0.2.4/README.md",
+      "changelog": "https://github.com/RubberDuckEngineering/ai-did-it/blob/v0.2.4/CHANGELOG.md",
       "license": "MIT",
       "category": "process",
       "effect": "read-write",
@@ -246,7 +246,7 @@
       "downloads": 0,
       "stars": 0,
       "created_at": "2026-11-10T00:00:00Z",
-      "updated_at": "2026-11-10T00:00:00Z"
+      "updated_at": "2026-11-16T00:00:00Z"
     },
     "agent-assign": {
       "name": "Agent Assign",
@@ -1582,9 +1582,9 @@
       "id": "companion",
       "description": "Records your spec-kit runs live: status, resume, and a health check for what actually happened.",
       "author": "alfredoperez",
-      "version": "0.26.0",
-      "download_url": "https://github.com/alfredoperez/speckit-companion/releases/download/speckit-ext-v0.26.0/companion-0.26.0.zip",
-      "sha256": "e385885cfb6e1254945da902295b4587b74050334109eb9b17c2446e285273c0",
+      "version": "0.27.0",
+      "download_url": "https://github.com/alfredoperez/speckit-companion/releases/download/speckit-ext-v0.27.0/companion-0.27.0.zip",
+      "sha256": "e8e2a62a55e030ec261ee5e3d475effb1b869a4f7abba5b4cd7e155f2133615b",
       "repository": "https://github.com/alfredoperez/speckit-companion",
       "homepage": "https://github.com/alfredoperez/speckit-companion/tree/main/apps/speckit-extension",
       "documentation": "https://github.com/alfredoperez/speckit-companion/blob/main/apps/speckit-extension/README.md",
@@ -1602,21 +1602,19 @@
         ]
       },
       "provides": {
-        "commands": 26,
+        "commands": 19,
         "hooks": 10
       },
       "tags": [
         "vscode",
         "progress",
-        "living-specs",
-        "drift",
         "hooks"
       ],
       "verified": false,
       "downloads": 0,
       "stars": 0,
       "created_at": "2026-06-11T00:00:00Z",
-      "updated_at": "2026-11-10T00:00:00Z"
+      "updated_at": "2026-11-16T00:00:00Z"
     },
     "conduct": {
       "name": "Conduct Extension",
@@ -2066,9 +2064,9 @@
       "id": "docguard",
       "description": "Documentation integrity for AI-assisted repositories: lifecycle registry, drift validation, traceability, safe archival, SARIF/JUnit, MCP, GitHub Actions, and Spec Kit hooks.",
       "author": "raccioly",
-      "version": "0.47.0",
-      "download_url": "https://github.com/raccioly/docguard/releases/download/v0.47.0/spec-kit-docguard-v0.47.0.zip",
-      "sha256": "69bf3e08acb22b2825637aed7afb38c7b05de0a8a0072de8942405a51370de67",
+      "version": "0.49.0",
+      "download_url": "https://github.com/raccioly/docguard/releases/download/v0.49.0/spec-kit-docguard-v0.49.0.zip",
+      "sha256": "d9daa012fc95321aac30f5973b2fcd829c8f62338578fa8b5acdac4405205983",
       "repository": "https://github.com/raccioly/docguard",
       "homepage": "https://www.npmjs.com/package/docguard-cli",
       "documentation": "https://github.com/raccioly/docguard/blob/main/extensions/spec-kit-docguard/README.md",
@@ -2109,7 +2107,7 @@
       "downloads": 0,
       "stars": 0,
       "created_at": "2026-03-13T00:00:00Z",
-      "updated_at": "2026-11-10T00:00:00Z"
+      "updated_at": "2026-11-17T00:00:00Z"
     },
     "doctor": {
       "name": "Project Health Check",
@@ -2886,6 +2884,56 @@
       "stars": 0,
       "created_at": "2026-09-11T00:00:00Z",
       "updated_at": "2026-09-11T00:00:00Z"
+    },
+    "ghp": {
+      "name": "Spec Kit for GitHub Projects - human-gated lifecycle",
+      "id": "ghp",
+      "description": "GitHub issue to Done through Spec Kit, with a human sign-off before every write.",
+      "author": "praveenlavu",
+      "version": "0.1.2",
+      "download_url": "https://github.com/praveenlavu/spec-kit-ghp/releases/download/v0.1.2/spec-kit-ghp-extension-0.1.2.zip",
+      "sha256": "21dc228f99fbf9b8768b6f75e889be2bb99c68ed9b5237951276e33e9dedfbda",
+      "repository": "https://github.com/praveenlavu/spec-kit-ghp",
+      "homepage": "https://github.com/praveenlavu/spec-kit-ghp",
+      "documentation": "https://github.com/praveenlavu/spec-kit-ghp/blob/main/README.md",
+      "changelog": "https://github.com/praveenlavu/spec-kit-ghp/blob/v0.1.2/CHANGELOG.md",
+      "license": "MIT",
+      "category": "integration",
+      "effect": "read-write",
+      "requires": {
+        "speckit_version": ">=1.2.1",
+        "tools": [
+          {
+            "name": "ghp",
+            "version": ">=0.1.2",
+            "required": true
+          },
+          {
+            "name": "git",
+            "required": true
+          },
+          {
+            "name": "gh",
+            "required": true
+          }
+        ]
+      },
+      "provides": {
+        "commands": 13,
+        "hooks": 2
+      },
+      "tags": [
+        "github-projects",
+        "issue-tracking",
+        "hitl",
+        "workflow",
+        "governance"
+      ],
+      "verified": false,
+      "downloads": 0,
+      "stars": 0,
+      "created_at": "2026-11-17T00:00:00Z",
+      "updated_at": "2026-11-17T00:00:00Z"
     },
     "github-issues": {
       "name": "GitHub Issues Integration 1",

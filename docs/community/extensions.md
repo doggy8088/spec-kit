@@ -72,7 +72,7 @@
 | CSDD — Controlled Spec-Driven Development | 將治理規範、門禁、範本安裝至已有儲存庫；第三方擴充功能依清單選擇性安裝，預設不安裝。 | `process` | 讀寫 | [csdd](https://github.com/yuansanche/csdd) |
 | Data Model Diagram | 在規劃後，從 Spec Kit 資料模型產生 Mermaid ER 圖表 | `docs` | 讀寫 | [spec-kit-data-model-diagram](https://github.com/benizzio/spec-kit-data-model-diagram) |
 | deja-vu session recall | 搜尋你過去為某功能執行過的程式代理工作階段：嘗試過什麼、決定了什麼或失敗了什麼。 | `process` | 唯讀 | [deja-vu](https://github.com/vshulcz/deja-vu) |
-| DocGuard — CDD Enforcement | AI 輔助儲存庫的文件完整性：生命週期登錄、漂移驗證、可追蹤性、安全封存、SARIF/JUnit、MCP、GitHub Actions 與 Spec Kit 掛鉤。 | `docs` | 讀寫 | [spec-kit-docguard](https://github.com/raccioly/docguard) |
+| DocGuard — CDD Enforcement | AI 輔助儲存庫的文件完整性：生命週期登錄、漂移驗證、可追蹤性、安全封存、SARIF/JUnit、MCP、GitHub Actions 與 Spec Kit 掛鉤。 | `docs` | 讀寫 | [docguard](https://github.com/raccioly/docguard) |
 | Domain Spec Maintenance | 維護各領域的標準規格：在 specify/plan 前讀取，在 implement 後更新 | `docs` | 讀寫 | [spec-kit-domain-spec](https://github.com/jinaparkdev/spec-kit-domain-spec) |
 | Dotdog | 將 GitHub Spec Kit 產出物匯入本機知識圖譜，以進行驗證、分析、搜尋與 MCP 查詢。 | `docs` | 讀寫 | [dotdog](https://github.com/specdog/dotdog) |
 | DUBSAR Memory | Spec Kit 的本機專案記憶，具備明確檢查點、跨工作階段恢復，以及已記錄規格、計畫與任務參照的 SHA-256 新鮮度。 | `visibility` | 讀寫 | [dubsar-memory](https://github.com/kotnisofiane-bit/dubsar-memory) |
@@ -176,6 +176,7 @@
 | Spec Kit Discovery Extension | 執行技術探索命令，涵蓋可行性、技術選擇、情境專屬技術決策、既有程式碼庫評估、實作理解與概念驗證 | `process` | 讀寫 | [spec-kit-discovery](https://github.com/bigsmartben/spec-kit-discovery) |
 | Spec Kit Figma | 透過 REST 或 MCP，將 SpecKit spec/plan/tasks 奠基於 Figma 設計脈絡，支援 macOS/Linux/Windows。 | `integration` | 讀寫 | [spec-kit-figma](https://github.com/Fyloss/spec-kit-figma) |
 | Spec Kit for Azure DevOps — human-gated lifecycle | 透過 Spec Kit 將 Azure DevOps story 推向 Done，每次看板變更前都需人類簽核。 | `integration` | 讀寫 | [spec-kit-ado](https://github.com/praveenlavu/spec-kit-ado) |
+| Spec Kit for GitHub Projects - human-gated lifecycle | 透過 Spec Kit 將 GitHub issue 推向 Done，每次寫入前都需人類簽核。 | `integration` | 讀寫 | [spec-kit-ghp](https://github.com/praveenlavu/spec-kit-ghp) |
 | Spec Kit lifecycle for Jira | 透過 Spec Kit 將 Jira story 推向 Done，每次 Jira 或 PR 寫入前都需人類簽核。 | `integration` | 讀寫 | [spec-kit-jira](https://github.com/praveenlavu/spec-kit-jira) |
 | Spec Kit Memory | 在 SDLC 各階段前，從可設定的記憶工具（如 memsearch）回想先前的規格與決策，讓規劃與規格制定從專案已知的內容出發 | `docs` | 讀寫 | [spec-kit-memory](https://github.com/zaytsevand/spec-kit-memory) |
 | Spec Kit Preview | 從 Spec Kit 產出物產生具證據支持的低、中或高保真預覽，格式為 Markdown 或自包含 HTML | `docs` | 讀寫 | [spec-kit-preview](https://github.com/bigsmartben/spec-kit-preview) |

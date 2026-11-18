@@ -186,7 +186,7 @@ class TestGitExtensionManifest:
 
         m = ExtensionManifest(EXT_DIR / "extension.yml")
         assert m.id == "git"
-        assert m.version == "1.0.5"
+        assert m.version == "1.0.6"
 
     def test_manifest_commands(self):
         """Manifest declares expected commands."""
@@ -534,6 +534,151 @@ class TestPowerShellBracketedProjectPath:
             cwd=project, capture_output=True, text=True,
         )
         assert count.stdout.strip() == "1"
+
+
+@pytest.mark.parametrize(
+    "exe",
+    [
+        pytest.param(
+            "pwsh",
+            marks=pytest.mark.skipif(not HAS_PWSH, reason="pwsh not available"),
+            id="pwsh",
+        ),
+        pytest.param(
+            WINDOWS_POWERSHELL,
+            marks=pytest.mark.skipif(
+                not WINDOWS_POWERSHELL, reason="Windows PowerShell 5.1 not available"
+            ),
+            id="windows-powershell-5.1",
+        ),
+    ],
+)
+class TestCreateFeaturePowerShellLegacyStdout:
+    @staticmethod
+    def _run_legacy_stdout(
+        project: Path,
+        exe: str,
+        *args: str,
+        env_extra: dict[str, str] | None = None,
+    ) -> subprocess.CompletedProcess[bytes]:
+        def quote(word: str) -> str:
+            return "'" + word.replace("'", "''") + "'"
+
+        script = (
+            project
+            / ".specify"
+            / "extensions"
+            / "git"
+            / "scripts"
+            / "powershell"
+            / "create-new-feature-branch.ps1"
+        )
+        words = [quote(str(script))] + [
+            arg if re.fullmatch(r"-[A-Za-z]+", arg) else quote(arg) for arg in args
+        ]
+        env = {**os.environ, **_GIT_ENV, **(env_extra or {})}
+        return subprocess.run(
+            [
+                exe,
+                "-NoProfile",
+                "-Command",
+                "$previous = [Console]::OutputEncoding; "
+                "[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding('iso-8859-1'); "
+                f"try {{ & {' '.join(words)} }} finally {{ [Console]::OutputEncoding = $previous }}; "
+                "exit $LASTEXITCODE",
+            ],
+            cwd=project,
+            capture_output=True,
+            env=env,
+        )
+
+    @pytest.mark.parametrize(
+        "layout",
+        ["core_common", "git_common_only", "stale_core_common"],
+    )
+    @pytest.mark.parametrize(
+        ("branch_override", "expected_num"),
+        [
+            ("équipe/042-后台-🚀", "042"),
+            ("équipe-后台", "équipe-后台"),
+        ],
+    )
+    def test_json_mode_escapes_non_ascii_branch_on_legacy_stdout(
+        self,
+        tmp_path: Path,
+        exe: str,
+        layout: str,
+        branch_override: str,
+        expected_num: str,
+    ):
+        project = _setup_project(tmp_path / "proj", git=False)
+        common_ps = project / "scripts" / "powershell" / "common.ps1"
+        if layout == "git_common_only":
+            common_ps.unlink()
+        elif layout == "stale_core_common":
+            common_ps.write_text(
+                "function Get-RepoRoot { return (Get-Location).Path }\n",
+                encoding="utf-8",
+            )
+
+        result = self._run_legacy_stdout(
+            project,
+            exe,
+            "-Json",
+            "-DryRun",
+            "Add feature",
+            env_extra={"GIT_BRANCH_NAME": branch_override},
+        )
+
+        assert result.returncode == 0, result.stderr.decode("utf-8", errors="replace")
+        assert result.stdout.isascii(), result.stdout
+        payload = json.loads(result.stdout.decode("utf-8"))
+        assert payload == {
+            "BRANCH_NAME": branch_override,
+            "FEATURE_NUM": expected_num,
+            "DRY_RUN": True,
+        }
+
+    def test_creates_non_ascii_branch_and_emits_ascii_json(
+        self, tmp_path: Path, exe: str
+    ):
+        project = _setup_project(tmp_path / "proj")
+        result = self._run_legacy_stdout(
+            project,
+            exe,
+            "-Json",
+            "Add feature",
+            env_extra={"GIT_BRANCH_NAME": "équipe/042-后台"},
+        )
+
+        assert result.returncode == 0, result.stderr.decode("utf-8", errors="replace")
+        assert result.stdout.isascii(), result.stdout
+        payload = json.loads(result.stdout.decode("utf-8"))
+        assert payload == {"BRANCH_NAME": "équipe/042-后台", "FEATURE_NUM": "042"}
+        head = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=project,
+            capture_output=True,
+            check=True,
+        )
+        assert head.stdout.decode("utf-8").strip() == "équipe/042-后台"
+
+    def test_overlong_non_ascii_override_fails_without_json_stdout(
+        self, tmp_path: Path, exe: str
+    ):
+        project = _setup_project(tmp_path / "proj", git=False)
+        overlong = "001-" + ("功" * 81)
+        result = self._run_legacy_stdout(
+            project,
+            exe,
+            "-Json",
+            "-DryRun",
+            "Add feature",
+            env_extra={"GIT_BRANCH_NAME": overlong},
+        )
+
+        assert result.returncode != 0
+        assert result.stdout.strip() == b""
 
 
 # ── create-new-feature-branch.sh Tests ──────────────────────────────────────────────
@@ -2106,6 +2251,106 @@ class TestAutoCommitPowerShellCommitStyle:
             cwd=project, capture_output=True, text=True,
         )
         assert "[Spec Kit] Add specification" in log.stdout
+
+
+# ── PowerShell UTF-8 input tests ─────────────────────────────────────────────
+
+
+@pytest.mark.parametrize(
+    "exe",
+    [
+        pytest.param(
+            "pwsh",
+            marks=pytest.mark.skipif(not HAS_PWSH, reason="pwsh not available"),
+            id="pwsh",
+        ),
+        pytest.param(
+            WINDOWS_POWERSHELL,
+            marks=pytest.mark.skipif(
+                not WINDOWS_POWERSHELL, reason="Windows PowerShell 5.1 not available"
+            ),
+            id="windows-powershell-5.1",
+        ),
+    ],
+)
+class TestPowerShellUtf8Inputs:
+    """Non-ASCII text in git-config.yml and in -MessageFile must reach git unchanged.
+
+    Without -Encoding, Get-Content in Windows PowerShell 5.1 decodes BOM-less
+    UTF-8 with the ANSI code page, so accented letters and dashes came out
+    garbled in commit messages and branch names. PowerShell 7 reads UTF-8 by
+    default, so only the windows-powershell-5.1 case can reproduce it.
+    """
+
+    TEXT = "café — naïve résumé"
+
+    @staticmethod
+    def _git_lines(project: Path, *args: str) -> list[str]:
+        out = subprocess.run(
+            ["git", *args], cwd=project, capture_output=True, check=True
+        )
+        return out.stdout.decode("utf-8").splitlines()
+
+    def test_auto_commit_reads_message_file_as_utf8(self, tmp_path: Path, exe: str):
+        project = _setup_project(tmp_path)
+        _write_config(project, (
+            "commit_style: conventional\n"
+            "auto_commit:\n"
+            "  default: false\n"
+            "  after_specify:\n"
+            "    enabled: true\n"
+        ))
+        (project / "new-file.txt").write_text("content")
+        msg_file = project / "commit-msg.txt"
+        msg_file.write_text(f"feat: {self.TEXT}\n", encoding="utf-8")
+
+        result = _run_pwsh(
+            "auto-commit.ps1", project, "after_specify", "-MessageFile", str(msg_file),
+            exe=exe,
+        )
+
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert self._git_lines(project, "log", "-1", "--format=%s") == [f"feat: {self.TEXT}"]
+
+    def test_auto_commit_reads_configured_message_as_utf8(self, tmp_path: Path, exe: str):
+        project = _setup_project(tmp_path)
+        _write_config(project, (
+            "auto_commit:\n"
+            "  default: false\n"
+            "  after_specify:\n"
+            "    enabled: true\n"
+            f'    message: "{self.TEXT}"\n'
+        ))
+        (project / "new-file.txt").write_text("content")
+
+        result = _run_pwsh("auto-commit.ps1", project, "after_specify", exe=exe)
+
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert self._git_lines(project, "log", "-1", "--format=%s") == [self.TEXT]
+
+    def test_initialize_repo_reads_init_commit_message_as_utf8(self, tmp_path: Path, exe: str):
+        project = _setup_project(tmp_path, git=False)
+        _write_config(project, f'init_commit_message: "{self.TEXT}"\n')
+
+        result = _run_pwsh("initialize-repo.ps1", project, exe=exe)
+
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert self._git_lines(project, "log", "-1", "--format=%s") == [self.TEXT]
+
+    def test_create_branch_reads_branch_prefix_as_utf8(self, tmp_path: Path, exe: str):
+        project = _setup_project(tmp_path)
+        _write_config(project, 'branch_prefix: "équipe"\n')
+
+        result = _run_pwsh(
+            "create-new-feature-branch.ps1", project,
+            "-ShortName", "guided-tour", "Add guided tour",
+            exe=exe,
+        )
+
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert self._git_lines(project, "branch", "--show-current") == [
+            "équipe/001-guided-tour"
+        ]
 
 
 # ── auto-commit.ps1 CRLF warning tests (issue #2253) ────────────────────────

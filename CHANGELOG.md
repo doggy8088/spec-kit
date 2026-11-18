@@ -2,6 +2,31 @@
 
 <!-- 在此註解下方插入新的變更記錄 -->
 
+## [1.4.2] - 2026-11-17
+
+### 變更
+
+- fix(extensions)：沒有鷹架失敗時省略設定提示 (#5459)
+- fix(powershell)：將 PowerShell 輔助程式的 -Json 輸出寫為 ASCII (#5417)
+- 將 ghp 社群套件組加入型錄 (#5457)
+- fix(bundles)：在初始化期間遵循套件組整合 (#5111)
+- 將 ado 社群套件組更新至 v0.4.0 (#5454)
+- 將 A·I·DID·IT — Agile Expansion Pack 更新至 v0.2.4 (#5451)
+- 將 Autonomous Run Governance 預設集更新至 v0.4.12 (#5446)
+- feat(tasks)：引用標準欄位約束並分析漂移 (#5458)
+- 將 Spec Kit for Azure DevOps — human-gated lifecycle 擴充功能更新至 v0.4.0 (#5453)
+- 將 DocGuard — CDD Enforcement 擴充功能更新至 v0.48.0 (#5450)
+- 將 SpecKit Companion 擴充功能更新至 v0.27.0 (#5447)
+- feat：為產生的技能加入版本來源 (#5456)
+- fix(5076)：在工作流程輸出中跳脫 Rich 標記 (#5112)
+- 將 ado-lifecycle 更新至 0.4.0 (#5427)
+- chore：將過期生命週期縮短為 30/30 天 (#5440)
+- 將 Spec Status 擴充功能加入社群型錄 (#5414)
+- fix：選擇啟用 OpenCode 探索隱藏的 Spec Kit 檔案 (#5032)
+- test：將套件直譯器釘選在 PATH 上，供對等指令稿子行程使用 (#5361)
+- chore(deps)：將 codeql-action 群組升級 2 項更新 (#5420)
+- chore：發行 1.4.1，開始 1.4.2.dev0 開發 (#5445)
+
 ## [1.4.1] - 2026-11-16
 
 ### 變更

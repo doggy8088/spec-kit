@@ -12,14 +12,22 @@
    dotnet tool install -g docfx
    ```
 
-2. 建置文件：
+2. 從本機型錄產生社群預設集目錄：
+
+   ```bash
+   python3 docs/generate_presets.py --fetch-stars
+   ```
+
+3. 建置文件：
 
    ```bash
    cd docs
    docfx docfx.json --serve
    ```
 
-3. 在瀏覽器開啟 `http://localhost:8080` 檢視文件。
+4. 在瀏覽器開啟 `http://localhost:8080` 檢視文件。
+
+編輯 `presets/catalog.community.json` 後請再次執行產生器。它會建立被忽略的 `_generated/preset-directory.md` 內含檔與 `community/presets/*.md` 詳細頁面，並移除已刪除項目的頁面。請勿編輯這些產生的檔案。該目錄只使用型錄的中繼資料：建置時不會擷取或執行第三方預設集內容。使用 `--fetch-stars` 時，它會針對每個儲存庫向 GitHub API 讀取一次星數。請設定 `GH_TOKEN` 或 `GITHUB_TOKEN` 以取得經驗證的 API 額度；部署工作流程會使用其儲存庫權杖。星數反映上次建置時的數值，共用的儲存庫會有相同的星數。查詢失敗時會產生警告並顯示「Stars unavailable」，絕不會憑空編出零。離線建置時請省略 `--fetch-stars`，星數會顯示為無法取得。它的搜尋、標籤與排序控制項能強化一份完整的靜態清單；即使沒有 JavaScript，該清單仍可閱讀。
 
 ## 結構
 
@@ -100,4 +108,4 @@ Overview 的支援頁面位於 `overview/` 之下，`index.md` 仍為網站首�
 
 ## 部署
 
-當變更推送至 `main` 分支時，文件會自動建置並部署至 GitHub Pages。工作流程定義於 `.github/workflows/docs.yml`。
+文件、社群預設集型錄與文件工作流程在 `zh-tw` 分支上的變更，會觸發一般的 GitHub Pages 部署。每次建置都會產生預設集目錄與詳細頁面，並在執行 DocFX 之前重新整理儲存庫星數。手動執行使用相同路徑；沒有另外的每週排程。工作流程定義於 `.github/workflows/docs.yml`，且只在本儲存庫中執行。

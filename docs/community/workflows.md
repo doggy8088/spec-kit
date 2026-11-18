@@ -12,6 +12,7 @@
 | 工作流程 | 版本 | 說明 |
 | --- | --- | --- |
 | [ADO story lifecycle](https://github.com/praveenlavu/spec-kit-ado/tree/v0.4.0/workflows/ado-lifecycle) (`ado-lifecycle`) | 0.4.0 | 將 Azure DevOps story 推向已開啟的 pull request，過程中提供預覽，並在每次 Azure Boards 或 PR 變更時設有人類關卡與套用步驟 |
+| [Spec Kit lifecycle for Jira](https://github.com/praveenlavu/spec-kit-jira/tree/v0.1.0/workflows/jira-lifecycle) (`jira-lifecycle`) | 0.1.0 | 將 Jira Cloud story 推向已開啟的 pull request，過程中提供預覽，並在每次 Jira 或 PR 變更時設有人類關卡與套用步驟 |
 | [Guided SDD Pipeline](https://github.com/domattioli/spec-kit-workflow-pipeline) (`pipeline`) | 1.1.0 | 串連 specify、clarify、plan、tasks、analyze、implement 與 converge，設有 clarify 關卡與實作後的收斂迴圈 |
 | [Full SDD Cycle - no gates](https://github.com/clintcparker/speckit-addons/tree/yolo-v0.1.0/workflows/yolo) (`yolo`) | 0.1.0 | 執行 specify、plan、tasks 與 implement，不設審查關卡 |
 

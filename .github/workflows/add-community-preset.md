@@ -61,7 +61,6 @@ safe-outputs:
     max: 1
     allowed-files:
       - presets/catalog.community.json
-      - docs/community/presets.md
     protected-files:
       policy: blocked
       exclude:
@@ -295,7 +294,7 @@ sha256sum --check --strict /tmp/gh-aw/community-archive.sha256
 原樣執行這條固定命令：
 
 ```bash
-python3 .github/scripts/validate_community_preset.py submission --issue /tmp/gh-aw/preset-submission.json --archive /tmp/gh-aw/community-archive.zip --readme /tmp/gh-aw/preset-readme.md --catalog presets/catalog.community.json --docs docs/community/presets.md --snapshot /tmp/gh-aw/preset-validation.json
+python3 .github/scripts/validate_community_preset.py submission --issue /tmp/gh-aw/preset-submission.json --archive /tmp/gh-aw/community-archive.zip --readme /tmp/gh-aw/preset-readme.md --catalog presets/catalog.community.json --snapshot /tmp/gh-aw/preset-validation.json
 ```
 
 驗證工具會從下載的 ZIP 中讀取 `preset.yml`，包括 monorepo 中預設集範圍的
@@ -339,7 +338,7 @@ ID、版本、Spec Kit 需求、所需擴充功能 ID、發行標籤與 README �
 
 若沒有環境阻礙，且每個必要檢查都已完成並通過：
 1. 移除先前執行遺留的過期 `validation-passed` 與 `validation-failed` 標籤。
-2. 繼續進行步驟 3。**先不要加上 `validation-passed`**：產生的型錄與文件
+2. 繼續進行步驟 3。**先不要加上 `validation-passed`**：產生的型錄
    必須先通過步驟 5 的驗證工具，成功才會被記錄。
 
 ## 步驟 3 — 判定新增或更新
@@ -426,43 +425,21 @@ ID、版本、Spec Kit 需求、所需擴充功能 ID、發行標籤與 README �
 步驟 5 的產生檔案驗證工具會解析並檢查 JSON。修正它回報的任何型錄錯誤，
 並在繼續之前重新執行。
 
-## 步驟 5 — 更新 `docs/community/presets.md`
+## 步驟 5 — 驗證產生的型錄
 
-編輯 `docs/community/presets.md`，在 Community Presets 表格中新增或更新一列。
-
-### 新增預設集
-
-將新列插入**依預設集名稱的字母順序**排列的位置：
-
-```
-| <Name> | <Description> | <N> templates, <N> commands | <Requires> | [<repo-name>](<repository-url>) |
-```
-
-Requires 欄位：
-- 若不需要任何擴充功能，使用 `—`
-- 若有，列出所需的擴充功能 ID（例如 `aide extension`），以逗號分隔
-- 在 Provides 中省略數量為零的種類，數量為一時使用單數名詞
-
-若預設集提供指令碼，一併列入：`<N> templates, <N> commands, <N> scripts`
-
-### 更新
-
-找到既有的列，原地更新任何有變更的欄位。
-
-### 驗證產生的檔案
+文件建置會直接從型錄產生依字母順序排列的預設集目錄與詳細頁面。提交過程中，請勿編輯 `docs/community/presets.md` 或產生的文件。
 
 在標記成功或要求建立 PR 之前，原樣執行這條固定命令：
 
 ```bash
-python3 .github/scripts/validate_community_preset.py generated --issue /tmp/gh-aw/preset-submission.json --archive /tmp/gh-aw/community-archive.zip --readme /tmp/gh-aw/preset-readme.md --catalog presets/catalog.community.json --docs docs/community/presets.md --snapshot /tmp/gh-aw/preset-validation.json
+python3 .github/scripts/validate_community_preset.py generated --issue /tmp/gh-aw/preset-submission.json --archive /tmp/gh-aw/community-archive.zip --readme /tmp/gh-aw/preset-readme.md --catalog presets/catalog.community.json --snapshot /tmp/gh-aw/preset-validation.json
 ```
 
 驗證工具會檢查 JSON 解析、驗證過的型錄中繼資料（包括 `homepage` 設定為
 提交的儲存庫 URL）與摘要值、最上層與項目 `updated_at` 時間戳是否符合
-記錄的 UTC 日期（新增項目還包括 `created_at`）、ID 的字母順序、
-文件列的名稱、用途、數量、擴充功能需求與儲存庫連結、名稱的字母順序，
+記錄的 UTC 日期（新增項目還包括 `created_at`）、ID 的字母順序，
 以及更新時 `created_at` 的保留。結束代碼 3（`REPAIR`）是代理產生的
-型錄或文件錯誤，**不是**提交者的缺陷：修正檔案並重新執行此命令，
+型錄錯誤，**不是**提交者的缺陷：修正型錄並重新執行此命令，
 直到結束代碼為 0。不要因為產生檔案的錯誤而標記 `validation-failed`。
 結束代碼 2（`BLOCKED`）表示某個輸入或工具無法使用：向維護者回報確切
 錯誤與工作流程執行連結，移除 `validation-passed`，並停止，不建立 PR。
@@ -476,7 +453,7 @@ python3 .github/scripts/validate_community_preset.py generated --issue /tmp/gh-a
 命名慣例：
 
 這個由儲存庫擁有的 gh-aw 維護工作流程不執行貢獻者未結 PR 數量檢查，
-也不要求確認。驗證成功且允許的型錄／文件檔案更新完成後，無論提交者
+也不要求確認。驗證成功且允許的型錄更新完成後，無論提交者
 或提出帳號目前有多少未結 PR，一律發出已設定的草稿 `create_pull_request`
 安全輸出。
 
@@ -492,7 +469,6 @@ Add <Name> preset to community catalog
 
 Add <id> preset submitted by @<issue-author> to:
 - presets/catalog.community.json (alphabetical order)
-- docs/community/presets.md community presets table
 
 Closes #<issue-number>
 ```
@@ -504,7 +480,6 @@ Update <Name> preset to v<version>
 
 Update <id> preset submitted by @<issue-author>:
 - presets/catalog.community.json (version, download_url, etc.)
-- docs/community/presets.md community presets table
 
 Closes #<issue-number>
 ```
@@ -519,10 +494,9 @@ Closes #<issue-number>
 
 ## 重要規則
 
-- **字母順序很重要**——項目在 JSON 中必須依 ID 排序，
-  在文件表格中必須依名稱排序
+- **字母順序很重要**——項目在 JSON 中必須依 ID 排序；
+  文件顯示順序由系統自動產生
 - **編輯後務必驗證 JSON**——多餘的逗號或缺少的大括號都會損壞型錄
 - **使用 `Closes` 而非 `Fixes`**——`Closes #N` 是提交 issue 的正確關鍵字
 - **更新時保留 `created_at`**——保留原始值；只更新 `updated_at`
 - **不要修改任何其他檔案**——僅限 `presets/catalog.community.json`
-  與 `docs/community/presets.md`

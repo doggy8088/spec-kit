@@ -18,6 +18,8 @@ specify init my-project --integration claude
 
 技能會安裝為 `.claude/skills/speckit-<command>/SKILL.md`。在 Claude 的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。
 
+受支援的核心技能會收到行內 `argument-hint` frontmatter，擴充功能命令與預設集命令別名則會保留其來源命令 frontmatter 中宣告的任何 `argument-hint`。
+
 ## 僅限使用者呼叫的技能
 
 預設情況下，為 Claude Code 安裝的每個 Spec Kit 技能都可由模型呼叫，因此它的說明永遠在 Claude 的上下文中，並占用技能清單的預算。在技能眾多的專案中，這可能把其他技能擠出清單。若要讓核心 Spec Kit 命令技能僅限使用者呼叫：

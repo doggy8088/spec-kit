@@ -12,6 +12,7 @@
 | Agentstandards Multi-Vendor Architecture | 安裝由 Codex 協調的多廠商架構委員會、其硬性任務關卡，以及支援的 Spec Kit 工作流程。 | `architecture-governance` | 1 個擴充功能、1 個預設集、1 個工作流程 | 已記錄 | [agentstandards](https://github.com/bbjwz/agentstandards) |
 | SicarioSpec Security & Governance Bundle | GitHub Spec Kit 的安全預設治理套件組。強制執行資料分類、威脅建模與由程式碼持有的驗證關卡。 | `security-engineer` | 1 個擴充功能、11 個預設集 | 已記錄 | [sicario-spec](https://github.com/dfirs1car1o/sicario-spec) |
 | Spec Kit for Azure DevOps | ado 擴充功能加上 ado-lifecycle 工作流程：將 ADO story 推向 Done，在每次看板或 PR 變更時都設有人類關卡。 | `developer` | 1 個擴充功能、1 個工作流程 | 已記錄 | [spec-kit-ado](https://github.com/praveenlavu/spec-kit-ado) |
+| Spec Kit for GitHub Projects | ghp 擴充功能加上 ghp-lifecycle 工作流程：透過 Spec Kit 將 GitHub issue 推向 Done，在每次寫入前都需人類簽核。 | `developer` | 1 個擴充功能、1 個工作流程 | 已記錄 | [spec-kit-ghp](https://github.com/praveenlavu/spec-kit-ghp) |
 | SpecAssay | 為原廠 Spec Kit 提供持久 ID 提升：範本、Gate 2 拒絕與追蹤資訊清單產出。 | `developer` | 1 個擴充功能、1 個預設集 | 已記錄 | [specassay](https://github.com/rdryfoos/specassay) |
 
 ## 另請參閱

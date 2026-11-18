@@ -18,7 +18,7 @@ specify init my-project --integration alquimia
 
 技能會安裝為 `.alquimia/skills/speckit-<command>/SKILL.md`。在代理的聊天中呼叫它們，例如 `/speckit-specify`，或已安裝 bug 擴充功能的 `/speckit-bug-assess`。
 
-產生的技能同時可由使用者與模型呼叫；受支援的核心技能還會附上行內參數提示。
+產生的技能同時可由使用者與模型呼叫；受支援的核心技能會收到行內 `argument-hint` frontmatter，擴充功能命令與預設集命令別名則會保留其來源命令 frontmatter 中宣告的任何 `argument-hint`。
 
 ## 工作流程分派
 

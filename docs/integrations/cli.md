@@ -19,7 +19,7 @@
 | Codex、Command Code、ZCode 技能 | `$speckit-specify` | `$speckit-bug-assess` |
 | Kimi 技能 | `/skill:speckit-specify` | `/skill:speckit-bug-assess` |
 
-請使用你的代理所公開的形式。GitHub Copilot 的技能與命令版式請參閱 [GitHub Copilot 指南](copilot.md)，或從[整合型錄](index.md)選擇另一個代理。
+請使用你的代理所公開的形式。在以技能為基礎的整合中，產生的核心、擴充功能與預設集技能都包含 hook-command 指引，會把點記法 hook 命令名稱（例如 `speckit.git.commit`）轉譯為使用中整合的連字號技能呼叫（例如 `/speckit-git-commit` 或 `$speckit-git-commit`）。GitHub Copilot 的技能與命令版式請參閱 [GitHub Copilot 指南](copilot.md)，或從[整合型錄](index.md)選擇另一個代理。
 
 ## 列出可用的整合
 
