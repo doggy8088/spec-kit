@@ -86,7 +86,7 @@ class SampleIntegration(SkillsIntegration):
 | `multi_install_safe` | 布林值，預設為 false；true 要求靜態、不重疊的輸出根目錄，或沒有檔案 |
 | `version` | 選用的類別屬性；外部轉接器若有提供，必須與描述檔版本相符 |
 
-選用的 `registrar_config.invoke_separator` 會覆寫註冊用的類別分隔符。若類別或 `registrar_config.dev_no_symlink` 任一要求，開發符號連結會被停用。選用的 `registrar_config.legacy_dir` 會宣告先前的專案相對輸出目錄以供遷移。
+選用的 `registrar_config.invoke_separator` 會覆寫註冊用的類別分隔符。若類別或 `registrar_config.dev_no_symlink` 任一要求，開發符號連結會被停用。選用的 `registrar_config.legacy_dir` 會宣告先前的專案相對輸出目錄以供遷移。技能位於使用者主目錄的內建整合會設定 `registrar_config.home_scoped = True`；擴充功能生命週期程式碼隨後會把該目錄視為允許的主目錄技能位置。外部轉接器無法設定它。
 
 對於外部轉接器，輸出根目錄不能是 home 相對路徑、不能進入 `.git` 或 `.specify`、不能含有遍歷，也不能穿越符號連結。主要與舊版目的地不能彼此重疊；多重安裝安全的轉接器也不能與另一個整合的目的地重疊。在所有平台上，比較都不區分大小寫。某些內建整合具有主機管理的 home 範圍或舊版版式；這些不會放寬外部套件契約。
 

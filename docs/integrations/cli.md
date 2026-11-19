@@ -146,7 +146,7 @@ specify integration switch <key>
 | 選項 | 說明 |
 | ------------------------ | ------------------------------------------------------------------------ |
 | `--script sh\|ps\|py`    | 指令稿類型：`sh`（bash/zsh）、`ps`（PowerShell）或 `py`（Python） |
-| `--force` | 在解除安裝期間強制移除已修改的檔案；目標已安裝時，覆寫自訂的共用基礎設施 |
+| `--force` | 在解除安裝期間強制移除已修改的檔案；目標已安裝時，覆寫自訂的共用基礎設施。目標技能算繪時，也會覆寫已修改或非擁有的擴充功能[技能資源](../extensions/developing.md#skill-resources)副本 |
 | `--refresh-shared-infra` | 覆寫自訂的共用指令碼、頁面範本與 `.specify/.gitignore`，包括已安裝的目標與目前的預設值 |
 | `--integration-options`  | 當目標尚未安裝時，提供給目標整合的選項 |
 | `--trust-integration` | 授權下載並執行經過審查的外部轉接器，跳過互動式信任提示 |
@@ -188,7 +188,7 @@ specify integration upgrade [<key>]
 
 | 選項 | 說明 |
 | ------------------------ | ------------------------------------------------------------------------ |
-| `--force`                | 即使檔案已被修改也將其覆寫 |
+| `--force`                | 即使檔案已被修改也將其覆寫；升級使用中的整合時，也會覆寫已修改或非擁有的擴充功能[技能資源](../extensions/developing.md#skill-resources)副本 |
 | `--script sh\|ps\|py`    | 指令稿類型：`sh`（bash/zsh）、`ps`（PowerShell）或 `py`（Python） |
 | `--integration-options`  | 提供給整合的選項 |
 | `--trust-integration`    | 授權下載／匯入經過審查的替代外部轉接器 |

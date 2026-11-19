@@ -194,6 +194,8 @@ specify extension list
 - `name`：命令名稱（必須符合 `speckit.{ext-id}.{command}`）
 - `file`：命令檔案路徑（相對於擴充功能根目錄）
 - `description`：命令說明（選用）
+- `aliases`：替代命令名稱（選用）
+- `resources`：要複製到產生技能中的檔案（選用；見[技能資源](#skill-resources)）
 
 **範本物件**：
 
@@ -277,6 +279,49 @@ scripts:
 
 ---
 
+<a id="skill-resources"></a>
+
+## 技能資源
+
+在每個命令上宣告選用的 `resources` 清單，把擴充功能檔案複製到其產生的技能中。項目為擴充功能根目錄相對的明確檔案路徑或萬用字元模式，使用與[`.extensionignore`](#excluding-files-with-extensionignore)相同的 gitignore 風格方言。例如：
+
+```yaml
+provides:
+  commands:
+    - name: speckit.my-ext.review
+      file: commands/review.md
+      aliases: [speckit.my-ext.rv]
+      resources:
+        - references/*.md
+        - scripts/bash/review.sh
+        - scripts/bash/common.sh  # sourced by review.sh
+```
+
+當原生技能整合算繪兩個名稱時，副本會在每個技能中保留其擴充功能相對路徑：
+
+```text
+<skills>/speckit-my-ext-review/SKILL.md
+<skills>/speckit-my-ext-review/references/<matching files>
+<skills>/speckit-my-ext-review/scripts/bash/{review.sh,common.sh}
+<skills>/speckit-my-ext-rv/SKILL.md
+<skills>/speckit-my-ext-rv/references/<matching files>
+<skills>/speckit-my-ext-rv/scripts/bash/{review.sh,common.sh}
+```
+
+補充技能只算繪主要命令。模式支援 `*`、`?`、`**` 與字元類別；例如，不含斜線的 `*.md` 會在任何深度相符，而 `references/*.md` 只會符合 `references/` 正下方的檔案。否定、絕對路徑與 `..` 區段都不允許。明確檔案必須存在，每個萬用字元至少必須符合一個一般檔案；符號連結相符項目與目的地為 `SKILL.md` 的資源會被拒絕。萬用字元絕不會選取根目錄的 `extension.yml` 或 `.specify-dev` 開發算繪快取（若你真的需要，請明確列出 `extension.yml`；`.specify-dev` 項目會被拒絕）。
+
+非空清單會為技能輸出啟用複製模式：**不會重寫任何路徑**，包括內文路徑與 frontmatter `scripts:` 路徑。請列出每個參照的檔案，包括 frontmatter 指令碼與其來源的任何檔案；`{SCRIPT}` 會使用撰寫的技能相對命令。代理會執行它，而 [Agent Skills 規格](https://agentskills.io/specification)不保證 shell 的工作目錄就是技能根目錄。在依賴技能相對指令碼執行之前，請先確認你的代理行為。Markdown、TOML 與其他非技能輸出會保留既有的算繪方式，不會收到資源副本。
+
+模式會在 `.extensionignore` 篩選套件副本之後，針對已安裝的擴充功能進行比對。請勿在擴充功能套件中使用符號連結：資源比對不會跟隨或審查它們。安裝會在解析連結的情況下複製套件，因此連結目錄的檔案會成為已安裝擴充功能中的一般檔案，並像其他檔案一樣比對，無論連結指向何處。相符的符號連結本身會被拒絕。使用者稍後在 `.specify/extensions/<id>/` 中建立的檔案，例如 `local-config.yml`，在重新算繪時仍可能相符並被複製；技能位置可能不在 gitignore 中。請優先使用明確路徑或狹窄模式，而非 `**` 這類寬泛萬用字元。
+
+副本會以來源檔案的權限位元加上擁有者讀寫權限建立，並受行程 umask 收窄。在 POSIX 上，帶有 shebang 且沒有執行位元的 `.sh` 副本隨後會變成可執行：每個讀取位元都會加上執行位元，至少有擁有者執行權限。例如，`0644` 指令碼可能變成 `0755`；`0600` 指令碼可能變成 `0700`。請勿依賴來源模式會被精確保留。
+
+副本會以雜湊追蹤。算繪期間，除非使用者提供 `--force`，否則已存在非擁有的目的地會跳過並發出警告；重新整理時，除非強制，否則已修改的已記錄副本也會保留並發出警告。擴充功能移除與更新會刪除已記錄的資源，包括編輯過的資源；不安全的路徑可能跳過並發出警告。資源清理不會刪除未記錄的檔案，但非一般的補充技能移除會移除整個技能目錄，包括未記錄的檔案。主目錄範圍的技能目錄會在專案之間共用，而所有權記錄是專案本機的；它們不是跨專案的專屬權威。
+
+省略 `resources` 或留空，會保留既有的無複製行為與路徑重寫。這種撰寫風格在文件中已棄用，但仍受支援，且不會有執行階段棄用警告；請加入 `resources` 並使用技能相對路徑來採用複製模式。
+
+---
+
 ## 命令檔案格式
 
 ### Frontmatter（YAML）
@@ -345,7 +390,7 @@ Once the assessment exists, the next step is `__SPECKIT_COMMAND_BUG_FIX__ slug=<
 
 ### 指令碼路徑重寫
 
-登錄器在渲染命令時會正規化輔助程式路徑。
+在[技能資源複製模式](#skill-resources)之外，登錄器在渲染命令時會正規化輔助程式路徑。
 含有兩個以上 `../` 區段的儲存庫根目錄參照，指向專案的核心指令稿。
 
 **在擴充功能中**：

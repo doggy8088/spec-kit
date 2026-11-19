@@ -37,7 +37,7 @@ specify integration install generic --integration-options="--commands-dir .myage
 
 ## 擴充功能
 
-當 `generic` 是使用中的整合時，`specify extension add` 會將擴充功能命令註冊到它設定的 `--commands-dir` 中，依 `--skills` 而定，形式為命令檔案或技能。`specify extension remove` 會移除未變更的擴充功能所屬成品，同時保持核心命令、使用者檔案與已編輯的擴充功能檔案完整無缺。
+當 `generic` 是使用中的整合時，`specify extension add` 會將擴充功能命令註冊到它設定的 `--commands-dir` 中，依 `--skills` 而定，形式為命令檔案或技能。`specify extension add --force` 會取代未變更的自有呼叫與先前已記錄的[技能資源](../extensions/developing.md#skill-resources)（包括編輯），同時拒絕覆寫 `--commands-dir` 中已編輯的呼叫或非擁有檔案。`specify extension remove` 會移除未變更的擴充功能所屬呼叫與已記錄的技能資源，同時保持核心命令、使用者檔案與已編輯的擴充功能呼叫完整無缺。
 
 ## 工作流程限制
 

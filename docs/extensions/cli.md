@@ -29,10 +29,10 @@ specify extension add --dev <path>
 | `--dev`         | 從本機目錄安裝（供開發使用）         |
 | `--from <url>`  | 從自訂 URL 安裝，而非型錄         |
 | `--version <v>` | 安裝型錄公告的精確版本        |
-| `--force`       | 若擴充功能已安裝則覆寫          |
+| `--force`       | 若擴充功能已安裝則覆寫，並覆寫已修改或非擁有的[技能資源](developing.md#skill-resources)副本（對於 `generic`，只會取代先前已記錄的資源） |
 | `--priority <N>`| 解析優先順序（預設：10；數字越小優先程度越高） |
 
-從型錄、URL 或本機目錄安裝擴充功能。擴充功能命令會向啟用中的 AI 程式代理整合註冊。對於 `generic`，呼叫使用設定的 `--commands-dir`：預設為平面命令檔案，或以 `--skills` 使用 `speckit-<name>/SKILL.md`。
+從型錄、URL 或本機目錄安裝擴充功能。擴充功能命令會向啟用中的 AI 程式代理整合註冊。對於 `generic`，呼叫使用設定的 `--commands-dir`：預設為平面命令檔案，或以 `--skills` 使用 `speckit-<name>/SKILL.md`；`extension add --force` 會取代未變更的自有呼叫與先前已記錄的技能資源，但拒絕取代 `--commands-dir` 中已編輯的呼叫或非擁有檔案。
 
 型錄安裝時位置名稱為必填，`--dev` 需要本機路徑。使用 `--from` 時可以省略位置名稱；下載的資訊清單會提供已安裝的擴充功能 ID。
 
