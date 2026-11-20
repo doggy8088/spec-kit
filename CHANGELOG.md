@@ -2,6 +2,31 @@
 
 <!-- 在此註解下方插入新的變更記錄 -->
 
+## [1.4.3] - 2026-11-19
+
+### 變更
+
+- fix(extensions)：在安裝時回報缺少的命令檔案 (#5479)
+- test(integrations)：讓未知的整合檢查不再依賴網路 (#5486)
+- fix(git)：在 create_new_feature_branch.py 中處理舊式管線上的非 ASCII 分支 (#5475)
+- feat(extensions)：將宣告的資源複製到擴充功能技能中 (#5383)
+- fix(integrations)：在預設整合變更時保持共用指令稿可執行 (#5425)
+- fix(workflows)：在 github 步驟中將 gh api 輸出解碼為 UTF-8 (#5477)
+- docs：將韓文 README 與目前的英文 README 同步 (#5473)
+- fix：保留形似選項的功能描述 (#5096) (#5124)
+- 將 DocGuard — CDD Enforcement 更新至 v0.49.0 (#5472)
+- [extension] 將 Spec Kit for GitHub Projects — human-gated lifecycle 擴充功能加入社群型錄 (#5463)
+- fix(extensions)：將擴充功能 PowerShell 輔助程式的 -Json 輸出寫為 ASCII (#5466)
+- fix(extensions)：在 Windows PowerShell 5.1 上將 git 擴充功能輸入讀取為 UTF-8 (#5390)
+- fix(integrations)：回復在資訊清單提交前失敗的內建升級或初始化 (#5402)
+- fix(agents)：在 render_skill_command 中套用引數提示與技能後處理 (#5449)
+- feat(presets)：加入有界的 Markdown 區段取代 (#5462)
+- [Copilot Dreaming] 防止僅憑中繼資料的下載檢查與不當的測試要求 (#5455)
+- feat(docs)：託管可搜尋的社群預設集目錄 (#5461)
+- 將 jira-lifecycle 加入社群工作流程型錄 (#5434)
+- fix(workflows)：在無效的啟動輸入下保留執行成品 (#5435)
+- chore：發行 1.4.2，開始 1.4.3.dev0 開發 (#5464)
+
 ## [1.4.2] - 2026-11-17
 
 ### 變更
