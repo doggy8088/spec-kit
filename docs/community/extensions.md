@@ -72,6 +72,7 @@
 | CSDD — Controlled Spec-Driven Development | 將治理規範、門禁、範本安裝至已有儲存庫；第三方擴充功能依清單選擇性安裝，預設不安裝。 | `process` | 讀寫 | [csdd](https://github.com/yuansanche/csdd) |
 | Data Model Diagram | 在規劃後，從 Spec Kit 資料模型產生 Mermaid ER 圖表 | `docs` | 讀寫 | [spec-kit-data-model-diagram](https://github.com/benizzio/spec-kit-data-model-diagram) |
 | deja-vu session recall | 搜尋你過去為某功能執行過的程式代理工作階段：嘗試過什麼、決定了什麼或失敗了什麼。 | `process` | 唯讀 | [deja-vu](https://github.com/vshulcz/deja-vu) |
+| Deliberate | 為 Spec Kit 提供探索、決策紀錄、狀態、分類，以及設有閘門的自動駕駛管線。 | `process` | 讀寫 | [spec-kit-deliberate](https://github.com/luismoriguerra/spec-kit-deliberate) |
 | DocGuard — CDD Enforcement | AI 輔助儲存庫的文件完整性：生命週期登錄、漂移驗證、可追蹤性、安全封存、SARIF/JUnit、MCP、GitHub Actions 與 Spec Kit 掛鉤。 | `docs` | 讀寫 | [docguard](https://github.com/raccioly/docguard) |
 | Domain Spec Maintenance | 維護各領域的標準規格：在 specify/plan 前讀取，在 implement 後更新 | `docs` | 讀寫 | [spec-kit-domain-spec](https://github.com/jinaparkdev/spec-kit-domain-spec) |
 | Dotdog | 將 GitHub Spec Kit 產出物匯入本機知識圖譜，以進行驗證、分析、搜尋與 MCP 查詢。 | `docs` | 讀寫 | [dotdog](https://github.com/specdog/dotdog) |

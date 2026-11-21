@@ -68,7 +68,7 @@ specify extension list --json
 
 列出已安裝的擴充功能，包含其狀態、版本與命令數量。
 
-雖然說明中稱 `--available` 與 `--all` 包含型錄條目，但目前的處理常式不會擷取或列出未安裝的擴充功能。請使用 `specify extension search` 來探索可用的擴充功能。
+請使用 `specify extension search` 來探索啟用型錄中的擴充功能。
 
 `--json` 將 JSON 陣列寫入 stdout。每個項目都有鍵 `id`、`name`、`description`、`version`、`author`、`priority`、`enabled`、`source` 與 `provides`。`author` 在缺席時為 `null`；`source` 對於本機、舊版或格式錯誤的來源為 `{"kind":"local"}`，對於有效的型錄來源為 `{"kind":"catalog","catalog":"<catalog-name>"}`。擴充功能的 `provides` 包含 `commands`、`templates`、`scripts` 與 `hooks` 數量。`--available` 與 `--all` 不會將 JSON 輸出擴展到已安裝擴充功能之外。成功時，`--json` 恰好將一個陣列寫入 stdout 並以 0 結束。在選項解析後的執行時期失敗，會恰好將一個 `{"error":"..."}` 物件寫入 stderr 並以 1 結束。若解析引發使用錯誤且原始 `--json` 權杖存在，它會將該 JSON 錯誤物件寫入 stderr 並保留使用結束代碼（通常為 2）。沒有 `--json` 時，包括說明，現有的人類可讀行為不變。
 
