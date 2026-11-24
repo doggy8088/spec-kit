@@ -37,7 +37,7 @@ argument-hint: '擴充功能提交的 GitHub 議題 URL 或編號'
 | 有 LICENSE 檔案 | 在儲存庫檔案清單中確認 |
 | 有與版本相符的 GitHub 發行版本 | 檢查儲存庫頁面的發行版本 |
 | 下載 URL 可存取 | 先驗證提交的 URL：配置必須為 `https`、主機必須恰好是 `github.com`、不得包含使用者名稱／密碼、查詢字串或片段，且其路徑必須符合 `archive/refs/tags/<tag>.zip` 或 `releases/download/<tag>/<asset>.zip`；同時驗證發行版本存在。確認無誤後，才在啟用重新導向的情況下擷取封存檔。對照明確的安全主機政策（`github.com`、`codeload.github.com` 或 `release-assets.githubusercontent.com`）驗證每次重新導向與最終 URL，並要求使用 HTTPS；允許 `release-assets.githubusercontent.com` 使用的簽署查詢字串。要求最終回應為 HTTP 200。 |
-| 擴充功能 ID 僅為小寫加連字號 | 正規表達式：`^[a-z][a-z0-9-]*$` |
+| 擴充功能 ID 僅為小寫英數加連字號 | 正規表達式：`^[a-z][a-z0-9-]*$` |
 | 版本遵循 semver | 格式：`X.Y.Z` |
 | 提交檢核清單已全部勾選 | 在議題內文中確認 |
 

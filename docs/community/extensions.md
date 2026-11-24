@@ -206,6 +206,7 @@
 | Superspec | 將 spec-kit 與 obra/superpowers（腦力激盪、TDD、子代理、程式碼審查）橋接為統一、可恢復的工作流程，具備優雅降級與工作階段進度追蹤 | `process` | 讀寫 | [superspec](https://github.com/WangX0111/superspec) |
 | T-Shirt Sizing Gate | 根據變更說明提供初步的 XS–XL 估算，加上已規劃功能的規模估算，以及在 Spec Kit 工作流程內的明確核准，並以 SHA-256 檢查計畫變更。 | `process` | 讀寫 | [spec-kit-sizing](https://github.com/mauriziopinotti/spec-kit-sizing) |
 | Taco Review | 將 Spec Kit 功能打包供人工審查，並將編輯與留言同步回來。 | `integration` | 讀寫 | [taco](https://github.com/Arcadia822/taco) |
+| Task Consolidation | 合併相關的 Spec Kit 任務，減少實作期間的重複工作與交接，同時保留需求、測試與進度。 | `process` | 讀寫 | [spec-kit-extension-task-consolidation](https://github.com/grafvonb/spec-kit-extension-task-consolidation) |
 | Tasks to GitHub Project | 將 Spec Kit 任務發佈並同步為 GitHub Project（v2）看板上的卡片，並在 spec.md/tasks.md 與看板之間同步優先順序與狀態。 | `integration` | 讀寫 | [spec-kit-tasks-to-project](https://github.com/mancioshell/spec-kit-tasks-to-project) |
 | TDD Extension | 以測試驅動 spec-kit 實作：與語言無關的 red-green-refactor 迴圈，具備各功能測試清單、記錄的 red 與 green 證據，以及經突變檢查的測試強度。 | `process` | 讀寫 | [spec-kit-tdd](https://github.com/d0whc3r/spec-kit-tdd) |
 | Team Assign | 將 tasks.md 項目指派給人類工程師、拆解為子任務，並產生各工程師的工作看板 | `process` | 讀寫 | [spec-kit-team-assign](https://github.com/tarunkumarbhati/spec-kit-team-assign) |

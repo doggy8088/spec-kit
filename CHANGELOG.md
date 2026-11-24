@@ -2,6 +2,31 @@
 
 <!-- 在此註解下方插入新的變更記錄 -->
 
+## [1.4.4] - 2026-11-23
+
+### 變更
+
+- 將 T-Shirt Sizing Gate 更新至 v0.2.1 (#5529)
+- 在未安裝任何整合時，讓整合升級以非零狀態結束 (#5526)
+- fix：防止在環境覆寫下移除整合型錄 (#5525)
+- 將 Parallel Autonomous Run Governance 預設集更新至 v0.2.13 (#5519)
+- fix(extensions)：在保留設定時釐清移除提示 (#5518)
+- fix：關閉 open_url 中的 HTTP 錯誤回應 (#5516) (#5517)
+- fix(presets)：在 add 狀態行中跳脫預設集名稱 (#5511)
+- fix(extensions)：在 add 未看到名稱時改用 ID (#5510)
+- fix(powershell)：在 Resolve-TemplateContent 中保留非 ASCII 預設集路徑與資訊清單診斷 (#5502)
+- fix(git)：在其餘 Python 輔助程式中處理 UTF-8 git 輸出並收窄 stderr 管線 (#5506)
+- fix(self)：將安裝程式登錄檔與驗證子行程輸出解碼為 UTF-8 (#5504)
+- fix：為長名稱與嚴格模式保留 FileHelper 原子寫入 (#5498)
+- 將 ghp-lifecycle 加入社群型錄 (#5443)
+- fix(extensions)：準確描述擴充功能清單選項 (#5496)
+- 將 Deliberate 擴充功能加入社群型錄 (#5497)
+- refactor：以 FileHelper 尋找專案根目錄 (#5494)
+- chore：加入 FileHelper 遷移基礎構件與防護 (#5484)
+- [bug-fix] 修復 resume 卡在執行中：先保存 resume 狀態再寫入日誌 (#5492)
+- 將 Spec Review Layout 預設集加入社群型錄 (#5490)
+- chore：發行 1.4.3，開始 1.4.4.dev0 開發 (#5491)
+
 ## [1.4.3] - 2026-11-19
 
 ### 變更

@@ -53,6 +53,8 @@ specify init my-project --integration copilot --integration-options="--commands"
 
 原生事件使用 `.github/hooks/speckit.json`。`--integration-options="--events false"` 可停用 Spec Kit 事件處理常式。請參閱[執行階段事件](cli.md#執行階段事件)。
 
+`session_start` 處理常式可透過其 stdout 提供模型上下文。Spec Kit 執行 `user_prompt_submit` 處理常式時會抑制 stdout，因為 Copilot 會捨棄 `userPromptSubmitted` 的命令 hook 輸出。
+
 工作流程步驟另外需要 Copilot CLI，與 IDE 設定分開。在技能模式中，命令步驟會在提示詞中傳入 `/speckit-<command>`。在命令模式中，它們會選取 `--agent speckit.<command>`，並將使用者的參數作為提示詞傳入，而不是把代理檔案當作斜線命令。
 
 無頭分派預設會加上 `--yolo`，允許工具、路徑與 URL 在沒有互動核准的情況下執行。將 `SPECKIT_COPILOT_ALLOW_ALL_TOOLS=0` 設為可阻止 Spec Kit 加上此旗標。已淘汰的 `SPECKIT_ALLOW_ALL_TOOLS` 只作為備援被接受。已設定的 `--model` 與要求的 `--output-format json` 都會被轉傳。
