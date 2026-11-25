@@ -28,3 +28,5 @@
 - **[Raaghu Spec Kit](https://marketplace.visualstudio.com/items?itemName=Waiin.raaghu-speckit)** — Raaghu Spec Kit 將規格驅動開發帶入 Azure DevOps。PM、BA 與 QA 可產生、審查與管理結構化規格、交付計畫、任務拆解與品質檢核清單，接著建立與精修 Azure Boards 工作項目，全部在專案內引導式的 AI 工作區中完成。支援 Azure DevOps Services 與 Azure DevOps Server（內部部署）。
 
 - **[Entalpa](https://entalpa.com/spec-kit)** — 託管式網頁應用程式，從公開 GitHub 儲存庫讀取 `specs/<feature>/spec.md` 與 `tasks.md`，或從以 zip 或資料夾上傳的私有儲存庫讀取，並將各功能整合為一份目前的待辦清單：使用者故事、連結至故事且狀態取自 `tasks.md` 的 `FR-`／`SC-` 需求，以及以已回答問題形式呈現的釐清事項。後續功能會修訂其變更的故事，而不是新增副本。檢視結果無需帳號；保存或編輯則需要帳號。上傳內容在瀏覽器中讀取，僅傳送這些規格檔案、其路徑以及 zip 或資料夾名稱；無論何種方式，整合時都會將規格傳送給第三方 AI 服務。結果可匯出回 `specs/` 功能。
+
+- **[spec-visualizer](https://github.com/josephleee/spec-visualizer)** — Spec Kit 專案的本機唯讀儀表板，以 `npx spec-visualizer` 執行。單一面板顯示各功能所處的階段（Constitution、Specify、Plan、Tasks、Implement、Done）以及下一個要輸入的命令；每份文件則依其種類以頁面開啟：含 Given/When/Then 場景的使用者故事、研究決策及其否決的替代方案、資料模型實體卡片，以及依階段區分進度的任務。檔案以 Markdown 解析器讀取，不涉及 AI；它絕不會寫入專案，只在 `127.0.0.1` 上回應。檔案變更時即時更新。亦可讀取 OpenSpec 與 Kiro 專案。
