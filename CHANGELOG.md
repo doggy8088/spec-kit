@@ -2,6 +2,31 @@
 
 <!-- 在此註解下方插入新的變更記錄 -->
 
+## [1.4.5] - 2026-11-25
+
+### 變更
+
+- fix(extensions)：讓 TOML 命令提示詞與內文保持一致 (#5570)
+- fix(scripts)：將 setup_plan.py 的串流重新設定為 UTF-8 (#5569)
+- 將 SpecKit Grill Me 擴充功能更新至 v1.0.3 (#5565)
+- fix(extensions)：在 UTF-8 BOM 之後解析命令 frontmatter (#5562)
+- fix(extensions)：在無法寫入已解除連結的下載檔案時，改用記憶體內封存 (#5561)
+- fix(presets)：回報被專案覆寫隱藏的預設集層級 (#5560)
+- fix：接受 bundler JSON 讀取器中的 UTF-8 BOM (#5557)
+- fix(extensions)：在未強制切換整合時保留已編輯的技能資源 (#5495)
+- fix(integrations)：將擷取的 dispatch_command 輸出解碼為 UTF-8 (#5535)
+- chore：將共用基礎設施寫入遷移至 FileHelper (#5543)
+- fix(presets)：透過 CLI 解析指令碼成品 (#5415)
+- fix(scripts)：在 setup_tasks.py 中將 stdout 與 stderr 重新設定為 UTF-8 (#5555)
+- docs：將 spec-visualizer 加入社群 friends (#5549)
+- [Copilot Dreaming] 避免拒絕含有數字的有效擴充功能 ID (#5548)
+- fix(copilot)：抑制已捨棄的提示詞 hook 輸出 (#5547)
+- fix(scripts)：在 resolve_template.py 中發出原始 UTF-8 位元組，不破壞換行 (#5539)
+- fix(auth)：在呼叫端執行緒中將 az 與 gh CLI 憑證解碼為 UTF-8 (#5500)
+- fix：為整合測試中的迴路 TLS 預留更多時間 (#5513)
+- 將 Task Consolidation 擴充功能加入社群型錄 (#5530)
+- chore：發行 1.4.4，開始 1.4.5.dev0 開發 (#5537)
+
 ## [1.4.4] - 2026-11-23
 
 ### 變更
